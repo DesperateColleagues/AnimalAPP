@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">AnimalApp</string>
+    <string name="animalapp_login">AnimalApp - Login</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="password_dimenticata">Password dimenticata?</string>
+    <string name="login">Login</string>
+    <string name="registrati">Registrati</string>
 </resources>
