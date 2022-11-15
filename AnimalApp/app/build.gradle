@@ -30,6 +30,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.navigation:navigation-runtime:2.4.1'
     def nav_version = "2.5.3"
 
     // Java language implementation for navigation

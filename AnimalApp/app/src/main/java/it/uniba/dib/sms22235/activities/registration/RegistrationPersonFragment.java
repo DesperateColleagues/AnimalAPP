@@ -21,6 +21,13 @@ import it.uniba.dib.sms22235.entities.FireBaseNamesUtils;
 import it.uniba.dib.sms22235.entities.users.User;
 import it.uniba.dib.sms22235.entities.users.Veterinary;
 
+/**
+ * This fragment contains the logic of a person registration.
+ * A person can be a user or a veterinary. This class menages the visibility of its
+ * layout components, according to the role of the person who is registering.
+ *
+ * @author Giacomo Detomaso
+ * */
 public class RegistrationPersonFragment extends Fragment {
 
     public interface RegistrationPersonFragmentListener {

@@ -2,24 +2,29 @@ package it.uniba.dib.sms22235.activities.registration;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
-import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
 
+/**
+ * This fragment is used to navigate through the fragments that compose the RegistrationActivity.
+ * From here it is possible to access the registration form of the three actor of the app.
+ *
+ * @author Giacomo Detomaso
+ * */
 public class RegistrationRoleChoiceFragment extends Fragment {
+
+    private NavController controller;
 
     public RegistrationRoleChoiceFragment() {
     }
@@ -27,16 +32,19 @@ public class RegistrationRoleChoiceFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+         controller = Navigation.findNavController(container);
 
-        // Inflate the view of the fragment
-        View root =  inflater.inflate(R.layout.fragment_registration_role_choice, container,
+        return inflater.inflate(R.layout.fragment_registration_role_choice, container,
                 false);
+    }
 
-        NavController controller = Navigation.findNavController(container);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        TextView txtRegUser = root.findViewById(R.id.txtRegUser);
-        TextView txtRegVeterinary = root.findViewById(R.id.txtRegVeterinary);
-        TextView txtRegOrganization = root.findViewById(R.id.txtRegOrganization);
+        TextView txtRegUser = view.findViewById(R.id.txtRegUser);
+        TextView txtRegVeterinary = view.findViewById(R.id.txtRegVeterinary);
+        TextView txtRegOrganization = view.findViewById(R.id.txtRegOrganization);
 
         // Set 3 onClickListeners to perform navigation through registration's fragments
 
@@ -48,7 +56,5 @@ public class RegistrationRoleChoiceFragment extends Fragment {
 
         txtRegOrganization.setOnClickListener(v ->
                 controller.navigate(R.id.registrationOrganizationFragment));
-
-        return root;
     }
 }

@@ -18,9 +18,20 @@ import android.widget.Toast;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.users.Organization;
 
+/**
+ * This fragment contains the logic of an organization's registration
+ *
+ * @author Giacomo Detomaso
+ * */
 public class RegistrationOrganizationFragment extends Fragment {
 
     public interface RegistrationOrganizationFragmentListener {
+        /**
+         * Triggered when the organization completes its sign up process
+         *
+         * @param org the organization to register
+         * @param pwd the password of the user
+         * */
         void onOrganizationRegistered(Organization org, String pwd);
     }
 
