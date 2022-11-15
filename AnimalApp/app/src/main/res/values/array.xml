@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="spinnerItems">
-        <item>Utente</item>
-        <item>Veterinario</item>
-        <item>Ente</item>
+        <item>Ente pubblico</item>
+        <item>Ente privato</item>
     </string-array>
 </resources>

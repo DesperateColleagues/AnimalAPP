@@ -7,37 +7,33 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import org.jetbrains.annotations.Contract;
 
 public class Veterinary extends AbstractPersonUser implements Owner {
-    private String clinicName;
-    private String CF;
+    private String clinicName, phonNumber;
 
     public Veterinary() {}
 
     /**
      * @param name       name of the person
-     * @param secondName second name of the person
      * @param email      email of the person used to perform operations like reset password
-     * @param birthDate  birthday date
      * @param clinicName the name of the clinic
-     * @param CF fiscal code
+     * @param phonNumber the phone number of the veterinary used as contact
      */
-    public Veterinary(String name, String secondName, String email, String birthDate,
-                      String clinicName, String CF) {
-        super(name, secondName, email, birthDate);
+    public Veterinary(String name, String email, String clinicName, String phonNumber) {
+        super(name, email);
         this.clinicName = clinicName;
-        this.CF = CF;
+        this.phonNumber = phonNumber;
     }
 
     @Override
     public String OwnerName() {
-        return name + " " + secondName + " " + CF;
-    }
-
-    public String getCF() {
-        return CF;
+        return fullName;
     }
 
     public String getClinicName() {
         return clinicName;
+    }
+
+    public String getPhonNumber() {
+        return phonNumber;
     }
 
     /**
@@ -52,11 +48,9 @@ public class Veterinary extends AbstractPersonUser implements Owner {
     public static Veterinary loadVeterinary(@NonNull DocumentSnapshot document){
         return new Veterinary(
                 (String) document.get("name"),
-                (String) document.get("secondName"),
                 (String) document.get("email"),
-                (String) document.get("birthDate"),
                 (String) document.get("clinicName"),
-                (String) document.get("CF")
+                (String) document.get("phoneNumber")
         );
     }
 }

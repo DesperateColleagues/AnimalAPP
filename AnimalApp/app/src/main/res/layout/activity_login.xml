@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_gravity="center"
     android:orientation="vertical">
 
@@ -12,48 +11,53 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <!--<Spinner
-        android:id="@+id/spinnerRole"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="50dp"
-        android:layout_marginRight="30dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
-        android:layout_height="48dp"
-        android:background="@drawable/bg_spinner_role"
-        android:entries="@array/spinnerItems" />!-->
+        android:layout_marginRight="30dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-    <EditText
-        android:id="@+id/txtInputEmail"
+        <EditText
+            android:id="@+id/txtInputOrgEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:drawableStart="@drawable/ic_baseline_email_24"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:minHeight="48dp"
+            android:textColorHint="#2E7D32" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
-        android:autofillHints=""
-        android:drawableStart="@drawable/ic_baseline_email_24"
-        android:drawablePadding="10dp"
-        android:ems="10"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
-        android:minHeight="48dp"
-        android:textColorHint="#2E7D32" />
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-    <EditText
-        android:id="@+id/txtInputPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="30dp"
-        android:ems="10"
-        android:drawablePadding="10dp"
-        android:drawableStart="@drawable/ic_baseline_lock_24"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:textColorHint="#2E7D32"
-        android:minHeight="48dp" />
+        <EditText
+            android:id="@+id/txtInputOrgPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_baseline_lock_24"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:minHeight="48dp"
+            android:textColorHint="#2E7D32"
+            android:importantForAutofill="no" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/txtRecoverPassword"
@@ -62,8 +66,8 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="30dp"
         android:layout_marginRight="30dp"
-        android:onClick="recoverPassword"
         android:minHeight="48dp"
+        android:onClick="txtRecoverPasswordAction"
         android:text="@string/password_dimenticata"
         android:textAlignment="center"
         android:textColor="#2E7D32" />
@@ -75,8 +79,8 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
-        android:text="@string/login"
-        android:onClick="loginAction"/>
+        android:onClick="loginAction"
+        android:text="@string/login" />
 
     <Button
         android:id="@+id/btnRegistration"
@@ -85,5 +89,6 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
+        android:onClick="btnRegisterAction"
         android:text="@string/registrati" />
 </LinearLayout>

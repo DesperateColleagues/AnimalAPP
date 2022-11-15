@@ -6,26 +6,20 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.jetbrains.annotations.Contract;
 
-public class User extends AbstractPersonUser implements Owner {
-    private String  username;
+public class User extends AbstractPersonUser {
+    protected String username;
 
+    // need this constructor for FireBase
     public User(){}
 
     /**
-     * @param name       name of the person
-     * @param secondName second name of the person
+     * @param fullName       name of the person
      * @param email      email of the person used to perform operations like reset password
-     * @param birthDate  birthday date
      * @param username   the username to access the private area of the app
      */
-    public User(String name, String secondName, String email, String birthDate, String username) {
-        super(name, secondName, email, birthDate);
+    public User(String fullName, String email, String username) {
+        super(fullName, email);
         this.username = username;
-    }
-
-    @Override
-    public String OwnerName() {
-        return name + " " + secondName + " " + username;
     }
 
     public String getUsername() {
@@ -43,9 +37,7 @@ public class User extends AbstractPersonUser implements Owner {
     public static User loadUserData(@NonNull DocumentSnapshot document){
         return new User(
                 (String) document.get("name"),
-                (String) document.get("secondName"),
                 (String) document.get("email"),
-                (String) document.get("birthDate"),
                 (String) document.get("username")
         );
     }

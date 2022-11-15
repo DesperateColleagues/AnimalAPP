@@ -1,7 +1,8 @@
-package it.uniba.dib.sms22235.activities;
+package it.uniba.dib.sms22235.activities.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -14,7 +15,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.activities.registration.RegistrationActivity;
 import it.uniba.dib.sms22235.entities.FireBaseNamesUtils;
+import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.User;
 import it.uniba.dib.sms22235.entities.users.Veterinary;
 
@@ -39,8 +42,8 @@ public class LoginActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         // Retrieve input fields
-        txtInputEmail = findViewById(R.id.txtInputEmail);
-        txtInputPassword = findViewById(R.id.txtInputPassword);
+        txtInputEmail = findViewById(R.id.txtInputOrgEmail);
+        txtInputPassword = findViewById(R.id.txtInputOrgPassword);
     }
 
     /**
@@ -86,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                                             // Get the role of the user by splitting the document name
                                             String role = docName.split("_")[0];
 
-                                            // TODO: SWITCH ACTIVITY
+                                            // TODO: SWITCH
 
                                             /*
                                             * Check what is the role of the logged user. Retrieve
@@ -101,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                                             } else if (role.equals(FireBaseNamesUtils.RolesNames.VETERINARY)){
                                                 Veterinary vet = Veterinary.loadVeterinary(document);
                                             } else if (role.equals(FireBaseNamesUtils.RolesNames.ORGANIZATION)) {
-                                                // TODO: prepare organization object
+                                                Organization org = Organization.loadOrganization(document);
                                             }
                                         }
                                     });
@@ -114,8 +117,18 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Specify what happens when the user want to recover a lost password
      * */
-    public void recoverPassword(View view){
+    public void txtRecoverPasswordAction(View view){
 
+    }
+
+    /***
+     * Start the RegistrationActivity
+     * @param view the current view
+     */
+    public void btnRegisterAction(View view){
+        // explicit intent to start the RegistrationActivity
+        Intent intent = new Intent(this, RegistrationActivity.class);
+        startActivity(intent);
     }
 
 }

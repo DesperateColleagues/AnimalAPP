@@ -6,4 +6,23 @@
     <string name="password_dimenticata">Password dimenticata?</string>
     <string name="login">Login</string>
     <string name="registrati">Registrati</string>
+    <string name="benvenuto">Benvenuto!</string>
+    <string name="role_message">Prima di tutto dicci che utente sei</string>
+    <string name="padrone">Padrone</string>
+    <string name="appassionato">Appassionato</string>
+    <string name="veterinario">Veterinario</string>
+    <string name="organizzazione">Organizzazione</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nome">Nome</string>
+    <string name="cognome">Cognome</string>
+    <string name="codice_fiscale">Codice Fiscale</string>
+    <string name="nome_clinica">Nome clinica</string>
+    <string name="scelta_ruolo">Scelta ruolo</string>
+    <string name="username">username</string>
+    <string name="nome_e_cognome">nome completo</string>
+    <string name="telefono">telefono</string>
+    <string name="nome_ente">nome ente</string>
+    <string name="scopo_ente">scopo ente</string>
+    <string name="descrizione_ente">descrizione ente</string>
 </resources>

@@ -30,6 +30,11 @@ android {
 }
 
 dependencies {
+    def nav_version = "2.5.3"
+
+    // Java language implementation for navigation
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
 
     implementation platform('com.google.firebase:firebase-bom:31.0.2')
     implementation 'androidx.appcompat:appcompat:1.5.1'

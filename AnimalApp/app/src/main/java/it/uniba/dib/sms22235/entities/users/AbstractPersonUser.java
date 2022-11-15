@@ -4,28 +4,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AbstractPersonUser {
-    protected String name;
-    protected String secondName;
+    protected String fullName;
     protected String email;
-    protected String birthDate;
     private static final String EMAIL_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
 
     public AbstractPersonUser() {}
 
     /**
-     * @param name      nome della persona
-     * @param secondName  cognome della persona
+     * @param fullName    full name (name + second name) of the person
      * @param email     email della persona
-     * @param birthDate data di nascita della persona
-     *
      */
-    public AbstractPersonUser(String name, String secondName, String email,
-                              String birthDate) {
+    public AbstractPersonUser(String fullName, String email) {
 
-        this.name = name;
-        this.secondName = secondName;
+        this.fullName = fullName;
         this.email = email;
-        this.birthDate = birthDate;
     }
 
     /**
@@ -41,19 +33,11 @@ public class AbstractPersonUser {
         return matcher.find();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getSecondName() {
-        return secondName;
+    public String getFullName() {
+        return fullName;
     }
 
     public String getEmail() {
         return email;
-    }
-
-    public String getBirthDate() {
-        return birthDate;
     }
 }
