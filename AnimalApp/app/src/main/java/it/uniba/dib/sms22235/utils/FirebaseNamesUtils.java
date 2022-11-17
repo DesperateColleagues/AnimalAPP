@@ -1,6 +1,6 @@
-package it.uniba.dib.sms22235.entities;
+package it.uniba.dib.sms22235.utils;
 
-public class FireBaseNamesUtils {
+public class FirebaseNamesUtils {
     public static class RolesNames {
         public static String VETERINARY = "vet";
         public static String COMMON_USER = "cus";

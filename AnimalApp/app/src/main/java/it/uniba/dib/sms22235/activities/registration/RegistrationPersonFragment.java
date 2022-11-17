@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputLayout;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.entities.FireBaseNamesUtils;
+import it.uniba.dib.sms22235.utils.FirebaseNamesUtils;
 import it.uniba.dib.sms22235.entities.users.User;
 import it.uniba.dib.sms22235.entities.users.Veterinary;
 
@@ -135,7 +135,7 @@ public class RegistrationPersonFragment extends Fragment {
 
             // If the input is not empty complete registration process
             if (!isEmptyInput) {
-                if (role.equals(FireBaseNamesUtils.RolesNames.COMMON_USER)) {
+                if (role.equals(FirebaseNamesUtils.RolesNames.COMMON_USER)) {
                     // Retrieve user specific field
                     username = ((EditText) view.findViewById(R.id.txtInputUsername))
                             .getText().toString();
@@ -176,11 +176,11 @@ public class RegistrationPersonFragment extends Fragment {
      * the role of the actor who's registering
      * */
     private void manageTxtInputVisibility() {
-        if (role.equals(FireBaseNamesUtils.RolesNames.COMMON_USER)) {
+        if (role.equals(FirebaseNamesUtils.RolesNames.COMMON_USER)) {
             layoutTxtInputClinicName.setVisibility(View.GONE);
             layoutTxtInputPhoneNumber.setVisibility(View.GONE);
             layoutTxtInputUsername.setVisibility(View.VISIBLE);
-        } else if (role.equals(FireBaseNamesUtils.RolesNames.VETERINARY)){
+        } else if (role.equals(FirebaseNamesUtils.RolesNames.VETERINARY)){
             layoutTxtInputClinicName.setVisibility(View.VISIBLE);
             layoutTxtInputPhoneNumber.setVisibility(View.VISIBLE);
             layoutTxtInputUsername.setVisibility(View.GONE);

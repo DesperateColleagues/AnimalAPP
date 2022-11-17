@@ -13,10 +13,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.entities.FireBaseNamesUtils;
+import it.uniba.dib.sms22235.utils.FirebaseNamesUtils;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.User;
 import it.uniba.dib.sms22235.entities.users.Veterinary;
+import it.uniba.dib.sms22235.utils.FirestoreQueryHelper;
 
 public class RegistrationActivity extends AppCompatActivity
         implements RegistrationPersonFragment.RegistrationPersonFragmentListener,
@@ -44,10 +45,10 @@ public class RegistrationActivity extends AppCompatActivity
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         // Save the user instance on the DB
-                        String docKey = FireBaseNamesUtils.RolesNames.COMMON_USER
+                        String docKey = FirebaseNamesUtils.RolesNames.COMMON_USER
                                 + "_" + user.getUsername();
 
-                        db.collection(FireBaseNamesUtils.CollectionsNames.ACTORS)
+                        db.collection(FirebaseNamesUtils.CollectionsNames.ACTORS)
                                 .document(docKey)
                                 .set(user)
                                 // TODO: switch the activity to LoginActivity or DashboardActivity
@@ -67,10 +68,10 @@ public class RegistrationActivity extends AppCompatActivity
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         // Save the veterinary instance on the DB
-                        String docKey = FireBaseNamesUtils.RolesNames.VETERINARY
+                        String docKey = FirebaseNamesUtils.RolesNames.VETERINARY
                                 + "_" + veterinary.getEmail();
 
-                        db.collection(FireBaseNamesUtils.CollectionsNames.ACTORS)
+                        db.collection(FirebaseNamesUtils.CollectionsNames.ACTORS)
                                 .document(docKey)
                                 .set(veterinary)
                                 // TODO: switch the activity to LoginActivity or DashboardActivity
@@ -91,10 +92,10 @@ public class RegistrationActivity extends AppCompatActivity
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         // Save the organization instance on the DB
-                        String docKey = FireBaseNamesUtils.RolesNames.ORGANIZATION
+                        String docKey = FirebaseNamesUtils.RolesNames.ORGANIZATION
                                 + "_" + org.getEmail();
 
-                        db.collection(FireBaseNamesUtils.CollectionsNames.ACTORS)
+                        db.collection(FirebaseNamesUtils.CollectionsNames.ACTORS)
                                 .document(docKey)
                                 .set(org)
                                 // TODO: switch the activity to LoginActivity or DashboardActivity
@@ -104,20 +105,5 @@ public class RegistrationActivity extends AppCompatActivity
                         Log.d("DEB", Objects.requireNonNull(task.getException()).getMessage());
                     }
                 });
-    }
-
-    /**
-     * This method is used to check if a string field value is unique
-     * amongst the actor's collection, before the actor's document is saved.
-     * For example it can be used to check email or username uniqueness inside the collection.
-     *
-     * @param fieldName the name of the field to check
-     * @param value the value of the field whose uniqueness will be checked
-     *
-     * @return boolean value: true if the field value is unique, false if it is not
-     * */
-    private boolean checkStringFieldUniqueness(String fieldName, String value) {
-        // TODO: implement this method with a whereEqualTo query on the db
-        return true;
     }
 }
