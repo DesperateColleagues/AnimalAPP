@@ -15,4 +15,9 @@ public class FirebaseNamesUtils {
         public static String REPORTS = "reports";
         public static String ANIMAL_RESIDENCE = "residence";
     }
+
+    public static class ActorFields {
+        public static String EMAIL = "email";
+        public static String USERNAME = "username";
+    }
 }

@@ -1,5 +1,7 @@
 package it.uniba.dib.sms22235.activities.registration;
 
+import it.uniba.dib.sms22235.utils.InputFieldCheck;
+
 import android.content.Context;
 import android.os.Bundle;
 
@@ -58,10 +60,6 @@ public class RegistrationPersonFragment extends Fragment {
     private TextInputLayout layoutTxtInputClinicName;
     private TextInputLayout layoutTxtInputPhoneNumber;
     private TextInputLayout layoutTxtInputUsername;
-
-    // Defining the constants to check email and password correctness
-    private final String EMAIL_PATTERN = "";
-    private final int PWD_MINIMUM_CHAR = 6;
 
     public RegistrationPersonFragment() {
         // Required empty public constructor
@@ -130,12 +128,11 @@ public class RegistrationPersonFragment extends Fragment {
             // The flag isEmptyInput will be true if the three strings are empty, false otherwise
             boolean isEmptyInput = name.equals("") || email.equals("") || password.equals("");
 
-            // TODO: check email and phone number pattern and password must contain up to 6 chars
-            boolean isInputCorrect;
+            boolean isInputCorrect = InputFieldCheck.isEmailValid(email) && InputFieldCheck.isPasswordValid(password);
 
             // If the input is not empty complete registration process
-            if (!isEmptyInput) {
-                if (role.equals(FirebaseNamesUtils.RolesNames.COMMON_USER)) {
+            if (!isEmptyInput && isInputCorrect) {
+                if (role.equals(FirebaseNamesUtils.RolesNames.COMMON_USER) ) {
                     // Retrieve user specific field
                     username = ((EditText) view.findViewById(R.id.txtInputUsername))
                             .getText().toString();
@@ -146,6 +143,7 @@ public class RegistrationPersonFragment extends Fragment {
                         // Delegate the Activity to register the user on the FireStore
                         listener.onUserRegistered(new User(name, email, username), password);
                     }
+
                 } else {
                     // Retrieve veterinary specifics fields
                     clinicName = ((EditText) view.findViewById(R.id.txtInputClinicName))
@@ -156,10 +154,16 @@ public class RegistrationPersonFragment extends Fragment {
 
                     isEmptyInput = clinicName.equals("") || phoneNumber.equals("");
 
-                    if (!isEmptyInput) {
+                    isInputCorrect = InputFieldCheck.isNumberValid(phoneNumber);
+
+                    if (!isEmptyInput && isInputCorrect) {
                         // Delegate the Activity to register the veterinary on the FireStore
                         listener.onVeterinaryRegistration(
                                 new Veterinary(name, email, clinicName, phoneNumber),password);
+                    }
+
+                    if (!InputFieldCheck.isNumberValid(phoneNumber)){
+                        Toast.makeText(getActivity(), "Numero di telefono non valido.", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -167,6 +171,14 @@ public class RegistrationPersonFragment extends Fragment {
             // Display error message if some fields are empty
             if (isEmptyInput) {
                 Toast.makeText(getActivity(), "Alcuni campi sono vuoti!", Toast.LENGTH_SHORT).show();
+            }
+
+            if (!InputFieldCheck.isEmailValid(email)) {
+                Toast.makeText(getActivity(), "Email non valida.", Toast.LENGTH_SHORT).show();
+            }
+
+            if(!InputFieldCheck.isPasswordValid(password)) {
+                Toast.makeText(getActivity(), "Password troppo corta, minimo 6 caratteri.", Toast.LENGTH_SHORT).show();
             }
         });
     }

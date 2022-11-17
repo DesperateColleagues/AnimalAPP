@@ -1,5 +1,7 @@
 package it.uniba.dib.sms22235.activities.registration;
 
+import it.uniba.dib.sms22235.utils.InputFieldCheck;
+
 import android.content.Context;
 import android.os.Bundle;
 
@@ -35,7 +37,7 @@ public class RegistrationOrganizationFragment extends Fragment {
         void onOrganizationRegistered(Organization org, String pwd);
     }
 
-    RegistrationOrganizationFragmentListener listener;
+    private RegistrationOrganizationFragmentListener listener;
 
     public RegistrationOrganizationFragment() {
         // Required empty public constructor
@@ -87,17 +89,30 @@ public class RegistrationOrganizationFragment extends Fragment {
                     .getSelectedItem();
 
             // Check if the input is empty or not
-            boolean isEmptyInput = organizationName.equals("") || email.equals("")
-                    || phoneNumber.equals("") || purpose.equals("") || password.equals("");
+            boolean isEmptyInput = organizationName.equals("") || email.equals("") ||
+                    phoneNumber.equals("") || purpose.equals("") || password.equals("");
 
-            // TODO: check email and phone number pattern and password must contain up to 6 chars
-            boolean isInputCorrect;
+            boolean isInputCorrect = InputFieldCheck.isEmailValid(email) &&
+                    InputFieldCheck.isNumberValid(phoneNumber) &&
+                    InputFieldCheck.isPasswordValid(password) ;
 
             // Communicate to the RegistrationActivity that the organization can be registered
-            if (!isEmptyInput) {
+            if (!isEmptyInput && isInputCorrect) {
                 listener.onOrganizationRegistered(
                         new Organization(organizationName, purpose, email, phoneNumber), password
                 );
+            }
+
+            if (!InputFieldCheck.isEmailValid(email)) {
+                Toast.makeText(getActivity(), "Email non valida.", Toast.LENGTH_SHORT).show();
+            }
+
+            if(!InputFieldCheck.isNumberValid(phoneNumber)) {
+                Toast.makeText(getActivity(), "Numero di telefono non valido.", Toast.LENGTH_SHORT).show();
+            }
+
+            if(!InputFieldCheck.isPasswordValid(password)) {
+                Toast.makeText(getActivity(), "Password troppo corta, minimo 6 caratteri.", Toast.LENGTH_SHORT).show();
             }
 
             if (isEmptyInput) {
