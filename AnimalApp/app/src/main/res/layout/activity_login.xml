@@ -70,7 +70,7 @@
         android:onClick="txtRecoverPasswordAction"
         android:text="@string/password_dimenticata"
         android:textAlignment="center"
-        android:textColor="#2E7D32" />
+        android:textColor="?attr/colorOnPrimary" />
 
     <Button
         android:id="@+id/btnLogin"

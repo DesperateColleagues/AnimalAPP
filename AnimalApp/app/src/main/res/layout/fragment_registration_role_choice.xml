@@ -63,7 +63,7 @@
                 android:drawablePadding="10dp"
                 android:text="@string/appassionato"
                 android:textAlignment="center"
-                app:drawableTopCompat="@drawable/phd_circle" />
+                app:drawableTopCompat="@drawable/fra_rrc_user" />
 
             <TextView
                 android:id="@+id/txtRegVeterinary"
@@ -75,7 +75,7 @@
                 android:drawablePadding="10dp"
                 android:text="@string/veterinario"
                 android:textAlignment="center"
-                app:drawableTopCompat="@drawable/phd_circle" />
+                app:drawableTopCompat="@drawable/fra_rrc_doctor" />
         </LinearLayout>
 
         <TextView
@@ -89,7 +89,7 @@
             android:drawablePadding="10dp"
             android:text="@string/organizzazione"
             android:textAlignment="center"
-            app:drawableTopCompat="@drawable/phd_circle" />
+            app:drawableTopCompat="@drawable/fra_rrc_organization" />
 
     </LinearLayout>
 

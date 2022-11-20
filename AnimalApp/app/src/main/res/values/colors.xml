@@ -12,9 +12,16 @@
     <color name="green_500">#4caf50</color>
     <color name="green_600">#43a047</color>
 
-    <color name="light_main">#7BDA6C</color>
-    <color name="light_accent">#BCF1C0</color>
-    <color name="dark_main">#42273B</color>
+    <color name="light_main">#16C172</color>
+    <color name="light_variation">#12A561</color>
+    <color name="light_accent">#A3F7B5</color>
+    <color name="light_onMain">#000000</color>
+    <color name="light_textColor">#000000</color>
+
+    <color name="dark_main">#593651</color>
+    <color name="dark_variation">#40263A</color>
     <color name="dark_accent">#70566D</color>
+    <color name="dark_onMain">#ffffff</color>
+    <color name="dark_textColor">#ffffff</color>
 
 </resources>
