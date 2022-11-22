@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_baseline_account_circle_24"
+        android:title="@string/title_passionate_profile" />
+
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/ic_baseline_local_hospital_24"
+        android:title="@string/title_passionate_veterinary_reservation" />
+
+    <item
+        android:id="@+id/navigation_notifications"
+        android:icon="@drawable/ic_baseline_shopping_cart_24"
+        android:title="@string/title_passionate_purchases" />
+
+</menu>

@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.activities.registration;
+package it.uniba.dib.sms22235.activities.registration.fragments;
 
 import android.os.Bundle;
 

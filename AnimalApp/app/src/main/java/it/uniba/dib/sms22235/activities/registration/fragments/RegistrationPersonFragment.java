@@ -1,5 +1,6 @@
-package it.uniba.dib.sms22235.activities.registration;
+package it.uniba.dib.sms22235.activities.registration.fragments;
 
+import it.uniba.dib.sms22235.activities.registration.RegistrationActivity;
 import it.uniba.dib.sms22235.utils.InputFieldCheck;
 
 import android.content.Context;

@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.activities.registration.RegistrationActivity;
 import it.uniba.dib.sms22235.utils.FirebaseNamesUtils;
 import it.uniba.dib.sms22235.entities.users.Organization;
@@ -101,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                                                  * */
                                                 if (role.equals(FirebaseNamesUtils.RolesNames.COMMON_USER)) {
                                                     User cus = User.loadUserData(document);
-                                                    Toast.makeText(this, cus.getUsername(), Toast.LENGTH_LONG).show();
+                                                    newActivityRunning(PassionateNavigationActivity.class, null);
                                                 } else if (role.equals(FirebaseNamesUtils.RolesNames.VETERINARY)) {
                                                     Veterinary vet = Veterinary.loadVeterinary(document);
                                                 } else if (role.equals(FirebaseNamesUtils.RolesNames.ORGANIZATION)) {
@@ -133,6 +134,25 @@ public class LoginActivity extends AppCompatActivity {
         // explicit intent to start the RegistrationActivity
         Intent intent = new Intent(this, RegistrationActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * This method allows the app to switch, calling the activity
+     *
+     * @author Michelangelo De Pascale
+     *
+     * @param newActivityClass                 the class of the activity that we need to call
+     * @param additionalData    optional bundle to pass as extra information to the newly
+     *                          created activity
+     */
+    private void newActivityRunning(@SuppressWarnings("rawtypes") Class newActivityClass, Bundle additionalData){
+        Intent intent = new Intent(this, newActivityClass);
+
+        if (additionalData != null){
+            intent.putExtras(additionalData);
+        }
+
+        startActivity(intent); //start a new activity
     }
 
 }

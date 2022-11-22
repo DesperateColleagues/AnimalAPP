@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/registrationRoleChoiceFragment"
-        android:name="it.uniba.dib.sms22235.activities.registration.RegistrationRoleChoiceFragment">
+        android:name="it.uniba.dib.sms22235.activities.registration.fragments.RegistrationRoleChoiceFragment">
         <action
             android:id="@+id/action_registrationRoleChoiceFragment_to_registrationUserFragment"
             app:destination="@id/registrationUserFragment" />
@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/registrationUserFragment"
-        android:name="it.uniba.dib.sms22235.activities.registration.RegistrationPersonFragment"
+        android:name="it.uniba.dib.sms22235.activities.registration.fragments.RegistrationPersonFragment"
         android:label="RegistrationPersonFragment" >
         <argument
             android:name="Role"
@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/registrationVeterinaryFragment"
-        android:name="it.uniba.dib.sms22235.activities.registration.RegistrationPersonFragment"
+        android:name="it.uniba.dib.sms22235.activities.registration.fragments.RegistrationPersonFragment"
         android:label="RegistrationPersonFragment" >
         <argument
             android:name="Role"
@@ -41,6 +41,6 @@
     </fragment>
     <fragment
         android:id="@+id/registrationOrganizationFragment"
-        android:name="it.uniba.dib.sms22235.activities.registration.RegistrationOrganizationFragment"
+        android:name="it.uniba.dib.sms22235.activities.registration.fragments.RegistrationOrganizationFragment"
         android:label="RegistrationOrganizationFragment" />
 </navigation>

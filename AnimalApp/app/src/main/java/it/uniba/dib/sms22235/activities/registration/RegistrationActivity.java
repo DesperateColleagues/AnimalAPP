@@ -13,6 +13,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.activities.registration.fragments.RegistrationOrganizationFragment;
+import it.uniba.dib.sms22235.activities.registration.fragments.RegistrationPersonFragment;
 import it.uniba.dib.sms22235.utils.FirebaseNamesUtils;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.User;
@@ -25,7 +27,6 @@ public class RegistrationActivity extends AppCompatActivity
     // Firebase objects to perform authentication and DB operations
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    //private FirestoreQueryHelper queryHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +36,6 @@ public class RegistrationActivity extends AppCompatActivity
         // Get the instances of the Firebase's objects
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        //queryHelper = new FirestoreQueryHelper(db);
-
     }
 
     @Override
@@ -48,6 +47,7 @@ public class RegistrationActivity extends AppCompatActivity
                 .whereEqualTo(FirebaseNamesUtils.ActorFields.USERNAME, user.getUsername())
                 .get()
                 .addOnCompleteListener(taskCheckUsername -> {
+                    // Create the new user only if the username is not duplicate
                     if (taskCheckUsername.isSuccessful() && taskCheckUsername.getResult().isEmpty()) {
 
                         mAuth.createUserWithEmailAndPassword(user.getEmail(), pwd)

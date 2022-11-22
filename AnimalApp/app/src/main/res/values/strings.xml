@@ -12,8 +12,6 @@
     <string name="appassionato">Appassionato</string>
     <string name="veterinario">Veterinario</string>
     <string name="organizzazione">Organizzazione</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="nome">Nome</string>
     <string name="cognome">Cognome</string>
     <string name="codice_fiscale">Codice Fiscale</string>
@@ -25,4 +23,9 @@
     <string name="nome_ente">nome ente</string>
     <string name="scopo_ente">scopo ente</string>
     <string name="descrizione_ente">descrizione ente</string>
+    <string name="title_activity_passionate_navigation">PassionateNavigationActivity</string>
+    <string name="title_passionate_profile">Profilo</string>
+    <string name="title_passionate_veterinary_reservation">Pet care</string>
+    <string name="title_passionate_purchases">Spese</string>
+    <string name="registra_animale">Registra animale</string>
 </resources>
