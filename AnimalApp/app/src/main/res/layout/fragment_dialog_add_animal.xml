@@ -12,7 +12,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="20dp"
-        android:hint="nome animale"
+        android:hint="@string/nome_animale"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
@@ -20,13 +20,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
-            android:drawableStart="@drawable/ic_baseline_corporate_fare_24"
+            android:drawableStart="@drawable/ic_baseline_pets_24"
             android:drawablePadding="10dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:minHeight="48dp"
             android:textColorHint="#2E7D32"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -36,7 +36,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
-        android:hint="specie animale"
+        android:hint="@string/specie_animale"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
@@ -44,13 +44,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
-            android:drawableStart="@drawable/ic_baseline_alternate_email_24"
+            android:drawableStart="@drawable/ic_baseline_emoji_nature_24"
             android:drawablePadding="10dp"
             android:ems="10"
             android:inputType="textEmailAddress"
             android:minHeight="48dp"
             android:textColorHint="#2E7D32"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -60,7 +60,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
-        android:hint="razza"
+        android:hint="@string/razza"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
@@ -68,13 +68,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
-            android:drawableStart="@drawable/ic_baseline_phone_24"
+            android:drawableStart="@drawable/ic_baseline_category_24"
             android:drawablePadding="10dp"
             android:ems="10"
-            android:inputType="phone"
+            android:inputType="textPersonName"
             android:minHeight="48dp"
             android:textColorHint="#2E7D32"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -84,21 +84,21 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
-        android:hint="codice microchip"
+        android:hint="@string/codice_microchip"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
             android:id="@+id/txtInputMicrochipCode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_baseline_lock_24"
+            android:drawableStart="@drawable/ic_baseline_tag_24"
             android:drawablePadding="10dp"
             android:ems="10"
             android:importantForAutofill="no"
-            android:inputType="textPassword"
+            android:inputType="textPersonName"
             android:minHeight="48dp"
             android:textColorHint="#2E7D32"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -108,21 +108,23 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
-        android:hint="data di nascita"
+        android:hint="@string/data_di_nascita"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
             android:id="@+id/txtInputBirthDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_baseline_lock_24"
+            android:drawableStart="@drawable/ic_baseline_calendar_month_24"
             android:drawablePadding="10dp"
             android:ems="10"
+            android:cursorVisible="false"
+            android:focusable="false"
             android:importantForAutofill="no"
             android:inputType="date"
             android:minHeight="48dp"
             android:textColorHint="#2E7D32"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -133,6 +135,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
+        android:layout_marginBottom="20dp"
         android:onClick="btnRegisterAction"
         android:text="@string/aggiungi_animale" />
 

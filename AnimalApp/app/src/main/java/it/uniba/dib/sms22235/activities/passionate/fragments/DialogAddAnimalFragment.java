@@ -8,24 +8,23 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
+
 
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
-import it.uniba.dib.sms22235.activities.registration.RegistrationActivity;
-import it.uniba.dib.sms22235.activities.registration.fragments.RegistrationPersonFragment;
 import it.uniba.dib.sms22235.entities.users.Animal;
-import it.uniba.dib.sms22235.entities.users.User;
-import it.uniba.dib.sms22235.entities.users.Veterinary;
 
-public class DialogAddAnimalFragment extends DialogFragment {
+public class DialogAddAnimalFragment extends DialogFragment implements android.app.DatePickerDialog.OnDateSetListener {
 
     public interface DialogAddAnimalFragmentListener {
         /**
@@ -37,6 +36,7 @@ public class DialogAddAnimalFragment extends DialogFragment {
     }
 
     private DialogAddAnimalFragmentListener listener;
+    private EditText txtInputBirthDate;
 
     public DialogAddAnimalFragment() {
         // Required empty public constructor
@@ -63,17 +63,25 @@ public class DialogAddAnimalFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
+        // Create the inflater and inflate the layout
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View root = inflater.inflate(R.layout.fragment_dialog_add_animal, null);
 
+        // Set dialog main options
         builder.setView(root);
         builder.setTitle("Registrazione Animale");
 
+        // Retrieve EditTexts objects from the inflated view
         EditText txtInputAnimalName = root.findViewById(R.id.txtInputAnimalName);
         EditText txtInputAnimalSpecies = root.findViewById(R.id.txtInputAnimalSpecies);
         EditText txtInputRace = root.findViewById(R.id.txtInputRace);
         EditText txtInputMicrochipCode = root.findViewById(R.id.txtInputMicrochipCode);
-        EditText txtInputBirthDate = root.findViewById(R.id.txtInputBirthDate);
+
+        txtInputBirthDate = root.findViewById(R.id.txtInputBirthDate);
+        txtInputBirthDate.setOnClickListener(v -> {
+            DatePickerDialogFragment datePickerFragment = new DatePickerDialogFragment(this);
+            datePickerFragment.show(getParentFragmentManager(), "DatePickerFragment");
+        });
 
         Button btnConfirmAnimalRegistration = root.findViewById(R.id.btnConfirmAnimalRegistration);
 
@@ -82,19 +90,30 @@ public class DialogAddAnimalFragment extends DialogFragment {
             String animalSpecies = txtInputAnimalSpecies.getText().toString();
             String race = txtInputRace.getText().toString();
             String microchipCode = txtInputMicrochipCode.getText().toString();
-            //String birthDate = txtInputBirthDate.getText().toString();
+            String birthDate = txtInputBirthDate.getText().toString();
 
             boolean isEmptyInput = animalName.equals("") || animalSpecies.equals("")
-                    || race.equals("") || microchipCode.equals("");
+                    || race.equals("") || microchipCode.equals("") || birthDate.equals("");
 
+            // If the input is not empty the animal can be registered
             if (!isEmptyInput){
                 listener.onAnimalRegistered(new Animal(animalName, animalSpecies, race,
-                        microchipCode, "22-11-2022"));
+                        microchipCode, birthDate));
             } else {
                 Toast.makeText(getContext(), "Alcuni campi sono vuoti!", Toast.LENGTH_SHORT).show();
             }
         });
 
         return builder.create();
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar mCalendar = Calendar.getInstance();
+        mCalendar.set(Calendar.YEAR, year);
+        mCalendar.set(Calendar.MONTH, month);
+        mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        String selectedDate = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(mCalendar.getTime());
+        txtInputBirthDate.setText(selectedDate);
     }
 }
