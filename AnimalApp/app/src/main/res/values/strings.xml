@@ -28,4 +28,7 @@
     <string name="title_passionate_veterinary_reservation">Pet care</string>
     <string name="title_passionate_purchases">Spese</string>
     <string name="registra_animale">Registra animale</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="passionate_profile_cardlayout_text">Visualizza le ultime segnalazioni della community!</string>
 </resources>

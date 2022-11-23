@@ -8,9 +8,14 @@
 
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <!--il folle senso dietro questa necessità mi è attualmente ancora sconosciuto-->
+        <item name="colorSecondary">@color/light_accent</item>
+        <item name="android:colorSecondary">?attr/colorSecondary</item>
+
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <!-- Customize your theme here. -->
 
-        <item name="android:editTextColor">@color/light_accent</item>
+
     </style>
 </resources>

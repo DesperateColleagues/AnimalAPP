@@ -6,7 +6,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 <item>
     <shape android:shape="oval">
         <size android:width="152dp" android:height="152dp" />
-        <solid android:color="?android:attr/editTextColor"/>
+        <solid android:color="?android:attr/colorSecondary"/>
     </shape>
 </item>
     <item>

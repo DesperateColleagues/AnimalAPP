@@ -14,7 +14,9 @@
         <!-- Color the action bar with the primary color-->
         <item name="actionBarStyle">@style/Widget.MaterialComponents.ActionBar.Primary</item>
 
+        <item name="colorSecondary">@color/dark_accent</item>
+        <item name="android:colorSecondary">?attr/colorSecondary</item>
+
         <!-- Customize your theme here. -->
-        <item name="android:editTextColor">@color/dark_main</item>
     </style>
 </resources>

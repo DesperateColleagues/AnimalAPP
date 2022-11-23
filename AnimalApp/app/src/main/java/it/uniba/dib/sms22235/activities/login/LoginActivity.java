@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -30,6 +31,13 @@ public class LoginActivity extends AppCompatActivity {
     // input fields for login
     private EditText txtInputEmail;
     private EditText txtInputPassword;
+    private Button btnLogin;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        btnLogin.setEnabled(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         // Retrieve input fields
         txtInputEmail = findViewById(R.id.txtInputOrgEmail);
         txtInputPassword = findViewById(R.id.txtInputOrgPassword);
+        btnLogin = findViewById(R.id.btnLogin);
     }
 
     /**
@@ -55,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = txtInputPassword.getText().toString();
 
         if(!email.equals("") && !password.equals("")) {
+            btnLogin.setEnabled(false);
             // Perform the sign in of the user with the retrieved email and password
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(taskLogin -> {
@@ -91,8 +101,6 @@ public class LoginActivity extends AppCompatActivity {
                                                 // Get the role of the user by splitting the document name
                                                 String role = docName.split("_")[0];
 
-                                                // TODO: SWITCH
-
                                                 /*
                                                  * Check what is the role of the logged user. Retrieve
                                                  * actors' data by the document and store them into the
@@ -112,6 +120,9 @@ public class LoginActivity extends AppCompatActivity {
                                         });
                                 Toast.makeText(this, "Login corretto", Toast.LENGTH_LONG).show();
                             }
+                        } else {
+                            btnLogin.setEnabled(true);
+                            Toast.makeText(this, "Email o password non corretti", Toast.LENGTH_LONG).show();
                         }
                     });
         } else {

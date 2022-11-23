@@ -31,8 +31,7 @@
             android:ems="10"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
-            android:minHeight="48dp"
-            android:textColorHint="#2E7D32" />
+            android:minHeight="48dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -70,7 +69,7 @@
         android:onClick="txtRecoverPasswordAction"
         android:text="@string/password_dimenticata"
         android:textAlignment="center"
-        android:textColor="?attr/colorOnPrimary" />
+        android:textColor="?attr/colorOnPrimary"/>
 
     <Button
         android:id="@+id/btnLogin"
