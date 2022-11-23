@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/passionate_profile"
         android:icon="@drawable/ic_baseline_account_circle_24"
         android:title="@string/title_passionate_profile" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/passionate_pet_care"
         android:icon="@drawable/ic_baseline_local_hospital_24"
         android:title="@string/title_passionate_veterinary_reservation" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/passionate_purchase"
         android:icon="@drawable/ic_baseline_shopping_cart_24"
         android:title="@string/title_passionate_purchases" />
 

@@ -60,13 +60,13 @@ public class AnimalGridFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        ArrayList<Animal> a = new ArrayList<>();
+        /*ArrayList<Animal> a = new ArrayList<>();
         Animal a1 = new Animal("Bobby","Cane","Violenza e delusione","01001",1);
         a.add(a1);
         Animal a2 = new Animal("Paco","Cane","La pasta di ammezzzogiorno","01002",1);
         a.add(a2);
         Animal a3 = new Animal("Mira","Gatto","Coccole e cibi di lusso","01003",1);
-        a.add(a3);
+        a.add(a3);*/
 
         LinearLayoutManager lineMan = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
     }

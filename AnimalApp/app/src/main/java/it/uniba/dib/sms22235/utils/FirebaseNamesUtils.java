@@ -5,6 +5,7 @@ public class FirebaseNamesUtils {
         public static String VETERINARY = "vet";
         public static String COMMON_USER = "cus";
         public static String ORGANIZATION = "org";
+        public static String ANIMAL = "ani";
     }
 
     public static class CollectionsNames {
@@ -19,5 +20,9 @@ public class FirebaseNamesUtils {
     public static class ActorFields {
         public static String EMAIL = "email";
         public static String USERNAME = "username";
+    }
+
+    public static class AnimalFields {
+        public static String MICROCHIP_CODE = "microchipCode";
     }
 }

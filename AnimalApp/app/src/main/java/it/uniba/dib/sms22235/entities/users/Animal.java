@@ -2,38 +2,38 @@ package it.uniba.dib.sms22235.entities.users;
 
 public class Animal {
     private String name;
+    private String animalSpecies;
     private String race;
-    private String diet;
     private String microchipCode;
-    private Integer age;
+    private String birthDate;
 
     public Animal(){}
 
-    public Animal(String name, String race, String diet, String microchipCode, Integer age) {
+    public Animal(String name, String animalSpecies, String race, String microchipCode, String birthDate) {
         this.name = name;
         this.race = race;
-        this.diet = diet;
+        this.animalSpecies = animalSpecies;
         this.microchipCode = microchipCode;
-        this.age = age;
+        this.birthDate = birthDate;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getRace() {
-        return race;
+    public String getAnimalSpecies() {
+        return animalSpecies;
     }
 
-    public String getDiet() {
-        return diet;
+    public String getRace() {
+        return race;
     }
 
     public String getMicrochipCode() {
         return microchipCode;
     }
 
-    public Integer getAge() {
-        return age;
+    public String getBirthDate() {
+        return birthDate;
     }
 }
