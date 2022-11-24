@@ -1,13 +1,10 @@
 package it.uniba.dib.sms22235.entities.operations;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
 import it.uniba.dib.sms22235.entities.users.Animal;
-import it.uniba.dib.sms22235.entities.users.UserOwner;
+import it.uniba.dib.sms22235.entities.users.User;
 
 public class Purchase {
-    private UserOwner owner;
+    private User owner;
     private Animal animal;
     private String itemName;
     private String date;
@@ -16,7 +13,7 @@ public class Purchase {
 
     public Purchase() {}
 
-    public Purchase(UserOwner owner, Animal animal, String itemName, String date, float cost, int amount) {
+    public Purchase(User owner, Animal animal, String itemName, String date, float cost, int amount) {
         this.owner = owner;
         this.animal = animal;
         this.itemName = itemName;
@@ -25,7 +22,7 @@ public class Purchase {
         this.date = date;
     }
 
-    public UserOwner getOwner() {
+    public User getOwner() {
         return owner;
     }
 

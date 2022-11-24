@@ -110,7 +110,9 @@ public class LoginActivity extends AppCompatActivity {
                                                  * */
                                                 if (role.equals(FirebaseNamesUtils.RolesNames.COMMON_USER)) {
                                                     User cus = User.loadUserData(document);
-                                                    newActivityRunning(PassionateNavigationActivity.class, null);
+                                                    Bundle bundle = new Bundle();
+                                                    bundle.putSerializable("PASSIONATE", cus);
+                                                    newActivityRunning(PassionateNavigationActivity.class, bundle);
                                                 } else if (role.equals(FirebaseNamesUtils.RolesNames.VETERINARY)) {
                                                     Veterinary vet = Veterinary.loadVeterinary(document);
                                                 } else if (role.equals(FirebaseNamesUtils.RolesNames.ORGANIZATION)) {

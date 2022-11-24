@@ -6,7 +6,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.jetbrains.annotations.Contract;
 
-public class User extends AbstractPersonUser {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class User extends AbstractPersonUser implements Serializable {
     protected String username;
 
     // need this constructor for FireBase
@@ -25,6 +29,7 @@ public class User extends AbstractPersonUser {
     public String getUsername() {
         return username;
     }
+
 
     /**
      * This method is used to create a user object given the document stored in FirebaseFirestore

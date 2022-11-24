@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
+
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.utils.FirebaseNamesUtils;
 import it.uniba.dib.sms22235.entities.users.User;
