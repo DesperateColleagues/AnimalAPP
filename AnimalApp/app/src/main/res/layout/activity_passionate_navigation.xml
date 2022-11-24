@@ -36,6 +36,7 @@
         android:clickable="true"
         android:focusable="true"
         app:srcCompat="@drawable/ic_baseline_add_24"
+        android:backgroundTint="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/nav_view"
         android:layout_marginEnd="15dp"

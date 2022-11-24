@@ -18,9 +18,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.activities.registration.RegistrationActivity;
-import it.uniba.dib.sms22235.utils.FirebaseNamesUtils;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.entities.users.Organization;
-import it.uniba.dib.sms22235.entities.users.User;
+import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.entities.users.Veterinary;
 
 public class LoginActivity extends AppCompatActivity {
@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                                  *  Perform a query to find, in the actors collection, the logged user
                                  *  with the email provided by the FirebaseUser object.
                                  */
-                                db.collection(FirebaseNamesUtils.CollectionsNames.ACTORS)
+                                db.collection(KeysNamesUtils.CollectionsNames.ACTORS)
                                         .whereEqualTo("email", user.getEmail())
                                         .get()
                                         .addOnCompleteListener(taskGetUser -> {
@@ -108,14 +108,15 @@ public class LoginActivity extends AppCompatActivity {
                                                  * Start the correct activity by passing as Bundle the
                                                  * object of the logged actor
                                                  * */
-                                                if (role.equals(FirebaseNamesUtils.RolesNames.COMMON_USER)) {
-                                                    User cus = User.loadUserData(document);
+                                                if (role.equals(KeysNamesUtils.RolesNames.COMMON_USER)) {
+                                                    Passionate cus = Passionate.loadUserData(document);
+
                                                     Bundle bundle = new Bundle();
-                                                    bundle.putSerializable("PASSIONATE", cus);
+                                                    bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE, cus);
                                                     newActivityRunning(PassionateNavigationActivity.class, bundle);
-                                                } else if (role.equals(FirebaseNamesUtils.RolesNames.VETERINARY)) {
+                                                } else if (role.equals(KeysNamesUtils.RolesNames.VETERINARY)) {
                                                     Veterinary vet = Veterinary.loadVeterinary(document);
-                                                } else if (role.equals(FirebaseNamesUtils.RolesNames.ORGANIZATION)) {
+                                                } else if (role.equals(KeysNamesUtils.RolesNames.ORGANIZATION)) {
                                                     Organization org = Organization.loadOrganization(document);
                                                 }
                                             }

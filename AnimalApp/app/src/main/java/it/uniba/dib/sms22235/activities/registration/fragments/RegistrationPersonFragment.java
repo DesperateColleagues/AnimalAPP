@@ -19,11 +19,9 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.ArrayList;
-
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.utils.FirebaseNamesUtils;
-import it.uniba.dib.sms22235.entities.users.User;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
+import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.entities.users.Veterinary;
 
 /**
@@ -39,10 +37,10 @@ public class RegistrationPersonFragment extends Fragment {
         /**
          * Triggered when the user completes its sign up process
          *
-         * @param user the user to register
+         * @param passionate the user to register
          * @param pwd the password of the user
          * */
-        void onUserRegistered(User user, String pwd);
+        void onPassionateRegistered(Passionate passionate, String pwd);
 
         /**
          * Triggered when the veterinary completes its sign up process
@@ -50,7 +48,7 @@ public class RegistrationPersonFragment extends Fragment {
          * @param veterinary the veterinary to register
          * @param pwd the password of the veterinary
          * */
-        void onVeterinaryRegistration(Veterinary veterinary, String pwd);
+        void onVeterinaryRegistered(Veterinary veterinary, String pwd);
     }
 
     // The role of the actor who is registering: it can be a user or a veterinary
@@ -135,7 +133,7 @@ public class RegistrationPersonFragment extends Fragment {
 
             // If the input is not empty complete registration process
             if (!isEmptyInput && isInputCorrect) {
-                if (role.equals(FirebaseNamesUtils.RolesNames.COMMON_USER) ) {
+                if (role.equals(KeysNamesUtils.RolesNames.COMMON_USER) ) {
                     // Retrieve user specific field
                     username = ((EditText) view.findViewById(R.id.txtInputUsername))
                             .getText().toString();
@@ -144,7 +142,7 @@ public class RegistrationPersonFragment extends Fragment {
 
                     if (!isEmptyInput) {
                         // Delegate the Activity to register the user on the FireStore
-                        listener.onUserRegistered(new User(name, email, username), password);
+                        listener.onPassionateRegistered(new Passionate(name, email, username), password);
                     }
 
                 } else {
@@ -161,7 +159,7 @@ public class RegistrationPersonFragment extends Fragment {
 
                     if (!isEmptyInput && isInputCorrect) {
                         // Delegate the Activity to register the veterinary on the FireStore
-                        listener.onVeterinaryRegistration(
+                        listener.onVeterinaryRegistered(
                                 new Veterinary(name, email, clinicName, phoneNumber),password);
                     }
 
@@ -191,11 +189,11 @@ public class RegistrationPersonFragment extends Fragment {
      * the role of the actor who's registering
      * */
     private void manageTxtInputVisibility() {
-        if (role.equals(FirebaseNamesUtils.RolesNames.COMMON_USER)) {
+        if (role.equals(KeysNamesUtils.RolesNames.COMMON_USER)) {
             layoutTxtInputClinicName.setVisibility(View.GONE);
             layoutTxtInputPhoneNumber.setVisibility(View.GONE);
             layoutTxtInputUsername.setVisibility(View.VISIBLE);
-        } else if (role.equals(FirebaseNamesUtils.RolesNames.VETERINARY)){
+        } else if (role.equals(KeysNamesUtils.RolesNames.VETERINARY)){
             layoutTxtInputClinicName.setVisibility(View.VISIBLE);
             layoutTxtInputPhoneNumber.setVisibility(View.VISIBLE);
             layoutTxtInputUsername.setVisibility(View.GONE);

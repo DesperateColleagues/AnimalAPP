@@ -19,7 +19,7 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
         TextView name;
         public ViewHolder(@NonNull View itemView){
             super(itemView);
-            name = itemView.findViewById(R.id.animalName);
+            name = itemView.findViewById(R.id.txtAnimalName);
 
         }
     }

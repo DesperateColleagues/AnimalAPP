@@ -1,10 +1,10 @@
 package it.uniba.dib.sms22235.entities.operations;
 
 import it.uniba.dib.sms22235.entities.users.Animal;
-import it.uniba.dib.sms22235.entities.users.User;
+import it.uniba.dib.sms22235.entities.users.Passionate;
 
 public class Purchase {
-    private User owner;
+    private Passionate owner;
     private Animal animal;
     private String itemName;
     private String date;
@@ -13,7 +13,7 @@ public class Purchase {
 
     public Purchase() {}
 
-    public Purchase(User owner, Animal animal, String itemName, String date, float cost, int amount) {
+    public Purchase(Passionate owner, Animal animal, String itemName, String date, float cost, int amount) {
         this.owner = owner;
         this.animal = animal;
         this.itemName = itemName;
@@ -22,7 +22,7 @@ public class Purchase {
         this.date = date;
     }
 
-    public User getOwner() {
+    public Passionate getOwner() {
         return owner;
     }
 

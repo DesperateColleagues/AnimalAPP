@@ -28,7 +28,7 @@ public class DialogAddAnimalFragment extends DialogFragment implements android.a
 
     public interface DialogAddAnimalFragmentListener {
         /**
-         * Triggered when the user completes its sign up process
+         * Callback triggered when the user completes its sign up process
          *
          * @param animal the animal to register
          * */
@@ -78,6 +78,7 @@ public class DialogAddAnimalFragment extends DialogFragment implements android.a
         EditText txtInputMicrochipCode = root.findViewById(R.id.txtInputMicrochipCode);
 
         txtInputBirthDate = root.findViewById(R.id.txtInputBirthDate);
+        // Show the date picker
         txtInputBirthDate.setOnClickListener(v -> {
             DatePickerDialogFragment datePickerFragment = new DatePickerDialogFragment(this);
             datePickerFragment.show(getParentFragmentManager(), "DatePickerFragment");

@@ -6,21 +6,23 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.jetbrains.annotations.Contract;
 
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
+
 public class Veterinary extends AbstractPersonUser implements Owner {
-    private String clinicName, phonNumber;
+    private String clinicName, phoneNumber;
 
     public Veterinary() {}
 
     /**
-     * @param name       name of the person
+     * @param fullName       name of the person
      * @param email      email of the person used to perform operations like reset password
      * @param clinicName the name of the clinic
-     * @param phonNumber the phone number of the veterinary used as contact
+     * @param phoneNumber the phone number of the veterinary used as contact
      */
-    public Veterinary(String name, String email, String clinicName, String phonNumber) {
-        super(name, email);
+    public Veterinary(String fullName, String email, String clinicName, String phoneNumber) {
+        super(fullName, email);
         this.clinicName = clinicName;
-        this.phonNumber = phonNumber;
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
@@ -32,8 +34,8 @@ public class Veterinary extends AbstractPersonUser implements Owner {
         return clinicName;
     }
 
-    public String getPhonNumber() {
-        return phonNumber;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
     /**
@@ -47,10 +49,10 @@ public class Veterinary extends AbstractPersonUser implements Owner {
     @Contract("_ -> new")
     public static Veterinary loadVeterinary(@NonNull DocumentSnapshot document){
         return new Veterinary(
-                (String) document.get("name"),
-                (String) document.get("email"),
-                (String) document.get("clinicName"),
-                (String) document.get("phoneNumber")
+                (String) document.get(KeysNamesUtils.ActorFields.FULL_NAME),
+                (String) document.get(KeysNamesUtils.ActorFields.FULL_NAME),
+                (String) document.get(KeysNamesUtils.ActorFields.CLINIC_NAME),
+                (String) document.get(KeysNamesUtils.ActorFields.PHONE_NUMBER)
         );
     }
 }
