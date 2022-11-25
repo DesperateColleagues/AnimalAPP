@@ -1,10 +1,8 @@
 package it.uniba.dib.sms22235.activities.passionate;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,17 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.activities.passionate.fragments.DialogAddAnimalFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.ProfileFragment;
 import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class PassionateNavigationActivity extends AppCompatActivity implements DialogAddAnimalFragment.DialogAddAnimalFragmentListener, ProfileFragment.ProfileFragmentListener {
+public class PassionateNavigationActivity extends AppCompatActivity implements /*DialogAddAnimalFragment.DialogAddAnimalFragmentListener,*/ ProfileFragment.ProfileFragmentListener {
 
     private FirebaseFirestore db;
-    private DialogAddAnimalFragment dialogAddAnimalFragment;
     private Passionate passionate;
 
     @Override
@@ -67,23 +63,51 @@ public class PassionateNavigationActivity extends AppCompatActivity implements D
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
         db = FirebaseFirestore.getInstance();
 
-
-        // On click listener of the fab used to show the dialog to insert the animals
-        fab.setOnClickListener(v -> {
-            dialogAddAnimalFragment = new DialogAddAnimalFragment();
-            dialogAddAnimalFragment.show(getSupportFragmentManager(), "DialogAddAnimalFragment");
-        });
-
         Bundle loginBundle = getIntent().getExtras(); // get the login bundle
 
         if (loginBundle != null) {
             passionate = (Passionate) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE);
         }
 
+        // Find the profile fragment from the navigation
+        ProfileFragment profileFragment = (ProfileFragment) navHostFragment.getChildFragmentManager()
+                .getPrimaryNavigationFragment();
+
+        if (profileFragment != null) {
+            // Set the Fab action from the fragment in order to better manager callbacks
+            profileFragment.setFabAction(fab);
+        }
     }
 
     @Override
-    public void onAnimalRegistered(@NonNull Animal animal) {
+    public void retrieveUserAnimals(RecyclerView recyclerView) {
+        AnimalListAdapter adapter = new AnimalListAdapter();
+
+        db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                .whereEqualTo(KeysNamesUtils.AnimalFields.OWNER, passionate.getUsername())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (!querySnapshot.isEmpty()) {
+                            List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+
+                            for (DocumentSnapshot document : documents) {
+                                // Add the animal to the list by loading it with the static method
+                                adapter.addAnimal(Animal.loadAnimal(document));
+                            }
+
+                            // Set up the recycler view to show the retrieved animals
+                            recyclerView.setAdapter(adapter);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(
+                                    this, RecyclerView.HORIZONTAL, false));
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onAnimalRegistered(@NonNull Animal animal, RecyclerView recyclerView) {
         String docKeyAnimal = KeysNamesUtils.RolesNames.ANIMAL
                 + "_" + animal.getMicrochipCode();
 
@@ -102,8 +126,25 @@ public class PassionateNavigationActivity extends AppCompatActivity implements D
                                     .document(docKeyAnimal)
                                     .set(animal)
                                     .addOnSuccessListener(unused -> {
-                                        // TODO: use the refresh activity or update the adapter
-                                        dialogAddAnimalFragment.dismiss();
+                                        // Obtain adapter from the recycle
+                                        AnimalListAdapter adapter = (AnimalListAdapter) recyclerView.getAdapter();
+
+                                        // Check the adapter nullability: if it is null
+                                        // then it's the first time an animal is registered for
+                                        // this user. The recycle view must be initialized.
+                                        // Otherwise it is only necessary to update the adapter
+                                        // And notify the recycle view.
+                                        if (adapter != null) {
+                                            adapter.addAnimal(animal);
+                                            adapter.notifyItemInserted(adapter.getItemCount() - 1);
+                                        } else {
+                                            adapter = new AnimalListAdapter();
+                                            adapter.addAnimal(animal);
+
+                                            recyclerView.setAdapter(adapter);
+                                            recyclerView.setLayoutManager(new LinearLayoutManager(
+                                                    this, RecyclerView.HORIZONTAL, false));
+                                        }
                                     })
                                     .addOnFailureListener(e -> Log.d("DEB", e.getMessage()));
                         } else {
@@ -111,48 +152,5 @@ public class PassionateNavigationActivity extends AppCompatActivity implements D
                         }
                     }
                 });
-    }
-
-    @Override
-    public void retrieveUserAnimals(RecyclerView recyclerView, View rootView) {
-        ArrayList<Animal> animalList = new ArrayList<>();
-        db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
-                .whereEqualTo(KeysNamesUtils.AnimalFields.OWNER, passionate.getUsername())
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        if (!querySnapshot.isEmpty()) {
-                            List<DocumentSnapshot> documents = querySnapshot.getDocuments();
-
-                            for (DocumentSnapshot document : documents) {
-                                // Add the animal to the list by loading it with the static method
-                                animalList.add(Animal.loadAnimal(document));
-                            }
-
-                            // Set up the recycler view to show the retrieved animals
-                            AnimalListAdapter adapter = new AnimalListAdapter(animalList);
-                            recyclerView.setAdapter(adapter);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext(),RecyclerView.HORIZONTAL, false));
-                        }
-                    }
-                });
-    }
-
-    /**
-     * This method is used to refresh the activity once a new movement has been registered,
-     * to update all the values
-     * */
-    private void refreshActivity() {
-        finish(); // end the current activity
-        overridePendingTransition(0, 0);
-
-        Bundle bundleRefreshActivity = new Bundle();
-        bundleRefreshActivity.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE, passionate);
-
-        Intent intent = getIntent().putExtras(bundleRefreshActivity);
-        startActivity(intent);// restart the activity
-
-        overridePendingTransition(0, 0);
     }
 }

@@ -2,7 +2,6 @@ package it.uniba.dib.sms22235.activities.passionate.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,7 +20,6 @@ import java.text.DateFormat;
 import java.util.Calendar;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.entities.users.Animal;
 
 public class DialogAddAnimalFragment extends DialogFragment implements android.app.DatePickerDialog.OnDateSetListener {
@@ -32,7 +30,7 @@ public class DialogAddAnimalFragment extends DialogFragment implements android.a
          *
          * @param animal the animal to register
          * */
-        void onAnimalRegistered(Animal animal);
+        void onDialogAddAnimalDismissed(Animal animal);
     }
 
     private DialogAddAnimalFragmentListener listener;
@@ -42,20 +40,8 @@ public class DialogAddAnimalFragment extends DialogFragment implements android.a
         // Required empty public constructor
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        PassionateNavigationActivity activity = (PassionateNavigationActivity) getActivity();
-
-        try {
-            // Attach the listener to the Fragment
-            listener = (DialogAddAnimalFragmentListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(
-                    (activity != null ? activity.toString() : null)
-                            + "Must implement the interface");
-        }
-
-        super.onAttach(context);
+    public void setListener(DialogAddAnimalFragmentListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -98,8 +84,9 @@ public class DialogAddAnimalFragment extends DialogFragment implements android.a
 
             // If the input is not empty the animal can be registered
             if (!isEmptyInput){
-                listener.onAnimalRegistered(new Animal(animalName, animalSpecies, race,
+                listener.onDialogAddAnimalDismissed(new Animal(animalName, animalSpecies, race,
                         microchipCode, birthDate));
+                dismiss();
             } else {
                 Toast.makeText(getContext(), "Alcuni campi sono vuoti!", Toast.LENGTH_SHORT).show();
             }

@@ -1,5 +1,6 @@
 package it.uniba.dib.sms22235.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,12 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.users.Animal;
 
 public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.ViewHolder> {
-    ArrayList<Animal> animalList = new ArrayList<>();
+    ArrayList<Animal> animalList;
+
+    public AnimalListAdapter (){
+        animalList = new ArrayList<>();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView name;
         public ViewHolder(@NonNull View itemView){
@@ -24,6 +30,7 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
         }
     }
 
+    @SuppressLint("InflateParams")
     @NonNull
     @Override
     public AnimalListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -33,16 +40,15 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull AnimalListAdapter.ViewHolder holder, int position) {
         holder.name.setText(animalList.get(position).getName());
+    }
 
+    public void addAnimal(Animal animal) {
+        animalList.add(animal);
     }
 
     @Override
     public int getItemCount() {
         return animalList.size();
-    }
-
-    public AnimalListAdapter (ArrayList<Animal> animalList){
-        this.animalList= animalList;
     }
 
 }
