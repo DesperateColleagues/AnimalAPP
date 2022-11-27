@@ -32,9 +32,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="passionate_profile_cardlayout_text">Visualizza le ultime segnalazioni della community!</string>
     <string name="aggiungi_animale">Aggiungi animale</string>
-    <string name="nome_animale">nome animale</string>
-    <string name="specie_animale">specie animale</string>
-    <string name="razza">razza</string>
-    <string name="codice_microchip">codice microchip</string>
-    <string name="data_di_nascita">data di nascita</string>
+    <string name="nome_animale">Nome animale</string>
+    <string name="specie_animale">Specie animale</string>
+    <string name="razza">Razza</string>
+    <string name="codice_microchip">Codice microchip</string>
+    <string name="data_di_nascita">Data di nascita</string>
+
+    <string name="impostazione_foto_animal_card">"Attendi, impostazione della foto in corso…"</string>
 </resources>

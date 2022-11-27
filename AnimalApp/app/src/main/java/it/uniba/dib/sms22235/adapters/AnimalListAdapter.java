@@ -51,4 +51,8 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
         return animalList.size();
     }
 
+    public Animal getAnimalAtPosition(int index) {
+        return animalList.get(index);
+    }
+
 }
