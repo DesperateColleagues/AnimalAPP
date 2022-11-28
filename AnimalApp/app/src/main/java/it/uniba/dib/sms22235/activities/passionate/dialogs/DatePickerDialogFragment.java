@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.activities.passionate.fragments;
+package it.uniba.dib.sms22235.activities.passionate.dialogs;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

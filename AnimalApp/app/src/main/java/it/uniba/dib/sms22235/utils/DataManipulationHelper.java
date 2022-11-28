@@ -4,21 +4,36 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class DataManipulationHelper {
 
-    public static String saveToInternalStorage(Bitmap bitmapImage, String filename, Context context) {
+    /**
+     * This method is used to save a Bitmap object to the internal storage
+     *
+     * @param bitmapImage the data to be saved
+     * @param dir the directory where the data will be saved
+     * @param filename the name of the file
+     * @param context the context of the app
+     * */
+    @NonNull
+    public static String saveBitmapToInternalStorage(Bitmap bitmapImage, String dir,
+                                                     String filename, Context context) {
 
         //ContextWrapper allows to get reference to the desired image directory.
         ContextWrapper cw = new ContextWrapper(context);
-        File directory = cw.getDir("AnimalAPP_Images", Context.MODE_PRIVATE);
-        File file = new File(directory,filename);
+        File directory = cw.getDir(dir, Context.MODE_PRIVATE);
+        File file = new File(directory, filename);
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(file);
@@ -29,19 +44,30 @@ public class DataManipulationHelper {
         } finally {
             try {
                 // fos.close() is used to ensure the Bitmap is saved in the app image folder
-                fos.close();
+                if (fos != null) {
+                    fos.close();
+                }
+                //Toast.makeText(context, file.getAbsolutePath(), Toast.LENGTH_LONG).show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return directory.getAbsolutePath();
+
+        return file.getAbsolutePath();
     }
 
-    public static Bitmap loadImageFromStorage(String path, String filename) {
+
+    /**
+     * This method is used to load a Bitmap object from the internal storage
+     *
+     * @param dirPath the path of the directory where the data is saved
+     * @param filename the name of the file
+     * */
+    public static Bitmap loadBitmapFromStorage(String dirPath, String filename) {
         Bitmap image = null;
         try {
             // Reading the image from the path
-            File f = new File(path, filename);
+            File f = new File(dirPath, filename);
             // Converting it into a Bitmap
             image = BitmapFactory.decodeStream(new FileInputStream(f));
         } catch (FileNotFoundException e) {
@@ -49,4 +75,49 @@ public class DataManipulationHelper {
         }
         return image;
     }
+
+    /**
+     * This method is used to save an object to a binary file
+     *
+     * @param context the context of the app
+     * @param obj the object to be saved
+     * @param path the path where the object will be saved
+     * */
+    public static boolean saveDataInternally(Context context, Object obj, String path){
+        boolean isCorrect = true;
+        try{
+            FileOutputStream out = context.openFileOutput(path, Context.MODE_PRIVATE);
+            ObjectOutputStream o = new ObjectOutputStream(out);
+            o.writeObject(obj);
+
+            o.close();
+        }catch (Exception e){
+            isCorrect = false;
+            e.printStackTrace();
+        }
+        return isCorrect;
+    }
+
+    /**
+     * This method is used to read an object from a binary file
+     *
+     * @param context the context of the app
+     * @param path the path where the object is saved
+     * */
+    public static Object readDataInternally(Context context, String path){
+        Object obj = null;
+        try{
+            FileInputStream fin = context.getApplicationContext().openFileInput(path);//open file input stream
+            ObjectInputStream in = new ObjectInputStream(fin);//open object input stream
+
+            obj = in.readObject();//reading object
+            in.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return obj;
+    }
+
 }

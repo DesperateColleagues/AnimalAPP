@@ -39,4 +39,9 @@
     <string name="data_di_nascita">Data di nascita</string>
 
     <string name="impostazione_foto_animal_card">"Attendi, impostazione della foto in corso…"</string>
+    <string name="photo_diary">Photo diary</string>
+    <string name="condividi_card">Condividi card</string>
+    <string name="descrizione_immagine">Descrizione immagine</string>
+    <string name="seleziona_immagine">Seleziona immagine</string>
+    <string name="salva">Salva</string>
 </resources>

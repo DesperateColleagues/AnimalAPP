@@ -10,10 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAddAnimalFragment;
 import it.uniba.dib.sms22235.entities.users.Animal;
 
 public class ProfileFragment extends Fragment implements DialogAddAnimalFragment.DialogAddAnimalFragmentListener {
@@ -64,22 +63,13 @@ public class ProfileFragment extends Fragment implements DialogAddAnimalFragment
         animalRecycleView = rootView.findViewById(R.id.animalList);
         listener.retrieveUserAnimals(animalRecycleView);
 
-        return rootView;
-    }
-
-    /**
-     * Method used to set the onClickListener to the fab which calls a dialog to register
-     * a new animal
-     *
-     * @param fab the fab to click
-     * */
-    public void setFabAction(@NonNull FloatingActionButton fab) {
-        // On click listener of the fab used to show the dialog to insert the animals
-        fab.setOnClickListener(v -> {
+        ((PassionateNavigationActivity) requireActivity()).getFab().setOnClickListener(v -> {
             dialogAddAnimalFragment = new DialogAddAnimalFragment();
             dialogAddAnimalFragment.setListener(this);
             dialogAddAnimalFragment.show(getParentFragmentManager(), "DialogAddAnimalFragment");
         });
+
+        return rootView;
     }
 
     @Override

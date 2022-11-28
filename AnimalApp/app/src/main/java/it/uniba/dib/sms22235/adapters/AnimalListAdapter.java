@@ -34,7 +34,7 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
     @NonNull
     @Override
     public AnimalListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_animal_single_card, null));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_item_animal_single_card, null));
     }
 
     @Override

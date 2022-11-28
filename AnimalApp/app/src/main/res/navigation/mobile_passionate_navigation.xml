@@ -12,6 +12,11 @@
         tools:layout="@layout/fragment_passionate_profile" />
 
     <fragment
+        android:id="@+id/passionate_photo_diary"
+        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.PhotoDiaryFragment"
+        android:label="Photo diary"/>
+
+    <fragment
         android:id="@+id/passionate_pet_care"
         android:name="it.uniba.dib.sms22235.activities.passionate.fragments.VeterinaryReservationFragment"
         android:label="@string/title_passionate_veterinary_reservation"

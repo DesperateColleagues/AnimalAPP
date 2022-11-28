@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 
 import androidx.navigation.fragment.NavHostFragment;
@@ -21,6 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -28,7 +32,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.List;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.activities.passionate.fragments.DialogAnimalCardFragment;
+import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAnimalCardFragment;
+import it.uniba.dib.sms22235.activities.passionate.fragments.PhotoDiaryFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.ProfileFragment;
 import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
 import it.uniba.dib.sms22235.entities.users.Animal;
@@ -41,6 +46,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
     private FirebaseFirestore db;
     private Passionate passionate;
     private final int STORAGE_REQUEST_CODE = 1;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +59,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.passionate_profile, R.id.passionate_pet_care, R.id.passionate_purchase)
+                R.id.passionate_profile, R.id.passionate_photo_diary,
+                R.id.passionate_pet_care, R.id.passionate_purchase)
                 .build();
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
@@ -66,7 +73,9 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        FloatingActionButton fab = findViewById(R.id.floatingActionButton);
+        fab = findViewById(R.id.floatingActionButton);
+
+
         db = FirebaseFirestore.getInstance();
 
         Bundle loginBundle = getIntent().getExtras(); // get the login bundle
@@ -74,15 +83,14 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
         if (loginBundle != null) {
             passionate = (Passionate) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE);
         }
+    }
 
-        // Find the profile fragment from the navigation
-        ProfileFragment profileFragment = (ProfileFragment) navHostFragment.getChildFragmentManager()
-                .getPrimaryNavigationFragment();
+    public FloatingActionButton getFab() {
+        return fab;
+    }
 
-        if (profileFragment != null) {
-            // Set the Fab action from the fragment in order to better manage callbacks
-            profileFragment.setFabAction(fab);
-        }
+    public String getPassionateUsername() {
+        return passionate.getUsername();
     }
 
     @Override
@@ -112,7 +120,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
                                 @Override
                                 public void onClick(View view, int position) {
                                     // This method is used to request storage permission to the user
-                                    // with that we can save animal images not only on firebase, but also locally, to retrieve them more easily
+                                    // with that we can save animal images not only on firebase,
+                                    // but also locally, to retrieve them more easily
                                     requestPermission();
 
                                     // This code obtains the selected Animal info and it shows them in a specific built Dialog
@@ -179,6 +188,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
     }
 
     //method to ask permissions
+    // todo: improve permissions requests
     private void requestPermission(){
         String permissionRead = Manifest.permission.READ_EXTERNAL_STORAGE;
         String permissionWrite = Manifest.permission.WRITE_EXTERNAL_STORAGE;

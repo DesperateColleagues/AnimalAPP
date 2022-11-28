@@ -1,5 +1,9 @@
 package it.uniba.dib.sms22235.utils;
 
+import androidx.annotation.NonNull;
+
+import org.jetbrains.annotations.Contract;
+
 public class KeysNamesUtils {
     public static class RolesNames {
         public static String VETERINARY = "vet";
@@ -38,5 +42,33 @@ public class KeysNamesUtils {
 
     public static class BundleKeys {
         public static String PASSIONATE = "passionate";
+    }
+
+    public static class FileDirsNames {
+        public static String BASE_PATH = "/data/user/0/it.uniba.dib.sms22235/";
+        public static String ROOT_PREFIX = "app_";
+        public static String PROFILE_IMAGES = "AnimalAPP_images";
+
+        /**
+         * Method that helps to obtain the name of the directory where posts' images
+         * are saved
+         * @param username the username used to build the directory
+         * */
+        @NonNull
+        @Contract(pure = true)
+        public static String passionatePostDirName(String username) {
+            return username + "_post";
+        }
+
+        /**
+         * Method that helps to obtain the name of the directory where posts' references
+         * are saved
+         * @param username the username used to build the directory
+         * */
+        @NonNull
+        @Contract(pure = true)
+        public static String passionatePostRefDirName(String username) {
+            return username + "_post_ref";
+        }
     }
 }
