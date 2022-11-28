@@ -5,13 +5,25 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <TextView
+        android:id="@+id/txtPostTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="start"
+        android:textSize="22sp"
+        android:textStyle="bold"/>
+
+    <ImageView
         android:id="@+id/photoDiaryImage"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="400dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:layout_marginBottom="20dp"
         android:layout_gravity="center"
         tools:srcCompat="@tools:sample/avatars" />
@@ -22,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
         android:ellipsize="end"
         android:maxLines="5"
         android:singleLine="false">

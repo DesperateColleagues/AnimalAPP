@@ -94,7 +94,9 @@ public class DialogAnimalCardFragment extends DialogFragment {
 
     @NonNull
     public Dialog onCreateDialog(@Nullable Bundle SavedInstanceBundle){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                getContext(),
+                R.style.AnimalCardRoundedDialog);
 
         // Create the inflater and inflate the layout
         LayoutInflater inflater = requireActivity().getLayoutInflater();

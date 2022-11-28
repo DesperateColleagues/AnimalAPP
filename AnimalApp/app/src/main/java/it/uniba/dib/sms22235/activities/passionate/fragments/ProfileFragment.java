@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -62,6 +63,11 @@ public class ProfileFragment extends Fragment implements DialogAddAnimalFragment
         View rootView = inflater.inflate(R.layout.fragment_passionate_profile, container, false);
         animalRecycleView = rootView.findViewById(R.id.animalList);
         listener.retrieveUserAnimals(animalRecycleView);
+
+        String title = "Benvenuto " + ((PassionateNavigationActivity) requireActivity())
+                .getPassionateUsername();
+
+        ((TextView) rootView.findViewById(R.id.txtWelcome)).setText(title);
 
         ((PassionateNavigationActivity) requireActivity()).getFab().setOnClickListener(v -> {
             dialogAddAnimalFragment = new DialogAddAnimalFragment();

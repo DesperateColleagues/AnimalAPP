@@ -28,7 +28,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="Pablo"
             android:textSize="20sp"
             android:textAlignment="center" />
 
@@ -50,7 +49,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cane"
             android:textAlignment="center"/>
 
         <TextView
@@ -58,7 +56,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Pastore tedesco"
             android:textAlignment="center"/>
 
         <TextView
@@ -66,7 +63,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="23/08/22"
             android:textAlignment="center" />
 
     </LinearLayout>
@@ -81,7 +77,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:text="XYZ8888"
         android:textAlignment="center"/>
 
     <Button

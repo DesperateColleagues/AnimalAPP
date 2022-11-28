@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -74,7 +75,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
         NavigationUI.setupWithNavController(navView, navController);
 
         fab = findViewById(R.id.floatingActionButton);
-
 
         db = FirebaseFirestore.getInstance();
 

@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -24,8 +23,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
@@ -34,11 +33,20 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class DialogAddImageDiaryFragment extends DialogFragment {
 
+    public interface DialogAddImageDiaryFragmentListener {
+        /**
+         * This callback is activated when the post is successfully saved.
+         * Update the list view with the brand new added post.
+         *
+         * */
+        void onImageAdded(PhotoDiaryPost post);
+    }
+
     private DialogAddImageDiaryFragmentListener listener;
     private ImageView photoDiaryImageInsert;
     private Bitmap selectedImageBitmap;
     private final String username;
-    private List<PhotoDiaryPost> photoDiaryPostList;
+    private Set<PhotoDiaryPost> photoDiaryPostSet;
 
     public DialogAddImageDiaryFragment(String username) {
         selectedImageBitmap = null;
@@ -68,31 +76,18 @@ public class DialogAddImageDiaryFragment extends DialogFragment {
                 }
             });
 
-
-    public interface DialogAddImageDiaryFragmentListener {
-        /**
-         * This callback is activated when the post is successfully saved.
-         * Update the list view with the brand new added post.
-         *
-         * @param post the post ref
-         * */
-        void onImageAdded(PhotoDiaryPost post);
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Obtain the posts' list from files
-        photoDiaryPostList = (ArrayList<PhotoDiaryPost>) DataManipulationHelper.readDataInternally(
+        // Obtain the posts' set from file system that will be update
+        // when the user will add a new post
+        photoDiaryPostSet = (LinkedHashSet<PhotoDiaryPost>) DataManipulationHelper.readDataInternally(
                 getContext(),  KeysNamesUtils.FileDirsNames.passionatePostRefDirName(username));
 
-        // If the return is null then, there aren't post, so the list can be created
-        if (photoDiaryPostList == null){
-            photoDiaryPostList = new ArrayList<>();
-            Toast.makeText(getContext(), "Array appena creato", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getContext(), "" + photoDiaryPostList.size(), Toast.LENGTH_SHORT).show();
+        // If the return is null then, there aren't post, so the set can be created
+        if (photoDiaryPostSet == null) {
+            photoDiaryPostSet = new LinkedHashSet<>();
         }
     }
 
@@ -111,38 +106,55 @@ public class DialogAddImageDiaryFragment extends DialogFragment {
         photoDiaryImageInsert = root.findViewById(R.id.photoDiaryImageInsert);
 
         EditText txtInputImageDescription = root.findViewById(R.id.txtInputImageDescription);
+        EditText txtInputPostTitle = root.findViewById(R.id.txtInputPostTitle);
 
         Button btnSelectedImage = root.findViewById(R.id.btnSelectImage);
         Button btnSavePost = root.findViewById(R.id.btnSavePost);
 
         btnSavePost.setOnClickListener(v -> {
             String inputImageDescription = txtInputImageDescription.getText().toString();
+            String inputPostTitle = txtInputPostTitle.getText().toString();
 
-            boolean isEmptyInput = inputImageDescription.equals("");
+            boolean isEmptyInput = inputImageDescription.equals("") || inputPostTitle.equals("");
 
             if (!isEmptyInput) {
                 // If the description is not empty check if the image has been selected
                 if (selectedImageBitmap != null) {
-                    // Save the image at the specified dir
-                    String fileName = "post_" + (photoDiaryPostList.size() + 1);
+                    // Create a new post object
+                    PhotoDiaryPost post = new PhotoDiaryPost(inputPostTitle, inputImageDescription);
 
-                    String imagePath = DataManipulationHelper.saveBitmapToInternalStorage(
-                            selectedImageBitmap,
-                            KeysNamesUtils.FileDirsNames.passionatePostDirName(username),
-                            fileName + ".jpg",
-                            getContext());
+                    // If the post title is unique it will be added to the Set
+                    if (photoDiaryPostSet.add(post)) {
+                        // Save the image at the specified dir
+                        String fileName = post.getTitle() + ".jpg";
 
-                    Log.d("IMAGE", imagePath);
-                    // Create a post object and save it to the internal storage
-                    PhotoDiaryPost post = new PhotoDiaryPost(imagePath, inputImageDescription);
-                    photoDiaryPostList.add(post); // add the post to the list
+                        // Save the Bitmap to the internal storage
+                        String dirPath = DataManipulationHelper.saveBitmapToInternalStorage(
+                                selectedImageBitmap,
+                                KeysNamesUtils.FileDirsNames.passionatePostDirName(username),
+                                fileName,
+                                getContext());
 
-                    if(DataManipulationHelper.saveDataInternally(getContext(), photoDiaryPostList,
-                            KeysNamesUtils.FileDirsNames.passionatePostRefDirName(username))) {
-                        listener.onImageAdded(post);
-                        dismiss();
+                        // Set the file data inside the post object
+                        post.setDirName(dirPath);
+                        post.setFileName(fileName);
+
+                        // Save the updated set with the new post in the internal storage
+                        if (DataManipulationHelper.saveDataInternally(getContext(), photoDiaryPostSet,
+                                KeysNamesUtils.FileDirsNames.passionatePostRefDirName(username))) {
+                            // Update the ListView with the new post
+                            listener.onImageAdded(post);
+
+                            // Send a notification to the user that the post is now visible
+                            Toast.makeText(getContext(),"Immagine aggiunta al diary",
+                                    Toast.LENGTH_LONG).show();
+                            dismiss();
+                        } else {
+                            Toast.makeText(getContext(), "Problemi durante il salvataggio del post",
+                                    Toast.LENGTH_LONG).show();
+                        }
                     } else {
-                        Toast.makeText(getContext(), "Problemi durante il salvataggio del post",
+                        Toast.makeText(getContext(), "Il titolo è stato già usato",
                                 Toast.LENGTH_LONG).show();
                     }
 
@@ -155,7 +167,7 @@ public class DialogAddImageDiaryFragment extends DialogFragment {
             } else {
                 Toast.makeText(
                         getContext(),
-                        "Il campo descrizione non può esssere vuoto",
+                        "I campi titoli e descrizione non possono esssere vuoti",
                         Toast.LENGTH_LONG).show();
             }
         });

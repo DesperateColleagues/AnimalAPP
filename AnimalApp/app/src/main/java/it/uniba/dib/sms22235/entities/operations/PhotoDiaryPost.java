@@ -1,17 +1,16 @@
 package it.uniba.dib.sms22235.entities.operations;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class PhotoDiaryPost implements Serializable {
-    private String path;
+    private String dirName;
+    private String fileName;
+    private String title;
     private String description;
 
-    /**
-     * @param path the path where the image of the post is saved
-     * @param description the description of the post
-     * */
-    public PhotoDiaryPost(String path, String description) {
-        this.path = path;
+    public PhotoDiaryPost(String title, String description) {
+        this.title = title;
         this.description = description;
     }
 
@@ -19,7 +18,36 @@ public class PhotoDiaryPost implements Serializable {
         return description;
     }
 
-    public String getPath() {
-        return path;
+    public String getDirName() {
+        return dirName;
+    }
+
+    public String getFileName(){
+        return  fileName;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setDirName(String dirName) {
+        this.dirName = dirName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PhotoDiaryPost that = (PhotoDiaryPost) o;
+        return title.equals(that.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title);
     }
 }

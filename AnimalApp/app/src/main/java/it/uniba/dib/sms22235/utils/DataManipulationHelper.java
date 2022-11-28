@@ -53,7 +53,7 @@ public class DataManipulationHelper {
             }
         }
 
-        return file.getAbsolutePath();
+        return directory.getAbsolutePath();
     }
 
 
