@@ -6,12 +6,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.jetbrains.annotations.Contract;
 
+import java.io.Serializable;
+
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class Veterinary extends AbstractPersonUser implements Owner {
+public class Veterinarian extends AbstractPersonUser implements Owner, Serializable {
     private String clinicName, phoneNumber;
 
-    public Veterinary() {}
+    public Veterinarian() {}
 
     /**
      * @param fullName       name of the person
@@ -19,7 +21,7 @@ public class Veterinary extends AbstractPersonUser implements Owner {
      * @param clinicName the name of the clinic
      * @param phoneNumber the phone number of the veterinary used as contact
      */
-    public Veterinary(String fullName, String email, String clinicName, String phoneNumber) {
+    public Veterinarian(String fullName, String email, String clinicName, String phoneNumber) {
         super(fullName, email);
         this.clinicName = clinicName;
         this.phoneNumber = phoneNumber;
@@ -47,8 +49,8 @@ public class Veterinary extends AbstractPersonUser implements Owner {
      * */
     @NonNull
     @Contract("_ -> new")
-    public static Veterinary loadVeterinary(@NonNull DocumentSnapshot document){
-        return new Veterinary(
+    public static Veterinarian loadVeterinarian(@NonNull DocumentSnapshot document){
+        return new Veterinarian(
                 (String) document.get(KeysNamesUtils.ActorFields.FULL_NAME),
                 (String) document.get(KeysNamesUtils.ActorFields.FULL_NAME),
                 (String) document.get(KeysNamesUtils.ActorFields.CLINIC_NAME),

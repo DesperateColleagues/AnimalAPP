@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/passionate_profile">
+
+    <fragment
+        android:id="@+id/veterinarian_profile"
+        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.ProfileFragment"
+        android:label="@string/title_veterinarian_profile"
+        tools:layout="@layout/fragment_veterinarian_profile" />
+
+    <fragment
+        android:id="@+id/passionate_photo_diary"
+        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.PhotoDiaryFragment"
+        android:label="Photo diary"/>
+
+</navigation>

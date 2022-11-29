@@ -20,7 +20,7 @@ import it.uniba.dib.sms22235.activities.registration.fragments.RegistrationPerso
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.Passionate;
-import it.uniba.dib.sms22235.entities.users.Veterinary;
+import it.uniba.dib.sms22235.entities.users.Veterinarian;
 
 public class RegistrationActivity extends AppCompatActivity
         implements RegistrationPersonFragment.RegistrationPersonFragmentListener,
@@ -92,19 +92,19 @@ public class RegistrationActivity extends AppCompatActivity
     }
 
     @Override
-    public void onVeterinaryRegistered(@NonNull Veterinary veterinary, String pwd) {
+    public void onVeterinaryRegistered(@NonNull Veterinarian veterinarian, String pwd) {
         // First register the veterinary with Firebase auth system
         // in order to authenticate him during login
-        mAuth.createUserWithEmailAndPassword(veterinary.getEmail(), pwd)
+        mAuth.createUserWithEmailAndPassword(veterinarian.getEmail(), pwd)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         // Save the veterinary instance on the DB
-                        String docKey = KeysNamesUtils.RolesNames.VETERINARY
-                                + "_" + veterinary.getEmail();
+                        String docKey = KeysNamesUtils.RolesNames.VETERINARIAN
+                                + "_" + veterinarian.getEmail();
 
                         db.collection(KeysNamesUtils.CollectionsNames.ACTORS)
                                 .document(docKey)
-                                .set(veterinary)
+                                .set(veterinarian)
                                 // TODO: switch the activity to LoginActivity or DashboardActivity
                                 .addOnSuccessListener(unused -> Log.d("REG", "Registrazione avvenuta con successo"))
                                 .addOnFailureListener(e -> Log.d("DEB", e.getMessage()));

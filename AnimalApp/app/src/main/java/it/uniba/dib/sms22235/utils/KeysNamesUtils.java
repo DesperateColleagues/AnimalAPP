@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Contract;
 
 public class KeysNamesUtils {
     public static class RolesNames {
-        public static String VETERINARY = "vet";
+        public static String VETERINARIAN = "vet";
         public static String COMMON_USER = "cus";
         public static String ORGANIZATION = "org";
         public static String ANIMAL = "ani";
@@ -42,6 +42,7 @@ public class KeysNamesUtils {
 
     public static class BundleKeys {
         public static String PASSIONATE = "passionate";
+        public static String VETERINARIAN = "veterinarian";
     }
 
     public static class FileDirsNames {
