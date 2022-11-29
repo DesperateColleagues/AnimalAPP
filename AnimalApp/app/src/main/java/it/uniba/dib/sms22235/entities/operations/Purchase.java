@@ -4,8 +4,8 @@ import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
 
 public class Purchase {
-    private Passionate owner;
-    private Animal animal;
+    private String owner;
+    private String animal;
     private String itemName;
     private String date;
     private float cost;
@@ -13,8 +13,7 @@ public class Purchase {
 
     public Purchase() {}
 
-    public Purchase(Passionate owner, Animal animal, String itemName, String date, float cost, int amount) {
-        this.owner = owner;
+    public Purchase(String animal, String itemName, String date, float cost, int amount) {
         this.animal = animal;
         this.itemName = itemName;
         this.cost = cost;
@@ -22,11 +21,15 @@ public class Purchase {
         this.date = date;
     }
 
-    public Passionate getOwner() {
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getOwner() {
         return owner;
     }
 
-    public Animal getAnimal() {
+    public String getAnimal() {
         return animal;
     }
 
