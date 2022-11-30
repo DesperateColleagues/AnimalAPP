@@ -50,4 +50,5 @@
     <string name="quantit">quantità</string>
     <string name="data_acquisto">data acquisto</string>
     <string name="inserisci_spesa">inserisci spesa</string>
+    <string name="categoria">categoria</string>
 </resources>

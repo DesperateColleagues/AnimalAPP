@@ -117,7 +117,6 @@ public class LoginActivity extends AppCompatActivity {
                                                  * */
                                                 if (role.equals(KeysNamesUtils.RolesNames.COMMON_USER)) {
                                                     Passionate cus = Passionate.loadUserData(document);
-
                                                     Bundle bundle = new Bundle();
                                                     bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE, cus);
                                                     newActivityRunning(PassionateNavigationActivity.class, bundle);

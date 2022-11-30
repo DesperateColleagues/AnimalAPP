@@ -74,4 +74,9 @@ public class Animal {
 
         return animal;
     }
+
+    @Override
+    public String toString() {
+        return name + " - " + microchipCode;
+    }
 }

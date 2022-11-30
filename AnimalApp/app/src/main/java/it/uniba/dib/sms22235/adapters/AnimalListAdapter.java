@@ -46,6 +46,10 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
         animalList.add(animal);
     }
 
+    public ArrayList<Animal> getAnimalList() {
+        return animalList;
+    }
+
     @Override
     public int getItemCount() {
         return animalList.size();

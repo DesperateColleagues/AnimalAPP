@@ -4,16 +4,14 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 
 import androidx.navigation.fragment.NavHostFragment;
@@ -24,29 +22,29 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAnimalCardFragment;
-import it.uniba.dib.sms22235.activities.passionate.fragments.PhotoDiaryFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.ProfileFragment;
+import it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment;
 import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
+import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
 
-public class PassionateNavigationActivity extends AppCompatActivity implements /*DialogAddAnimalFragment.DialogAddAnimalFragmentListener,*/ ProfileFragment.ProfileFragmentListener {
+public class PassionateNavigationActivity extends AppCompatActivity implements ProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener {
 
     private FirebaseFirestore db;
     private Passionate passionate;
-    private final int STORAGE_REQUEST_CODE = 1;
+    private ArrayList<Animal> animalList;
     private FloatingActionButton fab;
 
     @Override
@@ -93,6 +91,10 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
         return passionate.getUsername();
     }
 
+    public ArrayList<Animal> getAnimalList() {
+        return animalList;
+    }
+
     @Override
     public void retrieveUserAnimals(RecyclerView recyclerView) {
         AnimalListAdapter adapter = new AnimalListAdapter();
@@ -110,6 +112,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
                                 // Add the animal to the list by loading it with the static method
                                 adapter.addAnimal(Animal.loadAnimal(document));
                             }
+
+                            animalList = adapter.getAnimalList();
 
                             // Set up the recycler view to show the retrieved animals
                             recyclerView.setAdapter(adapter);
@@ -187,6 +191,18 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
                 });
     }
 
+    @Override
+    public void onPurchaseRegistered(Purchase purchase) {
+        purchase.setOwner(getPassionateUsername());
+
+        db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
+                .add(purchase)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(this, "Spesa correttamente inserita" + purchase.getCategory(), Toast.LENGTH_SHORT).show();
+                    // todo: update the list view with the registered purchase
+                });
+    }
+
     //method to ask permissions
     // todo: improve permissions requests
     private void requestPermission(){
@@ -202,7 +218,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
             if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissionRead) && ActivityCompat.shouldShowRequestPermissionRationale(this, permissionWrite)) {
                 //TODO Dialog
             } else {
-                ActivityCompat.requestPermissions(this,permissions,STORAGE_REQUEST_CODE);
+                int STORAGE_REQUEST_CODE = 1;
+                ActivityCompat.requestPermissions(this,permissions, STORAGE_REQUEST_CODE);
             }
         }
     }

@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.Contract;
 
+import it.uniba.dib.sms22235.R;
+
 public class KeysNamesUtils {
     public static class RolesNames {
         public static String VETERINARY = "vet";
@@ -42,6 +44,13 @@ public class KeysNamesUtils {
 
     public static class BundleKeys {
         public static String PASSIONATE = "passionate";
+    }
+
+    public static class PurchaseCategory {
+        public static int CLEANING = R.drawable.ic_baseline_clean_hands_24;
+        public static int MEDIC = R.drawable.ic_baseline_medical_services_24;
+        public static int FOOD = R.drawable.ic_baseline_pets_24;
+        public static int ENJOYMENT = R.drawable.ic_baseline_celebration_24;
     }
 
     public static class FileDirsNames {
