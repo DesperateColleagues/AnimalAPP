@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,8 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,6 +37,7 @@ import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAnimalCardFragm
 import it.uniba.dib.sms22235.activities.passionate.fragments.ProfileFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment;
 import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
+import it.uniba.dib.sms22235.adapters.ListViewPurchasesAdapter;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
@@ -192,14 +196,46 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
     }
 
     @Override
-    public void onPurchaseRegistered(Purchase purchase) {
+    public void onPurchaseRegistered(Purchase purchase, ListView listView) {
         purchase.setOwner(getPassionateUsername());
 
         db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
                 .add(purchase)
                 .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(this, "Spesa correttamente inserita" + purchase.getCategory(), Toast.LENGTH_SHORT).show();
-                    // todo: update the list view with the registered purchase
+                    ListViewPurchasesAdapter adapter = (ListViewPurchasesAdapter) listView.getAdapter();
+
+                    if (adapter != null) {
+                        adapter.addPurchase(purchase);
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        adapter = new ListViewPurchasesAdapter(this, 0);
+                        adapter.addPurchase(purchase);
+                        listView.setAdapter(adapter);
+                    }
+                });
+    }
+
+    @Override
+    public void retrieveUserPurchases(ListView listView) {
+        db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
+                .whereEqualTo(KeysNamesUtils.PurchaseFields.OWNER, passionate.getUsername())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+
+                        QuerySnapshot result = task.getResult();
+                        if(!result.isEmpty()) {
+                            ListViewPurchasesAdapter adapter = new ListViewPurchasesAdapter(this, 0);
+                            List<DocumentSnapshot> documentSnapshots = result.getDocuments();
+
+                            for (DocumentSnapshot document : documentSnapshots) {
+                                // Add the animal to the list by loading it with the static method
+                                adapter.addPurchase(Purchase.loadPurchase(document));
+                            }
+
+                            listView.setAdapter(adapter);
+                        }
+                    }
                 });
     }
 

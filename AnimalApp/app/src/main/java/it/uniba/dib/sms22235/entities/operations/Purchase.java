@@ -1,5 +1,9 @@
 package it.uniba.dib.sms22235.entities.operations;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
+
 public class Purchase {
     private String owner;
     private String animal;
@@ -50,5 +54,19 @@ public class Purchase {
 
     public String getDate() {
         return date;
+    }
+
+    public static Purchase loadPurchase(DocumentSnapshot document) {
+        Purchase purchase = new Purchase(
+                (String) document.get(KeysNamesUtils.PurchaseFields.ANIMAL),
+                (String) document.get(KeysNamesUtils.PurchaseFields.ITEM_NAME),
+                (String) document.get(KeysNamesUtils.PurchaseFields.DATE),
+                document.getLong(KeysNamesUtils.PurchaseFields.CATEGORY).intValue(),
+                document.getDouble(KeysNamesUtils.PurchaseFields.COST).floatValue(),
+                document.getLong(KeysNamesUtils.PurchaseFields.AMOUNT).intValue()
+        );
+
+        purchase.setOwner((String) document.get(KeysNamesUtils.PurchaseFields.OWNER));
+        return purchase;
     }
 }

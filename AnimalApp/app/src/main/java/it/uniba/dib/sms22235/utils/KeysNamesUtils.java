@@ -42,6 +42,16 @@ public class KeysNamesUtils {
         public static String OWNER = "owner";
     }
 
+    public static class PurchaseFields {
+        public static String ANIMAL = "animal";
+        public static String ITEM_NAME = "itemName";
+        public static String DATE = "date";
+        public static String CATEGORY = "category";
+        public static String COST = "cost";
+        public static String AMOUNT = "amount";
+        public static String OWNER = "owner";
+    }
+
     public static class BundleKeys {
         public static String PASSIONATE = "passionate";
     }

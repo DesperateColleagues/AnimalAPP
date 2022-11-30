@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,10 +30,16 @@ public class PurchaseFragment extends Fragment implements DialogAddPurchaseFragm
          *
          * @param purchase the registered purchase
          * */
-        void onPurchaseRegistered(Purchase purchase);
+        void onPurchaseRegistered(Purchase purchase, ListView listView);
+
+        /**
+         * */
+        void retrieveUserPurchases(ListView listView);
     }
 
     private PurchaseFragmentListener listener;
+
+    private ListView purchaseListView;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -52,12 +59,16 @@ public class PurchaseFragment extends Fragment implements DialogAddPurchaseFragm
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_passionate_purchase, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        purchaseListView = view.findViewById(R.id.purchaseListView);
+        listener.retrieveUserPurchases(purchaseListView);
 
         ArrayList<Animal> animalList = ((PassionateNavigationActivity) requireActivity()).getAnimalList();
 
@@ -73,7 +84,6 @@ public class PurchaseFragment extends Fragment implements DialogAddPurchaseFragm
     @Override
     public void onDialogAddPurchaseFragmentDismissed(@NonNull Purchase purchase) {
         // Notify the activity to save the purchase into the DB and to update the ListView
-        // todo: add list view as input and pass it to the activity
-        listener.onPurchaseRegistered(purchase);
+        listener.onPurchaseRegistered(purchase, purchaseListView);
     }
 }
