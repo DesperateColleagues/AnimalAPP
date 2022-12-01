@@ -18,7 +18,7 @@ import it.uniba.dib.sms22235.adapters.GridViewCategoryAdapter;
 public class DialogAddCategoryFragment extends DialogFragment {
 
     public interface DialogAddCategoryFragmentListener {
-        void onDialogAddCategoryFragmentListener(String categoryName, int id);
+        void onDialogAddCategoryFragmentListener(String categoryName);
     }
 
     private final DialogAddCategoryFragmentListener listener;
@@ -48,8 +48,7 @@ public class DialogAddCategoryFragment extends DialogFragment {
         gridView.setOnItemClickListener((parent, view, position, id) -> {
 
                 listener.onDialogAddCategoryFragmentListener(
-                    gridViewCategoryAdapter.getItemName(position),
-                    (int) gridViewCategoryAdapter.getItem(position)
+                        (String) gridViewCategoryAdapter.getItem(position)
                 );
 
                 dismiss();

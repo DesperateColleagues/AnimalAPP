@@ -49,7 +49,9 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
     private FirebaseFirestore db;
     private Passionate passionate;
     private ArrayList<Animal> animalList;
+    private ArrayList<Purchase> purchasesList;
     private FloatingActionButton fab;
+    private BottomNavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
 
         setContentView(R.layout.activity_passionate_navigation);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -87,8 +89,22 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if (navView.getVisibility() == View.GONE && fab.getVisibility() == View.GONE) {
+            navView.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
+        }
+    }
+
     public FloatingActionButton getFab() {
         return fab;
+    }
+
+    public void setNavViewVisibility(int visibility) {
+        navView.setVisibility(visibility);
     }
 
     public String getPassionateUsername() {
@@ -97,6 +113,10 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
 
     public ArrayList<Animal> getAnimalList() {
         return animalList;
+    }
+
+    public ArrayList<Purchase> getPurchasesList() {
+        return purchasesList;
     }
 
     @Override
@@ -196,26 +216,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
     }
 
     @Override
-    public void onPurchaseRegistered(Purchase purchase, ListView listView) {
-        purchase.setOwner(getPassionateUsername());
-
-        db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
-                .add(purchase)
-                .addOnSuccessListener(documentReference -> {
-                    ListViewPurchasesAdapter adapter = (ListViewPurchasesAdapter) listView.getAdapter();
-
-                    if (adapter != null) {
-                        adapter.addPurchase(purchase);
-                        adapter.notifyDataSetChanged();
-                    } else {
-                        adapter = new ListViewPurchasesAdapter(this, 0);
-                        adapter.addPurchase(purchase);
-                        listView.setAdapter(adapter);
-                    }
-                });
-    }
-
-    @Override
     public void retrieveUserPurchases(ListView listView) {
         db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
                 .whereEqualTo(KeysNamesUtils.PurchaseFields.OWNER, passionate.getUsername())
@@ -233,8 +233,30 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
                                 adapter.addPurchase(Purchase.loadPurchase(document));
                             }
 
+                            purchasesList = adapter.getPurchasesList();
+
                             listView.setAdapter(adapter);
                         }
+                    }
+                });
+    }
+
+    @Override
+    public void onPurchaseRegistered(Purchase purchase, ListView listView) {
+        purchase.setOwner(getPassionateUsername());
+
+        db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
+                .add(purchase)
+                .addOnSuccessListener(documentReference -> {
+                    ListViewPurchasesAdapter adapter = (ListViewPurchasesAdapter) listView.getAdapter();
+
+                    if (adapter != null) {
+                        adapter.addPurchase(purchase);
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        adapter = new ListViewPurchasesAdapter(this, 0);
+                        adapter.addPurchase(purchase);
+                        listView.setAdapter(adapter);
                     }
                 });
     }

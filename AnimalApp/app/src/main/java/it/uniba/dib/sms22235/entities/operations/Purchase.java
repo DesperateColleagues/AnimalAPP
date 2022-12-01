@@ -2,20 +2,23 @@ package it.uniba.dib.sms22235.entities.operations;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class Purchase {
+public class Purchase implements Serializable {
     private String owner;
     private String animal;
     private String itemName;
     private String date;
-    private int category;
+    private String category;
     private float cost;
     private int amount;
 
     public Purchase() {}
 
-    public Purchase(String animal, String itemName, String date, int category, float cost, int amount) {
+    public Purchase(String animal, String itemName, String date, String category, float cost, int amount) {
         this.animal = animal;
         this.itemName = itemName;
         this.category = category;
@@ -36,7 +39,7 @@ public class Purchase {
         return animal;
     }
 
-    public int getCategory() {
+    public String getCategory() {
         return category;
     }
 
@@ -61,9 +64,9 @@ public class Purchase {
                 (String) document.get(KeysNamesUtils.PurchaseFields.ANIMAL),
                 (String) document.get(KeysNamesUtils.PurchaseFields.ITEM_NAME),
                 (String) document.get(KeysNamesUtils.PurchaseFields.DATE),
-                document.getLong(KeysNamesUtils.PurchaseFields.CATEGORY).intValue(),
-                document.getDouble(KeysNamesUtils.PurchaseFields.COST).floatValue(),
-                document.getLong(KeysNamesUtils.PurchaseFields.AMOUNT).intValue()
+                (String) document.get(KeysNamesUtils.PurchaseFields.CATEGORY),
+                Objects.requireNonNull(document.getDouble(KeysNamesUtils.PurchaseFields.COST)).floatValue(),
+                Objects.requireNonNull(document.getLong(KeysNamesUtils.PurchaseFields.AMOUNT)).intValue()
         );
 
         purchase.setOwner((String) document.get(KeysNamesUtils.PurchaseFields.OWNER));

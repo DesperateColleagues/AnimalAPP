@@ -50,10 +50,21 @@ public class KeysNamesUtils {
         public static String COST = "cost";
         public static String AMOUNT = "amount";
         public static String OWNER = "owner";
+
+        public static String CREATE_TABLE = "CREATE TABLE purchases " + " (\n" +
+                ANIMAL + " VARCHAR(255) PRIMARY KEY,\n" +
+                ITEM_NAME + " VARCHAR(255) NOT NULL,\n" +
+                OWNER + " VARCHAR(255) DEFAULT NULL, \n" +
+                ITEM_NAME + " VARCHAR(255) NOT NULL,\n" +
+                DATE + " VARCHAR(100) NOT NULL,\n" +
+                AMOUNT + " INTEGER NOT NULL,\n" +
+                COST + " DECIMAL NOT NULL); ";
     }
 
     public static class BundleKeys {
         public static String PASSIONATE = "passionate";
+        public static String PASSIONATE_PURCHASES = "purchases";
+        public static String PASSIONATE_ANIMALS = "animals";
     }
 
     public static class PurchaseCategory {

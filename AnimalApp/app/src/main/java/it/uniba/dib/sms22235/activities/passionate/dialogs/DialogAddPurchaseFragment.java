@@ -35,7 +35,6 @@ public class DialogAddPurchaseFragment extends DialogFragment
 
     private EditText txtInputDatePurchase;
     private EditText txtInputCategory;
-    private int categoryImageId;
 
     private final ArrayList<Animal> animaList;
 
@@ -43,7 +42,6 @@ public class DialogAddPurchaseFragment extends DialogFragment
 
     public DialogAddPurchaseFragment(ArrayList<Animal>animaList) {
         this.animaList = animaList;
-        categoryImageId = -1;
     }
 
     public void setListener(DialogAddPurchaseFragmentListener listener) {
@@ -63,7 +61,7 @@ public class DialogAddPurchaseFragment extends DialogFragment
         builder.setTitle("Inserimento spesa");
 
         // Set the spinner items
-        spinnerAnimals = root.findViewById(R.id.spinnerAnimals);
+        spinnerAnimals = root.findViewById(R.id.spinnerAnimalsAddPurchase);
         ArrayAdapter<Animal> spinnerAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_dropdown_item, animaList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -116,11 +114,11 @@ public class DialogAddPurchaseFragment extends DialogFragment
                     isCorrectInput = false;
                 }
 
-                if (isCorrectInput && cost > 0 && amount > 0 && categoryImageId > 0){
+                if (isCorrectInput && cost > 0 && amount > 0) {
                     String microchip = animal.split(" - ")[1];
                     listener.onDialogAddPurchaseFragmentDismissed(new Purchase(
                             microchip, inputProductName,
-                            inputDatePurchase, categoryImageId, cost, amount
+                            inputDatePurchase, inputCategory, cost, amount
                     ));
                     dismiss();
                 }
@@ -146,8 +144,7 @@ public class DialogAddPurchaseFragment extends DialogFragment
     }
 
     @Override
-    public void onDialogAddCategoryFragmentListener(String categoryName, int id) {
+    public void onDialogAddCategoryFragmentListener(String categoryName) {
         txtInputCategory.setText(categoryName);
-        categoryImageId = id;
     }
 }

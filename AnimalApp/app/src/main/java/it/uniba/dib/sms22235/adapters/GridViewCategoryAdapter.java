@@ -43,7 +43,7 @@ public class GridViewCategoryAdapter extends BaseAdapter {
      * */
     @Override
     public int getCount() {
-        return categories.size();
+        return categoriesString.size();
     }
 
     /**
@@ -55,13 +55,12 @@ public class GridViewCategoryAdapter extends BaseAdapter {
      * */
     @Override
     public Object getItem(int position) {
-        return categories.get(position);
-    }
-
-    public String getItemName(int position) {
         return categoriesString.get(position);
     }
 
+    public int getItemName(int position) {
+        return categories.get(position);
+    }
 
     @Override
     public long getItemId(int position) {

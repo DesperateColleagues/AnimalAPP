@@ -18,7 +18,7 @@ import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class ListViewPurchasesAdapter extends ArrayAdapter<Purchase> {
-    private ArrayList<Purchase> purchasesList;
+    private final ArrayList<Purchase> purchasesList;
 
     public ListViewPurchasesAdapter(@NonNull Context context, int resource) {
         super(context, resource);
@@ -59,12 +59,29 @@ public class ListViewPurchasesAdapter extends ArrayAdapter<Purchase> {
         Purchase purchase = getItem(position);
 
         if (purchase != null) {
-            categoryImageShow.setImageResource(purchase.getCategory());
+            switch (purchase.getCategory()) {
+                case "Toelettatura":
+                    categoryImageShow.setImageResource(KeysNamesUtils.PurchaseCategory.CLEANING);
+                    break;
+                case "Divertimento":
+                    categoryImageShow.setImageResource(KeysNamesUtils.PurchaseCategory.ENJOYMENT);
+                    break;
+                case "Cibo":
+                    categoryImageShow.setImageResource(KeysNamesUtils.PurchaseCategory.FOOD);
+                    break;
+                case "Spese mediche":
+                    categoryImageShow.setImageResource(KeysNamesUtils.PurchaseCategory.MEDIC);
+                    break;
+            }
+
             String cost = "" + (purchase.getCost() * purchase.getAmount()) + " €";
             txtCost.setText(cost);
             txtItemName.setText(purchase.getItemName());
         }
-
         return listView;
+    }
+
+    public ArrayList<Purchase> getPurchasesList() {
+        return purchasesList;
     }
 }
