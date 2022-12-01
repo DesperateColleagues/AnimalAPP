@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.Contract;
 
+import it.uniba.dib.sms22235.R;
+
 public class KeysNamesUtils {
     public static class RolesNames {
         public static String VETERINARY = "vet";
@@ -40,8 +42,36 @@ public class KeysNamesUtils {
         public static String OWNER = "owner";
     }
 
+    public static class PurchaseFields {
+        public static String ANIMAL = "animal";
+        public static String ITEM_NAME = "itemName";
+        public static String DATE = "date";
+        public static String CATEGORY = "category";
+        public static String COST = "cost";
+        public static String AMOUNT = "amount";
+        public static String OWNER = "owner";
+
+        public static String CREATE_TABLE = "CREATE TABLE purchases " + " (\n" +
+                ANIMAL + " VARCHAR(255) PRIMARY KEY,\n" +
+                ITEM_NAME + " VARCHAR(255) NOT NULL,\n" +
+                OWNER + " VARCHAR(255) DEFAULT NULL, \n" +
+                ITEM_NAME + " VARCHAR(255) NOT NULL,\n" +
+                DATE + " VARCHAR(100) NOT NULL,\n" +
+                AMOUNT + " INTEGER NOT NULL,\n" +
+                COST + " DECIMAL NOT NULL); ";
+    }
+
     public static class BundleKeys {
         public static String PASSIONATE = "passionate";
+        public static String PASSIONATE_PURCHASES = "purchases";
+        public static String PASSIONATE_ANIMALS = "animals";
+    }
+
+    public static class PurchaseCategory {
+        public static int CLEANING = R.drawable.ic_baseline_clean_hands_24;
+        public static int MEDIC = R.drawable.ic_baseline_medical_services_24;
+        public static int FOOD = R.drawable.ic_baseline_pets_24;
+        public static int ENJOYMENT = R.drawable.ic_baseline_celebration_24;
     }
 
     public static class FileDirsNames {

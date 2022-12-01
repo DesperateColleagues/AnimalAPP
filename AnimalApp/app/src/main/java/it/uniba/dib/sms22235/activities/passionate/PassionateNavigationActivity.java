@@ -4,16 +4,15 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 
 import androidx.navigation.fragment.NavHostFragment;
@@ -22,32 +21,37 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAnimalCardFragment;
-import it.uniba.dib.sms22235.activities.passionate.fragments.PhotoDiaryFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.ProfileFragment;
+import it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment;
 import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
+import it.uniba.dib.sms22235.adapters.ListViewPurchasesAdapter;
+import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
 
-public class PassionateNavigationActivity extends AppCompatActivity implements /*DialogAddAnimalFragment.DialogAddAnimalFragmentListener,*/ ProfileFragment.ProfileFragmentListener {
+public class PassionateNavigationActivity extends AppCompatActivity implements ProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener {
 
     private FirebaseFirestore db;
     private Passionate passionate;
-    private final int STORAGE_REQUEST_CODE = 1;
+    private ArrayList<Animal> animalList;
+    private ArrayList<Purchase> purchasesList;
     private FloatingActionButton fab;
+    private BottomNavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +59,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
 
         setContentView(R.layout.activity_passionate_navigation);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -85,12 +89,34 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if (navView.getVisibility() == View.GONE && fab.getVisibility() == View.GONE) {
+            navView.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
+        }
+    }
+
     public FloatingActionButton getFab() {
         return fab;
     }
 
+    public void setNavViewVisibility(int visibility) {
+        navView.setVisibility(visibility);
+    }
+
     public String getPassionateUsername() {
         return passionate.getUsername();
+    }
+
+    public ArrayList<Animal> getAnimalList() {
+        return animalList;
+    }
+
+    public ArrayList<Purchase> getPurchasesList() {
+        return purchasesList;
     }
 
     @Override
@@ -110,6 +136,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
                                 // Add the animal to the list by loading it with the static method
                                 adapter.addAnimal(Animal.loadAnimal(document));
                             }
+
+                            animalList = adapter.getAnimalList();
 
                             // Set up the recycler view to show the retrieved animals
                             recyclerView.setAdapter(adapter);
@@ -187,6 +215,52 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
                 });
     }
 
+    @Override
+    public void retrieveUserPurchases(ListView listView) {
+        db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
+                .whereEqualTo(KeysNamesUtils.PurchaseFields.OWNER, passionate.getUsername())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+
+                        QuerySnapshot result = task.getResult();
+                        if(!result.isEmpty()) {
+                            ListViewPurchasesAdapter adapter = new ListViewPurchasesAdapter(this, 0);
+                            List<DocumentSnapshot> documentSnapshots = result.getDocuments();
+
+                            for (DocumentSnapshot document : documentSnapshots) {
+                                // Add the animal to the list by loading it with the static method
+                                adapter.addPurchase(Purchase.loadPurchase(document));
+                            }
+
+                            purchasesList = adapter.getPurchasesList();
+
+                            listView.setAdapter(adapter);
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onPurchaseRegistered(Purchase purchase, ListView listView) {
+        purchase.setOwner(getPassionateUsername());
+
+        db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
+                .add(purchase)
+                .addOnSuccessListener(documentReference -> {
+                    ListViewPurchasesAdapter adapter = (ListViewPurchasesAdapter) listView.getAdapter();
+
+                    if (adapter != null) {
+                        adapter.addPurchase(purchase);
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        adapter = new ListViewPurchasesAdapter(this, 0);
+                        adapter.addPurchase(purchase);
+                        listView.setAdapter(adapter);
+                    }
+                });
+    }
+
     //method to ask permissions
     // todo: improve permissions requests
     private void requestPermission(){
@@ -202,7 +276,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
             if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissionRead) && ActivityCompat.shouldShowRequestPermissionRationale(this, permissionWrite)) {
                 //TODO Dialog
             } else {
-                ActivityCompat.requestPermissions(this,permissions,STORAGE_REQUEST_CODE);
+                int STORAGE_REQUEST_CODE = 1;
+                ActivityCompat.requestPermissions(this,permissions, STORAGE_REQUEST_CODE);
             }
         }
     }

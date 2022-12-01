@@ -51,7 +51,8 @@ public class ListViewPhotoDiaryAdapter extends ArrayAdapter<PhotoDiaryPost> {
 
         // of the recyclable view is null then inflate the custom layout for the same
         if (listView == null) {
-            listView = LayoutInflater.from(getContext()).inflate(R.layout.item_fragment_photo_diary_list, parent, false);
+            listView = LayoutInflater.from(getContext()).inflate(
+                    R.layout.item_fragment_photo_diary_list, parent, false);
         }
 
         ImageView photoDiaryImage = listView.findViewById(R.id.photoDiaryImage);

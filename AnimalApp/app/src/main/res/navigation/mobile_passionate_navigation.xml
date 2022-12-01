@@ -26,5 +26,14 @@
         android:id="@+id/passionate_purchase"
         android:name="it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment"
         android:label="@string/title_passionate_purchases"
-        tools:layout="@layout/fragment_passionate_purchase" />
+        tools:layout="@layout/fragment_passionate_purchase" >
+        <action
+            android:id="@+id/action_passionate_purchase_to_filterPurchaseFragment"
+            app:destination="@id/filterPurchaseFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/filterPurchaseFragment"
+        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.FilterPurchaseFragment"
+        android:label="Filtri" />
 </navigation>

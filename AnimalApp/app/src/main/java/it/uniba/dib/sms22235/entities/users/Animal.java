@@ -5,9 +5,11 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.io.Serializable;
+
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class Animal {
+public class Animal implements Serializable {
     private String name;
     private String animalSpecies;
     private String race;
@@ -73,5 +75,10 @@ public class Animal {
         animal.setOwner((String) document.get(KeysNamesUtils.AnimalFields.OWNER));
 
         return animal;
+    }
+
+    @Override
+    public String toString() {
+        return name + " - " + microchipCode;
     }
 }

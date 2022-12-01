@@ -22,10 +22,11 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView name;
+        TextView txtAnimalName;
+
         public ViewHolder(@NonNull View itemView){
             super(itemView);
-            name = itemView.findViewById(R.id.txtAnimalName);
+            txtAnimalName = itemView.findViewById(R.id.txtAnimalName);
 
         }
     }
@@ -39,11 +40,15 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull AnimalListAdapter.ViewHolder holder, int position) {
-        holder.name.setText(animalList.get(position).getName());
+        holder.txtAnimalName.setText(animalList.get(position).getName());
     }
 
     public void addAnimal(Animal animal) {
         animalList.add(animal);
+    }
+
+    public ArrayList<Animal> getAnimalList() {
+        return animalList;
     }
 
     @Override

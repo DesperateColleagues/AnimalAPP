@@ -45,4 +45,14 @@
     <string name="seleziona_immagine">Seleziona immagine</string>
     <string name="salva">Salva</string>
     <string name="titolo_immagine">titolo immagine</string>
+    <string name="product">prodotto</string>
+    <string name="costo">costo</string>
+    <string name="quantit">quantità</string>
+    <string name="data_acquisto">data acquisto</string>
+    <string name="inserisci_spesa">inserisci spesa</string>
+    <string name="categoria">categoria</string>
+    <string name="filtri">FILTRI</string>
+    <string name="animale">Animale</string>
+    <string name="categorie">Categorie</string>
+    <string name="costoh">Costo</string>
 </resources>

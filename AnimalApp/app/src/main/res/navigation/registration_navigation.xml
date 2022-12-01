@@ -39,6 +39,7 @@
             app:argType="string"
             android:defaultValue="vet"/>
     </fragment>
+
     <fragment
         android:id="@+id/registrationOrganizationFragment"
         android:name="it.uniba.dib.sms22235.activities.registration.fragments.RegistrationOrganizationFragment"
