@@ -10,10 +10,20 @@ import java.io.Serializable;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class Veterinarian extends AbstractPersonUser implements Owner, Serializable {
+public class Veterinarian extends AbstractPersonUser implements  Serializable {
     private String clinicName, phoneNumber;
 
     public Veterinarian() {}
+
+    @Override
+    public String toString() {
+        return "Veterinarian{" +
+                " " + fullName + '\'' +
+                " " + email + '\'' +
+                " " + clinicName + '\'' +
+                " " + phoneNumber + '\'' +
+                '}';
+    }
 
     /**
      * @param fullName       name of the person
@@ -25,11 +35,6 @@ public class Veterinarian extends AbstractPersonUser implements Owner, Serializa
         super(fullName, email);
         this.clinicName = clinicName;
         this.phoneNumber = phoneNumber;
-    }
-
-    @Override
-    public String OwnerName() {
-        return fullName;
     }
 
     public String getClinicName() {
@@ -52,9 +57,11 @@ public class Veterinarian extends AbstractPersonUser implements Owner, Serializa
     public static Veterinarian loadVeterinarian(@NonNull DocumentSnapshot document){
         return new Veterinarian(
                 (String) document.get(KeysNamesUtils.ActorFields.FULL_NAME),
-                (String) document.get(KeysNamesUtils.ActorFields.FULL_NAME),
+                (String) document.get(KeysNamesUtils.ActorFields.EMAIL),
                 (String) document.get(KeysNamesUtils.ActorFields.CLINIC_NAME),
                 (String) document.get(KeysNamesUtils.ActorFields.PHONE_NUMBER)
         );
     }
+
+
 }

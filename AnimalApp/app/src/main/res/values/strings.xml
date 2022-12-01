@@ -48,4 +48,10 @@
     <string name="salva">Salva</string>
     <string name="titolo_immagine">titolo immagine</string>
 
+    <!-- Stringhe sottostanti riferite alla creazione di appuntamenti del veterinario -->
+    <string name="data_appuntamento">data</string>
+    <string name="ora_appuntamento">ora</string>
+    <string name="aggiungi_prenotazione">Aggiungi prenotazione</string>
+
+
 </resources>

@@ -19,6 +19,7 @@ public class KeysNamesUtils {
         public static String OWNERSHIP = "ownership";
         public static String REQUESTS = "request";
         public static String REPORTS = "reports";
+        public static String RESERVATIONS = "reservations";
     }
 
     public static class ActorFields {
@@ -38,6 +39,15 @@ public class KeysNamesUtils {
         public static String MICROCHIP_CODE = "microchipCode";
         public static String BIRTH_DATE = "birthDate";
         public static String OWNER = "owner";
+    }
+
+    public static class ReservationFields {
+        public static String OWNER = "owner";
+        public static String ANIMAL = "animal";
+        public static String VETERINARIAN = "veterinarian";
+        public static String DATE = "date";
+        public static String TIME  = "time";
+        public static String DIAGNOSIS = "diagnosis";
     }
 
     public static class BundleKeys {
