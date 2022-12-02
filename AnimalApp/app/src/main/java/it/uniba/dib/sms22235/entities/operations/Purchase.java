@@ -1,5 +1,7 @@
 package it.uniba.dib.sms22235.entities.operations;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.Serializable;
@@ -7,7 +9,7 @@ import java.util.Objects;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class Purchase implements Serializable {
+public class Purchase implements Serializable, Cloneable {
     private String owner;
     private String animal;
     private String itemName;
@@ -59,7 +61,8 @@ public class Purchase implements Serializable {
         return date;
     }
 
-    public static Purchase loadPurchase(DocumentSnapshot document) {
+    @NonNull
+    public static Purchase loadPurchase(@NonNull DocumentSnapshot document) {
         Purchase purchase = new Purchase(
                 (String) document.get(KeysNamesUtils.PurchaseFields.ANIMAL),
                 (String) document.get(KeysNamesUtils.PurchaseFields.ITEM_NAME),
@@ -71,5 +74,19 @@ public class Purchase implements Serializable {
 
         purchase.setOwner((String) document.get(KeysNamesUtils.PurchaseFields.OWNER));
         return purchase;
+    }
+
+    @NonNull
+    @Override
+    public Object clone() {
+        Object o = null;
+
+        try {
+            o = super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+
+        return o;
     }
 }

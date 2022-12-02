@@ -12,6 +12,7 @@
         android:layout_height="30dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
+        android:src="@drawable/ic_baseline_format_color_text_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

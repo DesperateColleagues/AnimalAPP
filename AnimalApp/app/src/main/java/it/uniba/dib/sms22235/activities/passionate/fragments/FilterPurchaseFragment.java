@@ -18,21 +18,29 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 
 public class FilterPurchaseFragment extends Fragment {
 
-    private ArrayList<Animal> animaList;
+    private ArrayList<String> animaList;
     private ArrayList<String> categories;
 
+    @SuppressWarnings("unchecked")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle arguments = getArguments();
-        animaList = (ArrayList<Animal>) arguments.getSerializable("ANIMAL");
 
-        if (animaList == null) {
-            animaList = new ArrayList<>();
+        if (arguments != null) {
+            animaList = (ArrayList<String>) arguments.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS);
+
+            if (animaList == null) {
+                animaList = new ArrayList<>();
+
+                Toast.makeText(getContext(), "Lista animali vuota, impossibile effettuare ricerche",
+                        Toast.LENGTH_SHORT).show();
+            }
         }
 
         categories = new ArrayList<>();
@@ -54,7 +62,7 @@ public class FilterPurchaseFragment extends Fragment {
 
 
         if (animaList.size() > 0) {
-            ArrayAdapter<Animal> spinnerAdapter = new ArrayAdapter<>(getContext(),
+            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
                     android.R.layout.simple_spinner_dropdown_item, animaList);
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerAnimalsFilter.setAdapter(spinnerAdapter);

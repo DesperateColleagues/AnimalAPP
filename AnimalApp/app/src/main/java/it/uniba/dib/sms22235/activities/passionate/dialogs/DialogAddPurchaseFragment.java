@@ -36,11 +36,11 @@ public class DialogAddPurchaseFragment extends DialogFragment
     private EditText txtInputDatePurchase;
     private EditText txtInputCategory;
 
-    private final ArrayList<Animal> animaList;
+    private final ArrayList<String> animaList;
 
     private Spinner spinnerAnimals;
 
-    public DialogAddPurchaseFragment(ArrayList<Animal>animaList) {
+    public DialogAddPurchaseFragment(ArrayList<String>animaList) {
         this.animaList = animaList;
     }
 
@@ -62,7 +62,7 @@ public class DialogAddPurchaseFragment extends DialogFragment
 
         // Set the spinner items
         spinnerAnimals = root.findViewById(R.id.spinnerAnimalsAddPurchase);
-        ArrayAdapter<Animal> spinnerAdapter = new ArrayAdapter<>(getContext(),
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_dropdown_item, animaList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerAnimals.setAdapter(spinnerAdapter);

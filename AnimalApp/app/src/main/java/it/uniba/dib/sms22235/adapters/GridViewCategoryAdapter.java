@@ -26,10 +26,10 @@ public class GridViewCategoryAdapter extends BaseAdapter {
         categories = new ArrayList<>();
         categoriesString = new ArrayList<>();
 
-        categories.add(KeysNamesUtils.PurchaseCategory.CLEANING);
-        categories.add(KeysNamesUtils.PurchaseCategory.ENJOYMENT);
-        categories.add(KeysNamesUtils.PurchaseCategory.FOOD);
-        categories.add(KeysNamesUtils.PurchaseCategory.MEDIC);
+        categories.add(R.drawable.ic_baseline_clean_hands_24);
+        categories.add(R.drawable.ic_baseline_celebration_24);
+        categories.add(R.drawable.ic_baseline_pets_24);
+        categories.add(R.drawable.ic_baseline_medical_services_24);
 
         categoriesString.add("Toelettatura");
         categoriesString.add("Divertimento");
@@ -56,10 +56,6 @@ public class GridViewCategoryAdapter extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         return categoriesString.get(position);
-    }
-
-    public int getItemName(int position) {
-        return categories.get(position);
     }
 
     @Override

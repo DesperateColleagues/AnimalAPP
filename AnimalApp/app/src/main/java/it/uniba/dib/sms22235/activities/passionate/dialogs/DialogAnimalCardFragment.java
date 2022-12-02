@@ -112,7 +112,7 @@ public class DialogAnimalCardFragment extends DialogFragment {
         TextView txtAnimalCardMicroChipCode = root.findViewById(R.id.txtAnimalCardMicrochipCode);
         TextView txtAnimalCardBirthDate = root.findViewById(R.id.txtAnimalCardBirthDate);
 
-        String microChipText = "Microchip" + animal.getMicrochipCode();
+        String microChipText = "Microchip: " + animal.getMicrochipCode();
 
         // Set up Text views text
         txtAnimalCardName.setText(animal.getName());

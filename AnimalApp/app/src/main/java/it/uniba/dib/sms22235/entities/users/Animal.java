@@ -6,10 +6,11 @@ import androidx.annotation.NonNull;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class Animal implements Serializable {
+public class Animal implements Serializable, Cloneable {
     private String name;
     private String animalSpecies;
     private String race;
@@ -78,7 +79,36 @@ public class Animal implements Serializable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Animal animal = (Animal) o;
+        return microchipCode.equals(animal.microchipCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(microchipCode);
+    }
+
+    @NonNull
+    @Override
     public String toString() {
         return name + " - " + microchipCode;
     }
+
+    @NonNull
+    @Override
+    public Object clone() {
+        Object o = null;
+
+        try {
+            o = super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+
+        return o;
+    }
+
 }

@@ -37,7 +37,7 @@ public class PhotoDiaryFragment extends Fragment implements DialogAddImageDiaryF
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Context context = requireActivity().getApplicationContext();
+        Context context = requireContext();
 
         adapter = new ListViewPhotoDiaryAdapter(context, 0);
 

@@ -31,6 +31,10 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
         }
     }
 
+    public void setAnimalList(ArrayList<Animal> animalList) {
+        this.animalList = animalList;
+    }
+
     @SuppressLint("InflateParams")
     @NonNull
     @Override
@@ -45,10 +49,6 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
 
     public void addAnimal(Animal animal) {
         animalList.add(animal);
-    }
-
-    public ArrayList<Animal> getAnimalList() {
-        return animalList;
     }
 
     @Override

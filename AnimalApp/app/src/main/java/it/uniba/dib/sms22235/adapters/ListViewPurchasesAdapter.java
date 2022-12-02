@@ -18,7 +18,7 @@ import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class ListViewPurchasesAdapter extends ArrayAdapter<Purchase> {
-    private final ArrayList<Purchase> purchasesList;
+    private ArrayList<Purchase> purchasesList;
 
     public ListViewPurchasesAdapter(@NonNull Context context, int resource) {
         super(context, resource);
@@ -27,6 +27,10 @@ public class ListViewPurchasesAdapter extends ArrayAdapter<Purchase> {
 
     public void addPurchase(Purchase purchase){
         purchasesList.add(purchase);
+    }
+
+    public void setPurchasesList(ArrayList<Purchase> purchasesList) {
+        this.purchasesList = purchasesList;
     }
 
     @Override
@@ -79,9 +83,5 @@ public class ListViewPurchasesAdapter extends ArrayAdapter<Purchase> {
             txtItemName.setText(purchase.getItemName());
         }
         return listView;
-    }
-
-    public ArrayList<Purchase> getPurchasesList() {
-        return purchasesList;
     }
 }

@@ -81,7 +81,7 @@
             android:drawableStart="@drawable/ic_baseline_exposure_plus_1_24"
             android:drawablePadding="10dp"
             android:ems="10"
-            android:inputType="phone"
+            android:inputType="number"
             android:minHeight="48dp"
             android:textColorHint="#2E7D32"
             tools:ignore="SpeakableTextPresentCheck" />

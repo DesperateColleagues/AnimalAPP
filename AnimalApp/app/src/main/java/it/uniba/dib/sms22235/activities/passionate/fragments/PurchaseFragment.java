@@ -6,9 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
+
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,16 +15,18 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAddPurchaseFragment;
+import it.uniba.dib.sms22235.adapters.ListViewPurchasesAdapter;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class PurchaseFragment extends Fragment implements DialogAddPurchaseFragment.DialogAddPurchaseFragmentListener {
 
@@ -37,15 +38,11 @@ public class PurchaseFragment extends Fragment implements DialogAddPurchaseFragm
          *
          * @param purchase the registered purchase
          * */
-        void onPurchaseRegistered(Purchase purchase, ListView listView);
-
-        /**
-         * */
-        void retrieveUserPurchases(ListView listView);
+        void onPurchaseRegistered(Purchase purchase);
     }
 
     private PurchaseFragmentListener listener;
-    private ListView purchaseListView;
+    private ListViewPurchasesAdapter adapter;
     private NavController controller;
 
     @Override
@@ -68,45 +65,74 @@ public class PurchaseFragment extends Fragment implements DialogAddPurchaseFragm
                              ViewGroup container, Bundle savedInstanceState) {
         controller = Navigation.findNavController(container);
 
-        View root = inflater.inflate(R.layout.fragment_passionate_purchase, container, false);
-
-        purchaseListView = root.findViewById(R.id.purchaseListView);
-        listener.retrieveUserPurchases(purchaseListView);
-
-        return root;
+        return inflater.inflate(R.layout.fragment_passionate_purchase, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ArrayList<Purchase> purchasesList = ((PassionateNavigationActivity) requireActivity()).getPurchasesList();
+
+        Context context = requireContext();
+
+        adapter = new ListViewPurchasesAdapter(context, 0);
+
+        if (purchasesList.size() > 0) {
+            /*for (Purchase purchase : purchasesList) {
+                adapter.addPurchase(purchase);
+            }*/
+            adapter.setPurchasesList(purchasesList);
+        }
+
+        // Once the purchases are retrieved from the activity the list view che be built
+        ListView purchaseListView = view.findViewById(R.id.purchaseListView);
+        purchaseListView.setAdapter(adapter);
+
         // Obtain data from Activity
-        ArrayList<Animal> animalList = ((PassionateNavigationActivity) requireActivity()).getAnimalList();
+        LinkedHashSet<Animal> animalSet = ((PassionateNavigationActivity) requireActivity()).getAnimalSet();
         FloatingActionButton fab = ((PassionateNavigationActivity) requireActivity()).getFab();
 
         // Get the fab from the activity and set the listener
         fab.setOnClickListener(v -> {
-            DialogAddPurchaseFragment dialogAddPurchaseFragment = new DialogAddPurchaseFragment(animalList);
+            DialogAddPurchaseFragment dialogAddPurchaseFragment = new DialogAddPurchaseFragment(
+                    buildSpinnerEntries(animalSet));
+
             dialogAddPurchaseFragment.setListener(this);
             dialogAddPurchaseFragment.show(requireActivity().getSupportFragmentManager(),
                     "DialogAddPurchaseFragment");
         });
 
         Button buttonFilter = view.findViewById(R.id.buttonFilter);
+
         buttonFilter.setOnClickListener(v -> {
             ((PassionateNavigationActivity) requireActivity()).setNavViewVisibility(View.GONE);
             fab.setVisibility(View.GONE);
 
             Bundle bundle = new Bundle();
 
-            bundle.putSerializable("ANIMAL", animalList);
+            bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS,
+                    buildSpinnerEntries(animalSet));
             controller.navigate(R.id.filterPurchaseFragment, bundle);
         });
     }
 
     @Override
     public void onDialogAddPurchaseFragmentDismissed(@NonNull Purchase purchase) {
-        // Notify the activity to save the purchase into the DB and to update the ListView
-        listener.onPurchaseRegistered(purchase, purchaseListView);
+        adapter.addPurchase(purchase);
+        adapter.notifyDataSetChanged();
+
+        listener.onPurchaseRegistered(purchase);
+    }
+
+    @NonNull
+    private ArrayList<String> buildSpinnerEntries(@NonNull LinkedHashSet<Animal> animals) {
+        ArrayList<String> list = new ArrayList<>();
+
+        for (Animal animal : animals) {
+            list.add(animal.toString());
+        }
+
+        return list;
     }
 }

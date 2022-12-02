@@ -61,17 +61,17 @@ public class KeysNamesUtils {
                 COST + " DECIMAL NOT NULL); ";
     }
 
-    public static class BundleKeys {
-        public static String PASSIONATE = "passionate";
-        public static String PASSIONATE_PURCHASES = "purchases";
-        public static String PASSIONATE_ANIMALS = "animals";
-    }
-
     public static class PurchaseCategory {
         public static int CLEANING = R.drawable.ic_baseline_clean_hands_24;
         public static int MEDIC = R.drawable.ic_baseline_medical_services_24;
         public static int FOOD = R.drawable.ic_baseline_pets_24;
         public static int ENJOYMENT = R.drawable.ic_baseline_celebration_24;
+    }
+
+    public static class BundleKeys {
+        public static String PASSIONATE = "passionate";
+        public static String PASSIONATE_PURCHASES = "purchases";
+        public static String PASSIONATE_ANIMALS = "animals";
     }
 
     public static class FileDirsNames {
