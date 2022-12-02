@@ -79,9 +79,7 @@ public class PurchaseFragment extends Fragment implements DialogAddPurchaseFragm
         adapter = new ListViewPurchasesAdapter(context, 0);
 
         if (purchasesList.size() > 0) {
-            /*for (Purchase purchase : purchasesList) {
-                adapter.addPurchase(purchase);
-            }*/
+            
             adapter.setPurchasesList(purchasesList);
         }
 

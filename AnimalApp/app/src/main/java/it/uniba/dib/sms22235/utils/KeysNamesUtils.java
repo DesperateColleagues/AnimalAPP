@@ -43,6 +43,7 @@ public class KeysNamesUtils {
     }
 
     public static class PurchaseFields {
+        public static String ID = "id";
         public static String ANIMAL = "animal";
         public static String ITEM_NAME = "itemName";
         public static String DATE = "date";
@@ -51,11 +52,12 @@ public class KeysNamesUtils {
         public static String AMOUNT = "amount";
         public static String OWNER = "owner";
 
-        public static String CREATE_TABLE = "CREATE TABLE purchases " + " (\n" +
-                ANIMAL + " VARCHAR(255) PRIMARY KEY,\n" +
+        public static String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS purchases " + " (\n" +
+                 ID + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"+
+                ANIMAL + " VARCHAR(255) NOT NULL,\n" +
                 ITEM_NAME + " VARCHAR(255) NOT NULL,\n" +
                 OWNER + " VARCHAR(255) DEFAULT NULL, \n" +
-                ITEM_NAME + " VARCHAR(255) NOT NULL,\n" +
+                CATEGORY + " VARCHAR(255) NOT NULL,\n" +
                 DATE + " VARCHAR(100) NOT NULL,\n" +
                 AMOUNT + " INTEGER NOT NULL,\n" +
                 COST + " DECIMAL NOT NULL); ";
