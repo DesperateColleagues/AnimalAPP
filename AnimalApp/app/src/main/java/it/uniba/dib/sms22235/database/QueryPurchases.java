@@ -7,8 +7,11 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import it.uniba.dib.sms22235.entities.operations.Interval;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
@@ -16,8 +19,7 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class QueryPurchases {
 
-    private DBHelper dbHelper;
-    private Context context;
+    private final DBHelper dbHelper;
 
     public QueryPurchases(Context context){
         dbHelper = new DBHelper(context);
@@ -48,7 +50,7 @@ public class QueryPurchases {
         return testValue;
     }
 
-    public Cursor runQuery(List<String> animals, List<String> categories, Interval<Float> costs) {
+    public Cursor runFilterQuery(List<String> animals, List<String> categories, Interval<Float> costs) {
 
         String query = buildQueryString(animals, categories, costs);
         Cursor cursor = null;
@@ -65,14 +67,30 @@ public class QueryPurchases {
         return cursor;
     }
 
+    public Cursor getPurchaseByItemNameQuery(String itemName) {
+        String query = "SELECT * FROM " + KeysNamesUtils.CollectionsNames.PURCHASES + " WHERE "
+                + KeysNamesUtils.PurchaseFields.ITEM_NAME + " = '" + itemName + "';";
+        Cursor cursor = null;
+
+        try {
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            cursor = db.rawQuery(query, null);
+        } catch (Exception e) {
+            Log.d("Cursor error", "errore nel lancio della query");
+        }
+
+        return cursor;
+    }
+
+    @NonNull
     private String buildQueryString(List<String> animals, List<String> categories, Interval<Float> costs) {
         StringBuilder query = new StringBuilder();
-        query.append("SELECT * FROM " + KeysNamesUtils.CollectionsNames.PURCHASES + "\n");
+        query.append("SELECT * FROM ").append(KeysNamesUtils.CollectionsNames.PURCHASES).append("\n");
 
         StringBuilder where = new StringBuilder();
         where.append("WHERE ");
 
-        StringBuilder empty_where =new StringBuilder();
+        StringBuilder empty_where = new StringBuilder();
         empty_where.append("WHERE ");
 
         /*
@@ -139,8 +157,7 @@ public class QueryPurchases {
             // SE C'E' IL FILTRO CATEGORIE
             if (categories != null) {
                 // SE E' GIA' STATO INSERITO UN FILTRO AGGIUNGE AND
-                if (!where.equals(empty_where)) {
-
+                if (!where.toString().equals(empty_where.toString())) {
                     where.append(") AND ");
                 }
 
@@ -153,19 +170,16 @@ public class QueryPurchases {
                 }
 
             }
+
             // SE C'E' IL FILTRO COSTI
             if (costs != null) {
-                if (!where.equals(empty_where)) {
-
+                if (!where.toString().equals(empty_where.toString())) {
                     where.append(") AND ");
                 }
-
                 where.append(KeysNamesUtils.PurchaseFields.COST).append(" BETWEEN (").append(costs.getMin()).append(",")
                         .append(costs.getMax());
-
             }
 
-            //
             where.append(");");
             query.append(where);
         }

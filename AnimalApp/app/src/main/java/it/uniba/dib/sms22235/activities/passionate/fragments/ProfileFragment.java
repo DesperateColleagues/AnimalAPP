@@ -1,6 +1,7 @@
 package it.uniba.dib.sms22235.activities.passionate.fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAddAnimalFragme
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAnimalCardFragment;
 import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
 import it.uniba.dib.sms22235.entities.users.Animal;
+import it.uniba.dib.sms22235.utils.DataManipulationHelper;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
 
 public class ProfileFragment extends Fragment implements DialogAddAnimalFragment.DialogAddAnimalFragmentListener {
@@ -69,11 +72,28 @@ public class ProfileFragment extends Fragment implements DialogAddAnimalFragment
 
         LinkedHashSet<Animal> animalSet = ((PassionateNavigationActivity) requireActivity()).getAnimalSet();
 
+        // Path to internal storage
+        String path =
+                KeysNamesUtils.FileDirsNames.BASE_PATH +
+                        KeysNamesUtils.FileDirsNames.ROOT_PREFIX +
+                        KeysNamesUtils.FileDirsNames.PROFILE_IMAGES;
+
         // Init the recycler
         adapter = new AnimalListAdapter();
+
         for (Animal animal : animalSet) {
+            // Set the animals in the adapter
             adapter.addAnimal(animal);
+
+            // Load the profile pic preview
+            Bitmap image = DataManipulationHelper.loadBitmapFromStorage(path,
+                    animal.getMicrochipCode() + ".png");
+
+            // Add the profile pic preview to the adapter
+            adapter.addPic(image);
         }
+
+
 
         animalRecycleView.setAdapter(adapter);
         animalRecycleView.setLayoutManager(new LinearLayoutManager(

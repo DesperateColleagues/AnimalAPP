@@ -13,15 +13,24 @@
         android:layout_marginTop="20dp"
         android:text="@string/animale"/>
 
-    <Spinner
-        android:id="@+id/spinnerAnimalsFilter"
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/bg_spinner_role"
-        android:minHeight="48dp" />
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="16dp">
+
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/animalsChipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipSpacingHorizontal="15dp"
+            app:singleLine="true">
+
+        </com.google.android.material.chip.ChipGroup>
+
+    </HorizontalScrollView>
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
@@ -36,15 +45,21 @@
         android:layout_marginTop="20dp"
         android:text="@string/categorie"/>
 
-    <Spinner
-        android:id="@+id/spinnerCategoriesFilter"
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/bg_spinner_role"
-        android:minHeight="48dp" />
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="16dp">
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/categoriesChipGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:chipSpacingHorizontal="15dp"
+        app:singleLine="true"/>
+
+    </HorizontalScrollView>
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
@@ -66,7 +81,7 @@
         android:valueFrom="0"
         android:value="10"
         android:valueTo="20"
-        app:haloColor="?attr/colorPrimary"
+        app:haloColor="?attr/colorSecondary"
         app:labelStyle="@style/Widget.App.Tooltip"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
@@ -84,6 +99,7 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/btnAddFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

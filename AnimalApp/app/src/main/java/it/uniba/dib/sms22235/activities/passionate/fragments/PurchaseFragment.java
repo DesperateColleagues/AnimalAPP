@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,18 +18,24 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAddPurchaseFragment;
 import it.uniba.dib.sms22235.adapters.ListViewPurchasesAdapter;
+import it.uniba.dib.sms22235.entities.operations.Interval;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class PurchaseFragment extends Fragment implements DialogAddPurchaseFragment.DialogAddPurchaseFragmentListener {
+public class PurchaseFragment extends Fragment implements
+        DialogAddPurchaseFragment.DialogAddPurchaseFragmentListener,
+        FilterPurchaseFragment.FilterPurchaseFragmentListener,
+        Serializable {
 
     public interface PurchaseFragmentListener {
         /**
@@ -88,8 +95,11 @@ public class PurchaseFragment extends Fragment implements DialogAddPurchaseFragm
         purchaseListView.setAdapter(adapter);
 
         // Obtain data from Activity
-        LinkedHashSet<Animal> animalSet = ((PassionateNavigationActivity) requireActivity()).getAnimalSet();
-        FloatingActionButton fab = ((PassionateNavigationActivity) requireActivity()).getFab();
+        LinkedHashSet<Animal> animalSet = ((PassionateNavigationActivity) requireActivity())
+                .getAnimalSet();
+
+        FloatingActionButton fab = ((PassionateNavigationActivity) requireActivity())
+                .getFab();
 
         // Get the fab from the activity and set the listener
         fab.setOnClickListener(v -> {
@@ -109,8 +119,13 @@ public class PurchaseFragment extends Fragment implements DialogAddPurchaseFragm
 
             Bundle bundle = new Bundle();
 
+            // Add the list of animal's names
             bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS,
                     buildSpinnerEntries(animalSet));
+
+            // Add a binding to FilterPurchaseFragment listener
+            bundle.putSerializable(KeysNamesUtils.BundleKeys.INTERFACE, this);
+
             controller.navigate(R.id.filterPurchaseFragment, bundle);
         });
     }
@@ -121,6 +136,12 @@ public class PurchaseFragment extends Fragment implements DialogAddPurchaseFragm
         adapter.notifyDataSetChanged();
 
         listener.onPurchaseRegistered(purchase);
+    }
+
+    @Override
+    public void onFiltersAdded(List<String> animals, List<String> categories, Interval<Float> costs) {
+        // todo: run query and update list view items
+        Toast.makeText(getContext(), "Funziona", Toast.LENGTH_LONG).show();
     }
 
     @NonNull

@@ -74,6 +74,7 @@ public class KeysNamesUtils {
         public static String PASSIONATE = "passionate";
         public static String PASSIONATE_PURCHASES = "purchases";
         public static String PASSIONATE_ANIMALS = "animals";
+        public static String INTERFACE = "INT";
     }
 
     public static class FileDirsNames {

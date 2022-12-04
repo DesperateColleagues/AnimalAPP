@@ -22,14 +22,19 @@ import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 
 public class ListViewPhotoDiaryAdapter extends ArrayAdapter<PhotoDiaryPost> {
     private List<PhotoDiaryPost> postList;
+    private List<Bitmap> picList;
 
     public ListViewPhotoDiaryAdapter(@NonNull Context context, int resource) {
         super(context, resource);
         postList = new ArrayList<>();
+        picList = new ArrayList<>();
     }
 
     public void addPost(PhotoDiaryPost post) {
         postList.add(post);
+        // Load the image from the file
+        picList.add(DataManipulationHelper
+                .loadBitmapFromStorage(post.getDirName(), post.getFileName()));
     }
 
     @Override
@@ -71,9 +76,7 @@ public class ListViewPhotoDiaryAdapter extends ArrayAdapter<PhotoDiaryPost> {
             String dirName = post.getDirName();
             String fileName = post.getFileName();
 
-            // Load the image from the file
-            Bitmap bitmap = DataManipulationHelper
-                    .loadBitmapFromStorage(dirName, fileName);
+            Bitmap bitmap = picList.get(position);
 
             if (bitmap != null) {
                 photoDiaryImage.setImageBitmap(bitmap);
