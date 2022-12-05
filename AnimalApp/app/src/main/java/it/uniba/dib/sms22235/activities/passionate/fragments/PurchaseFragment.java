@@ -1,6 +1,7 @@
 package it.uniba.dib.sms22235.activities.passionate.fragments;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAddPurchaseFragment;
 import it.uniba.dib.sms22235.adapters.ListViewPurchasesAdapter;
+import it.uniba.dib.sms22235.database.QueryPurchases;
 import it.uniba.dib.sms22235.entities.operations.Interval;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
@@ -141,7 +143,19 @@ public class PurchaseFragment extends Fragment implements
     @Override
     public void onFiltersAdded(List<String> animals, List<String> categories, Interval<Float> costs) {
         // todo: run query and update list view items
-        Toast.makeText(getContext(), "Funziona", Toast.LENGTH_LONG).show();
+        QueryPurchases queryPurchases = new QueryPurchases(requireContext());
+        Cursor cursor = queryPurchases.runFilterQuery(animals, categories, costs);
+
+
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                // todo: aggiornamento data set e list view
+                Toast.makeText(getContext(), "" + cursor.getCount(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(requireContext(), "Nessun risultato", Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
 
     @NonNull

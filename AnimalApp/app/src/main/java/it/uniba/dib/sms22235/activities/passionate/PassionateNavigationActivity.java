@@ -135,8 +135,10 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
 
         purchasesList.add(purchase);
 
-        queryPurchases.insertPurchase(purchase.getAnimal(), purchase.getItemName(), purchase.getOwner()
+        long testValue = queryPurchases.insertPurchase(purchase.getAnimal(), purchase.getItemName(), purchase.getOwner()
         , purchase.getDate(), purchase.getCategory(), purchase.getCost(), purchase.getAmount());
+
+        Toast.makeText(this, testValue + "", Toast.LENGTH_LONG).show();
 
         db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
                 .add(purchase)

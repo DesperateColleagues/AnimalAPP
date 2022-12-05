@@ -153,12 +153,14 @@ public class QueryPurchases {
                         where.append(",");
                 }
 
+                where.append(")");
+
             }
             // SE C'E' IL FILTRO CATEGORIE
             if (categories != null) {
                 // SE E' GIA' STATO INSERITO UN FILTRO AGGIUNGE AND
                 if (!where.toString().equals(empty_where.toString())) {
-                    where.append(") AND ");
+                    where.append(" AND ");
                 }
 
                 where.append(KeysNamesUtils.PurchaseFields.CATEGORY).append(" IN (");
@@ -169,18 +171,20 @@ public class QueryPurchases {
                         where.append(",");
                 }
 
+                where.append(")");
+
             }
 
             // SE C'E' IL FILTRO COSTI
             if (costs != null) {
                 if (!where.toString().equals(empty_where.toString())) {
-                    where.append(") AND ");
+                    where.append(" AND ");
                 }
-                where.append(KeysNamesUtils.PurchaseFields.COST).append(" BETWEEN (").append(costs.getMin()).append(",")
+                where.append(KeysNamesUtils.PurchaseFields.COST).append(" BETWEEN ").append(costs.getMin()).append(" AND ")
                         .append(costs.getMax());
             }
 
-            where.append(");");
+            where.append(";");
             query.append(where);
         }
 
