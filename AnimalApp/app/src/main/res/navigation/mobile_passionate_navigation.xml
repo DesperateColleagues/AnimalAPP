@@ -35,5 +35,9 @@
     <fragment
         android:id="@+id/filterPurchaseFragment"
         android:name="it.uniba.dib.sms22235.activities.passionate.fragments.FilterPurchaseFragment"
-        android:label="Filtri" />
+        android:label="Filtri" >
+        <action
+            android:id="@+id/action_filterPurchaseFragment_to_passionate_purchase"
+            app:destination="@id/passionate_purchase" />
+    </fragment>
 </navigation>

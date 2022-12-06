@@ -1,5 +1,7 @@
 package it.uniba.dib.sms22235.entities.operations;
 
+import android.database.Cursor;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -20,6 +22,15 @@ public class Purchase implements Serializable, Cloneable {
 
     public Purchase() {}
 
+    /**
+     *
+     * @param animal the animal of the purchase
+     * @param itemName the name of the bought item
+     * @param date the date of the purchase
+     * @param category the category of the item
+     * @param cost the cost of the purchase
+     * @param amount the amount of item bought
+     * */
     public Purchase(String animal, String itemName, String date, String category, float cost, int amount) {
         this.animal = animal;
         this.itemName = itemName;
@@ -61,6 +72,13 @@ public class Purchase implements Serializable, Cloneable {
         return date;
     }
 
+    /**
+     * This method is used to create a purchase object
+     * given the document stored in FirebaseFirestore
+     *
+     * @param document the document with purchase data
+     * @return the new instance of the purchase
+     * */
     @NonNull
     public static Purchase loadPurchase(@NonNull DocumentSnapshot document) {
         Purchase purchase = new Purchase(
@@ -79,7 +97,7 @@ public class Purchase implements Serializable, Cloneable {
     @NonNull
     @Override
     public Object clone() {
-        Object o = null;
+        Object o;
 
         try {
             o = super.clone();

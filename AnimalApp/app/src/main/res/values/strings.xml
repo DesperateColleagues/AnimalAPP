@@ -73,4 +73,10 @@
     <string name="animale">Animale</string>
     <string name="categorie">Categorie</string>
     <string name="costoh">Costo</string>
+
+    <string-array name="rangeSliderValues">
+        <item>0</item>
+        <item>30</item>
+    </string-array>
+
 </resources>

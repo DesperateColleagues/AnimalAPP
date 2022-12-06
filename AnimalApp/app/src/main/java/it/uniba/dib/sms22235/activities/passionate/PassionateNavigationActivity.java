@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import android.widget.Toast;
@@ -20,9 +21,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.common.base.MoreObjects;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -31,7 +30,7 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.fragments.ProfileFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment;
 
-import it.uniba.dib.sms22235.database.QueryPurchases;
+import it.uniba.dib.sms22235.database.QueryPurchasesManager;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
@@ -40,7 +39,7 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 public class PassionateNavigationActivity extends AppCompatActivity implements ProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener {
 
     private FirebaseFirestore db;
-    private QueryPurchases queryPurchases;
+    private QueryPurchasesManager queryPurchases;
 
     private Passionate passionate;
     private LinkedHashSet<Animal> animalSet;
@@ -79,7 +78,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
 
         db = FirebaseFirestore.getInstance();
 
-        queryPurchases = new QueryPurchases(this);
+        queryPurchases = new QueryPurchasesManager(this);
 
         Bundle loginBundle = getIntent().getExtras(); // get the login bundle
 
@@ -91,13 +90,14 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
-
-        if (navView.getVisibility() == View.GONE && fab.getVisibility() == View.GONE) {
-            navView.setVisibility(View.VISIBLE);
-            fab.setVisibility(View.VISIBLE);
-        }
+        restoreBottomAppBarVisibility();
     }
 
     @Override
@@ -135,17 +135,21 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
 
         purchasesList.add(purchase);
 
-        long testValue = queryPurchases.insertPurchase(purchase.getAnimal(), purchase.getItemName(), purchase.getOwner()
-        , purchase.getDate(), purchase.getCategory(), purchase.getCost(), purchase.getAmount());
+        long testValue = queryPurchases.insertPurchase(purchase.getAnimal(), purchase.getItemName(), purchase.getOwner(),
+                purchase.getDate(), purchase.getCategory(), purchase.getCost(), purchase.getAmount());
 
         Toast.makeText(this, testValue + "", Toast.LENGTH_LONG).show();
 
-        db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
-                .add(purchase)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(this, "Spesa salvata con successo",
-                            Toast.LENGTH_LONG).show();
-                });
+        if (testValue != -1) {
+            db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
+                    .add(purchase)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(this, "Spesa salvata con successo",
+                                Toast.LENGTH_LONG).show();
+                    });
+        } else {
+            Toast.makeText(this, "Errore nell'inserimento della spesa", Toast.LENGTH_LONG).show();
+        }
     }
 
     //method to ask permissions
@@ -198,6 +202,13 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
         }
 
         return clonedPurchasesList;
+    }
+
+    public void restoreBottomAppBarVisibility(){
+        if (navView.getVisibility() == View.GONE && fab.getVisibility() == View.GONE) {
+            navView.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
+        }
     }
 
     public FloatingActionButton getFab() {

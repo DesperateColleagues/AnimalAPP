@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,11 +27,8 @@ import it.uniba.dib.sms22235.activities.veterinarian.VeterinarianNavigationActiv
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
-import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
-import it.uniba.dib.sms22235.activities.registration.RegistrationActivity;
+import it.uniba.dib.sms22235.database.QueryPurchasesManager;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Animal;
@@ -44,6 +42,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth; // firebase object to perform authentication
     private FirebaseFirestore db; // firebase object to perform DB operations
+
+    private QueryPurchasesManager manager;
 
     // input fields for login
     private EditText txtInputEmail;
@@ -60,6 +60,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        manager = new QueryPurchasesManager(this);
+        manager.dropTableAndRefresh();
 
         // Get an instance of the authentication object
         mAuth = FirebaseAuth.getInstance();
@@ -169,7 +172,20 @@ public class LoginActivity extends AppCompatActivity {
 
                                                                 // Retrieve purchases
                                                                 for (DocumentSnapshot snapshot : retrievedPurchasesDocuments) {
-                                                                    purchases.add(Purchase.loadPurchase(snapshot));
+                                                                    Purchase purchase = Purchase.loadPurchase(snapshot);
+
+                                                                    long t = manager.insertPurchase(
+                                                                            purchase.getAnimal(),
+                                                                            purchase.getItemName(),
+                                                                            purchase.getOwner(),
+                                                                            purchase.getDate(),
+                                                                            purchase.getCategory(),
+                                                                            purchase.getCost(),
+                                                                            purchase.getAmount()
+                                                                    );
+
+                                                                    Log.d("TEST", t +"");
+                                                                    purchases.add(purchase);
                                                                 }
                                                             }
 

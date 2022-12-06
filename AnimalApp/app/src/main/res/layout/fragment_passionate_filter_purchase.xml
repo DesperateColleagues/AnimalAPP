@@ -74,13 +74,13 @@
         android:layout_marginTop="20dp"
         android:text="@string/costoh"/>
 
-    <com.google.android.material.slider.Slider
+    <com.google.android.material.slider.RangeSlider
         android:id="@+id/costRangeSlider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:valueFrom="0"
-        android:value="10"
-        android:valueTo="20"
+        android:valueTo="100"
+        app:values="@array/rangeSliderValues"
         app:haloColor="?attr/colorSecondary"
         app:labelStyle="@style/Widget.App.Tooltip"
         android:layout_marginLeft="30dp"

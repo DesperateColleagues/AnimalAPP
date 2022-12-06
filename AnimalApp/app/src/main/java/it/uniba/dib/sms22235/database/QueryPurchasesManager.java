@@ -5,26 +5,55 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import it.uniba.dib.sms22235.entities.operations.Interval;
-import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class QueryPurchases {
+public class QueryPurchasesManager {
 
     private final DBHelper dbHelper;
 
-    public QueryPurchases(Context context){
+    public QueryPurchasesManager(Context context){
         dbHelper = new DBHelper(context);
     }
 
+    /**
+     * This method is used to drop the current purchase table
+     * and recreate the same table
+     * */
+    public void dropTableAndRefresh(){
+        try {
+            dbHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS purchases;");
+        } catch (SQLException e){
+            Log.e("DROP ERROR", e.getMessage());
+        }
+
+        try {
+            dbHelper.getWritableDatabase().execSQL(KeysNamesUtils.PurchaseFields.CREATE_TABLE);
+        } catch (SQLException e) {
+            Log.e("CREATE ERROR", e.getMessage());
+        }
+    }
+
+    /**
+     * This method is used to insert into purchase table a new purchase record
+     *
+     * @param animal the animal of the purchase
+     * @param itemName the name of the bought item
+     * @param owner the owner of the animal who's registering the purchase
+     * @param date the date of the purchase
+     * @param category the category of the item
+     * @param cost the cost of the purchase
+     * @param amount the amount of item bought
+     *
+     * @return the number of rows of the table if the query is run successfully. -1 otherwise
+     * */
     public long insertPurchase(String animal, String itemName, String owner, String date,
                                String category, float cost, int amount) {
         long testValue = 0;
@@ -42,14 +71,24 @@ public class QueryPurchases {
         try{
 
             testValue = db.insert(KeysNamesUtils.CollectionsNames.PURCHASES, null, cv);
-        }catch(Exception e){
+        }catch(SQLiteException e){
 
-            Log.d("DATABASE", e.getMessage());
+            Log.d("INSERT ERROR", e.getMessage());
         }
 
         return testValue;
     }
 
+    /**
+     * This method runs a query which search in the purchase table for all the purchases
+     * which math the input conditions.
+     *
+     * @param animals a list of the selected animals to search. Null if not present
+     * @param categories a list of the select categories to search. Null if not present
+     * @param costs an interval of cost to search. Null if not present
+     *
+     * @return a cursor with the result of the query
+     * */
     public Cursor runFilterQuery(List<String> animals, List<String> categories, Interval<Float> costs) {
 
         String query = buildQueryString(animals, categories, costs);
@@ -59,7 +98,7 @@ public class QueryPurchases {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(query, null);
 
-        }catch(Exception e){
+        }catch(SQLiteException e){
             // todo: think to good error name
             Log.d("Cursor error", "errore nel lancio della query");
         }
@@ -67,15 +106,57 @@ public class QueryPurchases {
         return cursor;
     }
 
-    public Cursor getPurchaseByItemNameQuery(String itemName) {
-        String query = "SELECT * FROM " + KeysNamesUtils.CollectionsNames.PURCHASES + " WHERE "
-                + KeysNamesUtils.PurchaseFields.ITEM_NAME + " = '" + itemName + "';";
+    /**
+     * This query search for the input item into purchase table.
+     *
+     * @param itemName the name of the item to search
+     * @param username the owner of the purchase
+     * */
+    public Cursor getPurchaseByItemNameQuery(String itemName, String username) {
+        String query = "SELECT * FROM " + KeysNamesUtils.CollectionsNames.PURCHASES +
+                " WHERE " + KeysNamesUtils.PurchaseFields.ITEM_NAME + " LIKE '%" + itemName + "%'" +
+                " AND " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + username + "';";
+
         Cursor cursor = null;
 
         try {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(query, null);
-        } catch (Exception e) {
+        } catch (SQLiteException e) {
+            Log.d("Cursor error", "errore nel lancio della query");
+        }
+
+        return cursor;
+    }
+
+    public Cursor getMinimumPurchaseValue(String username){
+        String query = "SELECT MIN(" + KeysNamesUtils.PurchaseFields.COST + ") AS minCost" +
+                " FROM " + KeysNamesUtils.CollectionsNames.PURCHASES +
+                " WHERE " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + username + "';";
+
+        Cursor cursor = null;
+
+        try {
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            cursor = db.rawQuery(query, null);
+        } catch (SQLException e) {
+            Log.d("Cursor error", "errore nel lancio della query");
+        }
+
+        return cursor;
+    }
+
+    public Cursor getMaximumPurchaseValue(String username){
+        String query = "SELECT MAX(" + KeysNamesUtils.PurchaseFields.COST + ") AS maxCost" +
+                " FROM " + KeysNamesUtils.CollectionsNames.PURCHASES +
+                " WHERE " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + username + "';";
+
+        Cursor cursor = null;
+
+        try {
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            cursor = db.rawQuery(query, null);
+        } catch (SQLException e) {
             Log.d("Cursor error", "errore nel lancio della query");
         }
 
