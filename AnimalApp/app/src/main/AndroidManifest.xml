@@ -28,6 +28,16 @@
         </activity>
 
         <activity
+            android:name=".activities.veterinarian.VeterinarianNavigationActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"
+            android:label="@string/title_activity_veterinarian_navigation">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
             android:name=".activities.registration.RegistrationActivity"
             android:exported="false">
             <meta-data

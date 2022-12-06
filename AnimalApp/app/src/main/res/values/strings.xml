@@ -24,7 +24,9 @@
     <string name="scopo_ente">scopo ente</string>
     <string name="descrizione_ente">descrizione ente</string>
     <string name="title_activity_passionate_navigation">PassionateNavigationActivity</string>
+    <string name="title_activity_veterinarian_navigation">VeterinarianNavigationActivity</string>
     <string name="title_passionate_profile">Profilo</string>
+    <string name="title_veterinarian_profile">Profilo</string>
     <string name="title_passionate_veterinary_reservation">Pet care</string>
     <string name="title_passionate_purchases">Spese</string>
     <string name="registra_animale">Registra animale</string>
@@ -45,6 +47,13 @@
     <string name="seleziona_immagine">Seleziona immagine</string>
     <string name="salva">Salva</string>
     <string name="titolo_immagine">titolo immagine</string>
+
+    <!-- Stringhe sottostanti riferite alla creazione di appuntamenti del veterinario -->
+    <string name="data_appuntamento">data</string>
+    <string name="ora_appuntamento">ora</string>
+    <string name="aggiungi_prenotazione">Aggiungi prenotazione</string>
+
+
     <string name="product">prodotto</string>
     <string name="costo">costo</string>
     <string name="quantit">quantità</string>

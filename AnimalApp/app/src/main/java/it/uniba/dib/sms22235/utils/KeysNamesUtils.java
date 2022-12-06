@@ -8,7 +8,7 @@ import it.uniba.dib.sms22235.R;
 
 public class KeysNamesUtils {
     public static class RolesNames {
-        public static String VETERINARY = "vet";
+        public static String VETERINARIAN = "vet";
         public static String COMMON_USER = "cus";
         public static String ORGANIZATION = "org";
         public static String ANIMAL = "ani";
@@ -21,6 +21,7 @@ public class KeysNamesUtils {
         public static String OWNERSHIP = "ownership";
         public static String REQUESTS = "request";
         public static String REPORTS = "reports";
+        public static String RESERVATIONS = "reservations";
     }
 
     public static class ActorFields {
@@ -42,6 +43,14 @@ public class KeysNamesUtils {
         public static String OWNER = "owner";
     }
 
+    public static class ReservationFields {
+        public static String OWNER = "owner";
+        public static String ANIMAL = "animal";
+        public static String VETERINARIAN = "veterinarian";
+        public static String DATE = "date";
+        public static String TIME  = "time";
+        public static String DIAGNOSIS = "diagnosis";
+        
     public static class PurchaseFields {
         public static String ID = "id";
         public static String ANIMAL = "animal";
@@ -72,6 +81,7 @@ public class KeysNamesUtils {
 
     public static class BundleKeys {
         public static String PASSIONATE = "passionate";
+        public static String VETERINARIAN = "veterinarian";
         public static String PASSIONATE_PURCHASES = "purchases";
         public static String PASSIONATE_ANIMALS = "animals";
         public static String INTERFACE = "INT";

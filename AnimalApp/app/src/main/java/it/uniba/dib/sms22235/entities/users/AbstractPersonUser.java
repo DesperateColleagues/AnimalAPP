@@ -1,9 +1,10 @@
 package it.uniba.dib.sms22235.entities.users;
 
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AbstractPersonUser{
+public class AbstractPersonUser implements Serializable {
     protected String fullName;
     protected String email;
     private static final String EMAIL_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";

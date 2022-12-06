@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/veterinarian_profile"
+        android:icon="@drawable/ic_baseline_account_circle_24"
+        android:title="Profilo"/>
+        <!-- Cambiare stringa hardcodata, presente in strings.xml-->
+
+    <item
+        android:id="@+id/veterinarian_reservation"
+        android:icon="@drawable/ic_baseline_calendar_month_24"
+        android:title="Prenotazioni"/>
+</menu>

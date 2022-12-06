@@ -22,7 +22,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.entities.users.Passionate;
-import it.uniba.dib.sms22235.entities.users.Veterinary;
+import it.uniba.dib.sms22235.entities.users.Veterinarian;
 
 /**
  * This fragment contains the logic of a person registration.
@@ -45,10 +45,10 @@ public class RegistrationPersonFragment extends Fragment {
         /**
          * Triggered when the veterinary completes its sign up process
          *
-         * @param veterinary the veterinary to register
+         * @param veterinarian the veterinary to register
          * @param pwd the password of the veterinary
          * */
-        void onVeterinaryRegistered(Veterinary veterinary, String pwd);
+        void onVeterinaryRegistered(Veterinarian veterinarian, String pwd);
     }
 
     // The role of the actor who is registering: it can be a user or a veterinary
@@ -160,7 +160,7 @@ public class RegistrationPersonFragment extends Fragment {
                     if (!isEmptyInput && isInputCorrect) {
                         // Delegate the Activity to register the veterinary on the FireStore
                         listener.onVeterinaryRegistered(
-                                new Veterinary(name, email, clinicName, phoneNumber),password);
+                                new Veterinarian(name, email, clinicName, phoneNumber),password);
                     }
 
                     if (!InputFieldCheck.isNumberValid(phoneNumber)){
@@ -193,7 +193,7 @@ public class RegistrationPersonFragment extends Fragment {
             layoutTxtInputClinicName.setVisibility(View.GONE);
             layoutTxtInputPhoneNumber.setVisibility(View.GONE);
             layoutTxtInputUsername.setVisibility(View.VISIBLE);
-        } else if (role.equals(KeysNamesUtils.RolesNames.VETERINARY)){
+        } else if (role.equals(KeysNamesUtils.RolesNames.VETERINARIAN)){
             layoutTxtInputClinicName.setVisibility(View.VISIBLE);
             layoutTxtInputPhoneNumber.setVisibility(View.VISIBLE);
             layoutTxtInputUsername.setVisibility(View.GONE);

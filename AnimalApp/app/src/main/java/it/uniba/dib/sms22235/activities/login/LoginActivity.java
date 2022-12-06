@@ -17,6 +17,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
+import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.activities.registration.RegistrationActivity;
+import it.uniba.dib.sms22235.activities.veterinarian.VeterinarianNavigationActivity;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -27,10 +33,11 @@ import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.activities.registration.RegistrationActivity;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
+
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.Passionate;
-import it.uniba.dib.sms22235.entities.users.Veterinary;
+import it.uniba.dib.sms22235.entities.users.Veterinarian;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -122,6 +129,15 @@ public class LoginActivity extends AppCompatActivity {
 
                                                     Bundle bundle = new Bundle();
                                                     bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE, cus);
+                                                    
+                                                    newActivityRunning(PassionateNavigationActivity.class, bundle);
+                                                } else if (role.equals(KeysNamesUtils.RolesNames.VETERINARIAN)) {
+                                                    Veterinarian vet = Veterinarian.loadVeterinarian(document);
+
+                                                    Bundle bundle = new Bundle();
+                                                    bundle.putSerializable(KeysNamesUtils.BundleKeys.VETERINARIAN, vet);
+                                                    newActivityRunning(VeterinarianNavigationActivity.class, bundle);
+
 
                                                     // Execute the task to get the animals of the logged user
                                                     Task<QuerySnapshot> taskGetAnimals = db
@@ -177,8 +193,6 @@ public class LoginActivity extends AppCompatActivity {
                                                         newActivityRunning(PassionateNavigationActivity.class, bundle);
                                                     });
 
-                                                } else if (role.equals(KeysNamesUtils.RolesNames.VETERINARY)) {
-                                                    Veterinary vet = Veterinary.loadVeterinary(document);
                                                 } else if (role.equals(KeysNamesUtils.RolesNames.ORGANIZATION)) {
                                                     Organization org = Organization.loadOrganization(document);
                                                 }
