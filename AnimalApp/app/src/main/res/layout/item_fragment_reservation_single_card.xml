@@ -15,12 +15,12 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginTop="5dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="3dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="5dp"
-            android:backgroundTint="?attr/colorSecondary"
+            android:layout_marginBottom="3dp"
+            android:backgroundTint="?attr/colorPrimary"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
@@ -29,15 +29,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/txtReservationInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textSize="16sp"
+                    android:gravity="center_horizontal"
+                    android:textSize="17sp"
                     />
 
             </LinearLayout>

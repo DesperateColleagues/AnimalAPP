@@ -18,10 +18,17 @@
     <color name="light_onMain">#000000</color>
     <color name="light_textColor">#000000</color>
 
+    <color name="dark_main">#134074</color>
+    <color name="dark_variation">#0F2B51</color>
+    <color name="dark_accent">#50759C</color>
+    <color name="dark_onMain">#ffffff</color>
+    <color name="dark_textColor">#ffffff</color>
+
+    <!--
     <color name="dark_main">#593651</color>
     <color name="dark_variation">#40263A</color>
     <color name="dark_accent">#70566D</color>
     <color name="dark_onMain">#ffffff</color>
     <color name="dark_textColor">#ffffff</color>
-
+    -->
 </resources>

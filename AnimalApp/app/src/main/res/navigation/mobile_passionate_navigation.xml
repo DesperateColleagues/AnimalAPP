@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/passionate_profile"
         android:name="it.uniba.dib.sms22235.activities.passionate.fragments.ProfileFragment"
-        android:label="@string/title_passionate_profile"
+        android:label="@string/title_fragment_passionate_profile"
         tools:layout="@layout/fragment_passionate_profile" />
 
     <fragment
@@ -19,13 +19,13 @@
     <fragment
         android:id="@+id/passionate_pet_care"
         android:name="it.uniba.dib.sms22235.activities.passionate.fragments.VeterinaryReservationFragment"
-        android:label="@string/title_passionate_veterinary_reservation"
+        android:label="@string/title_fragment_passionate_reservation"
         tools:layout="@layout/fragment_passionate_veterinary_reservation" />
 
     <fragment
         android:id="@+id/passionate_purchase"
         android:name="it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment"
-        android:label="@string/title_passionate_purchases"
+        android:label="@string/title_fragment_passionate_purchases"
         tools:layout="@layout/fragment_passionate_purchase" >
         <action
             android:id="@+id/action_passionate_purchase_to_filterPurchaseFragment"

@@ -32,6 +32,7 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.activities.registration.RegistrationActivity;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
+import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Animal;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
@@ -129,15 +130,6 @@ public class LoginActivity extends AppCompatActivity {
 
                                                     Bundle bundle = new Bundle();
                                                     bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE, cus);
-                                                    
-                                                    newActivityRunning(PassionateNavigationActivity.class, bundle);
-                                                } else if (role.equals(KeysNamesUtils.RolesNames.VETERINARIAN)) {
-                                                    Veterinarian vet = Veterinarian.loadVeterinarian(document);
-
-                                                    Bundle bundle = new Bundle();
-                                                    bundle.putSerializable(KeysNamesUtils.BundleKeys.VETERINARIAN, vet);
-                                                    newActivityRunning(VeterinarianNavigationActivity.class, bundle);
-
 
                                                     // Execute the task to get the animals of the logged user
                                                     Task<QuerySnapshot> taskGetAnimals = db
@@ -191,6 +183,37 @@ public class LoginActivity extends AppCompatActivity {
 
                                                         // Start the new activity only once the bundle is filled
                                                         newActivityRunning(PassionateNavigationActivity.class, bundle);
+                                                    });
+
+                                                } else if (role.equals(KeysNamesUtils.RolesNames.VETERINARIAN)) {
+                                                    Veterinarian vet = Veterinarian.loadVeterinarian(document);
+
+                                                    Bundle bundle = new Bundle();
+                                                    bundle.putSerializable(KeysNamesUtils.BundleKeys.VETERINARIAN, vet);
+
+                                                    Task<QuerySnapshot> taskGetReservations = db
+                                                            .collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
+                                                            .whereEqualTo(KeysNamesUtils.ReservationFields.VETERINARIAN, vet.getEmail())
+                                                            .get();
+
+                                                    Tasks.whenAllComplete(taskGetReservations).addOnCompleteListener(task -> {
+                                                        QuerySnapshot reservationsSnapshot = (QuerySnapshot) task.getResult().get(0).getResult();
+
+                                                        ArrayList<Reservation> reservations = new ArrayList<>();
+
+                                                        if (!reservationsSnapshot.isEmpty()) {
+                                                            List<DocumentSnapshot> retrievedReservationsDocuments = reservationsSnapshot.getDocuments();
+
+                                                            for (DocumentSnapshot snapshot : retrievedReservationsDocuments) {
+                                                                reservations.add(Reservation.loadReservation(snapshot));
+                                                            }
+
+                                                        }
+
+                                                        bundle.putSerializable(KeysNamesUtils.BundleKeys.VETERINARIAN_RESERVATIONS, reservations);
+
+                                                        // Start the new activity only once the bundle is filled
+                                                        newActivityRunning(VeterinarianNavigationActivity.class, bundle);
                                                     });
 
                                                 } else if (role.equals(KeysNamesUtils.RolesNames.ORGANIZATION)) {

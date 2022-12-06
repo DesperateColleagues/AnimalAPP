@@ -22,10 +22,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.veterinarian.fragments.VeterinarianReservationFragment;
+import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
@@ -36,6 +38,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     private FloatingActionButton fab;
     private FirebaseFirestore db;
     private Veterinarian veterinarian;
+    private ArrayList<Reservation> reservationsList;
 
     public FloatingActionButton getFab() {
         return fab;
@@ -69,7 +72,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         Bundle loginBundle = getIntent().getExtras();
         if (loginBundle != null){
             veterinarian = (Veterinarian) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.VETERINARIAN);
-
+            reservationsList = (ArrayList<Reservation>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.VETERINARIAN_RESERVATIONS);
         }
 
     }
@@ -81,7 +84,9 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
         String docKeyReservation = KeysNamesUtils.CollectionsNames.RESERVATIONS
                 +"_"+ dateFormatted.replaceAll("[-+^/]*", "")
-        +"_"+ timeFormatted.replaceAll("[-+^]*", "");
+        +"_"+ timeFormatted;
+
+        reservationsList.add(reservation);
 
         db.collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
                 .whereEqualTo(KeysNamesUtils.ReservationFields.DATE, reservation.getDate())
@@ -95,15 +100,27 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
                                  .document(docKeyReservation)
                                  .set(reservation)
                                  .addOnSuccessListener(unused -> {
-                                     Toast.makeText(this, "Ci sono riuscito", Toast.LENGTH_LONG).show();
+                                     Toast.makeText(this, "Prenotazione inserita con successo!", Toast.LENGTH_SHORT).show();
                                  }).addOnFailureListener(e -> {
                                      Log.d("DEB", e.getMessage());
                                  });
                      } else {
-                         Toast.makeText(this, "Appuntamento duplicato", Toast.LENGTH_LONG).show();
+                         Toast.makeText(this, "Appuntamento già presente.", Toast.LENGTH_SHORT).show();
                      }
                  }
                 });
+    }
+
+    public ArrayList<Reservation> getDayReservationsList(String date) {
+        ArrayList<Reservation> clonedReservationsList = new ArrayList<>();
+
+        for (Reservation reservation : reservationsList) {
+            if (date.equals(reservation.getDate())){
+                clonedReservationsList.add((Reservation) reservation.clone());
+            }
+        }
+
+        return clonedReservationsList;
     }
 
     public String getVeterinarianEmail(){
