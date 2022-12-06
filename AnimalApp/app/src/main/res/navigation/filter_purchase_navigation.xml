@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/filter_purchase_navigation"
+    app:startDestination="@id/purchaseFragment">
+
+    <fragment
+        android:id="@+id/purchaseFragment"
+        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment"
+        android:label="fragment_passionate_purchase"
+        tools:layout="@layout/fragment_passionate_purchase" >
+        <action
+            android:id="@+id/action_purchaseFragment_to_filterPurchaseFragment"
+            app:destination="@id/filterPurchaseFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/filterPurchaseFragment"
+        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.FilterPurchaseFragment"
+        android:label="FilterPurchaseFragment" />
+</navigation>

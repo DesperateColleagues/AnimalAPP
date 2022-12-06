@@ -9,16 +9,31 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.activities.registration.RegistrationActivity;
 import it.uniba.dib.sms22235.activities.veterinarian.VeterinarianNavigationActivity;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.activities.registration.RegistrationActivity;
+import it.uniba.dib.sms22235.entities.operations.Purchase;
+import it.uniba.dib.sms22235.entities.users.Animal;
+
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.Passionate;
@@ -114,6 +129,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                                     Bundle bundle = new Bundle();
                                                     bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE, cus);
+                                                    
                                                     newActivityRunning(PassionateNavigationActivity.class, bundle);
                                                 } else if (role.equals(KeysNamesUtils.RolesNames.VETERINARIAN)) {
                                                     Veterinarian vet = Veterinarian.loadVeterinarian(document);
@@ -121,6 +137,61 @@ public class LoginActivity extends AppCompatActivity {
                                                     Bundle bundle = new Bundle();
                                                     bundle.putSerializable(KeysNamesUtils.BundleKeys.VETERINARIAN, vet);
                                                     newActivityRunning(VeterinarianNavigationActivity.class, bundle);
+
+
+                                                    // Execute the task to get the animals of the logged user
+                                                    Task<QuerySnapshot> taskGetAnimals = db
+                                                            .collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                                                            .whereEqualTo(KeysNamesUtils.AnimalFields.OWNER, cus.getUsername())
+                                                            .get();
+
+                                                    // Execute the task to get the purchases of the logged user
+                                                    Task<QuerySnapshot> taskPurchases = db
+                                                            .collection(KeysNamesUtils.CollectionsNames.PURCHASES)
+                                                            .whereEqualTo(KeysNamesUtils.PurchaseFields.OWNER, cus.getUsername())
+                                                            .get();
+
+                                                    // Wait until every task is finished to fill the lists to pass
+                                                    // as bundle to the PassionateNavigationActivity
+                                                    Tasks.whenAllComplete(taskGetAnimals, taskPurchases).addOnCompleteListener(task -> {
+                                                        // The order of the element in the task object follows the order
+                                                        // of the task passed in input to the whenAllCompleteMethod
+                                                        QuerySnapshot animalsSnapshot = (QuerySnapshot) task.getResult().get(0).getResult();
+                                                        QuerySnapshot purchasesSnapshot = (QuerySnapshot) task.getResult().get(1).getResult();
+
+                                                        LinkedHashSet<Animal> animals = new LinkedHashSet<>();
+                                                        ArrayList<Purchase> purchases = new ArrayList<>();
+
+                                                        // Check if the passionate has animals
+                                                        if (!animalsSnapshot.isEmpty()) {
+                                                            List<DocumentSnapshot> retrievedAnimalsDocuments = animalsSnapshot.getDocuments();
+
+                                                            // Retrieve animals
+                                                            for (DocumentSnapshot snapshot : retrievedAnimalsDocuments) {
+                                                                animals.add(Animal.loadAnimal(snapshot));
+                                                            }
+
+                                                            // Check if the user passionate has purchases
+                                                            if (!purchasesSnapshot.isEmpty()) {
+                                                                List<DocumentSnapshot> retrievedPurchasesDocuments = purchasesSnapshot.getDocuments();
+
+                                                                // Retrieve purchases
+                                                                for (DocumentSnapshot snapshot : retrievedPurchasesDocuments) {
+                                                                    purchases.add(Purchase.loadPurchase(snapshot));
+                                                                }
+                                                            }
+
+                                                        }
+
+                                                        // Fill the bundle. If one of the snapshot (or both) are empty
+                                                        // the bundle will be filled with an empty array list, in order
+                                                        // to prevent nullable errors
+                                                        bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS, animals);
+                                                        bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_PURCHASES, purchases);
+
+                                                        // Start the new activity only once the bundle is filled
+                                                        newActivityRunning(PassionateNavigationActivity.class, bundle);
+                                                    });
 
                                                 } else if (role.equals(KeysNamesUtils.RolesNames.ORGANIZATION)) {
                                                     Organization org = Organization.loadOrganization(document);

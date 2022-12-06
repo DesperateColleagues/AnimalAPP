@@ -32,7 +32,7 @@ public class RegistrationRoleChoiceFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-         controller = Navigation.findNavController(container);
+        controller = Navigation.findNavController(container);
 
         return inflater.inflate(R.layout.fragment_registration_role_choice, container,
                 false);

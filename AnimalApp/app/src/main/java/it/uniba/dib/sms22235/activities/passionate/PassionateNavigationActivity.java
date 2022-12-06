@@ -4,58 +4,59 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.common.base.MoreObjects;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAnimalCardFragment;
-import it.uniba.dib.sms22235.activities.passionate.fragments.PhotoDiaryFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.ProfileFragment;
-import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
+import it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment;
+
+import it.uniba.dib.sms22235.database.QueryPurchases;
+import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
-import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
 
-public class PassionateNavigationActivity extends AppCompatActivity implements /*DialogAddAnimalFragment.DialogAddAnimalFragmentListener,*/ ProfileFragment.ProfileFragmentListener {
+public class PassionateNavigationActivity extends AppCompatActivity implements ProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener {
 
     private FirebaseFirestore db;
-    private Passionate passionate;
-    private final int STORAGE_REQUEST_CODE = 1;
-    private FloatingActionButton fab;
+    private QueryPurchases queryPurchases;
 
+    private Passionate passionate;
+    private LinkedHashSet<Animal> animalSet;
+    private ArrayList<Purchase> purchasesList;
+
+    private FloatingActionButton fab;
+    private BottomNavigationView navView;
+
+    @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_passionate_navigation);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -78,118 +79,78 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
 
         db = FirebaseFirestore.getInstance();
 
+        queryPurchases = new QueryPurchases(this);
+
         Bundle loginBundle = getIntent().getExtras(); // get the login bundle
 
         if (loginBundle != null) {
             passionate = (Passionate) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE);
+            animalSet = (LinkedHashSet<Animal>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS);
+            purchasesList = (ArrayList<Purchase>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_PURCHASES);
         }
     }
 
-    public FloatingActionButton getFab() {
-        return fab;
-    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
-    public String getPassionateUsername() {
-        return passionate.getUsername();
+        if (navView.getVisibility() == View.GONE && fab.getVisibility() == View.GONE) {
+            navView.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
-    public void retrieveUserAnimals(RecyclerView recyclerView) {
-        AnimalListAdapter adapter = new AnimalListAdapter();
-
-        db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
-                .whereEqualTo(KeysNamesUtils.AnimalFields.OWNER, passionate.getUsername())
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        if (!querySnapshot.isEmpty()) {
-                            List<DocumentSnapshot> documents = querySnapshot.getDocuments();
-
-                            for (DocumentSnapshot document : documents) {
-                                // Add the animal to the list by loading it with the static method
-                                adapter.addAnimal(Animal.loadAnimal(document));
-                            }
-
-                            // Set up the recycler view to show the retrieved animals
-                            recyclerView.setAdapter(adapter);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(
-                                    this, RecyclerView.HORIZONTAL, false));
-                            // Set up the onClick event to show the AnimalCard of that puppy
-                            recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
-                                @Override
-                                public void onClick(View view, int position) {
-                                    // This method is used to request storage permission to the user
-                                    // with that we can save animal images not only on firebase,
-                                    // but also locally, to retrieve them more easily
-                                    requestPermission();
-
-                                    // This code obtains the selected Animal info and it shows them in a specific built Dialog
-                                    DialogAnimalCardFragment dialogAnimalCardFragment = new DialogAnimalCardFragment(adapter.getAnimalAtPosition(position));
-                                    dialogAnimalCardFragment.show(getSupportFragmentManager(), "DialogAnimalCardFragment");
-                                }
-
-                                @Override
-                                public void onLongClick(View view, int position) {
-                                    // We do not need this method atm
-                                }
-                            }));
-                        }
-                    }
-                });
-    }
-
-    @Override
-    public void onAnimalRegistered(@NonNull Animal animal, RecyclerView recyclerView) {
+    public void onAnimalRegistered(@NonNull Animal animal) {
         String docKeyAnimal = KeysNamesUtils.RolesNames.ANIMAL
                 + "_" + animal.getMicrochipCode();
 
         // Set the animal's owner
         animal.setOwner(passionate.getUsername());
 
-        // Query to search if the microchip code is unique
-        db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
-                .whereEqualTo(KeysNamesUtils.AnimalFields.MICROCHIP_CODE, animal.getMicrochipCode())
-                .get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        if (querySnapshot.isEmpty()) {
-                            // Insert animal data into Firestore
-                            db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
-                                    .document(docKeyAnimal)
-                                    .set(animal)
-                                    .addOnSuccessListener(unused -> {
-                                        // Obtain adapter from the recycle
-                                        AnimalListAdapter adapter = (AnimalListAdapter) recyclerView.getAdapter();
+        // Update the list of animals
+        boolean isAdded = animalSet.add(animal);
 
-                                        // Check the adapter nullability: if it is null
-                                        // then it's the first time an animal is registered for
-                                        // this user. The recycle view must be initialized.
-                                        // Otherwise it is only necessary to update the adapter
-                                        // And notify the recycle view.
-                                        if (adapter != null) {
-                                            adapter.addAnimal(animal);
-                                            adapter.notifyItemInserted(adapter.getItemCount() - 1);
-                                        } else {
-                                            adapter = new AnimalListAdapter();
-                                            adapter.addAnimal(animal);
+        // Use the set to check the animal's uniqueness
+        if (isAdded) {
+            // Query to search if the microchip code is unique
+            db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                    .document(docKeyAnimal)
+                    .set(animal)
+                    .addOnSuccessListener(unused ->
+                            Toast.makeText(this, "Animale registrato con successo",
+                                    Toast.LENGTH_LONG).show())
+                    .addOnFailureListener(e -> Log.d("DEB", e.getMessage()));
+        } else {
+            Toast.makeText(this, "Animale duplicato: codice microchip già esistente",
+                    Toast.LENGTH_SHORT).show();
+        }
 
-                                            recyclerView.setAdapter(adapter);
-                                            recyclerView.setLayoutManager(new LinearLayoutManager(
-                                                    this, RecyclerView.HORIZONTAL, false));
-                                        }
-                                    })
-                                    .addOnFailureListener(e -> Log.d("DEB", e.getMessage()));
-                        } else {
-                            Toast.makeText(this, "Codice microchip duplicato!", Toast.LENGTH_LONG).show();
-                        }
-                    }
+    }
+
+    @Override
+    public void onPurchaseRegistered(@NonNull Purchase purchase) {
+
+        purchase.setOwner(getPassionateUsername());
+
+        purchasesList.add(purchase);
+
+        long testValue = queryPurchases.insertPurchase(purchase.getAnimal(), purchase.getItemName(), purchase.getOwner()
+        , purchase.getDate(), purchase.getCategory(), purchase.getCost(), purchase.getAmount());
+
+        Toast.makeText(this, testValue + "", Toast.LENGTH_LONG).show();
+
+        db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
+                .add(purchase)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(this, "Spesa salvata con successo",
+                            Toast.LENGTH_LONG).show();
                 });
     }
 
     //method to ask permissions
     // todo: improve permissions requests
-    private void requestPermission(){
+    public void requestPermission() {
         String permissionRead = Manifest.permission.READ_EXTERNAL_STORAGE;
         String permissionWrite = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -202,8 +163,52 @@ public class PassionateNavigationActivity extends AppCompatActivity implements /
             if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissionRead) && ActivityCompat.shouldShowRequestPermissionRationale(this, permissionWrite)) {
                 //TODO Dialog
             } else {
-                ActivityCompat.requestPermissions(this,permissions,STORAGE_REQUEST_CODE);
+                int STORAGE_REQUEST_CODE = 1;
+                ActivityCompat.requestPermissions(this,permissions, STORAGE_REQUEST_CODE);
             }
         }
+    }
+
+    /**
+     * This method is used to get a copy of the set of
+     * passionate's animal
+     *
+     * @return a copy of the set with passionate's animals
+     * */
+    public LinkedHashSet<Animal> getAnimalSet() {
+        LinkedHashSet<Animal>clonedAnimalSet = new LinkedHashSet<>();
+
+        for (Animal animal : animalSet){
+            clonedAnimalSet.add((Animal) animal.clone());
+        }
+
+        return clonedAnimalSet;
+    }
+
+    /**
+     * This method is used to get a copy of passionate's purchases list
+     *
+     * @return a copy of the set with passionate's purchases
+     * */
+    public ArrayList<Purchase> getPurchasesList() {
+        ArrayList<Purchase> clonedPurchasesList = new ArrayList<>();
+
+        for (Purchase purchase : purchasesList) {
+            clonedPurchasesList.add((Purchase) purchase.clone());
+        }
+
+        return clonedPurchasesList;
+    }
+
+    public FloatingActionButton getFab() {
+        return fab;
+    }
+
+    public void setNavViewVisibility(int visibility) {
+        navView.setVisibility(visibility);
+    }
+
+    public String getPassionateUsername() {
+        return passionate.getUsername();
     }
 }
