@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -115,7 +116,7 @@ public class VeterinarianReservationFragment extends Fragment implements DialogA
 
         // Recycler view on touch event listener
         // This allows every item in the recycler to do something when pressed
-        reservationRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), reservationRecyclerView, new RecyclerTouchListener.ClickListener() {
+        /*reservationRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), reservationRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
 
@@ -125,6 +126,7 @@ public class VeterinarianReservationFragment extends Fragment implements DialogA
 
                 // If the reservation happened before now, the vet would be able to upload a diagnosis
                 if (checkIfDateDiagnosable(selectedDate, selectedTime)) {
+
                     Toast.makeText(VeterinarianReservationFragment.this.getContext(), "You are eligible to upload a diagnose for this reservation!", 0).show();
                 }
             }
@@ -132,7 +134,7 @@ public class VeterinarianReservationFragment extends Fragment implements DialogA
             @Override
             public void onLongClick(View view, int position) {
             }
-        }));
+        }));*/
 
         reservationRecyclerView.setAdapter(adapter);
         reservationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
