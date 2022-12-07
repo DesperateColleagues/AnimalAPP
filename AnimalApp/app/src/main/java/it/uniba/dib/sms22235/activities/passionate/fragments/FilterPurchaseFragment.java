@@ -1,6 +1,7 @@
 package it.uniba.dib.sms22235.activities.passionate.fragments;
 
 import android.annotation.SuppressLint;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.util.Log;
@@ -18,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.slider.RangeSlider;
 import com.google.android.material.slider.Slider;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import java.util.List;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.database.QueryPurchasesManager;
 import it.uniba.dib.sms22235.entities.operations.Interval;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
@@ -81,9 +84,7 @@ public class FilterPurchaseFragment extends Fragment {
 
         ChipGroup animalsChipGroup = view.findViewById(R.id.animalsChipGroup);
         ChipGroup categoriesChipGroup = view.findViewById(R.id.categoriesChipGroup);
-        Slider costRangeSlider = view.findViewById(R.id.costRangeSlider);
-
-        //TODO: implementare limiti inf. sup.
+        RangeSlider costRangeSlider = view.findViewById(R.id.costRangeSlider);
 
         if (animaList.size() > 0) {
             for(String entry : animaList) {
@@ -139,7 +140,6 @@ public class FilterPurchaseFragment extends Fragment {
                 categoryList = null;
             }
 
-            requireActivity().getSupportFragmentManager().popBackStack();
             listener.onFiltersAdded(animalList, categoryList, null);
         });
     }

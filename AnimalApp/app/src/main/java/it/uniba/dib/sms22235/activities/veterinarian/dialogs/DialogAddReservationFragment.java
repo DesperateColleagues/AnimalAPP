@@ -76,6 +76,7 @@ public class DialogAddReservationFragment extends DialogFragment implements andr
 
             if(!isEmptyInput){
                 listener.onDialogAddReservationDismissed(new Reservation(date, time));
+                dismiss();
             }
         });
 

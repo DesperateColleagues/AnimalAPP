@@ -39,7 +39,6 @@ public class ProfileFragment extends Fragment implements DialogAddAnimalFragment
     }
 
     private ProfileFragmentListener listener;
-    private RecyclerView animalRecycleView;
     private AnimalListAdapter adapter;
     private DialogAddAnimalFragment dialogAddAnimalFragment;
 
@@ -63,7 +62,7 @@ public class ProfileFragment extends Fragment implements DialogAddAnimalFragment
                              ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_passionate_profile, container, false);
-        animalRecycleView = rootView.findViewById(R.id.animalList);
+        RecyclerView animalRecycleView = rootView.findViewById(R.id.animalList);
 
         String title = "Benvenuto " + ((PassionateNavigationActivity) requireActivity())
                 .getPassionateUsername();
@@ -92,8 +91,6 @@ public class ProfileFragment extends Fragment implements DialogAddAnimalFragment
             // Add the profile pic preview to the adapter
             adapter.addPic(image);
         }
-
-
 
         animalRecycleView.setAdapter(adapter);
         animalRecycleView.setLayoutManager(new LinearLayoutManager(

@@ -48,8 +48,9 @@ public class KeysNamesUtils {
         public static String ANIMAL = "animal";
         public static String VETERINARIAN = "veterinarian";
         public static String DATE = "date";
-        public static String TIME  = "time";
+        public static String TIME = "time";
         public static String DIAGNOSIS = "diagnosis";
+    }
         
     public static class PurchaseFields {
         public static String ID = "id";
@@ -82,8 +83,10 @@ public class KeysNamesUtils {
     public static class BundleKeys {
         public static String PASSIONATE = "passionate";
         public static String VETERINARIAN = "veterinarian";
+        public static String VETERINARIAN_RESERVATIONS = "veterinarian_reservations";
         public static String PASSIONATE_PURCHASES = "purchases";
         public static String PASSIONATE_ANIMALS = "animals";
+        public static String FILTER_ADAPTER = "filter";
         public static String INTERFACE = "INT";
     }
 
