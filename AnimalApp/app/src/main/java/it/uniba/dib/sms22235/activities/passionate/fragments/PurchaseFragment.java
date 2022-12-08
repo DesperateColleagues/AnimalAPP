@@ -90,13 +90,12 @@ public class PurchaseFragment extends Fragment implements
 
         Context context = requireContext();
 
-        savedInstanceState = getArguments();
+        Bundle arguments = getArguments();
 
-        if (savedInstanceState != null) {
-            purchasesList = (ArrayList<Purchase>) savedInstanceState.getSerializable(KeysNamesUtils.BundleKeys.FILTER_ADAPTER);
+        if (arguments != null) {
+            purchasesList = (ArrayList<Purchase>) arguments.getSerializable(KeysNamesUtils.BundleKeys.FILTER_ADAPTER);
         } else {
             purchasesList = ((PassionateNavigationActivity)requireActivity()).getPurchasesList();
-            Toast.makeText(context, "NULLO", Toast.LENGTH_SHORT).show();
         }
 
         purchaseAdapter = new ListViewPurchasesAdapter(context, 0);
@@ -143,7 +142,27 @@ public class PurchaseFragment extends Fragment implements
             // Add a binding to FilterPurchaseFragment listener
             bundle.putSerializable(KeysNamesUtils.BundleKeys.INTERFACE, this);
 
-            // todo: pass as bundle min and max values
+            float minCost = -1, maxCost = -1;
+            Cursor cursor = queryPurchases.getMinimumPurchaseValue(username);
+            if(cursor != null) {
+                if (cursor.getCount() > 0){
+                    while (cursor.moveToNext()){
+                        minCost = cursor.getFloat(cursor.getColumnIndexOrThrow("minCost"));
+                    }
+                }
+            }
+
+            cursor = queryPurchases.getMaximumPurchaseValue(username);
+            if(cursor != null) {
+                if (cursor.getCount() > 0){
+                    while (cursor.moveToNext()){
+                        maxCost = cursor.getFloat(cursor.getColumnIndexOrThrow("maxCost"));
+                    }
+                }
+            }
+
+            bundle.putFloat(KeysNamesUtils.BundleKeys.MIN_COST, minCost);
+            bundle.putFloat(KeysNamesUtils.BundleKeys.MAX_COST, maxCost);
 
             controller.navigate(R.id.filterPurchaseFragment, bundle);
         });

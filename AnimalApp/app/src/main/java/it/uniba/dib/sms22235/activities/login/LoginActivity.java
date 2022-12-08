@@ -237,7 +237,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 }
                                             }
                                         });
-                                Toast.makeText(this, "Login corretto", Toast.LENGTH_LONG).show();
+                                Toast.makeText(this, "Login corretto", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             btnLogin.setEnabled(true);

@@ -33,10 +33,14 @@
 
     </LinearLayout>
 
-
     <ListView
         android:id="@+id/purchaseListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:focusable="false"
+        android:clickable="false"
+        android:listSelector="@android:color/transparent"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="5.0sp"/>
 
 </LinearLayout>

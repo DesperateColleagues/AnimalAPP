@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.w3c.dom.Text;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -58,6 +60,9 @@ public class ListViewPurchasesAdapter extends ArrayAdapter<Purchase> {
 
         TextView txtItemName = listView.findViewById(R.id.txtItemName);
         TextView txtCost = listView.findViewById(R.id.txtCost);
+        TextView txtAnimalPurchase = listView.findViewById(R.id.txtAnimalPurchase);
+        TextView txtDatePurchase = listView.findViewById(R.id.txtDatePurchase);
+        TextView txtCostXAmount = listView.findViewById(R.id.txtCostXAmount);
 
         ImageView categoryImageShow = listView.findViewById(R.id.categoryImageShow);
 
@@ -79,7 +84,14 @@ public class ListViewPurchasesAdapter extends ArrayAdapter<Purchase> {
                     break;
             }
 
-            String cost = "" + (purchase.getCost() * purchase.getAmount()) + " €";
+            String costAmount = "" + (purchase.getCost()) + " € x " + purchase.getAmount();
+            String cost = "" + (purchase.getCost()) + " €";
+            String animal = purchase.getAnimal();
+            String date = purchase.getDate();
+
+            txtAnimalPurchase.setText(animal);
+            txtDatePurchase.setText(date);
+            txtCostXAmount.setText(costAmount);
             txtCost.setText(cost);
             txtItemName.setText(purchase.getItemName());
         }

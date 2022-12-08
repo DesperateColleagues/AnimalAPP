@@ -62,6 +62,9 @@ public class KeysNamesUtils {
         public static String AMOUNT = "amount";
         public static String OWNER = "owner";
 
+        public static String MIN_COST = "minCost";
+        public static String MAX_COST = "maxCost";
+
         public static String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS purchases " + " (\n" +
                  ID + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"+
                 ANIMAL + " VARCHAR(255) NOT NULL,\n" +
@@ -88,6 +91,8 @@ public class KeysNamesUtils {
         public static String PASSIONATE_ANIMALS = "animals";
         public static String FILTER_ADAPTER = "filter";
         public static String INTERFACE = "INT";
+        public static String MIN_COST = "minCost";
+        public static String MAX_COST = "maxCost";
     }
 
     public static class FileDirsNames {

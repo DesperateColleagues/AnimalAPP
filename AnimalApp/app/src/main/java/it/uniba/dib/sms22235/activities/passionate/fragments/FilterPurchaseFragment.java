@@ -42,6 +42,9 @@ public class FilterPurchaseFragment extends Fragment {
 
     private ArrayList<String> animaList;
     private ArrayList<String> categories;
+    private Float minCost;
+    private Float maxCost;
+
 
     private FilterPurchaseFragmentListener listener;
 
@@ -59,6 +62,10 @@ public class FilterPurchaseFragment extends Fragment {
             // Initialize the listener
             listener = (FilterPurchaseFragmentListener) arguments
                     .getSerializable(KeysNamesUtils.BundleKeys.INTERFACE);
+
+            minCost = arguments.getFloat(KeysNamesUtils.BundleKeys.MIN_COST);
+
+            maxCost = arguments.getFloat(KeysNamesUtils.BundleKeys.MAX_COST);
 
             if (animaList == null) {
                 animaList = new ArrayList<>();
@@ -85,6 +92,16 @@ public class FilterPurchaseFragment extends Fragment {
         ChipGroup animalsChipGroup = view.findViewById(R.id.animalsChipGroup);
         ChipGroup categoriesChipGroup = view.findViewById(R.id.categoriesChipGroup);
         RangeSlider costRangeSlider = view.findViewById(R.id.costRangeSlider);
+
+        List<Float> minMaxCosts = new ArrayList<>();
+
+        costRangeSlider.setValueFrom(minCost);
+        costRangeSlider.setValueTo(maxCost);
+
+        minMaxCosts.add(minCost);
+        minMaxCosts.add(maxCost);
+
+        costRangeSlider.setValues(minMaxCosts);
 
         if (animaList.size() > 0) {
             for(String entry : animaList) {
@@ -130,7 +147,9 @@ public class FilterPurchaseFragment extends Fragment {
                 }
             }
 
-            interval = new Interval<>(costRangeSlider.getValueFrom(), costRangeSlider.getValueTo());
+
+            interval = new Interval<>(costRangeSlider.getValues().get(0),
+                    costRangeSlider.getValues().get(1));
 
             if(animalList.size() == 0){
                 animalList = null;
@@ -140,7 +159,7 @@ public class FilterPurchaseFragment extends Fragment {
                 categoryList = null;
             }
 
-            listener.onFiltersAdded(animalList, categoryList, null);
+            listener.onFiltersAdded(animalList, categoryList, interval);
         });
     }
 }
