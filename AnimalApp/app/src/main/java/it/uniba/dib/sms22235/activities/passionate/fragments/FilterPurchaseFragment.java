@@ -95,13 +95,39 @@ public class FilterPurchaseFragment extends Fragment {
 
         List<Float> minMaxCosts = new ArrayList<>();
 
-        costRangeSlider.setValueFrom(minCost);
-        costRangeSlider.setValueTo(maxCost);
+        if (minCost == maxCost){
 
-        minMaxCosts.add(minCost);
-        minMaxCosts.add(maxCost);
+            costRangeSlider.setValueFrom(0F);
+            costRangeSlider.setValueTo(maxCost);
 
-        costRangeSlider.setValues(minMaxCosts);
+            minMaxCosts.add(0F);
+            minMaxCosts.add(maxCost);
+            costRangeSlider.setValues(minMaxCosts);
+        } else {
+
+            costRangeSlider.setValueFrom(minCost);
+            costRangeSlider.setValueTo(maxCost);
+
+            minMaxCosts.add(minCost);
+            minMaxCosts.add(maxCost);
+            costRangeSlider.setValues(minMaxCosts);
+        }
+
+        // TODO: must be write an efficient code to assign a right number of step for every interval
+
+        float intervallo = maxCost - minCost;
+
+        if (intervallo == 0){
+            costRangeSlider.setStepSize(maxCost);
+        } else if (intervallo > 0 && intervallo <= 50){
+            costRangeSlider.setStepSize(1F);
+        } else if (intervallo > 50 && intervallo <= 1000){
+            costRangeSlider.setStepSize(intervallo / 25);
+        } else if (intervallo > 1000 && intervallo <= 2500) {
+            costRangeSlider.setStepSize(intervallo / 50);
+        } else {
+            costRangeSlider.setStepSize(intervallo / 100);
+        }
 
         if (animaList.size() > 0) {
             for(String entry : animaList) {

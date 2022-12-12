@@ -85,7 +85,7 @@ public class ListViewPurchasesAdapter extends ArrayAdapter<Purchase> {
             }
 
             String costAmount = "" + (purchase.getCost()) + " € x " + purchase.getAmount();
-            String cost = "" + (purchase.getCost()) + " €";
+            String cost = "" + (purchase.getCost() * purchase.getAmount()) + " €";
             String animal = purchase.getAnimal();
             String date = purchase.getDate();
 

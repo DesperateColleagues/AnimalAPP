@@ -23,6 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
@@ -36,17 +37,17 @@ import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class PassionateNavigationActivity extends AppCompatActivity implements ProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener {
+public class PassionateNavigationActivity extends AppCompatActivity implements ProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener, Serializable {
 
-    private FirebaseFirestore db;
-    private QueryPurchasesManager queryPurchases;
+    private transient FirebaseFirestore db;
+    private transient QueryPurchasesManager queryPurchases;
 
-    private Passionate passionate;
-    private LinkedHashSet<Animal> animalSet;
-    private ArrayList<Purchase> purchasesList;
+    private transient Passionate passionate;
+    private transient LinkedHashSet<Animal> animalSet;
+    private transient ArrayList<Purchase> purchasesList;
 
-    private FloatingActionButton fab;
-    private BottomNavigationView navView;
+    private transient FloatingActionButton fab;
+    private transient BottomNavigationView navView;
 
     @SuppressWarnings("unchecked")
     @Override

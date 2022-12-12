@@ -52,11 +52,11 @@ public class PurchaseFragment extends Fragment implements
         void onPurchaseRegistered(Purchase purchase);
     }
 
-    private PurchaseFragmentListener listener;
-    private ListViewPurchasesAdapter purchaseAdapter;
-    private NavController controller;
-    private QueryPurchasesManager queryPurchases;
-    private ListView purchaseListView;
+    private transient PurchaseFragmentListener listener;
+    private transient ListViewPurchasesAdapter purchaseAdapter;
+    private transient NavController controller;
+    private transient QueryPurchasesManager queryPurchases;
+    private transient ListView purchaseListView;
 
     @Override
     public void onAttach(@NonNull Context context) {
