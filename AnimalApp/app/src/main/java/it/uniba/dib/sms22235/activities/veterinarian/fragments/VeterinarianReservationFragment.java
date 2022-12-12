@@ -1,11 +1,14 @@
 package it.uniba.dib.sms22235.activities.veterinarian.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,7 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,14 +25,11 @@ import java.util.Date;
 import java.util.Locale;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
-import it.uniba.dib.sms22235.activities.passionate.fragments.VeterinaryReservationFragment;
 import it.uniba.dib.sms22235.activities.veterinarian.VeterinarianNavigationActivity;
+import it.uniba.dib.sms22235.activities.veterinarian.dialogs.BSDialogVeterinarianFragment;
 import it.uniba.dib.sms22235.activities.veterinarian.dialogs.DialogAddReservationFragment;
-import it.uniba.dib.sms22235.adapters.ListViewPurchasesAdapter;
 import it.uniba.dib.sms22235.adapters.ReservationsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
-import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
 
 public class VeterinarianReservationFragment extends Fragment implements DialogAddReservationFragment.
         DialogAddReservationFragmentListener {
@@ -52,10 +53,10 @@ public class VeterinarianReservationFragment extends Fragment implements DialogA
         VeterinarianNavigationActivity activity = (VeterinarianNavigationActivity) getActivity();
         try {
             listener = (VeterinarianReservationFragment.VeterinarianReservationFragmentListener) context;
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             throw new ClassCastException(
                     (activity != null ? activity.toString() : null)
-                    + "Must implement the interface");
+                            + "Must implement the interface");
         }
 
         super.onAttach(context);
@@ -75,6 +76,52 @@ public class VeterinarianReservationFragment extends Fragment implements DialogA
         reservationRecyclerView = view.findViewById(R.id.reservationList);
 
         adapter = new ReservationsAdapter();
+        adapter.setOnItemClickListener(reservation -> {
+            new BSDialogVeterinarianFragment(reservation)
+                    .setOnDeleteListener(() -> {
+                        //TODO: implementare rimozione appuntamento
+                        Toast.makeText(getContext(), "RIMOZIONE APPUNTAMENTO", Toast.LENGTH_SHORT).show();
+                        new MaterialAlertDialogBuilder(requireContext()).setTitle("ATTENZIONE")
+                                .setMessage("Vuoi davvero eliminare l'appuntamento?")
+                                .setNegativeButton("No", (dialog, which) -> {
+                                    Toast.makeText(getContext(), "APPUNTAMENTO NON ELIMINATO", Toast.LENGTH_SHORT).show();
+                                })
+                                .setPositiveButton("SI", (dialog, which) -> {
+                                    Toast.makeText(getContext(), "APPUNTAMENTO ELIMINATO", Toast.LENGTH_SHORT).show();
+                                }).show();
+                    })
+                    .setOnAddDiagnosisListener(() -> {
+                        //TODO: implementare aggiunta diagnosi
+                        Toast.makeText(getContext(), "AGGIUNTA DIAGNOSI", Toast.LENGTH_SHORT).show();
+
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("Aggiunta diagnosi");
+
+                        // Set up the input
+                        final EditText input = new EditText(getContext());
+                        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                        input.setInputType(InputType.TYPE_CLASS_TEXT);
+                        builder.setView(input);
+
+                        // Set up the buttons
+                        builder.setPositiveButton("OK", (dialog, which) ->
+                                Toast.makeText(getContext(), "RIMOZIONE APPUNTAMENTO", Toast.LENGTH_SHORT).show())
+
+                        .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+                        builder.show();
+
+
+                    })
+                    .setOnUpgradeListener(() -> {
+                        //TODO: implementare modifica appuntamento
+                        Toast.makeText(getContext(), "MODIFICA APPUNTAMENTO", Toast.LENGTH_SHORT).show();
+                    })
+                    .show(getParentFragmentManager(), "TAG");
+
+
+        });
 
         // These methods allows to retrieve the current date and the current time. We need them to
         // specify if a reservation inside the recycler view is allowed to have a diagnose liked
@@ -90,10 +137,10 @@ public class VeterinarianReservationFragment extends Fragment implements DialogA
         // Adding them to the adapter and attaching the adapter to the RecyclerView
         adapter.addAllReservations(dayReservationsList);
         reservationRecyclerView.setAdapter(adapter);
-        reservationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        reservationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
         calendarView.setOnDateChangeListener((calendarView, i, i1, i2) -> {
-            Toast.makeText(getContext(),"Build Date: "+buildDate(i, i1, i2),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Build Date: " + buildDate(i, i1, i2), Toast.LENGTH_SHORT).show();
 
             // Retrieving only a specific day reservations
             dayReservationsList = ((VeterinarianNavigationActivity) requireActivity()).getDayReservationsList(buildDate(i, i1, i2));
@@ -102,7 +149,7 @@ public class VeterinarianReservationFragment extends Fragment implements DialogA
             adapter.clearAll();
             adapter.addAllReservations(dayReservationsList);
             reservationRecyclerView.setAdapter(adapter);
-            reservationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+            reservationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         });
 
         // Event listener for the fab
@@ -137,7 +184,7 @@ public class VeterinarianReservationFragment extends Fragment implements DialogA
         }));*/
 
         reservationRecyclerView.setAdapter(adapter);
-        reservationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        reservationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
     // Basically a method to reconstruct a String from day, month and year expressed as Integers
@@ -190,7 +237,7 @@ public class VeterinarianReservationFragment extends Fragment implements DialogA
     }
 
     @Override
-    public void onDialogAddReservationDismissed(Reservation reservation){
+    public void onDialogAddReservationDismissed(Reservation reservation) {
         String email = ((VeterinarianNavigationActivity) requireActivity()).getVeterinarianEmail();
         reservation.setVeterinarian(email);
         adapter.addReservation(reservation);

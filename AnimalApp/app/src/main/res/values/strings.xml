@@ -61,6 +61,9 @@
     <string name="data_appuntamento">data</string>
     <string name="ora_appuntamento">ora</string>
     <string name="aggiungi_prenotazione">Aggiungi prenotazione</string>
+    <string name="aggiungi_diagnosi">Aggiungi diagnosi</string>
+    <string name="modifica_diagnosi">Modifica diagnosi</string>
+    <string name="elimina_diagnosi">Elimina diagnosi</string>
 
     <!-- Stringhe sottostanti riferite agli acquisti -->
     <string name="product">prodotto</string>
