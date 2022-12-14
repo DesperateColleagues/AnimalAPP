@@ -73,7 +73,34 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
         // Set up the navigation system
         NavController navController = navHostFragment.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+
+        // Use this method to not bug the app with undesired animation
+        navView.setOnNavigationItemSelectedListener(item -> {
+            final int PASSIONATE_PROFILE = R.id.passionate_profile;
+            final int PASSIONATE_PHOTO_DIARY = R.id.passionate_photo_diary;
+            final int PASSIONATE_PET_CARE = R.id.passionate_pet_care;
+            final int PASSIONATE_PURCHASE = R.id.passionate_purchase;
+
+            switch (item.getItemId()) {
+                case PASSIONATE_PROFILE:
+                    navController.navigate(R.id.passionate_profile);
+                    break;
+                case PASSIONATE_PHOTO_DIARY:
+                    navController.navigate(R.id.passionate_photo_diary);
+                    break;
+                case PASSIONATE_PET_CARE:
+                    navController.navigate(R.id.passionate_pet_care);
+                    break;
+                case PASSIONATE_PURCHASE:
+                    navController.navigate(R.id.passionate_purchase);
+                    break;
+            }
+            return true;
+        });
+
+        navView.setOnNavigationItemReselectedListener(item -> {
+            // empty
+        });
 
         fab = findViewById(R.id.floatingActionButton);
 
@@ -89,6 +116,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
             purchasesList = (ArrayList<Purchase>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_PURCHASES);
         }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

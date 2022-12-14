@@ -1,29 +1,26 @@
 package it.uniba.dib.sms22235.activities.passionate.fragments;
 
 import android.annotation.SuppressLint;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.transition.Slide;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.slider.RangeSlider;
-import com.google.android.material.slider.Slider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
@@ -37,7 +34,7 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 public class FilterPurchaseFragment extends Fragment {
 
     public interface FilterPurchaseFragmentListener {
-        void onFiltersAdded(List<String> animals, List<String> categories, Interval<Float> costs);
+        ArrayList<Purchase> onFiltersAdded(List<String> animals, List<String> categories, Interval<Float> costs);
     }
 
     private ArrayList<String> animaList;
@@ -47,12 +44,16 @@ public class FilterPurchaseFragment extends Fragment {
 
 
     private FilterPurchaseFragmentListener listener;
+    private NavController controller;
 
     @SuppressWarnings("unchecked")
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle arguments = getArguments();
+
+
+        controller = Navigation.findNavController(container);
 
         if (arguments != null) {
             // Retrieve the animal list
@@ -95,38 +96,36 @@ public class FilterPurchaseFragment extends Fragment {
 
         List<Float> minMaxCosts = new ArrayList<>();
 
-        if (minCost == maxCost){
+        if (Objects.equals(minCost, maxCost)){
 
             costRangeSlider.setValueFrom(0F);
             costRangeSlider.setValueTo(maxCost);
 
             minMaxCosts.add(0F);
-            minMaxCosts.add(maxCost);
-            costRangeSlider.setValues(minMaxCosts);
         } else {
 
             costRangeSlider.setValueFrom(minCost);
             costRangeSlider.setValueTo(maxCost);
 
             minMaxCosts.add(minCost);
-            minMaxCosts.add(maxCost);
-            costRangeSlider.setValues(minMaxCosts);
         }
+        minMaxCosts.add(maxCost);
+        costRangeSlider.setValues(minMaxCosts);
 
         // TODO: must be write an efficient code to assign a right number of step for every interval
 
-        float intervallo = maxCost - minCost;
+        float intervalSlider = maxCost - minCost;
 
-        if (intervallo == 0){
+        if (intervalSlider == 0){
             costRangeSlider.setStepSize(maxCost);
-        } else if (intervallo > 0 && intervallo <= 50){
+        } else if (intervalSlider > 0 && intervalSlider <= 50){
             costRangeSlider.setStepSize(1F);
-        } else if (intervallo > 50 && intervallo <= 1000){
-            costRangeSlider.setStepSize(intervallo / 25);
-        } else if (intervallo > 1000 && intervallo <= 2500) {
-            costRangeSlider.setStepSize(intervallo / 50);
+        } else if (intervalSlider > 50 && intervalSlider <= 1000){
+            costRangeSlider.setStepSize(intervalSlider / 25);
+        } else if (intervalSlider > 1000 && intervalSlider <= 2500) {
+            costRangeSlider.setStepSize(intervalSlider / 50);
         } else {
-            costRangeSlider.setStepSize(intervallo / 100);
+            costRangeSlider.setStepSize(intervalSlider / 100);
         }
 
         if (animaList.size() > 0) {
@@ -185,7 +184,16 @@ public class FilterPurchaseFragment extends Fragment {
                 categoryList = null;
             }
 
-            listener.onFiltersAdded(animalList, categoryList, interval);
+            ArrayList<Purchase> purchasesSubList = listener.onFiltersAdded(animalList, categoryList, interval);
+
+            // Get back to the purchase fragment passing the list as bundle
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(KeysNamesUtils.BundleKeys.FILTER_ADAPTER, purchasesSubList);
+
+            controller.navigate(R.id.action_filterPurchaseFragment_to_passionate_purchase, bundle);
+
+            // Update the view from the activity
+            ((PassionateNavigationActivity) requireActivity()).restoreBottomAppBarVisibility();
         });
     }
 }

@@ -71,7 +71,7 @@ public class KeysNamesUtils {
                 ITEM_NAME + " VARCHAR(255) NOT NULL,\n" +
                 OWNER + " VARCHAR(255) DEFAULT NULL, \n" +
                 CATEGORY + " VARCHAR(255) NOT NULL,\n" +
-                DATE + " VARCHAR(100) NOT NULL,\n" +
+                DATE + " DATE NOT NULL,\n" +
                 AMOUNT + " INTEGER NOT NULL,\n" +
                 COST + " DECIMAL NOT NULL); ";
     }

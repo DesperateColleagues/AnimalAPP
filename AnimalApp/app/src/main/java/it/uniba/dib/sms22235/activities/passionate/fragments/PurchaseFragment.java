@@ -164,7 +164,7 @@ public class PurchaseFragment extends Fragment implements
             bundle.putFloat(KeysNamesUtils.BundleKeys.MIN_COST, minCost);
             bundle.putFloat(KeysNamesUtils.BundleKeys.MAX_COST, maxCost);
 
-            controller.navigate(R.id.filterPurchaseFragment, bundle);
+            controller.navigate(R.id.action_passionate_purchase_to_filterPurchaseFragment, bundle);
         });
 
         SearchView searchView = view.findViewById(R.id.searchViewProduct);
@@ -230,8 +230,9 @@ public class PurchaseFragment extends Fragment implements
     }
 
     @Override
-    public void onFiltersAdded(List<String> animals, List<String> categories, Interval<Float> costs) {
-        Cursor cursor = queryPurchases.runFilterQuery(animals, categories, costs);
+    public ArrayList<Purchase> onFiltersAdded(List<String> animals, List<String> categories, Interval<Float> costs) {
+        Cursor cursor = queryPurchases.runFilterQuery(animals, categories, costs,
+                "", "");
         ArrayList<Purchase> purchasesSubList = new ArrayList<>();
 
         if (cursor != null) {
@@ -263,19 +264,13 @@ public class PurchaseFragment extends Fragment implements
                             KeysNamesUtils.PurchaseFields.OWNER)));
 
                     purchasesSubList.add(purchase);
-
-                    // Get back to the purchase fragment passing the list as bundle
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(KeysNamesUtils.BundleKeys.FILTER_ADAPTER, purchasesSubList);
-                    controller.navigate(R.id.passionate_purchase, bundle);
-
-                    // Update the view from the activity
-                    ((PassionateNavigationActivity) requireActivity()).restoreBottomAppBarVisibility();
                 }
             } else {
                 Toast.makeText(requireContext(), "Nessun risultato", Toast.LENGTH_SHORT).show();
             }
         }
+
+        return purchasesSubList;
     }
 
     @NonNull
