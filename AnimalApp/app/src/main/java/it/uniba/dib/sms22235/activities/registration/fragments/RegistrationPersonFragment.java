@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.security.NoSuchAlgorithmException;
+
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.entities.users.Passionate;
@@ -40,7 +42,7 @@ public class RegistrationPersonFragment extends Fragment {
          * @param passionate the user to register
          * @param pwd the password of the user
          * */
-        void onPassionateRegistered(Passionate passionate, String pwd);
+        void onPassionateRegistered(Passionate passionate);
 
         /**
          * Triggered when the veterinary completes its sign up process
@@ -48,7 +50,7 @@ public class RegistrationPersonFragment extends Fragment {
          * @param veterinarian the veterinary to register
          * @param pwd the password of the veterinary
          * */
-        void onVeterinaryRegistered(Veterinarian veterinarian, String pwd);
+        void onVeterinaryRegistered(Veterinarian veterinarian);
     }
 
     // The role of the actor who is registering: it can be a user or a veterinary
@@ -131,9 +133,18 @@ public class RegistrationPersonFragment extends Fragment {
 
             boolean isInputCorrect = InputFieldCheck.isEmailValid(email) && InputFieldCheck.isPasswordValid(password);
 
+
             // If the input is not empty complete registration process
             if (!isEmptyInput && isInputCorrect) {
-                if (role.equals(KeysNamesUtils.RolesNames.COMMON_USER) ) {
+
+                // Encode the password before saving it
+                try {
+                    password = InputFieldCheck.encodePassword(password);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+
+                if (role.equals(KeysNamesUtils.RolesNames.COMMON_USER)) {
                     // Retrieve user specific field
                     username = ((EditText) view.findViewById(R.id.txtInputUsername))
                             .getText().toString();
@@ -142,7 +153,7 @@ public class RegistrationPersonFragment extends Fragment {
 
                     if (!isEmptyInput) {
                         // Delegate the Activity to register the user on the FireStore
-                        listener.onPassionateRegistered(new Passionate(name, email, username), password);
+                        listener.onPassionateRegistered(new Passionate(name, email, username, password));
                     }
 
                 } else {
@@ -160,7 +171,7 @@ public class RegistrationPersonFragment extends Fragment {
                     if (!isEmptyInput && isInputCorrect) {
                         // Delegate the Activity to register the veterinary on the FireStore
                         listener.onVeterinaryRegistered(
-                                new Veterinarian(name, email, clinicName, phoneNumber),password);
+                                new Veterinarian(name, email, clinicName, phoneNumber, password));
                     }
 
                     if (!InputFieldCheck.isNumberValid(phoneNumber)){

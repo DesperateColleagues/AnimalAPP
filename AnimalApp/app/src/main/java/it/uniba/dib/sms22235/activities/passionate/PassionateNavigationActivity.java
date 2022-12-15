@@ -2,6 +2,10 @@ package it.uniba.dib.sms22235.activities.passionate;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,6 +23,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,9 +40,12 @@ import it.uniba.dib.sms22235.database.QueryPurchasesManager;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
+import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class PassionateNavigationActivity extends AppCompatActivity implements ProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener, Serializable {
+public class PassionateNavigationActivity extends AppCompatActivity implements
+        ProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener,
+        Serializable {
 
     private transient FirebaseFirestore db;
     private transient QueryPurchasesManager queryPurchases;
@@ -48,6 +56,55 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
 
     private transient FloatingActionButton fab;
     private transient BottomNavigationView navView;
+
+    // Flag that specify whether the connection is enabled or not
+    private boolean isConnectionEnabled;
+
+    // Callback that verifies the connectivity to a network at run time
+    private final ConnectivityManager.NetworkCallback networkCallback =
+            new ConnectivityManager.NetworkCallback() {
+        @SuppressWarnings("unchecked")
+        @Override
+        public void onAvailable(@NonNull Network network) {
+            super.onAvailable(network);
+
+            isConnectionEnabled = true;
+
+            // put the local files into firebase once the connection is enabled
+            ArrayList<Purchase> purchasesOfflineList = (ArrayList<Purchase>)
+                    DataManipulationHelper.readDataInternally(PassionateNavigationActivity.this,
+                            KeysNamesUtils.FileDirsNames.ADD_PURCHASE);
+
+            if (purchasesOfflineList != null) {
+
+                // Upload the offline files to fire store
+                for (Purchase purchase : purchasesOfflineList) {
+                    onPurchaseRegistered(purchase);
+                }
+
+                // Delete the file once the process is over. If some network error occurs
+                // during onPurchaseRegistered then a new offline file will be created
+                // and will contain all the purchases that didn't make the upload to fire store
+                deleteFile(KeysNamesUtils.FileDirsNames.ADD_PURCHASE);
+            }
+        }
+
+        @Override
+        public void onLost(@NonNull Network network) {
+            super.onLost(network);
+
+            isConnectionEnabled = false;
+
+            Toast.makeText(PassionateNavigationActivity.this,
+                    "Connessione persa: avvio modalità offline.\nAlcune funzionalità possono non essere più disponibili",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCapabilitiesChanged(@NonNull Network network, @NonNull NetworkCapabilities networkCapabilities) {
+            super.onCapabilitiesChanged(network, networkCapabilities);
+        }
+    };
 
     @SuppressWarnings("unchecked")
     @Override
@@ -98,10 +155,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
             return true;
         });
 
-        navView.setOnNavigationItemReselectedListener(item -> {
-            // empty
-        });
-
         fab = findViewById(R.id.floatingActionButton);
 
         db = FirebaseFirestore.getInstance();
@@ -115,6 +168,18 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
             animalSet = (LinkedHashSet<Animal>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS);
             purchasesList = (ArrayList<Purchase>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_PURCHASES);
         }
+
+        // Build the network request
+        NetworkRequest networkRequest = new NetworkRequest.Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+                .build();
+
+        // Request the network from the ConnectivityManager and start listening
+        // to the availability of the network from the networkCallback
+        ConnectivityManager connectivityManager = getSystemService(ConnectivityManager.class);
+        connectivityManager.requestNetwork(networkRequest, networkCallback);
     }
 
 
@@ -157,6 +222,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onPurchaseRegistered(@NonNull Purchase purchase) {
 
@@ -164,18 +230,38 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
 
         purchasesList.add(purchase);
 
-        long testValue = queryPurchases.insertPurchase(purchase.getAnimal(), purchase.getItemName(), purchase.getOwner(),
-                purchase.getDate(), purchase.getCategory(), purchase.getCost(), purchase.getAmount());
-
-        Toast.makeText(this, testValue + "", Toast.LENGTH_LONG).show();
+        long testValue = queryPurchases.insertPurchase(
+                purchase.getAnimal(), purchase.getItemName(),
+                purchase.getOwner(), purchase.getDate(), purchase.getCategory(),
+                purchase.getCost(), purchase.getAmount());
 
         if (testValue != -1) {
-            db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
-                    .add(purchase)
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(this, "Spesa salvata con successo",
-                                Toast.LENGTH_LONG).show();
-                    });
+            // Save the purchase only if there is an internet connection
+            if (isConnectionEnabled) {
+                db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
+                        .add(purchase)
+                        .addOnSuccessListener(documentReference -> Toast.makeText(this,
+                                "Spesa salvata con successo",
+                                Toast.LENGTH_LONG).show())
+                        .addOnFailureListener(e -> {
+                            // Add changes to local files
+                        });
+            } else {
+                // Read the current offline purchase additions
+                ArrayList<Purchase> purchasesOfflineList = (ArrayList<Purchase>)
+                        DataManipulationHelper.readDataInternally(this,
+                        KeysNamesUtils.FileDirsNames.ADD_PURCHASE);
+
+                if (purchasesOfflineList == null) {
+                    purchasesOfflineList = new ArrayList<>();
+                }
+
+                purchasesOfflineList.add(purchase);
+
+                // Update the files which holds the purchases' addition while the app is offline
+                DataManipulationHelper.saveDataInternally(this, purchasesOfflineList,
+                        KeysNamesUtils.FileDirsNames.ADD_PURCHASE);
+            }
         } else {
             Toast.makeText(this, "Errore nell'inserimento della spesa", Toast.LENGTH_LONG).show();
         }

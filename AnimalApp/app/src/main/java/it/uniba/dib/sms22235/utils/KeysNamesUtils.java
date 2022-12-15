@@ -32,6 +32,7 @@ public class KeysNamesUtils {
         public static String ORG_NAME = "orgName";
         public static String PHONE_NUMBER = "phoneNumber";
         public static String PURPOSE = "purpose";
+        public static String PASSWORD = "password";
     }
 
     public static class AnimalFields {
@@ -99,6 +100,7 @@ public class KeysNamesUtils {
         public static String BASE_PATH = "/data/user/0/it.uniba.dib.sms22235/";
         public static String ROOT_PREFIX = "app_";
         public static String PROFILE_IMAGES = "AnimalAPP_images";
+        public static String ADD_PURCHASE = "add_purchase";
 
         /**
          * Method that helps to obtain the name of the directory where posts' images
@@ -120,6 +122,12 @@ public class KeysNamesUtils {
         @Contract(pure = true)
         public static String passionatePostRefDirName(String username) {
             return username + "_post_ref";
+        }
+
+        @NonNull
+        @Contract(pure = true)
+        public static String currentPassionateOffline(String username) {
+            return "off_" + username;
         }
     }
 }

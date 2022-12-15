@@ -41,7 +41,7 @@ public class RegistrationActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPassionateRegistered(@NonNull Passionate passionate, String pwd) {
+    public void onPassionateRegistered(@NonNull Passionate passionate) {
         // First register the user with Firebase auth system
         // in order to authenticate him during login
 
@@ -52,7 +52,7 @@ public class RegistrationActivity extends AppCompatActivity
                     // Create the new user only if the username is not duplicate
                     if (taskCheckUsername.isSuccessful() && taskCheckUsername.getResult().isEmpty()) {
                         // Create the AUTH user
-                        mAuth.createUserWithEmailAndPassword(passionate.getEmail(), pwd)
+                        mAuth.createUserWithEmailAndPassword(passionate.getEmail(), passionate.getPassword())
                                 .addOnCompleteListener(task -> {
                                     if (task.isSuccessful()){
                                         // Key of the document
@@ -88,14 +88,13 @@ public class RegistrationActivity extends AppCompatActivity
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
 
     @Override
-    public void onVeterinaryRegistered(@NonNull Veterinarian veterinarian, String pwd) {
+    public void onVeterinaryRegistered(@NonNull Veterinarian veterinarian) {
         // First register the veterinary with Firebase auth system
         // in order to authenticate him during login
-        mAuth.createUserWithEmailAndPassword(veterinarian.getEmail(), pwd)
+        mAuth.createUserWithEmailAndPassword(veterinarian.getEmail(), veterinarian.getPassword())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         // Save the veterinary instance on the DB

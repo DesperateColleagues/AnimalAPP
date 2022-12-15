@@ -7,18 +7,21 @@ import java.util.regex.Pattern;
 public class AbstractPersonUser implements Serializable {
     protected String fullName;
     protected String email;
+    protected String password;
     private static final String EMAIL_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
 
     public AbstractPersonUser() {}
 
     /**
      * @param fullName    full name (name + second name) of the person
-     * @param email     email della persona
+     * @param email     email of the person
+     * @param password the password of the user
      */
-    public AbstractPersonUser(String fullName, String email) {
+    public AbstractPersonUser(String fullName, String email, String password) {
 
         this.fullName = fullName;
         this.email = email;
+        this.password = password;
     }
 
     /**
@@ -40,5 +43,9 @@ public class AbstractPersonUser implements Serializable {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

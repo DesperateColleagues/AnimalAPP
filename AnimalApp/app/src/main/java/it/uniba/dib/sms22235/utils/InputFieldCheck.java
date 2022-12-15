@@ -1,5 +1,12 @@
 package it.uniba.dib.sms22235.utils;
 
+import androidx.annotation.NonNull;
+
+import org.jetbrains.annotations.Contract;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
 public class InputFieldCheck {
@@ -20,7 +27,36 @@ public class InputFieldCheck {
         return p.matcher(number).matches();
     }
 
-    public static  boolean isPasswordValid(String password){
+    @Contract(pure = true)
+    public static  boolean isPasswordValid(@NonNull String password){
         return password.length() >= MIN_CHAR;
+    }
+
+    /**
+     * This method is used to encode a string, using the MD5 algorithm
+     *
+     * @param encodingString      the string to encode
+     *
+     * @return the encoded string
+     * */
+    @NonNull
+    public static String encodePassword(@NonNull String encodingString) throws NoSuchAlgorithmException {
+        // MessageDigest instance for MD5
+        final String MD5_MODE = "MD5";
+        MessageDigest md = MessageDigest.getInstance(MD5_MODE);
+
+        // Update MessageDigest with input text in bytes
+        md.update(encodingString.getBytes(StandardCharsets.UTF_8));
+
+        // Get the hash bytes
+        byte[] hashBytes = md.digest();
+
+        //Convert hash bytes to hex format
+        StringBuilder sb = new StringBuilder();
+        for (byte b : hashBytes) {
+            sb.append(String.format("%02x", b));
+        }
+
+        return sb.toString();
     }
 }
