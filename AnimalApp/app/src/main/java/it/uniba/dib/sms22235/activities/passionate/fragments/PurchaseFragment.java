@@ -94,6 +94,13 @@ public class PurchaseFragment extends Fragment implements
 
         if (arguments != null) {
             purchasesList = (ArrayList<Purchase>) arguments.getSerializable(KeysNamesUtils.BundleKeys.FILTER_ADAPTER);
+
+            // If the arguments has size 0 then the filter query does not return any result.
+            // The original data set will be displayed
+            if (purchasesList.size() == 0) {
+                purchasesList = ((PassionateNavigationActivity)requireActivity()).getPurchasesList();
+            }
+
         } else {
             purchasesList = ((PassionateNavigationActivity)requireActivity()).getPurchasesList();
         }
@@ -119,52 +126,63 @@ public class PurchaseFragment extends Fragment implements
 
         // Get the fab from the activity and set the listener
         fab.setOnClickListener(v -> {
-            DialogAddPurchaseFragment dialogAddPurchaseFragment = new DialogAddPurchaseFragment(
-                    buildSpinnerEntries(animalSet));
+            if (animalSet.size() > 0) {
+                DialogAddPurchaseFragment dialogAddPurchaseFragment = new DialogAddPurchaseFragment(
+                        buildSpinnerEntries(animalSet));
 
-            dialogAddPurchaseFragment.setListener(this);
-            dialogAddPurchaseFragment.show(requireActivity().getSupportFragmentManager(),
-                    "DialogAddPurchaseFragment");
+                dialogAddPurchaseFragment.setListener(this);
+                dialogAddPurchaseFragment.show(requireActivity().getSupportFragmentManager(),
+                        "DialogAddPurchaseFragment");
+            } else {
+                Toast.makeText(context, "Impossibile inserire una spesa se non si hanno animali registrati", Toast.LENGTH_SHORT).show();
+            }
         });
 
         Button buttonFilter = view.findViewById(R.id.buttonFilter);
 
+        ArrayList<Purchase> finalPurchasesList = purchasesList;
+
         buttonFilter.setOnClickListener(v -> {
-            ((PassionateNavigationActivity) requireActivity()).setNavViewVisibility(View.GONE);
-            fab.setVisibility(View.GONE);
+            if (finalPurchasesList.size() > 0) {
+                ((PassionateNavigationActivity) requireActivity()).setNavViewVisibility(View.GONE);
+                fab.setVisibility(View.GONE);
 
-            Bundle bundle = new Bundle();
+                Bundle bundle = new Bundle();
 
-            // Add the list of animal's names
-            bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS,
-                    buildSpinnerEntries(animalSet));
+                // Add the list of animal's names
+                bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS,
+                        buildSpinnerEntries(animalSet));
 
-            // Add a binding to FilterPurchaseFragment listener
-            bundle.putSerializable(KeysNamesUtils.BundleKeys.INTERFACE, this);
+                // Add a binding to FilterPurchaseFragment listener
+                bundle.putSerializable(KeysNamesUtils.BundleKeys.INTERFACE, this);
 
-            float minCost = -1, maxCost = -1;
-            Cursor cursor = queryPurchases.getMinimumPurchaseValue(username);
-            if(cursor != null) {
-                if (cursor.getCount() > 0){
-                    while (cursor.moveToNext()){
-                        minCost = cursor.getFloat(cursor.getColumnIndexOrThrow("minCost"));
+                float minCost = -1, maxCost = -1;
+                Cursor cursor = queryPurchases.getMinimumPurchaseValue(username);
+                if (cursor != null) {
+                    if (cursor.getCount() > 0) {
+                        while (cursor.moveToNext()) {
+                            minCost = cursor.getFloat(cursor.getColumnIndexOrThrow("minCost"));
+                        }
                     }
                 }
-            }
 
-            cursor = queryPurchases.getMaximumPurchaseValue(username);
-            if(cursor != null) {
-                if (cursor.getCount() > 0){
-                    while (cursor.moveToNext()){
-                        maxCost = cursor.getFloat(cursor.getColumnIndexOrThrow("maxCost"));
+                cursor = queryPurchases.getMaximumPurchaseValue(username);
+                if (cursor != null) {
+                    if (cursor.getCount() > 0) {
+                        while (cursor.moveToNext()) {
+                            maxCost = cursor.getFloat(cursor.getColumnIndexOrThrow("maxCost"));
+                        }
                     }
                 }
+
+                bundle.putFloat(KeysNamesUtils.BundleKeys.MIN_COST, minCost);
+                bundle.putFloat(KeysNamesUtils.BundleKeys.MAX_COST, maxCost);
+
+                controller.navigate(R.id.action_passionate_purchase_to_filterPurchaseFragment, bundle);
+            } else {
+                Toast.makeText(context, "Inserisci almeno una spesa per poter accedere ai filtri",
+                        Toast.LENGTH_SHORT).show();
             }
-
-            bundle.putFloat(KeysNamesUtils.BundleKeys.MIN_COST, minCost);
-            bundle.putFloat(KeysNamesUtils.BundleKeys.MAX_COST, maxCost);
-
-            controller.navigate(R.id.action_passionate_purchase_to_filterPurchaseFragment, bundle);
         });
 
         SearchView searchView = view.findViewById(R.id.searchViewProduct);

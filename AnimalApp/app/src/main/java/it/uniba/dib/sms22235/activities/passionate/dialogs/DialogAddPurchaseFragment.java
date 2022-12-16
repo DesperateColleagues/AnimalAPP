@@ -16,14 +16,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
-import it.uniba.dib.sms22235.entities.users.Animal;
 
 public class DialogAddPurchaseFragment extends DialogFragment
         implements android.app.DatePickerDialog.OnDateSetListener, DialogAddCategoryFragment.DialogAddCategoryFragmentListener {

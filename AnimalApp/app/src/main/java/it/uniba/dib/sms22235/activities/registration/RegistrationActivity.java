@@ -17,6 +17,7 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.activities.registration.fragments.RegistrationOrganizationFragment;
 import it.uniba.dib.sms22235.activities.registration.fragments.RegistrationPersonFragment;
+import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.Passionate;
@@ -69,11 +70,15 @@ public class RegistrationActivity extends AppCompatActivity
                                                             Toast.LENGTH_LONG)
                                                             .show();
 
+                                                    DataManipulationHelper.saveDataInternally(
+                                                            this,
+                                                            passionate,
+                                                            KeysNamesUtils.FileDirsNames.currentPassionateOffline(passionate.getEmail()));
+
                                                     // Go to the profile fragment of the passionate
                                                     Bundle bundle = new Bundle();
                                                     bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE, passionate);
                                                     newActivityRunning(PassionateNavigationActivity.class, bundle);
-
                                                 })
                                                 .addOnFailureListener(e -> Log.d("DEB", e.getMessage()));
 

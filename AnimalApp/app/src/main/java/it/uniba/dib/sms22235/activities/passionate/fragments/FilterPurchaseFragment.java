@@ -97,10 +97,8 @@ public class FilterPurchaseFragment extends Fragment {
         List<Float> minMaxCosts = new ArrayList<>();
 
         if (Objects.equals(minCost, maxCost)){
-
             costRangeSlider.setValueFrom(0F);
             costRangeSlider.setValueTo(maxCost);
-
             minMaxCosts.add(0F);
         } else {
 
@@ -109,6 +107,7 @@ public class FilterPurchaseFragment extends Fragment {
 
             minMaxCosts.add(minCost);
         }
+
         minMaxCosts.add(maxCost);
         costRangeSlider.setValues(minMaxCosts);
 

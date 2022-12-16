@@ -101,6 +101,7 @@ public class KeysNamesUtils {
         public static String ROOT_PREFIX = "app_";
         public static String PROFILE_IMAGES = "AnimalAPP_images";
         public static String ADD_PURCHASE = "add_purchase";
+        public static String ADD_ANIMAL = "add_animal";
 
         /**
          * Method that helps to obtain the name of the directory where posts' images
@@ -128,6 +129,12 @@ public class KeysNamesUtils {
         @Contract(pure = true)
         public static String currentPassionateOffline(String username) {
             return "off_" + username;
+        }
+
+        @NonNull
+        @Contract(pure = true)
+        public static String localAnimalsSet(String email) {
+            return "animals_" + email;
         }
     }
 }

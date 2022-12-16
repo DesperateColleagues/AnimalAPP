@@ -4,17 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -67,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onAvailable(@NonNull Network network) {
                     super.onAvailable(network);
-
                     isConnectionEnabled = true;
                 }
 
@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
             if (isConnectionEnabled) {
                 onlineLogin(email, InputFieldCheck.encodePassword(password));
             } else {
-                offlineLogin(email, InputFieldCheck.encodePassword(password));
+                offlineUserLogin(email, InputFieldCheck.encodePassword(password));
             }
 
         } else {
@@ -159,9 +159,6 @@ public class LoginActivity extends AppCompatActivity {
                         FirebaseUser user = mAuth.getCurrentUser();
 
                         if (user != null) {
-                            // Refresh local table if the connection is enabled
-                            manager.dropTableAndRefresh();
-
                             /*
                              *  Perform a query to find, in the actors collection, the logged user
                              *  with the email provided by the FirebaseUser object.
@@ -217,55 +214,66 @@ public class LoginActivity extends AppCompatActivity {
                                                 // Wait until every task is finished to fill the lists to pass
                                                 // as bundle to the PassionateNavigationActivity
                                                 Tasks.whenAllComplete(taskGetAnimals, taskPurchases).addOnCompleteListener(task -> {
-                                                    // The order of the element in the task object follows the order
-                                                    // of the task passed in input to the whenAllCompleteMethod
-                                                    QuerySnapshot animalsSnapshot = (QuerySnapshot) task.getResult().get(0).getResult();
-                                                    QuerySnapshot purchasesSnapshot = (QuerySnapshot) task.getResult().get(1).getResult();
 
-                                                    LinkedHashSet<Animal> animals = new LinkedHashSet<>();
-                                                    ArrayList<Purchase> purchases = new ArrayList<>();
+                                                    if (task.isSuccessful()) {
+                                                        // Refresh local data structures if the connection is enabled and the task completed
+                                                        manager.dropTableAndRefresh();
+                                                        deleteFile(KeysNamesUtils.FileDirsNames.localAnimalsSet(email));
 
-                                                    // Check if the passionate has animals
-                                                    if (!animalsSnapshot.isEmpty()) {
-                                                        List<DocumentSnapshot> retrievedAnimalsDocuments = animalsSnapshot.getDocuments();
+                                                        // The order of the element in the task object follows the order
+                                                        // of the task passed in input to the whenAllCompleteMethod
+                                                        QuerySnapshot animalsSnapshot = (QuerySnapshot) task.getResult().get(0).getResult();
+                                                        QuerySnapshot purchasesSnapshot = (QuerySnapshot) task.getResult().get(1).getResult();
 
-                                                        // Retrieve animals
-                                                        for (DocumentSnapshot snapshot : retrievedAnimalsDocuments) {
-                                                            animals.add(Animal.loadAnimal(snapshot));
-                                                        }
+                                                        LinkedHashSet<Animal> animals = new LinkedHashSet<>();
+                                                        ArrayList<Purchase> purchases = new ArrayList<>();
 
-                                                        // Check if the user passionate has purchases
-                                                        if (!purchasesSnapshot.isEmpty()) {
-                                                            List<DocumentSnapshot> retrievedPurchasesDocuments = purchasesSnapshot.getDocuments();
+                                                        // Check if the passionate has animals
+                                                        if (!animalsSnapshot.isEmpty()) {
+                                                            List<DocumentSnapshot> retrievedAnimalsDocuments = animalsSnapshot.getDocuments();
 
-                                                            // Retrieve purchases
-                                                            for (DocumentSnapshot snapshot : retrievedPurchasesDocuments) {
-                                                                Purchase purchase = Purchase.loadPurchase(snapshot);
+                                                            // Retrieve animals
+                                                            for (DocumentSnapshot snapshot : retrievedAnimalsDocuments) {
+                                                                animals.add(Animal.loadAnimal(snapshot));
+                                                            }
 
-                                                                long t = manager.insertPurchase(
-                                                                        purchase.getAnimal(),
-                                                                        purchase.getItemName(),
-                                                                        purchase.getOwner(),
-                                                                        purchase.getDate(),
-                                                                        purchase.getCategory(),
-                                                                        purchase.getCost(),
-                                                                        purchase.getAmount()
-                                                                );
+                                                            // Create back the local set file with the updated data from fire store
+                                                            DataManipulationHelper.saveDataInternally(this, animals,
+                                                                    KeysNamesUtils.FileDirsNames.localAnimalsSet(email));
 
-                                                                Log.d("TEST", t +"");
-                                                                purchases.add(purchase);
+                                                            // Check if the user passionate has purchases
+                                                            if (!purchasesSnapshot.isEmpty()) {
+                                                                List<DocumentSnapshot> retrievedPurchasesDocuments = purchasesSnapshot.getDocuments();
+
+                                                                // Retrieve purchases
+                                                                for (DocumentSnapshot snapshot : retrievedPurchasesDocuments) {
+                                                                    Purchase purchase = Purchase.loadPurchase(snapshot);
+
+                                                                    // Update the local DB with the changes in purchases' table
+                                                                    manager.insertPurchase(
+                                                                            purchase.getAnimal(),
+                                                                            purchase.getItemName(),
+                                                                            purchase.getOwner(),
+                                                                            purchase.getDate(),
+                                                                            purchase.getCategory(),
+                                                                            purchase.getCost(),
+                                                                            purchase.getAmount()
+                                                                    );
+                                                                    purchases.add(purchase);
+                                                                }
                                                             }
                                                         }
-                                                    }
-                                                    // Fill the bundle. If one of the snapshot (or both) are empty
-                                                    // the bundle will be filled with an empty array list, in order
-                                                    // to prevent nullable errors
-                                                    bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS, animals);
-                                                    bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_PURCHASES, purchases);
+                                                        // Fill the bundle. If one of the snapshot (or both) are empty
+                                                        // the bundle will be filled with an empty array list, in order
+                                                        // to prevent nullable errors
+                                                        bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS, animals);
+                                                        bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_PURCHASES, purchases);
 
-                                                    // Start the new activity only once the bundle is filled
-                                                    newActivityRunning(PassionateNavigationActivity.class, bundle);
-                                                });
+                                                        // Start the new activity only once the bundle is filled
+                                                        newActivityRunning(PassionateNavigationActivity.class, bundle);
+
+                                                    }
+                                                }).addOnFailureListener(e -> offlineUserLogin(email, password));
 
                                             } else if (role.equals(KeysNamesUtils.RolesNames.VETERINARIAN)) {
                                                 Veterinarian vet = Veterinarian.loadVeterinarian(document);
@@ -289,7 +297,6 @@ public class LoginActivity extends AppCompatActivity {
                                                         for (DocumentSnapshot snapshot : retrievedReservationsDocuments) {
                                                             reservations.add(Reservation.loadReservation(snapshot));
                                                         }
-
                                                     }
 
                                                     bundle.putSerializable(KeysNamesUtils.BundleKeys.VETERINARIAN_RESERVATIONS, reservations);
@@ -313,15 +320,67 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-
-    private void offlineLogin(String email, String password){
+    @SuppressWarnings("unchecked")
+    private void offlineUserLogin(String email, String password) {
         Passionate passionate = (Passionate)
                 DataManipulationHelper.readDataInternally(this,
                         KeysNamesUtils.FileDirsNames.currentPassionateOffline(email));
 
-        if (passionate != null){
+        if (passionate != null) {
+            // Check if email and password are correct
             if (passionate.getEmail().equals(email) && passionate.getPassword().equals(password)) {
-                // todo: implement offline login
+                ArrayList<Purchase> purchasesLocalList = new ArrayList<>();
+
+                // Retrieve the local animals
+                LinkedHashSet<Animal> animalLocalLinkedHashSet = (LinkedHashSet<Animal>)
+                        DataManipulationHelper.readDataInternally(this,
+                                KeysNamesUtils.FileDirsNames.localAnimalsSet(email));
+
+                if (animalLocalLinkedHashSet != null) {
+                    Cursor cursor = manager.runFilterQuery(null, null, null,
+                            "", "");
+
+                    if (cursor != null) {
+                        if (cursor.getCount() > 0) {
+                            while (cursor.moveToNext()) {
+                                // Retrieve the purchase using Cursor
+                                Purchase purchase = new Purchase(
+                                        cursor.getString(cursor.getColumnIndexOrThrow(
+                                                KeysNamesUtils.PurchaseFields.ANIMAL)),
+
+                                        cursor.getString(cursor.getColumnIndexOrThrow(
+                                                KeysNamesUtils.PurchaseFields.ITEM_NAME)),
+
+                                        cursor.getString(cursor.getColumnIndexOrThrow(
+                                                KeysNamesUtils.PurchaseFields.DATE)),
+
+                                        cursor.getString(cursor.getColumnIndexOrThrow(
+                                                KeysNamesUtils.PurchaseFields.CATEGORY)),
+
+                                        cursor.getFloat(cursor.getColumnIndexOrThrow(
+                                                KeysNamesUtils.PurchaseFields.COST)),
+
+                                        cursor.getInt(cursor.getColumnIndexOrThrow(
+                                                KeysNamesUtils.PurchaseFields.AMOUNT))
+                                );
+
+                                purchase.setOwner(cursor.getString(cursor.getColumnIndexOrThrow(
+                                        KeysNamesUtils.PurchaseFields.OWNER)));
+
+                                purchasesLocalList.add(purchase);
+                            }
+                        }
+                    }
+                }
+
+                Bundle bundle = new Bundle();
+
+                // Fill the bundle to pass to the activity
+                bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE, passionate);
+                bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS, animalLocalLinkedHashSet);
+                bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_PURCHASES, purchasesLocalList);
+
+                newActivityRunning(PassionateNavigationActivity.class, bundle);
             }
         }
     }
@@ -361,5 +420,4 @@ public class LoginActivity extends AppCompatActivity {
 
         startActivity(intent); //start a new activity
     }
-
 }
