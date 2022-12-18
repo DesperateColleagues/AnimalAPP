@@ -337,8 +337,8 @@ public class LoginActivity extends AppCompatActivity {
                                 KeysNamesUtils.FileDirsNames.localAnimalsSet(email));
 
                 if (animalLocalLinkedHashSet != null) {
-                    Cursor cursor = manager.runFilterQuery(null, null, null,
-                            "", "");
+                    Cursor cursor = manager.runFilterQuery(passionate.getUsername(), null,
+                            null,  null, "", "");
 
                     if (cursor != null) {
                         if (cursor.getCount() > 0) {

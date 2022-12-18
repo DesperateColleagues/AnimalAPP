@@ -122,7 +122,7 @@ public class PurchaseFragment extends Fragment implements
         FloatingActionButton fab = ((PassionateNavigationActivity) requireActivity())
                 .getFab();
 
-        String username = ((PassionateNavigationActivity) requireActivity()).getPassionateUsername();
+        String owner = ((PassionateNavigationActivity) requireActivity()).getPassionateUsername();
 
         // Get the fab from the activity and set the listener
         fab.setOnClickListener(v -> {
@@ -157,7 +157,7 @@ public class PurchaseFragment extends Fragment implements
                 bundle.putSerializable(KeysNamesUtils.BundleKeys.INTERFACE, this);
 
                 float minCost = -1, maxCost = -1;
-                Cursor cursor = queryPurchases.getMinimumPurchaseValue(username);
+                Cursor cursor = queryPurchases.getMinimumPurchaseValue(owner);
                 if (cursor != null) {
                     if (cursor.getCount() > 0) {
                         while (cursor.moveToNext()) {
@@ -166,7 +166,7 @@ public class PurchaseFragment extends Fragment implements
                     }
                 }
 
-                cursor = queryPurchases.getMaximumPurchaseValue(username);
+                cursor = queryPurchases.getMaximumPurchaseValue(owner);
                 if (cursor != null) {
                     if (cursor.getCount() > 0) {
                         while (cursor.moveToNext()) {
@@ -196,7 +196,7 @@ public class PurchaseFragment extends Fragment implements
             @Override
             public boolean onQueryTextChange(String searchText) {
                 // Execute the query to obtain the purchases with the searched item
-                Cursor cursor = queryPurchases.getPurchaseByItemNameQuery(searchText, username);
+                Cursor cursor = queryPurchases.getPurchaseByItemNameQuery(searchText, owner);
 
                 // Create a new adapter which will contain the purchase from the search query
                 ListViewPurchasesAdapter adapterSearchedPurchases =  new ListViewPurchasesAdapter(
@@ -248,8 +248,8 @@ public class PurchaseFragment extends Fragment implements
     }
 
     @Override
-    public ArrayList<Purchase> onFiltersAdded(List<String> animals, List<String> categories, Interval<Float> costs) {
-        Cursor cursor = queryPurchases.runFilterQuery(animals, categories, costs,
+    public ArrayList<Purchase> onFiltersAdded(String owner, List<String> animals, List<String> categories, Interval<Float> costs) {
+        Cursor cursor = queryPurchases.runFilterQuery(owner, animals, categories, costs,
                 "", "");
         ArrayList<Purchase> purchasesSubList = new ArrayList<>();
 

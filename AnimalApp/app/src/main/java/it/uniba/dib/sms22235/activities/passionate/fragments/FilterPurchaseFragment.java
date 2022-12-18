@@ -34,9 +34,10 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 public class FilterPurchaseFragment extends Fragment {
 
     public interface FilterPurchaseFragmentListener {
-        ArrayList<Purchase> onFiltersAdded(List<String> animals, List<String> categories, Interval<Float> costs);
+        ArrayList<Purchase> onFiltersAdded(String owner, List<String> animals, List<String> categories, Interval<Float> costs);
     }
 
+    private String owner;
     private ArrayList<String> animaList;
     private ArrayList<String> categories;
     private Float minCost;
@@ -54,6 +55,8 @@ public class FilterPurchaseFragment extends Fragment {
 
 
         controller = Navigation.findNavController(container);
+
+        owner = ((PassionateNavigationActivity) requireActivity()).getPassionateUsername();
 
         if (arguments != null) {
             // Retrieve the animal list
@@ -111,14 +114,14 @@ public class FilterPurchaseFragment extends Fragment {
         minMaxCosts.add(maxCost);
         costRangeSlider.setValues(minMaxCosts);
 
-        // TODO: must be write an efficient code to assign a right number of step for every interval
+        // TODO: optimize this code to assign a right number of step for every interval
 
         float intervalSlider = maxCost - minCost;
 
         if (intervalSlider == 0){
             costRangeSlider.setStepSize(maxCost);
         } else if (intervalSlider > 0 && intervalSlider <= 50){
-            costRangeSlider.setStepSize(1F);
+            costRangeSlider.setStepSize(0);
         } else if (intervalSlider > 50 && intervalSlider <= 1000){
             costRangeSlider.setStepSize(intervalSlider / 25);
         } else if (intervalSlider > 1000 && intervalSlider <= 2500) {
@@ -183,7 +186,7 @@ public class FilterPurchaseFragment extends Fragment {
                 categoryList = null;
             }
 
-            ArrayList<Purchase> purchasesSubList = listener.onFiltersAdded(animalList, categoryList, interval);
+            ArrayList<Purchase> purchasesSubList = listener.onFiltersAdded(owner, animalList, categoryList, interval);
 
             // Get back to the purchase fragment passing the list as bundle
             Bundle bundle = new Bundle();

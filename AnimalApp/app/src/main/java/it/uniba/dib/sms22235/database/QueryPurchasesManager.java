@@ -90,10 +90,10 @@ public class QueryPurchasesManager {
      *
      * @return a cursor with the result of the query
      * */
-    public Cursor runFilterQuery(List<String> animals, List<String> categories,
+    public Cursor runFilterQuery(String owner, List<String> animals, List<String> categories,
                                  Interval<Float> costs, String dateFrom, String dateTo) {
 
-        String query = buildQueryString(animals, categories, costs, dateFrom, dateTo);
+        String query = buildQueryString(owner, animals, categories, costs, dateFrom, dateTo);
         Cursor cursor = null;
 
         try{
@@ -112,12 +112,12 @@ public class QueryPurchasesManager {
      * This query search for the input item into purchase table.
      *
      * @param itemName the name of the item to search
-     * @param username the owner of the purchase
+     * @param owner the owner of the purchase
      * */
-    public Cursor getPurchaseByItemNameQuery(String itemName, String username) {
+    public Cursor getPurchaseByItemNameQuery(String itemName, String owner) {
         String query = "SELECT * FROM " + KeysNamesUtils.CollectionsNames.PURCHASES +
                 " WHERE " + KeysNamesUtils.PurchaseFields.ITEM_NAME + " LIKE '%" + itemName + "%'" +
-                " AND " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + username + "';";
+                " AND " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + owner + "';";
 
         Cursor cursor = null;
 
@@ -131,10 +131,10 @@ public class QueryPurchasesManager {
         return cursor;
     }
 
-    public Cursor getMinimumPurchaseValue(String username){
+    public Cursor getMinimumPurchaseValue(String owner){
         String query = "SELECT MIN(" + KeysNamesUtils.PurchaseFields.COST + ") AS minCost" +
                 " FROM " + KeysNamesUtils.CollectionsNames.PURCHASES +
-                " WHERE " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + username + "';";
+                " WHERE " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + owner + "';";
 
         Cursor cursor = null;
 
@@ -148,10 +148,10 @@ public class QueryPurchasesManager {
         return cursor;
     }
 
-    public Cursor getMaximumPurchaseValue(String username){
+    public Cursor getMaximumPurchaseValue(String owner){
         String query = "SELECT MAX(" + KeysNamesUtils.PurchaseFields.COST + ") AS maxCost" +
                 " FROM " + KeysNamesUtils.CollectionsNames.PURCHASES +
-                " WHERE " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + username + "';";
+                " WHERE " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + owner + "';";
 
         Cursor cursor = null;
 
@@ -166,16 +166,14 @@ public class QueryPurchasesManager {
     }
 
     @NonNull
-    private String buildQueryString(List<String> animals, List<String> categories,
+    private String buildQueryString(String owner, List<String> animals, List<String> categories,
                                     Interval<Float> costs, String dateFrom, String dateTo) {
         StringBuilder query = new StringBuilder();
         query.append("SELECT * FROM ").append(KeysNamesUtils.CollectionsNames.PURCHASES).append("\n");
 
+        //TODO: decidere se lasciare la query in due parti o costruirla direttamente in query
         StringBuilder where = new StringBuilder();
-        where.append("WHERE ");
-
-        StringBuilder empty_where = new StringBuilder();
-        empty_where.append("WHERE ");
+        where.append("WHERE ").append(KeysNamesUtils.PurchaseFields.OWNER).append(" = '").append(owner).append("'");
 
         // If nof filters are present select all table's rows
         if (animals == null && categories == null && costs == null){
@@ -184,6 +182,7 @@ public class QueryPurchasesManager {
         } else {
             // If there is the animal's filter
             if (animals != null) {
+                where.append(" AND ");
 
                 where.append(KeysNamesUtils.PurchaseFields.ANIMAL).append(" IN (");
 
@@ -199,9 +198,7 @@ public class QueryPurchasesManager {
             // if there is category's filter
             if (categories != null) {
                 // if a filter is already been selected add an AND condition
-                if (!where.toString().equals(empty_where.toString())) {
-                    where.append(" AND ");
-                }
+                where.append(" AND ");
 
                 where.append(KeysNamesUtils.PurchaseFields.CATEGORY).append(" IN (");
 
@@ -218,12 +215,12 @@ public class QueryPurchasesManager {
             // If cost filter is present
             if (costs != null) {
                 // if a filter is already been selected add an AND condition
-                if (!where.toString().equals(empty_where.toString())) {
-                    where.append(" AND ");
-                }
+                where.append(" AND ");
+
                 where.append(KeysNamesUtils.PurchaseFields.COST).append(" BETWEEN ").append(costs.getMin()).append(" AND ")
                         .append(costs.getMax());
             }
+            //TODO: filtrare per data.
 
 
 
