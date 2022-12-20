@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/passionate_profile"
-        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.ProfileFragment"
+        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.PassionateProfileFragment"
         android:label="@string/title_fragment_passionate_profile"
         tools:layout="@layout/fragment_passionate_profile" />
 
@@ -18,9 +18,9 @@
 
     <fragment
         android:id="@+id/passionate_pet_care"
-        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.VeterinaryReservationFragment"
+        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.PassionateReservationFragment"
         android:label="@string/title_fragment_passionate_reservation"
-        tools:layout="@layout/fragment_passionate_veterinary_reservation" />
+        tools:layout="@layout/fragment_passionate_calendar_reservation" />
 
     <fragment
         android:id="@+id/passionate_purchase"

@@ -20,11 +20,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
-import it.uniba.dib.sms22235.activities.passionate.fragments.VeterinaryReservationFragment;
 import it.uniba.dib.sms22235.activities.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.activities.veterinarian.dialogs.DialogAddReservationFragment;
-import it.uniba.dib.sms22235.adapters.ListViewPurchasesAdapter;
 import it.uniba.dib.sms22235.adapters.ReservationsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.utils.RecyclerTouchListener;

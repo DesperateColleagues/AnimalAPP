@@ -22,30 +22,28 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.activities.passionate.fragments.ProfileFragment;
+import it.uniba.dib.sms22235.activities.passionate.fragments.PassionateProfileFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment;
 
 import it.uniba.dib.sms22235.database.QueryPurchasesManager;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
+import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class PassionateNavigationActivity extends AppCompatActivity implements
-        ProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener,
+        PassionateProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener,
         Serializable {
 
     private transient FirebaseFirestore db;
@@ -54,6 +52,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     private transient Passionate passionate;
     private transient LinkedHashSet<Animal> animalSet;
     private transient ArrayList<Purchase> purchasesList;
+    private transient ArrayList<Reservation> passionateReservationsList;
+    private transient ArrayList<Reservation> availableReservationsList;
 
     private transient FloatingActionButton fab;
     private transient BottomNavigationView navView;
@@ -169,6 +169,9 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             passionate = (Passionate) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE);
             animalSet = (LinkedHashSet<Animal>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS);
             purchasesList = (ArrayList<Purchase>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_PURCHASES);
+
+            passionateReservationsList = (ArrayList<Reservation>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_RESERVATIONS);
+            availableReservationsList = (ArrayList<Reservation>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.AVAILABLE_RESERVATIONS);
         }
 
         // Init the animal data set if it is null
@@ -177,6 +180,16 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         }
 
         // Init the purchases data set it is null
+        if (purchasesList == null) {
+            purchasesList = new ArrayList<>();
+        }
+
+        // Init the available reservations data set it is null
+        if (purchasesList == null) {
+            purchasesList = new ArrayList<>();
+        }
+
+        // Init the passionate reservations data set it is null
         if (purchasesList == null) {
             purchasesList = new ArrayList<>();
         }
@@ -366,6 +379,40 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         }
 
         return clonedPurchasesList;
+    }
+
+    /**
+     * This method is used to get a copy of passionate's reservations list
+     *
+     * @return a copy of the list with passionate's reservations
+     * */
+    public ArrayList<Reservation> getPassionateReservationsList() {
+        ArrayList<Reservation> clonedPassionateReservationsList = new ArrayList<>();
+
+        if (passionateReservationsList != null) {
+            for (Reservation reservation : passionateReservationsList) {
+                clonedPassionateReservationsList.add((Reservation) reservation.clone());
+            }
+        }
+
+        return clonedPassionateReservationsList;
+    }
+
+    /**
+     * This method is used to get a copy of available reservations list
+     *
+     * @return a copy of the list with available reservations
+     * */
+    public ArrayList<Reservation> getAvailableReservationsList() {
+        ArrayList<Reservation> clonedAvailableReservationsList = new ArrayList<>();
+
+        if (availableReservationsList != null) {
+            for (Reservation reservation : availableReservationsList) {
+                clonedAvailableReservationsList.add((Reservation) reservation.clone());
+            }
+        }
+
+        return clonedAvailableReservationsList;
     }
 
     public void restoreBottomAppBarVisibility(){

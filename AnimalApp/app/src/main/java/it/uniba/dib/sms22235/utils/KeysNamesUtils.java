@@ -88,6 +88,8 @@ public class KeysNamesUtils {
         public static String PASSIONATE = "passionate";
         public static String VETERINARIAN = "veterinarian";
         public static String VETERINARIAN_RESERVATIONS = "veterinarian_reservations";
+        public static String PASSIONATE_RESERVATIONS = "passionate_reservations";
+        public static String AVAILABLE_RESERVATIONS = "available_reservations";
         public static String PASSIONATE_PURCHASES = "purchases";
         public static String PASSIONATE_ANIMALS = "animals";
         public static String FILTER_ADAPTER = "filter";

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="20dp"
+    android:paddingBottom="15dp"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/txtInputDiagnosisDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_baseline_edit_note_24"
+        android:drawablePadding="10dp"
+        android:inputType="textMultiLine"
+        android:scrollbars="vertical"
+        android:minHeight="48dp"
+        android:lines="8"
+        android:maxLines="10"
+        android:textSize="17sp"
+        android:hint="Inserisci riassunto breve della visita"
+        android:textColorHint="?attr/colorOnPrimary"
+        tools:ignore="LabelFor,SpeakableTextPresentCheck" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#757575"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:text="Oppure aggiungi un file .doc con una diagnosi approfondita"
+            />
+
+        <Button
+            android:id="@+id/btnAddDiagnosisFile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            android:drawableRight="@drawable/ic_baseline_post_add_24"
+            android:layout_weight="5"
+            android:drawableTint="?attr/colorPrimary"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnAddDiagnosis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="Completa inserimento" />
+
+
+</LinearLayout>

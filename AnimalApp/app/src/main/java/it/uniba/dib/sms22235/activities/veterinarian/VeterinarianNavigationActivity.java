@@ -123,7 +123,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         return clonedReservationsList;
     }
 
-    public String getVeterinarianEmail(){
-        return veterinarian.getEmail();
-    }
+    public String getVeterinarianEmail(){ return veterinarian.getEmail(); }
+
+    public String getVeterinarianFullName(){ return veterinarian.getFullName(); }
 }

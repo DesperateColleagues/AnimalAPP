@@ -211,9 +211,25 @@ public class LoginActivity extends AppCompatActivity {
                                                         .whereEqualTo(KeysNamesUtils.PurchaseFields.OWNER, cus.getUsername())
                                                         .get();
 
+                                                Task<QuerySnapshot> taskAvailableReservations = db
+                                                        .collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
+                                                        .whereEqualTo(KeysNamesUtils.ReservationFields.OWNER, null)
+                                                        .whereEqualTo(KeysNamesUtils.ReservationFields.ANIMAL, null)
+                                                        .get();
+
+                                                Task<QuerySnapshot> taskPassionateReservations = db
+                                                        .collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
+                                                        .whereEqualTo(KeysNamesUtils.ReservationFields.OWNER, cus.getUsername())
+                                                        .get();
+
                                                 // Wait until every task is finished to fill the lists to pass
                                                 // as bundle to the PassionateNavigationActivity
-                                                Tasks.whenAllComplete(taskGetAnimals, taskPurchases).addOnCompleteListener(task -> {
+                                                Tasks.whenAllComplete(
+                                                        taskGetAnimals,
+                                                        taskPurchases,
+                                                        taskAvailableReservations,
+                                                        taskPassionateReservations
+                                                ).addOnCompleteListener(task -> {
 
                                                     if (task.isSuccessful()) {
                                                         // Refresh local data structures if the connection is enabled and the task completed
@@ -224,9 +240,13 @@ public class LoginActivity extends AppCompatActivity {
                                                         // of the task passed in input to the whenAllCompleteMethod
                                                         QuerySnapshot animalsSnapshot = (QuerySnapshot) task.getResult().get(0).getResult();
                                                         QuerySnapshot purchasesSnapshot = (QuerySnapshot) task.getResult().get(1).getResult();
+                                                        QuerySnapshot availableReservationsSnapshot = (QuerySnapshot) task.getResult().get(2).getResult();
+                                                        QuerySnapshot passionateReservationsSnapshot = (QuerySnapshot) task.getResult().get(3).getResult();
 
                                                         LinkedHashSet<Animal> animals = new LinkedHashSet<>();
                                                         ArrayList<Purchase> purchases = new ArrayList<>();
+                                                        ArrayList<Reservation> availableReservations = new ArrayList<>();
+                                                        ArrayList<Reservation> passionateReservations = new ArrayList<>();
 
                                                         // Check if the passionate has animals
                                                         if (!animalsSnapshot.isEmpty()) {
@@ -262,12 +282,33 @@ public class LoginActivity extends AppCompatActivity {
                                                                     purchases.add(purchase);
                                                                 }
                                                             }
+
+                                                            if (!availableReservationsSnapshot.isEmpty()) {
+                                                                List<DocumentSnapshot> availableReservationsDocuments = availableReservationsSnapshot.getDocuments();
+
+                                                                for (DocumentSnapshot snapshot : availableReservationsDocuments) {
+                                                                    Reservation reservation = Reservation.loadReservation(snapshot);
+
+                                                                    availableReservations.add(reservation);
+                                                                }
+                                                            }
+                                                            if (!passionateReservationsSnapshot.isEmpty()) {
+                                                                List<DocumentSnapshot> passionateReservationsDocuments = passionateReservationsSnapshot.getDocuments();
+
+                                                                for (DocumentSnapshot snapshot : passionateReservationsDocuments) {
+                                                                    Reservation reservation = Reservation.loadReservation(snapshot);
+
+                                                                    passionateReservations.add(reservation);
+                                                                }
+                                                            }
                                                         }
                                                         // Fill the bundle. If one of the snapshot (or both) are empty
                                                         // the bundle will be filled with an empty array list, in order
                                                         // to prevent nullable errors
                                                         bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS, animals);
                                                         bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_PURCHASES, purchases);
+                                                        bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_RESERVATIONS, passionateReservations);
+                                                        bundle.putSerializable(KeysNamesUtils.BundleKeys.AVAILABLE_RESERVATIONS, availableReservations);
 
                                                         // Start the new activity only once the bundle is filled
                                                         newActivityRunning(PassionateNavigationActivity.class, bundle);
