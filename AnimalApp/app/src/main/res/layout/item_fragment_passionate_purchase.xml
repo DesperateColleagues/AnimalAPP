@@ -33,47 +33,54 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:orientation="vertical"
-                    android:layout_margin="10dp">
+                    android:layout_marginStart="5dp"
+                    android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/categoryImageShow"
+                        android:layout_marginStart="5dp"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_gravity="center"
+                        android:layout_gravity="start"
                         android:src="@drawable/ic_baseline_filter_list_24" />
 
                     <TextView
                         android:id="@+id/txtDatePurchase"
+                        android:layout_marginStart="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="start"
                         android:layout_marginTop="5dp"
+                        android:textSize="12sp"
+                        android:autoSizeTextType="uniform"
                         android:text="data"/>
                 </LinearLayout>
 
                 <LinearLayout
+                    android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginStart="20dp"
                     android:gravity="center"
+                    android:layout_marginStart="20dp"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/txtItemName"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
+                        android:gravity="start"
+                        android:autoSizeTextType="uniform"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:text="Spesa"
-                        android:textSize="20sp" />
+                        android:textSize="16sp"/>
 
                     <TextView
                         android:id="@+id/txtAnimalPurchase"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:gravity="center"
+                        android:gravity="start"
+                        android:autoSizeTextType="uniform"
                         android:textSize="12sp"
                         android:layout_marginTop="10dp"
                         android:text="Animale" />
@@ -84,8 +91,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:layout_weight="2"
-                    android:layout_margin="10dp"
+                    android:layout_weight="4"
+                    android:layout_marginEnd="10dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -94,8 +101,9 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:text="Costo totale"
-                        android:gravity="end"
-                        android:textSize="20sp" />
+                        android:autoSizeTextType="uniform"
+                        android:textSize="16sp"
+                        android:gravity="end" />
 
                     <TextView
                         android:id="@+id/txtCostXAmount"
@@ -103,6 +111,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginTop="10dp"
+                        android:autoSizeTextType="uniform"
                         android:gravity="end"
                         android:textSize="12sp"
                         android:text="costo x quantita" />

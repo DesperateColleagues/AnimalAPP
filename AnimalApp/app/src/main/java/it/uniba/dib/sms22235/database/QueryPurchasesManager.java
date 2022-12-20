@@ -176,7 +176,7 @@ public class QueryPurchasesManager {
         where.append("WHERE ").append(KeysNamesUtils.PurchaseFields.OWNER).append(" = '").append(owner).append("'");
 
         // If nof filters are present select all table's rows
-        if (animals == null && categories == null && costs == null){
+        if (animals == null && categories == null && costs == null && dateFrom.equals("") && dateTo.equals("")){
             query.append(";");
 
         } else {
@@ -197,7 +197,6 @@ public class QueryPurchasesManager {
             }
             // if there is category's filter
             if (categories != null) {
-                // if a filter is already been selected add an AND condition
                 where.append(" AND ");
 
                 where.append(KeysNamesUtils.PurchaseFields.CATEGORY).append(" IN (");
@@ -209,18 +208,23 @@ public class QueryPurchasesManager {
                 }
 
                 where.append(")");
-
             }
 
             // If cost filter is present
             if (costs != null) {
-                // if a filter is already been selected add an AND condition
                 where.append(" AND ");
 
-                where.append(KeysNamesUtils.PurchaseFields.COST).append(" BETWEEN ").append(costs.getMin()).append(" AND ")
-                        .append(costs.getMax());
+                where.append(KeysNamesUtils.PurchaseFields.COST).append(" BETWEEN ").append(costs.getMin())
+                        .append(" AND ").append(costs.getMax());
             }
-            //TODO: filtrare per data.
+
+            // If dates filter is present
+            if (!dateFrom.equals("") && !dateTo.equals("")) {
+                where.append(" AND ");
+
+                where.append(KeysNamesUtils.PurchaseFields.DATE).append(" BETWEEN '").append(dateFrom)
+                        .append("' AND '").append(dateTo).append("'");
+            }
 
 
 

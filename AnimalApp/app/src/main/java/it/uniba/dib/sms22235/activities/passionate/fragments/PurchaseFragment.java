@@ -140,10 +140,7 @@ public class PurchaseFragment extends Fragment implements
 
         Button buttonFilter = view.findViewById(R.id.buttonFilter);
 
-        ArrayList<Purchase> finalPurchasesList = purchasesList;
-
         buttonFilter.setOnClickListener(v -> {
-            if (finalPurchasesList.size() > 0) {
                 ((PassionateNavigationActivity) requireActivity()).setNavViewVisibility(View.GONE);
                 fab.setVisibility(View.GONE);
 
@@ -179,10 +176,6 @@ public class PurchaseFragment extends Fragment implements
                 bundle.putFloat(KeysNamesUtils.BundleKeys.MAX_COST, maxCost);
 
                 controller.navigate(R.id.action_passionate_purchase_to_filterPurchaseFragment, bundle);
-            } else {
-                Toast.makeText(context, "Inserisci almeno una spesa per poter accedere ai filtri",
-                        Toast.LENGTH_SHORT).show();
-            }
         });
 
         SearchView searchView = view.findViewById(R.id.searchViewProduct);
@@ -248,9 +241,9 @@ public class PurchaseFragment extends Fragment implements
     }
 
     @Override
-    public ArrayList<Purchase> onFiltersAdded(String owner, List<String> animals, List<String> categories, Interval<Float> costs) {
+    public ArrayList<Purchase> onFiltersAdded(String owner, List<String> animals, List<String> categories, Interval<Float> costs, String dateFrom, String dateTo) {
         Cursor cursor = queryPurchases.runFilterQuery(owner, animals, categories, costs,
-                "", "");
+                dateFrom, dateTo);
         ArrayList<Purchase> purchasesSubList = new ArrayList<>();
 
         if (cursor != null) {

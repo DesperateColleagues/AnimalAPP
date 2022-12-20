@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "it.uniba.dib.sms22235"
-        minSdk 25
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -36,6 +36,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-runtime:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+
     def nav_version = "2.5.3"
 
     // Java language implementation for navigation

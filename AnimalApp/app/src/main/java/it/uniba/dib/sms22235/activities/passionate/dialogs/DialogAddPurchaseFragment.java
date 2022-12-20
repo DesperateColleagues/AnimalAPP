@@ -144,13 +144,9 @@ public class DialogAddPurchaseFragment extends DialogFragment
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, dayOfMonth);
 
-        SimpleDateFormat dateToDisplayFormat = new SimpleDateFormat("dd-MM-yyyy");
-        String dateToDisplay = dateToDisplayFormat.format(calendar.getTime());
-
-        txtInputDatePurchase.setText(dateToDisplay);
-
         SimpleDateFormat dateSqlFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateSql = dateSqlFormat.format(calendar.getTime());
+        txtInputDatePurchase.setText(dateSql);
     }
 
     @Override

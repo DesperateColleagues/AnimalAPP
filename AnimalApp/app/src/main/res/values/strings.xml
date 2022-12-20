@@ -72,7 +72,9 @@
     <string name="filtri">FILTRI</string>
     <string name="animale">Animale</string>
     <string name="categorie">Categorie</string>
-    <string name="costoh">Costo</string>
+    <string name="costoh">Costo unitario</string>
+    <string name="intervallo_date">Intervallo date</string>
+    <string name="date">Date</string>
 
     <string-array name="rangeSliderValues">
         <item>0</item>
