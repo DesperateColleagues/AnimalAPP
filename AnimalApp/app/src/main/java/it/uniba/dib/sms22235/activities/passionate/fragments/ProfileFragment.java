@@ -7,13 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
 import it.uniba.dib.sms22235.R;
@@ -69,66 +69,72 @@ public class ProfileFragment extends Fragment implements DialogAddAnimalFragment
 
         ((TextView) rootView.findViewById(R.id.txtWelcome)).setText(title);
 
-        LinkedHashSet<Animal> animalSet = ((PassionateNavigationActivity) requireActivity()).getAnimalSet();
+        LinkedHashSet<Animal> animalSet =
+                ((PassionateNavigationActivity) requireActivity()).getAnimalSet();
 
-        // Path to internal storage
-        String path =
-                KeysNamesUtils.FileDirsNames.BASE_PATH +
-                        KeysNamesUtils.FileDirsNames.ROOT_PREFIX +
-                        KeysNamesUtils.FileDirsNames.PROFILE_IMAGES;
+        if (animalSet != null) {
+            // Path to internal storage
+            String path =
+                    KeysNamesUtils.FileDirsNames.BASE_PATH +
+                            KeysNamesUtils.FileDirsNames.ROOT_PREFIX +
+                            KeysNamesUtils.FileDirsNames.PROFILE_IMAGES;
 
-        // Init the recycler
-        adapter = new AnimalListAdapter();
+            // Init the recycler
+            adapter = new AnimalListAdapter();
 
-        for (Animal animal : animalSet) {
-            // Set the animals in the adapter
-            adapter.addAnimal(animal);
+            for (Animal animal : animalSet) {
+                // Set the animals in the adapter
+                adapter.addAnimal(animal);
 
-            // Load the profile pic preview
-            Bitmap image = DataManipulationHelper.loadBitmapFromStorage(path,
-                    animal.getMicrochipCode() + ".png");
+                // Load the profile pic preview
+                Bitmap image = DataManipulationHelper.loadBitmapFromStorage(path,
+                        animal.getMicrochipCode() + ".png");
 
-            // Add the profile pic preview to the adapter
-            adapter.addPic(image);
+                // Add the profile pic preview to the adapter
+                adapter.addPic(image);
+            }
+
+            animalRecycleView.setAdapter(adapter);
+            animalRecycleView.setLayoutManager(new LinearLayoutManager(
+                    getContext(), RecyclerView.HORIZONTAL, false));
+
+            animalRecycleView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), animalRecycleView, new RecyclerTouchListener.ClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+                    // This method is used to request storage permission to the user
+                    // with that we can save animal images not only on firebase,
+                    // but also locally, to retrieve them more easily
+                    ((PassionateNavigationActivity) requireActivity()).requestPermission();
+
+                    // This code obtains the selected Animal info and it shows them in a specific built Dialog
+                    DialogAnimalCardFragment dialogAnimalCardFragment = new DialogAnimalCardFragment(
+                            adapter.getAnimalAtPosition(position));
+                    dialogAnimalCardFragment.show(requireActivity().getSupportFragmentManager(),
+                            "DialogAnimalCardFragment");
+                }
+
+                @Override
+                public void onLongClick(View view, int position) {
+                    // We do not need this method atm
+                }
+            }));
+
+            ((PassionateNavigationActivity) requireActivity()).getFab().setOnClickListener(v -> {
+                dialogAddAnimalFragment = new DialogAddAnimalFragment();
+                dialogAddAnimalFragment.setListener(this);
+                dialogAddAnimalFragment.show(getParentFragmentManager(), "DialogAddAnimalFragment");
+            });
         }
-
-        animalRecycleView.setAdapter(adapter);
-        animalRecycleView.setLayoutManager(new LinearLayoutManager(
-                getContext(), RecyclerView.HORIZONTAL, false));
-
-        animalRecycleView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), animalRecycleView, new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                // This method is used to request storage permission to the user
-                // with that we can save animal images not only on firebase,
-                // but also locally, to retrieve them more easily
-                ((PassionateNavigationActivity) requireActivity()).requestPermission();
-
-                // This code obtains the selected Animal info and it shows them in a specific built Dialog
-                DialogAnimalCardFragment dialogAnimalCardFragment = new DialogAnimalCardFragment(
-                        adapter.getAnimalAtPosition(position));
-                dialogAnimalCardFragment.show(requireActivity().getSupportFragmentManager(),
-                        "DialogAnimalCardFragment");
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-                // We do not need this method atm
-            }
-        }));
-
-        ((PassionateNavigationActivity) requireActivity()).getFab().setOnClickListener(v -> {
-            dialogAddAnimalFragment = new DialogAddAnimalFragment();
-            dialogAddAnimalFragment.setListener(this);
-            dialogAddAnimalFragment.show(getParentFragmentManager(), "DialogAddAnimalFragment");
-        });
 
         return rootView;
     }
 
     @Override
     public void onDialogAddAnimalDismissed(Animal animal) {
+        // Add the new animal to the adapter
         adapter.addAnimal(animal);
+        // When the animal is added no profile pic is provided
+        adapter.addPic(null);
         adapter.notifyItemInserted(adapter.getItemCount());
 
         // Execute listener method to perform data saving

@@ -52,11 +52,11 @@ public class PurchaseFragment extends Fragment implements
         void onPurchaseRegistered(Purchase purchase);
     }
 
-    private PurchaseFragmentListener listener;
-    private ListViewPurchasesAdapter purchaseAdapter;
-    private NavController controller;
-    private QueryPurchasesManager queryPurchases;
-    private ListView purchaseListView;
+    private transient PurchaseFragmentListener listener;
+    private transient ListViewPurchasesAdapter purchaseAdapter;
+    private transient NavController controller;
+    private transient QueryPurchasesManager queryPurchases;
+    private transient ListView purchaseListView;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -90,13 +90,19 @@ public class PurchaseFragment extends Fragment implements
 
         Context context = requireContext();
 
-        savedInstanceState = getArguments();
+        Bundle arguments = getArguments();
 
-        if (savedInstanceState != null) {
-            purchasesList = (ArrayList<Purchase>) savedInstanceState.getSerializable(KeysNamesUtils.BundleKeys.FILTER_ADAPTER);
+        if (arguments != null) {
+            purchasesList = (ArrayList<Purchase>) arguments.getSerializable(KeysNamesUtils.BundleKeys.FILTER_ADAPTER);
+
+            // If the arguments has size 0 then the filter query does not return any result.
+            // The original data set will be displayed
+            if (purchasesList.size() == 0) {
+                purchasesList = ((PassionateNavigationActivity)requireActivity()).getPurchasesList();
+            }
+
         } else {
             purchasesList = ((PassionateNavigationActivity)requireActivity()).getPurchasesList();
-            Toast.makeText(context, "NULLO", Toast.LENGTH_SHORT).show();
         }
 
         purchaseAdapter = new ListViewPurchasesAdapter(context, 0);
@@ -116,36 +122,60 @@ public class PurchaseFragment extends Fragment implements
         FloatingActionButton fab = ((PassionateNavigationActivity) requireActivity())
                 .getFab();
 
-        String username = ((PassionateNavigationActivity) requireActivity()).getPassionateUsername();
+        String owner = ((PassionateNavigationActivity) requireActivity()).getPassionateUsername();
 
         // Get the fab from the activity and set the listener
         fab.setOnClickListener(v -> {
-            DialogAddPurchaseFragment dialogAddPurchaseFragment = new DialogAddPurchaseFragment(
-                    buildSpinnerEntries(animalSet));
+            if (animalSet.size() > 0) {
+                DialogAddPurchaseFragment dialogAddPurchaseFragment = new DialogAddPurchaseFragment(
+                        buildSpinnerEntries(animalSet));
 
-            dialogAddPurchaseFragment.setListener(this);
-            dialogAddPurchaseFragment.show(requireActivity().getSupportFragmentManager(),
-                    "DialogAddPurchaseFragment");
+                dialogAddPurchaseFragment.setListener(this);
+                dialogAddPurchaseFragment.show(requireActivity().getSupportFragmentManager(),
+                        "DialogAddPurchaseFragment");
+            } else {
+                Toast.makeText(context, "Impossibile inserire una spesa se non si hanno animali registrati", Toast.LENGTH_SHORT).show();
+            }
         });
 
         Button buttonFilter = view.findViewById(R.id.buttonFilter);
 
         buttonFilter.setOnClickListener(v -> {
-            ((PassionateNavigationActivity) requireActivity()).setNavViewVisibility(View.GONE);
-            fab.setVisibility(View.GONE);
+                ((PassionateNavigationActivity) requireActivity()).setNavViewVisibility(View.GONE);
+                fab.setVisibility(View.GONE);
 
-            Bundle bundle = new Bundle();
+                Bundle bundle = new Bundle();
 
-            // Add the list of animal's names
-            bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS,
-                    buildSpinnerEntries(animalSet));
+                // Add the list of animal's names
+                bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS,
+                        buildSpinnerEntries(animalSet));
 
-            // Add a binding to FilterPurchaseFragment listener
-            bundle.putSerializable(KeysNamesUtils.BundleKeys.INTERFACE, this);
+                // Add a binding to FilterPurchaseFragment listener
+                bundle.putSerializable(KeysNamesUtils.BundleKeys.INTERFACE, this);
 
-            // todo: pass as bundle min and max values
+                float minCost = -1, maxCost = -1;
+                Cursor cursor = queryPurchases.getMinimumPurchaseValue(owner);
+                if (cursor != null) {
+                    if (cursor.getCount() > 0) {
+                        while (cursor.moveToNext()) {
+                            minCost = cursor.getFloat(cursor.getColumnIndexOrThrow("minCost"));
+                        }
+                    }
+                }
 
-            controller.navigate(R.id.filterPurchaseFragment, bundle);
+                cursor = queryPurchases.getMaximumPurchaseValue(owner);
+                if (cursor != null) {
+                    if (cursor.getCount() > 0) {
+                        while (cursor.moveToNext()) {
+                            maxCost = cursor.getFloat(cursor.getColumnIndexOrThrow("maxCost"));
+                        }
+                    }
+                }
+
+                bundle.putFloat(KeysNamesUtils.BundleKeys.MIN_COST, minCost);
+                bundle.putFloat(KeysNamesUtils.BundleKeys.MAX_COST, maxCost);
+
+                controller.navigate(R.id.action_passionate_purchase_to_filterPurchaseFragment, bundle);
         });
 
         SearchView searchView = view.findViewById(R.id.searchViewProduct);
@@ -159,7 +189,7 @@ public class PurchaseFragment extends Fragment implements
             @Override
             public boolean onQueryTextChange(String searchText) {
                 // Execute the query to obtain the purchases with the searched item
-                Cursor cursor = queryPurchases.getPurchaseByItemNameQuery(searchText, username);
+                Cursor cursor = queryPurchases.getPurchaseByItemNameQuery(searchText, owner);
 
                 // Create a new adapter which will contain the purchase from the search query
                 ListViewPurchasesAdapter adapterSearchedPurchases =  new ListViewPurchasesAdapter(
@@ -211,8 +241,9 @@ public class PurchaseFragment extends Fragment implements
     }
 
     @Override
-    public void onFiltersAdded(List<String> animals, List<String> categories, Interval<Float> costs) {
-        Cursor cursor = queryPurchases.runFilterQuery(animals, categories, costs);
+    public ArrayList<Purchase> onFiltersAdded(String owner, List<String> animals, List<String> categories, Interval<Float> costs, String dateFrom, String dateTo) {
+        Cursor cursor = queryPurchases.runFilterQuery(owner, animals, categories, costs,
+                dateFrom, dateTo);
         ArrayList<Purchase> purchasesSubList = new ArrayList<>();
 
         if (cursor != null) {
@@ -244,19 +275,13 @@ public class PurchaseFragment extends Fragment implements
                             KeysNamesUtils.PurchaseFields.OWNER)));
 
                     purchasesSubList.add(purchase);
-
-                    // Get back to the purchase fragment passing the list as bundle
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(KeysNamesUtils.BundleKeys.FILTER_ADAPTER, purchasesSubList);
-                    controller.navigate(R.id.passionate_purchase, bundle);
-
-                    // Update the view from the activity
-                    ((PassionateNavigationActivity) requireActivity()).restoreBottomAppBarVisibility();
                 }
             } else {
                 Toast.makeText(requireContext(), "Nessun risultato", Toast.LENGTH_SHORT).show();
             }
         }
+
+        return purchasesSubList;
     }
 
     @NonNull

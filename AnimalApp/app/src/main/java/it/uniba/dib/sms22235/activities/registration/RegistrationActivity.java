@@ -17,6 +17,7 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.activities.registration.fragments.RegistrationOrganizationFragment;
 import it.uniba.dib.sms22235.activities.registration.fragments.RegistrationPersonFragment;
+import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.Passionate;
@@ -41,7 +42,7 @@ public class RegistrationActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPassionateRegistered(@NonNull Passionate passionate, String pwd) {
+    public void onPassionateRegistered(@NonNull Passionate passionate) {
         // First register the user with Firebase auth system
         // in order to authenticate him during login
 
@@ -52,7 +53,7 @@ public class RegistrationActivity extends AppCompatActivity
                     // Create the new user only if the username is not duplicate
                     if (taskCheckUsername.isSuccessful() && taskCheckUsername.getResult().isEmpty()) {
                         // Create the AUTH user
-                        mAuth.createUserWithEmailAndPassword(passionate.getEmail(), pwd)
+                        mAuth.createUserWithEmailAndPassword(passionate.getEmail(), passionate.getPassword())
                                 .addOnCompleteListener(task -> {
                                     if (task.isSuccessful()){
                                         // Key of the document
@@ -69,11 +70,15 @@ public class RegistrationActivity extends AppCompatActivity
                                                             Toast.LENGTH_LONG)
                                                             .show();
 
+                                                    DataManipulationHelper.saveDataInternally(
+                                                            this,
+                                                            passionate,
+                                                            KeysNamesUtils.FileDirsNames.currentPassionateOffline(passionate.getEmail()));
+
                                                     // Go to the profile fragment of the passionate
                                                     Bundle bundle = new Bundle();
                                                     bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE, passionate);
                                                     newActivityRunning(PassionateNavigationActivity.class, bundle);
-
                                                 })
                                                 .addOnFailureListener(e -> Log.d("DEB", e.getMessage()));
 
@@ -88,14 +93,13 @@ public class RegistrationActivity extends AppCompatActivity
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
 
     @Override
-    public void onVeterinaryRegistered(@NonNull Veterinarian veterinarian, String pwd) {
+    public void onVeterinaryRegistered(@NonNull Veterinarian veterinarian) {
         // First register the veterinary with Firebase auth system
         // in order to authenticate him during login
-        mAuth.createUserWithEmailAndPassword(veterinarian.getEmail(), pwd)
+        mAuth.createUserWithEmailAndPassword(veterinarian.getEmail(), veterinarian.getPassword())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         // Save the veterinary instance on the DB

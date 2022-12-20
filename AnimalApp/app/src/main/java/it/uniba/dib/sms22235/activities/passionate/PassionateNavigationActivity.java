@@ -2,8 +2,11 @@ package it.uniba.dib.sms22235.activities.passionate;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -19,10 +22,14 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
@@ -34,19 +41,72 @@ import it.uniba.dib.sms22235.database.QueryPurchasesManager;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
+import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class PassionateNavigationActivity extends AppCompatActivity implements ProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener {
+public class PassionateNavigationActivity extends AppCompatActivity implements
+        ProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener,
+        Serializable {
 
-    private FirebaseFirestore db;
-    private QueryPurchasesManager queryPurchases;
+    private transient FirebaseFirestore db;
+    private transient QueryPurchasesManager queryPurchases;
 
-    private Passionate passionate;
-    private LinkedHashSet<Animal> animalSet;
-    private ArrayList<Purchase> purchasesList;
+    private transient Passionate passionate;
+    private transient LinkedHashSet<Animal> animalSet;
+    private transient ArrayList<Purchase> purchasesList;
 
-    private FloatingActionButton fab;
-    private BottomNavigationView navView;
+    private transient FloatingActionButton fab;
+    private transient BottomNavigationView navView;
+
+    // Flag that specify whether the connection is enabled or not
+    private boolean isConnectionEnabled;
+
+    // Callback that verifies the connectivity to a network at run time
+    private final ConnectivityManager.NetworkCallback networkCallback =
+            new ConnectivityManager.NetworkCallback() {
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void onAvailable(@NonNull Network network) {
+            super.onAvailable(network);
+
+            isConnectionEnabled = true;
+
+            ArrayList<Purchase> purchasesOfflineList = (ArrayList<Purchase>)
+                    DataManipulationHelper.readDataInternally(PassionateNavigationActivity.this,
+                            KeysNamesUtils.FileDirsNames.ADD_PURCHASE);
+
+            // Purchases offline operations
+            if (purchasesOfflineList != null) {
+
+                // Upload the offline files to fire store
+                for (Purchase purchase : purchasesOfflineList) {
+                    registerPurchaseFirebase(purchase);
+                }
+
+                // Delete the file once the process is over. If some network error occurs
+                // during onPurchaseRegistered then a new offline file will be created
+                // and will contain all the purchases that didn't make the upload to fire store
+                deleteFile(KeysNamesUtils.FileDirsNames.ADD_PURCHASE);
+            }
+        }
+
+        @Override
+        public void onLost(@NonNull Network network) {
+            super.onLost(network);
+
+            isConnectionEnabled = false;
+
+            Toast.makeText(PassionateNavigationActivity.this,
+                    "Connessione persa: avvio modalità offline.\nAlcune funzionalità possono non essere più disponibili",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCapabilitiesChanged(@NonNull Network network, @NonNull NetworkCapabilities networkCapabilities) {
+            super.onCapabilitiesChanged(network, networkCapabilities);
+        }
+    };
 
     @SuppressWarnings("unchecked")
     @Override
@@ -72,7 +132,30 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
         // Set up the navigation system
         NavController navController = navHostFragment.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+
+        // Use this method to not bug the app with undesired animation
+        navView.setOnNavigationItemSelectedListener(item -> {
+            final int PASSIONATE_PROFILE = R.id.passionate_profile;
+            final int PASSIONATE_PHOTO_DIARY = R.id.passionate_photo_diary;
+            final int PASSIONATE_PET_CARE = R.id.passionate_pet_care;
+            final int PASSIONATE_PURCHASE = R.id.passionate_purchase;
+
+            switch (item.getItemId()) {
+                case PASSIONATE_PROFILE:
+                    navController.navigate(R.id.passionate_profile);
+                    break;
+                case PASSIONATE_PHOTO_DIARY:
+                    navController.navigate(R.id.passionate_photo_diary);
+                    break;
+                case PASSIONATE_PET_CARE:
+                    navController.navigate(R.id.passionate_pet_care);
+                    break;
+                case PASSIONATE_PURCHASE:
+                    navController.navigate(R.id.passionate_purchase);
+                    break;
+            }
+            return true;
+        });
 
         fab = findViewById(R.id.floatingActionButton);
 
@@ -87,7 +170,30 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
             animalSet = (LinkedHashSet<Animal>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS);
             purchasesList = (ArrayList<Purchase>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_PURCHASES);
         }
+
+        // Init the animal data set if it is null
+        if (animalSet == null) {
+            animalSet = new LinkedHashSet<>();
+        }
+
+        // Init the purchases data set it is null
+        if (purchasesList == null) {
+            purchasesList = new ArrayList<>();
+        }
+
+        // Build the network request
+        NetworkRequest networkRequest = new NetworkRequest.Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+                .build();
+
+        // Request the network from the ConnectivityManager and start listening
+        // to the availability of the network from the networkCallback
+        ConnectivityManager connectivityManager = getSystemService(ConnectivityManager.class);
+        connectivityManager.requestNetwork(networkRequest, networkCallback);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -100,34 +206,75 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
         restoreBottomAppBarVisibility();
     }
 
-    @Override
-    public void onAnimalRegistered(@NonNull Animal animal) {
+    private void registerAnimalFirebase(@NonNull Animal animal) {
         String docKeyAnimal = KeysNamesUtils.RolesNames.ANIMAL
                 + "_" + animal.getMicrochipCode();
 
-        // Set the animal's owner
-        animal.setOwner(passionate.getUsername());
+        // Check if the microchip code is duplicated first
+        db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                .whereEqualTo(KeysNamesUtils.AnimalFields.MICROCHIP_CODE, animal.getMicrochipCode())
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // If no animal own that microchip code, then it is possible to insert
+                        if (task.getResult().isEmpty()) {
+                            db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                                    .document(docKeyAnimal)
+                                    .set(animal)
+                                    .addOnSuccessListener(unused -> {
 
-        // Update the list of animals
-        boolean isAdded = animalSet.add(animal);
+                                        Toast.makeText(this,
+                                                "Animale registrato con successo",
+                                                Toast.LENGTH_LONG).show();
 
-        // Use the set to check the animal's uniqueness
-        if (isAdded) {
-            // Query to search if the microchip code is unique
-            db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
-                    .document(docKeyAnimal)
-                    .set(animal)
-                    .addOnSuccessListener(unused ->
-                            Toast.makeText(this, "Animale registrato con successo",
-                                    Toast.LENGTH_LONG).show())
-                    .addOnFailureListener(e -> Log.d("DEB", e.getMessage()));
+                                        // Update the local animal's files
+                                        DataManipulationHelper.saveDataInternally(this, animalSet,
+                                                KeysNamesUtils.FileDirsNames.localAnimalsSet(passionate.getEmail()));
+                                    })
+                                    .addOnFailureListener(e ->
+                                            Toast.makeText(this, "Animale duplicato: " +
+                                                            "codice microchip già esistente",
+                                                    Toast.LENGTH_SHORT).show());
+                        }
+                    }
+                });
+    }
+
+    private void registerPurchaseFirebase(Purchase purchase) {
+        db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
+                .add(purchase)
+                .addOnSuccessListener(documentReference -> Toast.makeText(this,
+                        "Spesa salvata con successo",
+                        Toast.LENGTH_LONG).show())
+                .addOnFailureListener(e -> {
+                    // Add changes to local files
+                });
+    }
+
+    @Override
+    public void onAnimalRegistered(@NonNull Animal animal) {
+        if (isConnectionEnabled) {
+            // Set the animal's owner
+            animal.setOwner(passionate.getUsername());
+
+            // Update the list of animals
+            boolean isAdded = animalSet.add(animal);
+
+            // Use the set to check the animal's uniqueness
+            if (isAdded) {
+                    registerAnimalFirebase(animal);
+
+            } else {
+                Toast.makeText(this, "Animale duplicato: codice microchip già esistente",
+                        Toast.LENGTH_SHORT).show();
+            }
         } else {
-            Toast.makeText(this, "Animale duplicato: codice microchip già esistente",
+            Toast.makeText(this, "Impossibile salvare l'animale: rete assente",
                     Toast.LENGTH_SHORT).show();
         }
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onPurchaseRegistered(@NonNull Purchase purchase) {
 
@@ -135,18 +282,31 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
 
         purchasesList.add(purchase);
 
-        long testValue = queryPurchases.insertPurchase(purchase.getAnimal(), purchase.getItemName(), purchase.getOwner(),
-                purchase.getDate(), purchase.getCategory(), purchase.getCost(), purchase.getAmount());
-
-        Toast.makeText(this, testValue + "", Toast.LENGTH_LONG).show();
+        long testValue = queryPurchases.insertPurchase(
+                purchase.getAnimal(), purchase.getItemName(),
+                purchase.getOwner(), purchase.getDate(), purchase.getCategory(),
+                purchase.getCost(), purchase.getAmount());
 
         if (testValue != -1) {
-            db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
-                    .add(purchase)
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(this, "Spesa salvata con successo",
-                                Toast.LENGTH_LONG).show();
-                    });
+            // Save the purchase only if there is an internet connection
+            if (isConnectionEnabled) {
+                registerPurchaseFirebase(purchase);
+            } else {
+                // Read the current offline purchase additions
+                ArrayList<Purchase> purchasesOfflineList = (ArrayList<Purchase>)
+                        DataManipulationHelper.readDataInternally(this,
+                        KeysNamesUtils.FileDirsNames.ADD_PURCHASE);
+
+                if (purchasesOfflineList == null) {
+                    purchasesOfflineList = new ArrayList<>();
+                }
+
+                purchasesOfflineList.add(purchase);
+
+                // Update the files which holds the purchases' addition while the app is offline
+                DataManipulationHelper.saveDataInternally(this, purchasesOfflineList,
+                        KeysNamesUtils.FileDirsNames.ADD_PURCHASE);
+            }
         } else {
             Toast.makeText(this, "Errore nell'inserimento della spesa", Toast.LENGTH_LONG).show();
         }
@@ -180,10 +340,12 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
      * @return a copy of the set with passionate's animals
      * */
     public LinkedHashSet<Animal> getAnimalSet() {
-        LinkedHashSet<Animal>clonedAnimalSet = new LinkedHashSet<>();
+        LinkedHashSet<Animal> clonedAnimalSet = new LinkedHashSet<>();
 
-        for (Animal animal : animalSet){
-            clonedAnimalSet.add((Animal) animal.clone());
+        if (animalSet != null) {
+            for (Animal animal : animalSet) {
+                clonedAnimalSet.add((Animal) animal.clone());
+            }
         }
 
         return clonedAnimalSet;
@@ -197,8 +359,10 @@ public class PassionateNavigationActivity extends AppCompatActivity implements P
     public ArrayList<Purchase> getPurchasesList() {
         ArrayList<Purchase> clonedPurchasesList = new ArrayList<>();
 
-        for (Purchase purchase : purchasesList) {
-            clonedPurchasesList.add((Purchase) purchase.clone());
+        if (purchasesList != null) {
+            for (Purchase purchase : purchasesList) {
+                clonedPurchasesList.add((Purchase) purchase.clone());
+            }
         }
 
         return clonedPurchasesList;

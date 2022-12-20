@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -89,9 +90,10 @@ public class QueryPurchasesManager {
      *
      * @return a cursor with the result of the query
      * */
-    public Cursor runFilterQuery(List<String> animals, List<String> categories, Interval<Float> costs) {
+    public Cursor runFilterQuery(String owner, List<String> animals, List<String> categories,
+                                 Interval<Float> costs, String dateFrom, String dateTo) {
 
-        String query = buildQueryString(animals, categories, costs);
+        String query = buildQueryString(owner, animals, categories, costs, dateFrom, dateTo);
         Cursor cursor = null;
 
         try{
@@ -110,12 +112,12 @@ public class QueryPurchasesManager {
      * This query search for the input item into purchase table.
      *
      * @param itemName the name of the item to search
-     * @param username the owner of the purchase
+     * @param owner the owner of the purchase
      * */
-    public Cursor getPurchaseByItemNameQuery(String itemName, String username) {
+    public Cursor getPurchaseByItemNameQuery(String itemName, String owner) {
         String query = "SELECT * FROM " + KeysNamesUtils.CollectionsNames.PURCHASES +
                 " WHERE " + KeysNamesUtils.PurchaseFields.ITEM_NAME + " LIKE '%" + itemName + "%'" +
-                " AND " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + username + "';";
+                " AND " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + owner + "';";
 
         Cursor cursor = null;
 
@@ -129,10 +131,10 @@ public class QueryPurchasesManager {
         return cursor;
     }
 
-    public Cursor getMinimumPurchaseValue(String username){
+    public Cursor getMinimumPurchaseValue(String owner){
         String query = "SELECT MIN(" + KeysNamesUtils.PurchaseFields.COST + ") AS minCost" +
                 " FROM " + KeysNamesUtils.CollectionsNames.PURCHASES +
-                " WHERE " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + username + "';";
+                " WHERE " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + owner + "';";
 
         Cursor cursor = null;
 
@@ -146,10 +148,10 @@ public class QueryPurchasesManager {
         return cursor;
     }
 
-    public Cursor getMaximumPurchaseValue(String username){
+    public Cursor getMaximumPurchaseValue(String owner){
         String query = "SELECT MAX(" + KeysNamesUtils.PurchaseFields.COST + ") AS maxCost" +
                 " FROM " + KeysNamesUtils.CollectionsNames.PURCHASES +
-                " WHERE " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + username + "';";
+                " WHERE " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + owner + "';";
 
         Cursor cursor = null;
 
@@ -164,67 +166,23 @@ public class QueryPurchasesManager {
     }
 
     @NonNull
-    private String buildQueryString(List<String> animals, List<String> categories, Interval<Float> costs) {
+    private String buildQueryString(String owner, List<String> animals, List<String> categories,
+                                    Interval<Float> costs, String dateFrom, String dateTo) {
         StringBuilder query = new StringBuilder();
         query.append("SELECT * FROM ").append(KeysNamesUtils.CollectionsNames.PURCHASES).append("\n");
 
+        //TODO: decidere se lasciare la query in due parti o costruirla direttamente in query
         StringBuilder where = new StringBuilder();
-        where.append("WHERE ");
+        where.append("WHERE ").append(KeysNamesUtils.PurchaseFields.OWNER).append(" = '").append(owner).append("'");
 
-        StringBuilder empty_where = new StringBuilder();
-        empty_where.append("WHERE ");
-
-        /*
-        if (animals != null && categories != null && costs != null)
-        {
-            where.append(KeysNamesUtils.PurchaseFields.ANIMAL).append(" IN (");
-            for (int i = 0; i < animals.size(); i++) {
-                where.append("'").append(animals.get(i)).append("'");
-                if (i < (animals.size() - 1 ))
-                    where.append(",");
-            }
-
-            where.append(") AND ");
-
-            where.append(KeysNamesUtils.PurchaseFields.CATEGORY).append(" IN (");
-
-            for (int i = 0; i < categories.size(); i++) {
-                where.append("'").append(categories.get(i)).append("'");
-                if (i < (categories.size() - 1 ))
-                    where.append(",");
-            }
-
-            where.append(") AND ").append(KeysNamesUtils.PurchaseFields.COST).append(" BETWEEN (").append(costs.getMin()).append(",")
-                    .append(costs.getMax()).append(");");
-
-        }
-        if (animals != null && categories != null && costs == null){
-
-        }
-        if (animals != null && categories == null && costs != null){
-
-        }
-        if (animals == null && categories != null && costs != null){
-
-        }
-        if (animals != null && categories == null && costs == null){
-
-        }
-        if (animals == null && categories == null && costs != null){
-
-        }
-        if (animals == null && categories != null && costs == null){
-
-        }
-        */
-
-        // SE NON CI SONO FILTRI SELEZIONA TUTTA LA TABELLA
-        if (animals == null && categories == null && costs == null){
+        // If nof filters are present select all table's rows
+        if (animals == null && categories == null && costs == null && dateFrom.equals("") && dateTo.equals("")){
             query.append(";");
 
         } else {
-            // SE C'E' IL FILTRO ANIMALI
+            // If there is the animal's filter
             if (animals != null) {
+                where.append(" AND ");
 
                 where.append(KeysNamesUtils.PurchaseFields.ANIMAL).append(" IN (");
 
@@ -237,12 +195,9 @@ public class QueryPurchasesManager {
                 where.append(")");
 
             }
-            // SE C'E' IL FILTRO CATEGORIE
+            // if there is category's filter
             if (categories != null) {
-                // SE E' GIA' STATO INSERITO UN FILTRO AGGIUNGE AND
-                if (!where.toString().equals(empty_where.toString())) {
-                    where.append(" AND ");
-                }
+                where.append(" AND ");
 
                 where.append(KeysNamesUtils.PurchaseFields.CATEGORY).append(" IN (");
 
@@ -253,17 +208,25 @@ public class QueryPurchasesManager {
                 }
 
                 where.append(")");
-
             }
 
-            // SE C'E' IL FILTRO COSTI
+            // If cost filter is present
             if (costs != null) {
-                if (!where.toString().equals(empty_where.toString())) {
-                    where.append(" AND ");
-                }
-                where.append(KeysNamesUtils.PurchaseFields.COST).append(" BETWEEN ").append(costs.getMin()).append(" AND ")
-                        .append(costs.getMax());
+                where.append(" AND ");
+
+                where.append(KeysNamesUtils.PurchaseFields.COST).append(" BETWEEN ").append(costs.getMin())
+                        .append(" AND ").append(costs.getMax());
             }
+
+            // If dates filter is present
+            if (!dateFrom.equals("") && !dateTo.equals("")) {
+                where.append(" AND ");
+
+                where.append(KeysNamesUtils.PurchaseFields.DATE).append(" BETWEEN '").append(dateFrom)
+                        .append("' AND '").append(dateTo).append("'");
+            }
+
+
 
             where.append(";");
             query.append(where);

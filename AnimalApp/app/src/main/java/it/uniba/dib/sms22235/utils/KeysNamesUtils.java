@@ -32,6 +32,7 @@ public class KeysNamesUtils {
         public static String ORG_NAME = "orgName";
         public static String PHONE_NUMBER = "phoneNumber";
         public static String PURPOSE = "purpose";
+        public static String PASSWORD = "password";
     }
 
     public static class AnimalFields {
@@ -62,13 +63,16 @@ public class KeysNamesUtils {
         public static String AMOUNT = "amount";
         public static String OWNER = "owner";
 
+        public static String MIN_COST = "minCost";
+        public static String MAX_COST = "maxCost";
+
         public static String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS purchases " + " (\n" +
                  ID + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"+
                 ANIMAL + " VARCHAR(255) NOT NULL,\n" +
                 ITEM_NAME + " VARCHAR(255) NOT NULL,\n" +
                 OWNER + " VARCHAR(255) DEFAULT NULL, \n" +
                 CATEGORY + " VARCHAR(255) NOT NULL,\n" +
-                DATE + " VARCHAR(100) NOT NULL,\n" +
+                DATE + " DATE NOT NULL,\n" +
                 AMOUNT + " INTEGER NOT NULL,\n" +
                 COST + " DECIMAL NOT NULL); ";
     }
@@ -88,12 +92,16 @@ public class KeysNamesUtils {
         public static String PASSIONATE_ANIMALS = "animals";
         public static String FILTER_ADAPTER = "filter";
         public static String INTERFACE = "INT";
+        public static String MIN_COST = "minCost";
+        public static String MAX_COST = "maxCost";
     }
 
     public static class FileDirsNames {
         public static String BASE_PATH = "/data/user/0/it.uniba.dib.sms22235/";
         public static String ROOT_PREFIX = "app_";
         public static String PROFILE_IMAGES = "AnimalAPP_images";
+        public static String ADD_PURCHASE = "add_purchase";
+        public static String ADD_ANIMAL = "add_animal";
 
         /**
          * Method that helps to obtain the name of the directory where posts' images
@@ -115,6 +123,18 @@ public class KeysNamesUtils {
         @Contract(pure = true)
         public static String passionatePostRefDirName(String username) {
             return username + "_post_ref";
+        }
+
+        @NonNull
+        @Contract(pure = true)
+        public static String currentPassionateOffline(String username) {
+            return "off_" + username;
+        }
+
+        @NonNull
+        @Contract(pure = true)
+        public static String localAnimalsSet(String email) {
+            return "animals_" + email;
         }
     }
 }

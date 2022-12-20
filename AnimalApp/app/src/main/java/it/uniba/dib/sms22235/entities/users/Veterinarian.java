@@ -31,8 +31,8 @@ public class Veterinarian extends AbstractPersonUser implements  Serializable {
      * @param clinicName the name of the clinic
      * @param phoneNumber the phone number of the veterinary used as contact
      */
-    public Veterinarian(String fullName, String email, String clinicName, String phoneNumber) {
-        super(fullName, email);
+    public Veterinarian(String fullName, String email, String clinicName, String phoneNumber, String password) {
+        super(fullName, email, password);
         this.clinicName = clinicName;
         this.phoneNumber = phoneNumber;
     }
@@ -59,7 +59,8 @@ public class Veterinarian extends AbstractPersonUser implements  Serializable {
                 (String) document.get(KeysNamesUtils.ActorFields.FULL_NAME),
                 (String) document.get(KeysNamesUtils.ActorFields.EMAIL),
                 (String) document.get(KeysNamesUtils.ActorFields.CLINIC_NAME),
-                (String) document.get(KeysNamesUtils.ActorFields.PHONE_NUMBER)
+                (String) document.get(KeysNamesUtils.ActorFields.PHONE_NUMBER),
+                (String) document.get(KeysNamesUtils.ActorFields.PASSWORD)
         );
     }
 

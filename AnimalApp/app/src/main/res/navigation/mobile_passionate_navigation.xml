@@ -29,7 +29,9 @@
         tools:layout="@layout/fragment_passionate_purchase" >
         <action
             android:id="@+id/action_passionate_purchase_to_filterPurchaseFragment"
-            app:destination="@id/filterPurchaseFragment" />
+            app:destination="@id/filterPurchaseFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -38,6 +40,8 @@
         android:label="Filtri" >
         <action
             android:id="@+id/action_filterPurchaseFragment_to_passionate_purchase"
-            app:destination="@id/passionate_purchase" />
+            app:destination="@id/passionate_purchase"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
 </navigation>

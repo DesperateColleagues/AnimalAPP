@@ -16,13 +16,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
-import it.uniba.dib.sms22235.entities.users.Animal;
 
 public class DialogAddPurchaseFragment extends DialogFragment
         implements android.app.DatePickerDialog.OnDateSetListener, DialogAddCategoryFragment.DialogAddCategoryFragmentListener {
@@ -37,6 +36,8 @@ public class DialogAddPurchaseFragment extends DialogFragment
     private EditText txtInputCategory;
 
     private final ArrayList<String> animaList;
+
+    private String dateSql;
 
     private Spinner spinnerAnimals;
 
@@ -118,8 +119,9 @@ public class DialogAddPurchaseFragment extends DialogFragment
                     String microchip = animal.split(" - ")[1];
                     listener.onDialogAddPurchaseFragmentDismissed(new Purchase(
                             microchip, inputProductName,
-                            inputDatePurchase, inputCategory, cost, amount
+                            dateSql, inputCategory, cost, amount
                     ));
+
                     dismiss();
                 }
             }
@@ -134,13 +136,17 @@ public class DialogAddPurchaseFragment extends DialogFragment
     }
 
     @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Calendar mCalendar = Calendar.getInstance();
-        mCalendar.set(Calendar.YEAR, year);
-        mCalendar.set(Calendar.MONTH, month);
-        mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String selectedDate = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(mCalendar.getTime());
-        txtInputDatePurchase.setText(selectedDate);
+    public void onDateSet(@NonNull DatePicker view, int year, int month, int dayOfMonth) {
+        year = view.getYear();
+        month = view.getMonth();
+        dayOfMonth = view.getDayOfMonth();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, dayOfMonth);
+
+        SimpleDateFormat dateSqlFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateSql = dateSqlFormat.format(calendar.getTime());
+        txtInputDatePurchase.setText(dateSql);
     }
 
     @Override
