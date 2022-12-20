@@ -37,6 +37,10 @@
                 android:value="" />
         </activity>
 
+        <activity android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
+
         <activity
             android:name=".activities.registration.RegistrationActivity"
             android:exported="false">
