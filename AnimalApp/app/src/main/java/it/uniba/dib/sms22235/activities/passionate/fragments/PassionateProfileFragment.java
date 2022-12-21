@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
 import it.uniba.dib.sms22235.R;
@@ -20,6 +21,8 @@ import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAddAnimalFragment;
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAnimalCardFragment;
 import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
+import it.uniba.dib.sms22235.adapters.MessageListAdapter;
+import it.uniba.dib.sms22235.entities.operations.InfoMessage;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
@@ -38,7 +41,8 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
     }
 
     private ProfileFragmentListener listener;
-    private AnimalListAdapter adapter;
+    private MessageListAdapter messageListAdapter;
+    private AnimalListAdapter animalListAdapter;
     private DialogAddAnimalFragment dialogAddAnimalFragment;
 
     @Override
@@ -61,11 +65,9 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
                              ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_passionate_profile, container, false);
-        RecyclerView animalRecycleView = rootView.findViewById(R.id.animalList);
 
         String title = "Benvenuto, " + ((PassionateNavigationActivity) requireActivity())
                 .getPassionateUsername();
-
         ((TextView) rootView.findViewById(R.id.txtPassionateWelcome)).setText(title);
 
         LinkedHashSet<Animal> animalSet =
@@ -79,21 +81,31 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
                             KeysNamesUtils.FileDirsNames.PROFILE_IMAGES;
 
             // Init the recycler
-            adapter = new AnimalListAdapter();
+            animalListAdapter = new AnimalListAdapter();
 
             for (Animal animal : animalSet) {
                 // Set the animals in the adapter
-                adapter.addAnimal(animal);
+                animalListAdapter.addAnimal(animal);
 
                 // Load the profile pic preview
                 Bitmap image = DataManipulationHelper.loadBitmapFromStorage(path,
                         animal.getMicrochipCode() + ".png");
 
                 // Add the profile pic preview to the adapter
-                adapter.addPic(image);
+                animalListAdapter.addPic(image);
             }
 
-            animalRecycleView.setAdapter(adapter);
+            RecyclerView messageRecyclerView = rootView.findViewById(R.id.messagesList);
+            RecyclerView animalRecycleView = rootView.findViewById(R.id.animalList);
+
+            ArrayList<InfoMessage> messages = new ArrayList<>();
+            messageListAdapter = new MessageListAdapter(buildStandardMessages(messages));
+            messageRecyclerView.setAdapter(messageListAdapter);
+            messageRecyclerView.setLayoutManager(new LinearLayoutManager(
+                    getContext(), RecyclerView.HORIZONTAL, false));
+
+
+            animalRecycleView.setAdapter(animalListAdapter);
             animalRecycleView.setLayoutManager(new LinearLayoutManager(
                     getContext(), RecyclerView.HORIZONTAL, false));
 
@@ -107,7 +119,7 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
 
                     // This code obtains the selected Animal info and it shows them in a specific built Dialog
                     DialogAnimalCardFragment dialogAnimalCardFragment = new DialogAnimalCardFragment(
-                            adapter.getAnimalAtPosition(position));
+                            animalListAdapter.getAnimalAtPosition(position));
                     dialogAnimalCardFragment.show(requireActivity().getSupportFragmentManager(),
                             "DialogAnimalCardFragment");
                 }
@@ -128,13 +140,23 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
         return rootView;
     }
 
+    private ArrayList<InfoMessage> buildStandardMessages(ArrayList<InfoMessage> messages) {
+        InfoMessage findings = new InfoMessage(R.string.passionate_profile_cardlayout_text, 0, R.drawable.warningsign);
+        InfoMessage recentReservations = new InfoMessage(R.string.appuntamenti_recenti, R.string.tutti_appuntamenti_recenti, 0);
+
+        messages.add(findings);
+        messages.add(recentReservations);
+
+        return messages;
+    }
+
     @Override
     public void onDialogAddAnimalDismissed(Animal animal) {
         // Add the new animal to the adapter
-        adapter.addAnimal(animal);
+        animalListAdapter.addAnimal(animal);
         // When the animal is added no profile pic is provided
-        adapter.addPic(null);
-        adapter.notifyItemInserted(adapter.getItemCount());
+        animalListAdapter.addPic(null);
+        animalListAdapter.notifyItemInserted(animalListAdapter.getItemCount());
 
         // Execute listener method to perform data saving
         listener.onAnimalRegistered(animal);
