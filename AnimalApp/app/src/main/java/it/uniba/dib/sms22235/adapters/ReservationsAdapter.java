@@ -1,24 +1,26 @@
 package it.uniba.dib.sms22235.adapters;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
-import it.uniba.dib.sms22235.entities.users.Animal;
 
 public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapter.ViewHolder> {
     private ArrayList<Reservation> reservationsList;
+    private String currentDate;
+    private String currentTime;
+
+    private OnItemClickListener onItemClickListener;
 
     public ReservationsAdapter (){
         reservationsList = new ArrayList<>();
@@ -26,10 +28,13 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView txtReservationInfo;
+        CardView itemReservationCardView;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             txtReservationInfo = itemView.findViewById(R.id.txtReservationInfo);
+            itemReservationCardView = itemView.findViewById(R.id.itemReservationCardView);
+
         }
     }
 
@@ -45,6 +50,12 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         Reservation reservation = reservationsList.get(position);
         String res = reservation.getDate() + " " + reservation.getTime();
         holder.txtReservationInfo.setText(res);
+
+        holder.itemReservationCardView.setOnClickListener(v -> {
+            if (onItemClickListener != null){
+                onItemClickListener.onItemClick(reservation);
+            }
+        });
 
     }
 
@@ -69,4 +80,43 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         return reservationsList.get(index);
     }
 
+    private boolean checkIfDateDiagnosable(String selectedDate, String selectedTime) {
+        boolean isDateDiagnosable = true;
+
+        String[] selectedDateArray = selectedDate.split("/");
+        String[] currentDateArray = this.currentDate.split("/");
+
+        if (selectedDateArray[2].compareTo(currentDateArray[2]) > 0) {
+            isDateDiagnosable = false;
+        } else if (selectedDateArray[1].compareTo(currentDateArray[1]) > 0) {
+            isDateDiagnosable = false;
+        } else if (selectedDateArray[0].compareTo(currentDateArray[0]) <= 0) {
+            if (selectedDateArray[0].compareTo(currentDateArray[0]) == 0) {
+                isDateDiagnosable = checkIfTimeDiagnosable(selectedTime);
+            }
+        } else {
+            isDateDiagnosable = false;
+        }
+        return isDateDiagnosable;
+    }
+
+    private boolean checkIfTimeDiagnosable(String selected) {
+
+        String[] selectedTimeArray = selected.split(":");
+        String[] currentTimeArray = this.currentTime.split(":");
+
+        if (selectedTimeArray[0].compareTo(currentTimeArray[0]) > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Reservation reservation);
+    }
 }

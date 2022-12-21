@@ -27,7 +27,8 @@
             android:minHeight="48dp"
             android:text="@string/benvenuto"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnSecondary" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,6 +36,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:text="@string/role_message"
+            android:textColor="?attr/colorOnSecondary"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -63,6 +65,7 @@
                 android:drawablePadding="10dp"
                 android:text="@string/appassionato"
                 android:textAlignment="center"
+                android:textColor="?attr/colorOnSecondary"
                 app:drawableTopCompat="@drawable/fra_rrc_user" />
 
             <TextView
@@ -75,6 +78,7 @@
                 android:drawablePadding="10dp"
                 android:text="@string/veterinario"
                 android:textAlignment="center"
+                android:textColor="?attr/colorOnSecondary"
                 app:drawableTopCompat="@drawable/fra_rrc_doctor" />
         </LinearLayout>
 
@@ -89,6 +93,7 @@
             android:drawablePadding="10dp"
             android:text="@string/organizzazione"
             android:textAlignment="center"
+            android:textColor="?attr/colorOnSecondary"
             app:drawableTopCompat="@drawable/fra_rrc_organization" />
 
     </LinearLayout>

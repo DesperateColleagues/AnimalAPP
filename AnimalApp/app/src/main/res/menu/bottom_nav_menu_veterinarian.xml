@@ -8,6 +8,11 @@
         <!-- Cambiare stringa hardcodata, presente in strings.xml-->
 
     <item
+        android:id="@+id/veterinarian_animal_list"
+        android:icon="@drawable/ic_baseline_pets_24"
+        android:title="Pazienti"/>
+
+    <item
         android:id="@+id/veterinarian_reservation"
         android:icon="@drawable/ic_baseline_calendar_month_24"
         android:title="Prenotazioni"/>

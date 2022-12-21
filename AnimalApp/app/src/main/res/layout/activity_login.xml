@@ -79,7 +79,9 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
         android:onClick="loginAction"
-        android:text="@string/login" />
+        android:text="@string/login"
+        android:textStyle="bold"
+        android:textColor="@color/black"/>
 
     <Button
         android:id="@+id/btnRegistration"
@@ -89,5 +91,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
         android:onClick="btnRegisterAction"
-        android:text="@string/registrati" />
+        android:text="@string/registrati"
+        android:textStyle="bold"
+        android:textColor="@color/black"/>
 </LinearLayout>
