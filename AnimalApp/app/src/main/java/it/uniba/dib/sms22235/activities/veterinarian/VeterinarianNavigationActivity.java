@@ -40,9 +40,6 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     private Veterinarian veterinarian;
     private ArrayList<Reservation> reservationsList;
 
-    public FloatingActionButton getFab() {
-        return fab;
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,5 +122,8 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
     public String getVeterinarianEmail(){ return veterinarian.getEmail(); }
 
+    public FloatingActionButton getFab() {
+        return fab;
+    }
     public String getVeterinarianFullName(){ return veterinarian.getFullName(); }
 }

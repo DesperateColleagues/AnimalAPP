@@ -45,6 +45,8 @@ public class PhotoDiaryFragment extends Fragment implements DialogAddImageDiaryF
 
         String username = ((PassionateNavigationActivity) requireActivity()).getPassionateUsername();
 
+
+        ((PassionateNavigationActivity) requireActivity()).getFab().setVisibility(View.VISIBLE);
         ((PassionateNavigationActivity) requireActivity()).getFab().setOnClickListener(v -> {
             dialogAddImageDiaryFragment = new DialogAddImageDiaryFragment(username);
             dialogAddImageDiaryFragment.setListener(this);

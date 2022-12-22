@@ -26,6 +26,10 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         reservationsList = new ArrayList<>();
     }
 
+    public void remove(Reservation reservation) {
+        reservationsList.remove(reservation);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView txtReservationInfo;
         CardView itemReservationCardView;

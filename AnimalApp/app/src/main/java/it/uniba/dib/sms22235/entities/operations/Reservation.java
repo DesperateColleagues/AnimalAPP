@@ -21,8 +21,24 @@ public class Reservation implements Serializable, Cloneable {
         return owner;
     }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getDiagnosis() {
+        return diagnosis;
+    }
+
     public String getAnimal() {
         return animal;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public Reservation(String date, String time) {

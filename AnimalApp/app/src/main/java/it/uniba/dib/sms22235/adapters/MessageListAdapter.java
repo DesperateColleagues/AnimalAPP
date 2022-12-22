@@ -28,13 +28,11 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView txtMessageLeftText;
-        TextView txtMessageBottomText;
         ImageView imgMessageRight;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             txtMessageLeftText = itemView.findViewById(R.id.txtMessageLeftText);
-            txtMessageBottomText = itemView.findViewById(R.id.txtMessageBottomText);
             imgMessageRight = itemView.findViewById(R.id.imgMessageRight);
         }
     }
@@ -49,13 +47,12 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     @Override
     public void onBindViewHolder(@NonNull MessageListAdapter.ViewHolder holder, int position) {
         InfoMessage message = infoMessages.get(position);
-        if(message.getLeftText() != 0)
+        if(message.getLeftText() != 0) {
             holder.txtMessageLeftText.setText(message.getLeftText());
-        if(message.getBottomText() != 0)
-            holder.txtMessageBottomText.setText(message.getBottomText());
-        if(message.getRightImage() != 0)
+        }
+        if(message.getRightImage() != 0) {
             holder.imgMessageRight.setImageResource(message.getRightImage());
-        holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+        }
     }
 
     public void addMessage(InfoMessage message) {

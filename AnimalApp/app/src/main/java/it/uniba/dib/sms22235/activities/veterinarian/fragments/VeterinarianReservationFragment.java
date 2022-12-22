@@ -40,6 +40,7 @@ public class VeterinarianReservationFragment extends Fragment implements DialogA
     private ArrayList<Reservation> dayReservationsList;
     private ReservationsAdapter adapter;
     private String currentDate;
+    private String selectedDate;
     private String currentTime;
 
     public interface VeterinarianReservationFragmentListener {
@@ -161,8 +162,9 @@ public class VeterinarianReservationFragment extends Fragment implements DialogA
         calendarView.setOnDateChangeListener((calendarView, i, i1, i2) -> {
             Toast.makeText(getContext(),"Build Date: "+buildDate(i, i1, i2),Toast.LENGTH_SHORT).show();
 
+            selectedDate = buildDate(i, i1, i2);
             // Retrieving only a specific day reservations
-            dayReservationsList = ((VeterinarianNavigationActivity) requireActivity()).getDayReservationsList(buildDate(i, i1, i2));
+            dayReservationsList = ((VeterinarianNavigationActivity) requireActivity()).getDayReservationsList(selectedDate);
 
             // Removing from the adapter the old reservations, adding the new ones to the adapter and attaching the adapter to the RecyclerView again
             adapter.clearAll();
@@ -237,7 +239,10 @@ public class VeterinarianReservationFragment extends Fragment implements DialogA
     public void onDialogAddReservationDismissed(Reservation reservation){
         String email = ((VeterinarianNavigationActivity) requireActivity()).getVeterinarianEmail();
         reservation.setVeterinarian(email);
-        adapter.addReservation(reservation);
+        Toast.makeText(getContext(), reservation.getDate() + " " + currentDate,Toast.LENGTH_SHORT).show();
+        if(reservation.getDate().equals(selectedDate)){
+            adapter.addReservation(reservation);
+        }
         adapter.notifyDataSetChanged();
         listener.onReservationRegistered(reservation);
     }

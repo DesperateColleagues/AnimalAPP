@@ -7,6 +7,7 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -25,6 +26,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ import java.util.LinkedHashSet;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PassionateProfileFragment;
+import it.uniba.dib.sms22235.activities.passionate.fragments.PassionateReservationFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment;
 
 import it.uniba.dib.sms22235.database.QueryPurchasesManager;
@@ -44,6 +47,7 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class PassionateNavigationActivity extends AppCompatActivity implements
         PassionateProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener,
+        PassionateReservationFragment.PassionateReservationFragmentListener,
         Serializable {
 
     private transient FirebaseFirestore db;
@@ -185,13 +189,13 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         }
 
         // Init the available reservations data set it is null
-        if (purchasesList == null) {
-            purchasesList = new ArrayList<>();
+        if (passionateReservationsList == null) {
+            passionateReservationsList = new ArrayList<>();
         }
 
         // Init the passionate reservations data set it is null
-        if (purchasesList == null) {
-            purchasesList = new ArrayList<>();
+        if (availableReservationsList == null) {
+            availableReservationsList = new ArrayList<>();
         }
 
         // Build the network request
@@ -403,16 +407,16 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
      *
      * @return a copy of the list with available reservations
      * */
-    public ArrayList<Reservation> getAvailableReservationsList() {
-        ArrayList<Reservation> clonedAvailableReservationsList = new ArrayList<>();
+    public ArrayList<Reservation> getAvailableReservationsList(String date) {
+        ArrayList<Reservation> clonedReservationsList = new ArrayList<>();
 
-        if (availableReservationsList != null) {
-            for (Reservation reservation : availableReservationsList) {
-                clonedAvailableReservationsList.add((Reservation) reservation.clone());
+        for (Reservation reservation : availableReservationsList) {
+            if (date.equals(reservation.getDate())){
+                clonedReservationsList.add((Reservation) reservation.clone());
             }
         }
 
-        return clonedAvailableReservationsList;
+        return clonedReservationsList;
     }
 
     public void restoreBottomAppBarVisibility(){
@@ -433,4 +437,42 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     public String getPassionateUsername() {
         return passionate.getUsername();
     }
+
+    @Override
+    public void onReservationBooked(@NonNull Reservation reservation) {
+        String dateFormatted = reservation.getDate();
+        String timeFormatted = reservation.getTime();
+
+        availableReservationsList.remove(reservation);
+        reservation.setOwner(getPassionateUsername());
+
+        String docKeyReservation = KeysNamesUtils.CollectionsNames.RESERVATIONS
+                +"_"+ dateFormatted.replaceAll("[-+^/]*", "")
+                +"_"+ timeFormatted;
+
+        db.collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
+                .whereEqualTo(KeysNamesUtils.ReservationFields.DATE, reservation.getDate())
+                .whereEqualTo(KeysNamesUtils.ReservationFields.TIME, reservation.getTime())
+                .whereEqualTo(KeysNamesUtils.ReservationFields.VETERINARIAN, reservation.getVeterinarian())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (!querySnapshot.isEmpty()){
+                            db.collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
+                                    .document(docKeyReservation)
+                                    .set(reservation)
+                                    .addOnSuccessListener(unused -> {
+                                        Toast.makeText(this, "Prenotazione confermata!", Toast.LENGTH_SHORT).show();
+                                    }).addOnFailureListener(e -> {
+                                        Log.d("DEB", e.getMessage());
+                                    });
+                        } else {
+                            Toast.makeText(this, "Si è verificato un errore, provare più tardi.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+
 }

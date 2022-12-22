@@ -130,6 +130,7 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
                 }
             }));
 
+            ((PassionateNavigationActivity) requireActivity()).getFab().setVisibility(View.VISIBLE);
             ((PassionateNavigationActivity) requireActivity()).getFab().setOnClickListener(v -> {
                 dialogAddAnimalFragment = new DialogAddAnimalFragment();
                 dialogAddAnimalFragment.setListener(this);
@@ -141,8 +142,8 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
     }
 
     private ArrayList<InfoMessage> buildStandardMessages(ArrayList<InfoMessage> messages) {
-        InfoMessage findings = new InfoMessage(R.string.passionate_profile_cardlayout_text, 0, R.drawable.warningsign);
-        InfoMessage recentReservations = new InfoMessage(R.string.appuntamenti_recenti, R.string.tutti_appuntamenti_recenti, 0);
+        InfoMessage findings = new InfoMessage(R.string.passionate_profile_cardlayout_text, R.drawable.warningsign);
+        InfoMessage recentReservations = new InfoMessage(R.string.tutti_appuntamenti_recenti, 0);
 
         messages.add(findings);
         messages.add(recentReservations);
