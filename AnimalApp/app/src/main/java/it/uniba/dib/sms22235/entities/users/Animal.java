@@ -17,8 +17,17 @@ public class Animal implements Serializable, Cloneable {
     private String microchipCode;
     private String birthDate;
     private String owner;
+    private String veterinarian;
 
     public Animal(){}
+
+    public String getVeterinarian() {
+        return veterinarian;
+    }
+
+    public void setVeterinarian(String veterinarian) {
+        this.veterinarian = veterinarian;
+    }
 
     public Animal(String name, String animalSpecies, String race, String microchipCode,
                   String birthDate) {

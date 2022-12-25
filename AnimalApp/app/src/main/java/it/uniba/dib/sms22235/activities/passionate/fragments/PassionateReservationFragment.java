@@ -3,10 +3,11 @@ package it.uniba.dib.sms22235.activities.passionate.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,26 +18,32 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
-import it.uniba.dib.sms22235.activities.veterinarian.VeterinarianNavigationActivity;
-import it.uniba.dib.sms22235.activities.veterinarian.dialogs.DialogAddReservationFragment;
+import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogChooseAnimalFragment;
 import it.uniba.dib.sms22235.adapters.ReservationsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
+import it.uniba.dib.sms22235.entities.users.Animal;
 
-public class PassionateReservationFragment extends Fragment {
+public class PassionateReservationFragment extends Fragment implements DialogChooseAnimalFragment.
+        DialogChooseAnimalFragmentListener{
 
     private CalendarView calendarView;
     private RecyclerView reservationRecyclerView;
+    private DialogChooseAnimalFragment dialogChooseAnimalFragment;
     private ArrayList<Reservation> dayReservationsList;
     private ReservationsAdapter adapter;
     private String currentDate;
     private String currentTime;
+    private Reservation selectedReservation;
 
-    public interface PassionateReservationFragmentListener {
+
+    public interface PassionateReservationFragmentListener{
         void onReservationBooked(Reservation reservation);
+        List<Animal> getAnimalsByVeterinarian(String veterinarian);
     }
 
     PassionateReservationFragmentListener listener;
@@ -71,9 +78,12 @@ public class PassionateReservationFragment extends Fragment {
         adapter = new ReservationsAdapter();
         adapter.setOnItemClickListener(reservation -> {
 
-            adapter.remove(reservation);
-            listener.onReservationBooked(reservation);
-            adapter.notifyDataSetChanged();
+            this.selectedReservation = reservation;
+
+            dialogChooseAnimalFragment = new DialogChooseAnimalFragment(listener.getAnimalsByVeterinarian(reservation.getVeterinarian()));
+            dialogChooseAnimalFragment.setListener(this);
+            dialogChooseAnimalFragment.show(getParentFragmentManager(), "DialogChooseAnimalFragment");
+
         });
 
         SimpleDateFormat dateSDF = new SimpleDateFormat("dd/MM/yy", Locale.ITALY);
@@ -89,7 +99,6 @@ public class PassionateReservationFragment extends Fragment {
         reservationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
 
         calendarView.setOnDateChangeListener((calendarView, i, i1, i2) -> {
-            Toast.makeText(getContext(),"Build Date: " + buildDate(i, i1, i2),Toast.LENGTH_SHORT).show();
 
             // Retrieving only a specific day reservations
             dayReservationsList = ((PassionateNavigationActivity) requireActivity()).getAvailableReservationsList(buildDate(i, i1, i2));
@@ -122,4 +131,13 @@ public class PassionateReservationFragment extends Fragment {
         return stringBuilder.toString();
     }
 
+
+    @Override
+    public void onDialogChoosedAnimal(String selectedAnimal) {
+        this.selectedReservation.setAnimal(selectedAnimal);
+        adapter.remove(selectedReservation);
+        listener.onReservationBooked(selectedReservation);
+        adapter.notifyDataSetChanged();
+        dialogChooseAnimalFragment.dismiss();
+    }
 }

@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -200,27 +199,12 @@ public class LoginActivity extends AppCompatActivity {
                                                 bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE, cus);
 
                                                 // Execute the task to get the animals of the logged user
-                                                Task<QuerySnapshot> taskGetAnimals = db
-                                                        .collection(KeysNamesUtils.CollectionsNames.ANIMALS)
-                                                        .whereEqualTo(KeysNamesUtils.AnimalFields.OWNER, cus.getUsername())
-                                                        .get();
-
+                                                Task<QuerySnapshot> taskGetAnimals = getAnimalTask(cus.getUsername());
                                                 // Execute the task to get the purchases of the logged user
-                                                Task<QuerySnapshot> taskPurchases = db
-                                                        .collection(KeysNamesUtils.CollectionsNames.PURCHASES)
-                                                        .whereEqualTo(KeysNamesUtils.PurchaseFields.OWNER, cus.getUsername())
-                                                        .get();
-
-                                                Task<QuerySnapshot> taskAvailableReservations = db
-                                                        .collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
-                                                        .whereEqualTo(KeysNamesUtils.ReservationFields.OWNER, null)
-                                                        .whereEqualTo(KeysNamesUtils.ReservationFields.ANIMAL, null)
-                                                        .get();
-
-                                                Task<QuerySnapshot> taskPassionateReservations = db
-                                                        .collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
-                                                        .whereEqualTo(KeysNamesUtils.ReservationFields.OWNER, cus.getUsername())
-                                                        .get();
+                                                Task<QuerySnapshot> taskPurchases = getPurchasesTask(cus.getUsername());
+                                                Task<QuerySnapshot> taskAvailableReservations = getAvailableReservationsTask();
+                                                Task<QuerySnapshot> taskPassionateReservations = getPassionateReservationsTask(cus.getUsername());
+                                                Task<QuerySnapshot> taskVeterinarians = getVeterinariansTask();
 
                                                 // Wait until every task is finished to fill the lists to pass
                                                 // as bundle to the PassionateNavigationActivity
@@ -228,7 +212,8 @@ public class LoginActivity extends AppCompatActivity {
                                                         taskGetAnimals,
                                                         taskPurchases,
                                                         taskAvailableReservations,
-                                                        taskPassionateReservations
+                                                        taskPassionateReservations,
+                                                        taskVeterinarians
                                                 ).addOnCompleteListener(task -> {
 
                                                     if (task.isSuccessful()) {
@@ -242,11 +227,13 @@ public class LoginActivity extends AppCompatActivity {
                                                         QuerySnapshot purchasesSnapshot = (QuerySnapshot) task.getResult().get(1).getResult();
                                                         QuerySnapshot availableReservationsSnapshot = (QuerySnapshot) task.getResult().get(2).getResult();
                                                         QuerySnapshot passionateReservationsSnapshot = (QuerySnapshot) task.getResult().get(3).getResult();
+                                                        QuerySnapshot veterinariansSnapshot = (QuerySnapshot) task.getResult().get(4).getResult();
 
                                                         LinkedHashSet<Animal> animals = new LinkedHashSet<>();
                                                         ArrayList<Purchase> purchases = new ArrayList<>();
                                                         ArrayList<Reservation> availableReservations = new ArrayList<>();
                                                         ArrayList<Reservation> passionateReservations = new ArrayList<>();
+                                                        ArrayList<Veterinarian> veterinarians = new ArrayList<>();
 
                                                         // Check if the passionate has animals
                                                         if (!animalsSnapshot.isEmpty()) {
@@ -302,6 +289,14 @@ public class LoginActivity extends AppCompatActivity {
                                                                 }
                                                             }
                                                         }
+
+                                                        if(!veterinariansSnapshot.isEmpty()){
+                                                            List<DocumentSnapshot> veterinariansDocuments = veterinariansSnapshot.getDocuments();
+
+                                                            for (DocumentSnapshot snapshot : veterinariansDocuments) {
+                                                                veterinarians.add(Veterinarian.loadVeterinarian(snapshot));
+                                                            }
+                                                        }
                                                         // Fill the bundle. If one of the snapshot (or both) are empty
                                                         // the bundle will be filled with an empty array list, in order
                                                         // to prevent nullable errors
@@ -309,6 +304,7 @@ public class LoginActivity extends AppCompatActivity {
                                                         bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_PURCHASES, purchases);
                                                         bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_RESERVATIONS, passionateReservations);
                                                         bundle.putSerializable(KeysNamesUtils.BundleKeys.AVAILABLE_RESERVATIONS, availableReservations);
+                                                        bundle.putSerializable(KeysNamesUtils.BundleKeys.VETERINARIANS_LIST, veterinarians);
 
                                                         // Start the new activity only once the bundle is filled
                                                         newActivityRunning(PassionateNavigationActivity.class, bundle);
@@ -460,5 +456,36 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         startActivity(intent); //start a new activity
+    }
+
+    private Task<QuerySnapshot> getAnimalTask(String passionateUsername){
+        return db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                .whereEqualTo(KeysNamesUtils.AnimalFields.OWNER, passionateUsername)
+                .get();
+    }
+
+    private Task<QuerySnapshot> getVeterinariansTask() {
+        return db.collection(KeysNamesUtils.CollectionsNames.ACTORS)
+                .whereEqualTo(KeysNamesUtils.ActorFields.PURPOSE, KeysNamesUtils.RolesNames.VETERINARIAN)
+                .get();
+    }
+
+    private Task<QuerySnapshot> getPassionateReservationsTask(String passionateUsername) {
+        return db.collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
+                .whereEqualTo(KeysNamesUtils.ReservationFields.OWNER, passionateUsername)
+                .get();
+    }
+
+    private Task<QuerySnapshot> getAvailableReservationsTask() {
+        return db.collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
+                .whereEqualTo(KeysNamesUtils.ReservationFields.OWNER, null)
+                .whereEqualTo(KeysNamesUtils.ReservationFields.ANIMAL, null)
+                .get();
+    }
+
+    private Task<QuerySnapshot> getPurchasesTask(String passionateUsername) {
+        return db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
+                .whereEqualTo(KeysNamesUtils.PurchaseFields.OWNER, passionateUsername)
+                .get();
     }
 }

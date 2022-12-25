@@ -15,20 +15,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAddAnimalFragment;
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAnimalCardFragment;
+import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogEditAnimalDataFragment;
 import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
 import it.uniba.dib.sms22235.adapters.MessageListAdapter;
 import it.uniba.dib.sms22235.entities.operations.InfoMessage;
 import it.uniba.dib.sms22235.entities.users.Animal;
+import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
 
-public class PassionateProfileFragment extends Fragment implements DialogAddAnimalFragment.DialogAddAnimalFragmentListener {
+public class PassionateProfileFragment extends Fragment implements DialogAddAnimalFragment.DialogAddAnimalFragmentListener,
+        DialogEditAnimalDataFragment.DialogEditAnimalDataFragmentListener {
+
+    PassionateProfileFragment.ProfileFragmentListener listener;
+    private DialogEditAnimalDataFragment dialogEditAnimalDataFragment;
 
     public interface ProfileFragmentListener {
         /**
@@ -38,9 +45,10 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
          * @param animal the animal to register
          * */
         void onAnimalRegistered(Animal animal);
+        List<Veterinarian> getVeterinarianList();
+        void onAnimalUpdated(Animal animal);
     }
 
-    private ProfileFragmentListener listener;
     private MessageListAdapter messageListAdapter;
     private AnimalListAdapter animalListAdapter;
     private DialogAddAnimalFragment dialogAddAnimalFragment;
@@ -109,6 +117,10 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
             animalRecycleView.setLayoutManager(new LinearLayoutManager(
                     getContext(), RecyclerView.HORIZONTAL, false));
 
+
+            dialogEditAnimalDataFragment = new DialogEditAnimalDataFragment();
+            dialogEditAnimalDataFragment.setListener(this);
+
             animalRecycleView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), animalRecycleView, new RecyclerTouchListener.ClickListener() {
                 @Override
                 public void onClick(View view, int position) {
@@ -126,7 +138,10 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
 
                 @Override
                 public void onLongClick(View view, int position) {
-                    // We do not need this method atm
+                    dialogEditAnimalDataFragment.setAnimal(animalListAdapter.getAnimalAtPosition(position));
+                    dialogEditAnimalDataFragment.setVeterinarianList(listener.getVeterinarianList());
+                    dialogEditAnimalDataFragment.show(requireActivity().getSupportFragmentManager(),
+                            "DialogEditAnimalDataFragment");
                 }
             }));
 
@@ -161,6 +176,17 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
 
         // Execute listener method to perform data saving
         listener.onAnimalRegistered(animal);
+    }
+
+    @Override
+    public void onDialogChoosedVeterinarian(Animal selectedAnimal, String selectedVeterinarian) {
+        Animal animal = animalListAdapter.getAnimalByMicroChipCode(selectedAnimal.getMicrochipCode());
+        animalListAdapter.remove(animal);
+        animal.setVeterinarian(selectedVeterinarian);
+        animalListAdapter.addAnimal(animal);
+        animalListAdapter.notifyItemInserted(animalListAdapter.getItemCount());
+
+        listener.onAnimalUpdated(animal);
     }
 
 }

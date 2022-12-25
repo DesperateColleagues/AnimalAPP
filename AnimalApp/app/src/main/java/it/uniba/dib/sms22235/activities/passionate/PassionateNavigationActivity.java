@@ -30,7 +30,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PassionateProfileFragment;
@@ -42,6 +44,7 @@ import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
+import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
@@ -58,6 +61,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     private transient ArrayList<Purchase> purchasesList;
     private transient ArrayList<Reservation> passionateReservationsList;
     private transient ArrayList<Reservation> availableReservationsList;
+    private transient ArrayList<Veterinarian> veterinariansList;
 
     private transient FloatingActionButton fab;
     private transient BottomNavigationView navView;
@@ -176,6 +180,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
             passionateReservationsList = (ArrayList<Reservation>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_RESERVATIONS);
             availableReservationsList = (ArrayList<Reservation>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.AVAILABLE_RESERVATIONS);
+            veterinariansList = (ArrayList<Veterinarian>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.VETERINARIANS_LIST);
         }
 
         // Init the animal data set if it is null
@@ -196,6 +201,11 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         // Init the passionate reservations data set it is null
         if (availableReservationsList == null) {
             availableReservationsList = new ArrayList<>();
+        }
+
+        // Init the purchases data set it is null
+        if (veterinariansList == null) {
+            veterinariansList = new ArrayList<>();
         }
 
         // Build the network request
@@ -469,6 +479,71 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                                     });
                         } else {
                             Toast.makeText(this, "Si è verificato un errore, provare più tardi.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public List<Animal> getAnimalsByVeterinarian(String veterinarian) {
+        List<Animal> animalsByVeterinarian = new ArrayList<>();
+        Animal animal;
+        Iterator<Animal> it = animalSet.iterator();
+        while (it.hasNext()) {
+            animal = it.next();
+            animalsByVeterinarian.add(animal);
+        }
+
+        return animalsByVeterinarian;
+    }
+
+    @Override
+    public List<Veterinarian> getVeterinarianList() {
+        List<Veterinarian> clonedVeterinarianList = new ArrayList<>();
+
+        for (Veterinarian veterinarian : veterinariansList) {
+            clonedVeterinarianList.add((Veterinarian) veterinarian.clone());
+        }
+
+        return clonedVeterinarianList;
+    }
+
+    @Override
+    public void onAnimalUpdated(@NonNull Animal animal) {
+        if (isConnectionEnabled) {
+            updateAnimalVeterinarian(animal);
+        } else {
+            Toast.makeText(this, "Impossibile modificare l'animale: rete assente",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void updateAnimalVeterinarian(Animal animal) {
+
+        String docKeyAnimal = KeysNamesUtils.RolesNames.ANIMAL
+                + "_" + animal.getMicrochipCode();
+
+        db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                .whereEqualTo(KeysNamesUtils.AnimalFields.MICROCHIP_CODE, animal.getMicrochipCode())
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                                    .document(docKeyAnimal)
+                                    .update(KeysNamesUtils.AnimalFields.VETERINARIAN,animal.getVeterinarian())
+                                    .addOnSuccessListener(unused -> {
+                                        Toast.makeText(this,
+                                                "Animale aggiornato con successo",
+                                                Toast.LENGTH_LONG).show();
+
+                                        // Update the local animal's files
+                                        /*DataManipulationHelper.saveDataInternally(this, animalSet,
+                                                KeysNamesUtils.FileDirsNames.localAnimalsSet(passionate.getEmail()));*/
+                                    })
+                                    .addOnFailureListener(e ->
+                                            Toast.makeText(this, "Errore interno, dati non aggiornati",
+                                                    Toast.LENGTH_SHORT).show());
                         }
                     }
                 });

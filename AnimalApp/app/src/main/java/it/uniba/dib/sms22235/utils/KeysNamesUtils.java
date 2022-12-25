@@ -22,6 +22,7 @@ public class KeysNamesUtils {
         public static String REQUESTS = "request";
         public static String REPORTS = "reports";
         public static String RESERVATIONS = "reservations";
+        public static String DIAGNOSIS = "diagnosis";
     }
 
     public static class ActorFields {
@@ -42,7 +43,9 @@ public class KeysNamesUtils {
         public static String MICROCHIP_CODE = "microchipCode";
         public static String BIRTH_DATE = "birthDate";
         public static String OWNER = "owner";
+        public static String VETERINARIAN = "veterinarian";
     }
+
 
     public static class ReservationFields {
         public static String OWNER = "owner";
@@ -51,6 +54,12 @@ public class KeysNamesUtils {
         public static String DATE = "date";
         public static String TIME = "time";
         public static String DIAGNOSIS = "diagnosis";
+    }
+
+    public static class DiagnosisFields {
+        public static String ID = "id";
+        public static String DESCRIPTION = "description";
+        public static String PATH = "path";
     }
         
     public static class PurchaseFields {
@@ -92,6 +101,7 @@ public class KeysNamesUtils {
         public static String AVAILABLE_RESERVATIONS = "available_reservations";
         public static String PASSIONATE_PURCHASES = "purchases";
         public static String PASSIONATE_ANIMALS = "animals";
+        public static String VETERINARIANS_LIST = "veterinarians_list";
         public static String FILTER_ADAPTER = "filter";
         public static String INTERFACE = "INT";
         public static String MIN_COST = "minCost";

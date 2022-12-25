@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,10 +19,23 @@ import androidx.fragment.app.DialogFragment;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DatePickerDialogFragment;
 import it.uniba.dib.sms22235.common_dialogs.TimePickerDialogFragment;
+import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 
 
 public class DialogAddDiagnosisFragment extends DialogFragment {
+
+    private TextView txtInputDiagnosisDescription;
+
+    public interface DialogAddDiagnosisFragmentListener{
+        void onDialogAddDiagnosisDismissed(Diagnosis diagnosis);
+    }
+
+    private DialogAddDiagnosisFragment.DialogAddDiagnosisFragmentListener listener;
+
+    public void setListener(DialogAddDiagnosisFragment.DialogAddDiagnosisFragmentListener listener) {
+        this.listener = listener;
+    }
 
     @Nullable
     @Override
@@ -29,34 +44,22 @@ public class DialogAddDiagnosisFragment extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View root = inflater.inflate(R.layout.fragment_dialog_add_diagnosis, null);
         builder.setView(root);
-        builder.setTitle("Aggiunta diagnosi");/*
+        builder.setTitle("Aggiunta diagnosi");
 
-        txtInputReservationDate = root.findViewById(R.id.txtInputReservationDate);
-        txtInputReservationTime = root.findViewById(R.id.txtInputReservationTime);
+        txtInputDiagnosisDescription = root.findViewById(R.id.txtInputDiagnosisDescription);
 
-        txtInputReservationDate.setOnClickListener(v -> {
-            DatePickerDialogFragment datePickerFragment = new DatePickerDialogFragment(this);
-            datePickerFragment.show(getParentFragmentManager(), "DatePickerFragment");
+        Button btnAddDiagnosisFile = root.findViewById(R.id.btnAddDiagnosisFile);
+
+        btnAddDiagnosisFile.setOnClickListener(view -> {
+            Toast.makeText(getContext(), "Feature will be implemented soon!", Toast.LENGTH_SHORT).show();
         });
 
-        txtInputReservationTime.setOnClickListener(v -> {
-            TimePickerDialogFragment timePickerFragment = new TimePickerDialogFragment(this);
-            timePickerFragment.show(getParentFragmentManager(), "TimePickerFragment");
+        Button btnConfirmAddDiagnosis = root.findViewById(R.id.btnAddDiagnosis);
+        btnConfirmAddDiagnosis.setOnClickListener(v -> {
+            String diagnosis = txtInputDiagnosisDescription.getText().toString();
+            listener.onDialogAddDiagnosisDismissed(new Diagnosis(diagnosis,null));
+            dismiss();
         });
-
-        Button btnConfirmAddReservation = root.findViewById(R.id.btnConfirmAddReservation);
-        btnConfirmAddReservation.setOnClickListener(v -> {
-            String date = txtInputReservationDate.getText().toString();
-            String time = txtInputReservationTime.getText().toString();
-
-            boolean isEmptyInput = date.equals("") || time.equals("");
-
-            if(!isEmptyInput){
-                listener.onDialogAddReservationDismissed(new Reservation(date, time));
-                dismiss();
-            }
-        });
-*/
 
         return builder.create();
     }
