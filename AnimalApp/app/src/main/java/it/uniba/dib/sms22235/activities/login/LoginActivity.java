@@ -458,24 +458,28 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent); //start a new activity
     }
 
+    @NonNull
     private Task<QuerySnapshot> getAnimalTask(String passionateUsername){
         return db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
                 .whereEqualTo(KeysNamesUtils.AnimalFields.OWNER, passionateUsername)
                 .get();
     }
 
+    @NonNull
     private Task<QuerySnapshot> getVeterinariansTask() {
         return db.collection(KeysNamesUtils.CollectionsNames.ACTORS)
                 .whereEqualTo(KeysNamesUtils.ActorFields.PURPOSE, KeysNamesUtils.RolesNames.VETERINARIAN)
                 .get();
     }
 
+    @NonNull
     private Task<QuerySnapshot> getPassionateReservationsTask(String passionateUsername) {
         return db.collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
                 .whereEqualTo(KeysNamesUtils.ReservationFields.OWNER, passionateUsername)
                 .get();
     }
 
+    @NonNull
     private Task<QuerySnapshot> getAvailableReservationsTask() {
         return db.collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
                 .whereEqualTo(KeysNamesUtils.ReservationFields.OWNER, null)
@@ -483,6 +487,7 @@ public class LoginActivity extends AppCompatActivity {
                 .get();
     }
 
+    @NonNull
     private Task<QuerySnapshot> getPurchasesTask(String passionateUsername) {
         return db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
                 .whereEqualTo(KeysNamesUtils.PurchaseFields.OWNER, passionateUsername)

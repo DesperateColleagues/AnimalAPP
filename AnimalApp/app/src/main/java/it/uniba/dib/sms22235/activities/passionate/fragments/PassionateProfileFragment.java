@@ -9,9 +9,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -102,21 +105,24 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
                 // Add the profile pic preview to the adapter
                 animalListAdapter.addPic(image);
             }
-
             RecyclerView messageRecyclerView = rootView.findViewById(R.id.messagesList);
             RecyclerView animalRecycleView = rootView.findViewById(R.id.animalList);
 
             ArrayList<InfoMessage> messages = new ArrayList<>();
+
             messageListAdapter = new MessageListAdapter(buildStandardMessages(messages));
+
             messageRecyclerView.setAdapter(messageListAdapter);
+
             messageRecyclerView.setLayoutManager(new LinearLayoutManager(
                     getContext(), RecyclerView.HORIZONTAL, false));
 
+            SnapHelper helper = new LinearSnapHelper();
+            helper.attachToRecyclerView(messageRecyclerView);
 
             animalRecycleView.setAdapter(animalListAdapter);
             animalRecycleView.setLayoutManager(new LinearLayoutManager(
                     getContext(), RecyclerView.HORIZONTAL, false));
-
 
             dialogEditAnimalDataFragment = new DialogEditAnimalDataFragment();
             dialogEditAnimalDataFragment.setListener(this);
@@ -125,7 +131,8 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
                 @Override
                 public void onClick(View view, int position) {
                     // This method is used to request storage permission to the user
-                    // with that we can save animal images not only on firebase,
+                    // with that we can save animal images not only on firebase,marcobari@libero.it
+
                     // but also locally, to retrieve them more easily
                     ((PassionateNavigationActivity) requireActivity()).requestPermission();
 
@@ -162,6 +169,7 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
 
         messages.add(findings);
         messages.add(recentReservations);
+
 
         return messages;
     }

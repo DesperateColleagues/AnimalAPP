@@ -37,7 +37,7 @@
     <string name="registra_animale">Registra animale</string>
 
     <!-- Stringhe sottostanti riferite alle funzioni del passionate -->
-    <string name="passionate_profile_cardlayout_text">Visualizza le ultime segnalazioni della community!</string>
+    <string name="passionate_profile_cardlayout_text">Visualizza le segnalazioni</string>
     <string name="aggiungi_animale">Aggiungi animale</string>
     <string name="nome_animale">Nome animale</string>
     <string name="specie_animale">Specie animale</string>
