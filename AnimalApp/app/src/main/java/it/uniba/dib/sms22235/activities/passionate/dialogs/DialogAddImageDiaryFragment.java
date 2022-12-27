@@ -6,15 +6,19 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -22,12 +26,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.yalantis.ucrop.UCrop;
+
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
+import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
@@ -43,14 +55,14 @@ public class DialogAddImageDiaryFragment extends DialogFragment {
     }
 
     private DialogAddImageDiaryFragmentListener listener;
-    private ImageView photoDiaryImageInsert;
-    private Bitmap selectedImageBitmap;
-    private final String username;
+    private ImageView photoDiaryImageInsert; // todo: find a way to display a preview
+    private Uri destUri = null;
     private Set<PhotoDiaryPost> photoDiaryPostSet;
+    private final List<String> animalList;
+    private Button btnSavePost;
 
-    public DialogAddImageDiaryFragment(String username) {
-        selectedImageBitmap = null;
-        this.username = username;
+    public DialogAddImageDiaryFragment(List<String>animalList) {
+        this.animalList = animalList;
     }
 
     // Used to launch the callback to retrieve intent's results
@@ -60,30 +72,26 @@ public class DialogAddImageDiaryFragment extends DialogFragment {
                     Intent data = result.getData();
 
                     if (data != null && data.getData() != null) {
-                        Uri selectedImageUri = data.getData();
+                        Uri sourceUri = data.getData();
 
-                        try {
-                            selectedImageBitmap = MediaStore.Images.Media.getBitmap(
-                                    requireActivity().getContentResolver(), selectedImageUri);
+                        // Destination URI of the cropped image
+                        String destUriString = UUID.randomUUID().toString() + ".jpg";
+                        destUri = Uri.fromFile(new File(requireContext().getCacheDir(), destUriString));
 
-                            photoDiaryImageInsert.setImageBitmap(selectedImageBitmap);
-                            photoDiaryImageInsert.setVisibility(View.VISIBLE);
+                        // Crop the image to fit the correct aspect ratio
+                        UCrop.of(sourceUri, destUri)
+                                .withAspectRatio(1, 1)
+                                .start(requireActivity());
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        btnSavePost.setVisibility(View.VISIBLE);
                     }
                 }
             });
 
-    @SuppressWarnings("unchecked")
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Obtain the posts' set from file system that will be update
-        // when the user will add a new post
-        photoDiaryPostSet = (LinkedHashSet<PhotoDiaryPost>) DataManipulationHelper.readDataInternally(
-                getContext(),  KeysNamesUtils.FileDirsNames.passionatePostRefDirName(username));
 
         // If the return is null then, there aren't post, so the set can be created
         if (photoDiaryPostSet == null) {
@@ -91,11 +99,16 @@ public class DialogAddImageDiaryFragment extends DialogFragment {
         }
     }
 
+    public void setPhotoDiaryImageInsert(Uri uri) {
+        photoDiaryImageInsert.setVisibility(View.VISIBLE);
+        photoDiaryImageInsert.setImageURI(uri);
+    }
+
     @SuppressLint("InflateParams")
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AnimalCardRoundedDialog);
 
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View root = inflater.inflate(R.layout.fragment_dialog_add_image_diary, null);
@@ -104,71 +117,24 @@ public class DialogAddImageDiaryFragment extends DialogFragment {
         builder.setTitle("Aggiunta al photo diary");
 
         photoDiaryImageInsert = root.findViewById(R.id.photoDiaryImageInsert);
-
-        EditText txtInputImageDescription = root.findViewById(R.id.txtInputImageDescription);
-        EditText txtInputPostTitle = root.findViewById(R.id.txtInputPostTitle);
+        Spinner spinnerAnimalsAddPhotoDiary = root.findViewById(R.id.spinnerAnimalsAddPhotoDiary);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_spinner_dropdown_item, animalList);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerAnimalsAddPhotoDiary.setAdapter(spinnerAdapter);
 
         Button btnSelectedImage = root.findViewById(R.id.btnSelectImage);
-        Button btnSavePost = root.findViewById(R.id.btnSavePost);
+        btnSavePost = root.findViewById(R.id.btnSavePost);
 
         btnSavePost.setOnClickListener(v -> {
-            String inputImageDescription = txtInputImageDescription.getText().toString();
-            String inputPostTitle = txtInputPostTitle.getText().toString();
+            if (destUri != null) {
+                String animal = spinnerAnimalsAddPhotoDiary.getSelectedItem().toString().split(" - ")[1];
+                PhotoDiaryPost post = new PhotoDiaryPost(
+                        destUri.toString(), animal);
 
-            boolean isEmptyInput = inputImageDescription.equals("") || inputPostTitle.equals("");
+                listener.onImageAdded(post);
 
-            if (!isEmptyInput) {
-                // If the description is not empty check if the image has been selected
-                if (selectedImageBitmap != null) {
-                    // Create a new post object
-                    PhotoDiaryPost post = new PhotoDiaryPost(inputPostTitle, inputImageDescription);
-
-                    // If the post title is unique it will be added to the Set
-                    if (photoDiaryPostSet.add(post)) {
-                        // Save the image at the specified dir
-                        String fileName = post.getTitle() + ".jpg";
-
-                        // Save the Bitmap to the internal storage
-                        String dirPath = DataManipulationHelper.saveBitmapToInternalStorage(
-                                selectedImageBitmap,
-                                KeysNamesUtils.FileDirsNames.passionatePostDirName(username),
-                                fileName,
-                                getContext());
-
-                        // Set the file data inside the post object
-                        post.setDirName(dirPath);
-                        post.setFileName(fileName);
-
-                        // Save the updated set with the new post in the internal storage
-                        if (DataManipulationHelper.saveDataInternally(getContext(), photoDiaryPostSet,
-                                KeysNamesUtils.FileDirsNames.passionatePostRefDirName(username))) {
-                            // Update the ListView with the new post
-                            listener.onImageAdded(post);
-
-                            // Send a notification to the user that the post is now visible
-                            Toast.makeText(getContext(),"Immagine aggiunta al diary",
-                                    Toast.LENGTH_LONG).show();
-                            dismiss();
-                        } else {
-                            Toast.makeText(getContext(), "Problemi durante il salvataggio del post",
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(getContext(), "Il titolo è stato già usato",
-                                Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
-                    Toast.makeText(
-                            getContext(),
-                            "Selezionare un immagine prima di completare il post",
-                            Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(
-                        getContext(),
-                        "I campi titoli e descrizione non possono esssere vuoti",
-                        Toast.LENGTH_LONG).show();
+                dismiss();
             }
         });
 
@@ -185,5 +151,4 @@ public class DialogAddImageDiaryFragment extends DialogFragment {
     public void setListener(DialogAddImageDiaryFragmentListener listener) {
         this.listener = listener;
     }
-
 }

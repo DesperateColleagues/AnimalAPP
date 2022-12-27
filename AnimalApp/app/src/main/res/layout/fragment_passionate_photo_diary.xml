@@ -3,11 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/diaryListView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/diaryRecycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"/>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

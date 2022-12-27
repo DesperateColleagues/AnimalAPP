@@ -23,6 +23,7 @@ public class KeysNamesUtils {
         public static String REPORTS = "reports";
         public static String RESERVATIONS = "reservations";
         public static String DIAGNOSIS = "diagnosis";
+        public static String PHOTO_DIARY = "photoDiary";
     }
 
     public static class ActorFields {
@@ -60,6 +61,11 @@ public class KeysNamesUtils {
         public static String ID = "id";
         public static String DESCRIPTION = "description";
         public static String PATH = "path";
+        
+    public static class PhotoDiaryFields {
+        public static String POST_URI = "postUri";
+        public static String POST_ANIMAL = "postAnimal";
+        public static String POST_PATH = "postPath";
     }
         
     public static class PurchaseFields {
@@ -129,12 +135,12 @@ public class KeysNamesUtils {
         /**
          * Method that helps to obtain the name of the directory where posts' references
          * are saved
-         * @param username the username used to build the directory
+         * @param microchip the microchip used to build the directory
          * */
         @NonNull
         @Contract(pure = true)
-        public static String passionatePostRefDirName(String username) {
-            return username + "_post_ref";
+        public static String passionatePostRefDirAnimal(String microchip) {
+            return microchip + "_post";
         }
 
         @NonNull
