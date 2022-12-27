@@ -40,7 +40,7 @@ public class RegistrationPersonFragment extends Fragment {
          * Triggered when the user completes its sign up process
          *
          * @param passionate the user to register
-         * @param pwd the password of the user
+         * // @param pwd the password of the user
          * */
         void onPassionateRegistered(Passionate passionate);
 
@@ -48,7 +48,7 @@ public class RegistrationPersonFragment extends Fragment {
          * Triggered when the veterinary completes its sign up process
          *
          * @param veterinarian the veterinary to register
-         * @param pwd the password of the veterinary
+         * // @param pwd the password of the veterinary
          * */
         void onVeterinaryRegistered(Veterinarian veterinarian);
     }
@@ -153,7 +153,7 @@ public class RegistrationPersonFragment extends Fragment {
 
                     if (!isEmptyInput) {
                         // Delegate the Activity to register the user on the FireStore
-                        listener.onPassionateRegistered(new Passionate(name, email, username, password));
+                        listener.onPassionateRegistered(new Passionate(name, email, username, password, role));
                     }
 
                 } else {
@@ -171,7 +171,7 @@ public class RegistrationPersonFragment extends Fragment {
                     if (!isEmptyInput && isInputCorrect) {
                         // Delegate the Activity to register the veterinary on the FireStore
                         listener.onVeterinaryRegistered(
-                                new Veterinarian(name, email, clinicName, phoneNumber, password));
+                                new Veterinarian(name, email, clinicName, phoneNumber, password, role));
                     }
 
                     if (!InputFieldCheck.isNumberValid(phoneNumber)){

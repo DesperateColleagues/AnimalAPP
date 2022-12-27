@@ -14,6 +14,7 @@
         android:layout_marginRight="30dp"
         android:background="@drawable/bg_spinner_role"
         android:entries="@array/spinnerItems"
+        android:textColor="@color/black"
         android:minHeight="48dp" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -140,6 +141,8 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
         android:onClick="btnRegisterAction"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         android:text="@string/registrati" />
 
 </LinearLayout>

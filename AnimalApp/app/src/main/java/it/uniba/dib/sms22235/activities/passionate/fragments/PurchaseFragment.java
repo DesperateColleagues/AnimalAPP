@@ -119,8 +119,10 @@ public class PurchaseFragment extends Fragment implements
         LinkedHashSet<Animal> animalSet = ((PassionateNavigationActivity) requireActivity())
                 .getAnimalSet();
 
+
         FloatingActionButton fab = ((PassionateNavigationActivity) requireActivity())
                 .getFab();
+        fab.setVisibility(View.VISIBLE);
 
         String owner = ((PassionateNavigationActivity) requireActivity()).getPassionateUsername();
 

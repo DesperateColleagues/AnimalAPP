@@ -4,7 +4,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/light_main</item>
         <item name="colorPrimaryVariant">@color/light_variation</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
 
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
@@ -14,10 +14,15 @@
         <item name="android:colorSecondary">?attr/colorSecondary</item>
 
         <item name="android:textColor">?attr/colorOnPrimary</item>
+
         <!-- Customize your theme here. -->
+
+        <item name="colorOnSecondary">@color/black</item>
 
         <item name="colorTertiary">@color/cardview_light_background</item>
         <item name="colorOnTertiary">@color/black</item>
+
+        <item name="android:navigationBarColor">?colorPrimary</item>
 
 
     </style>

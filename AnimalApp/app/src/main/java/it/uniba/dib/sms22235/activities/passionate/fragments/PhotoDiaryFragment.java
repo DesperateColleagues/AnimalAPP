@@ -83,6 +83,8 @@ public class PhotoDiaryFragment extends Fragment implements DialogAddImageDiaryF
         Context context = requireContext();
         PostGridAdapter postGridAdapter = new PostGridAdapter(context, posts);
 
+
+        ((PassionateNavigationActivity) requireActivity()).getFab().setVisibility(View.VISIBLE);
         ((PassionateNavigationActivity) requireActivity()).getFab().setOnClickListener(v -> {
             LinkedHashSet<Animal> animalSet = ((PassionateNavigationActivity) requireActivity()).getAnimalSet();
             dialogAddImageDiaryFragment = new DialogAddImageDiaryFragment(buildSpinnerEntries(animalSet));

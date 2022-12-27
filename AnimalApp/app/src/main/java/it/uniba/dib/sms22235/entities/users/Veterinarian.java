@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class Veterinarian extends AbstractPersonUser implements  Serializable {
+public class Veterinarian extends AbstractPersonUser implements  Serializable, Cloneable {
     private String clinicName, phoneNumber;
 
     public Veterinarian() {}
@@ -31,10 +31,20 @@ public class Veterinarian extends AbstractPersonUser implements  Serializable {
      * @param clinicName the name of the clinic
      * @param phoneNumber the phone number of the veterinary used as contact
      */
-    public Veterinarian(String fullName, String email, String clinicName, String phoneNumber, String password) {
-        super(fullName, email, password);
+    public Veterinarian(String fullName, String email, String clinicName, String phoneNumber, String password, String purpose) {
+        super(fullName, email, password, purpose);
         this.clinicName = clinicName;
         this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public String getEmail() {
+        return super.getEmail();
+    }
+
+    @Override
+    public String getFullName() {
+        return super.getFullName();
     }
 
     public String getClinicName() {
@@ -60,9 +70,21 @@ public class Veterinarian extends AbstractPersonUser implements  Serializable {
                 (String) document.get(KeysNamesUtils.ActorFields.EMAIL),
                 (String) document.get(KeysNamesUtils.ActorFields.CLINIC_NAME),
                 (String) document.get(KeysNamesUtils.ActorFields.PHONE_NUMBER),
-                (String) document.get(KeysNamesUtils.ActorFields.PASSWORD)
+                (String) document.get(KeysNamesUtils.ActorFields.PASSWORD),
+                (String) document.get(KeysNamesUtils.ActorFields.PURPOSE)
         );
     }
 
 
+    @NonNull
+    @Override
+    public Object clone() {
+        Object o = null;
+        try {
+            o = super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+        return o;
+    }
 }

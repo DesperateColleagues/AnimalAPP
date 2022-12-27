@@ -27,6 +27,7 @@ import java.util.List;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.veterinarian.fragments.VeterinarianReservationFragment;
+import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
@@ -40,9 +41,6 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     private Veterinarian veterinarian;
     private ArrayList<Reservation> reservationsList;
 
-    public FloatingActionButton getFab() {
-        return fab;
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,6 +109,63 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
                 });
     }
 
+    @Override
+    public void onDiagnosisRegistered(Reservation reservation, Diagnosis diagnosis) {
+
+        db.collection(KeysNamesUtils.CollectionsNames.DIAGNOSIS)
+                .whereEqualTo(KeysNamesUtils.DiagnosisFields.ID, diagnosis.getId())
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().isEmpty()) {
+                            db.collection(KeysNamesUtils.CollectionsNames.DIAGNOSIS)
+                                    .document(diagnosis.getId())
+                                    .set(diagnosis)
+                                    .addOnSuccessListener(unused -> {
+                                        updateReservation(reservation, diagnosis.getId());
+                                        Toast.makeText(this,
+                                                "Diagnosi inserita con successo",
+                                                Toast.LENGTH_LONG).show();
+                                    })
+                                    .addOnFailureListener(e ->
+                                            Toast.makeText(this, "Errore interno, dati non aggiornati",
+                                                    Toast.LENGTH_SHORT).show());
+                        }
+                    }
+                });
+    }
+
+    private void updateReservation(Reservation reservation, String diagnosisID) {
+        String dateFormatted = reservation.getDate();
+        String timeFormatted = reservation.getTime();
+
+        String docKeyReservation = KeysNamesUtils.CollectionsNames.RESERVATIONS
+                +"_"+ dateFormatted.replaceAll("[-+^/]*", "")
+                +"_"+ timeFormatted;
+
+
+        db.collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
+                .whereEqualTo(KeysNamesUtils.ReservationFields.DATE, reservation.getDate())
+                .whereEqualTo(KeysNamesUtils.ReservationFields.VETERINARIAN, reservation.getVeterinarian())
+                .whereEqualTo(KeysNamesUtils.ReservationFields.TIME, reservation.getTime())
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            db.collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
+                                    .document(docKeyReservation)
+                                    .update(KeysNamesUtils.ReservationFields.DIAGNOSIS, diagnosisID)
+                                    .addOnSuccessListener(unused -> {
+                                        Toast.makeText(this,
+                                                "Prenotazione aggionrnata con successo!",
+                                                Toast.LENGTH_LONG).show();
+                                    })
+                                    .addOnFailureListener(e ->
+                                            Toast.makeText(this, "Errore interno, dati non aggiornati",
+                                                    Toast.LENGTH_SHORT).show());
+                        }
+                    }
+                });
+    }
+
     public ArrayList<Reservation> getDayReservationsList(String date) {
         ArrayList<Reservation> clonedReservationsList = new ArrayList<>();
 
@@ -123,7 +178,11 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         return clonedReservationsList;
     }
 
-    public String getVeterinarianEmail(){
-        return veterinarian.getEmail();
+    public String getVeterinarianEmail(){ return veterinarian.getEmail(); }
+
+    public FloatingActionButton getFab() {
+        return fab;
     }
+
+    public String getVeterinarianFullName(){ return veterinarian.getFullName(); }
 }

@@ -21,8 +21,8 @@ public class Passionate extends AbstractPersonUser implements Serializable {
      * @param email      email of the person used to perform operations like reset password
      * @param username   the username to access the private area of the app
      */
-    public Passionate(String fullName, String email, String username, String password) {
-        super(fullName, email, password);
+    public Passionate(String fullName, String email, String username, String password, String purpose) {
+        super(fullName, email, password, purpose);
         this.username = username;
     }
 
@@ -45,7 +45,8 @@ public class Passionate extends AbstractPersonUser implements Serializable {
                 (String) document.get(KeysNamesUtils.ActorFields.FULL_NAME),
                 (String) document.get(KeysNamesUtils.ActorFields.EMAIL),
                 (String) document.get(KeysNamesUtils.ActorFields.USERNAME),
-                (String) document.get(KeysNamesUtils.ActorFields.PASSWORD)
+                (String) document.get(KeysNamesUtils.ActorFields.PASSWORD),
+                (String) document.get(KeysNamesUtils.ActorFields.PURPOSE)
         );
     }
 }

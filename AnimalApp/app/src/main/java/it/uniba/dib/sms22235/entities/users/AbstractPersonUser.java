@@ -4,10 +4,12 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AbstractPersonUser implements Serializable {
+public class AbstractPersonUser implements Serializable, Cloneable {
     protected String fullName;
     protected String email;
     protected String password;
+    protected String purpose;
+
     private static final String EMAIL_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
 
     public AbstractPersonUser() {}
@@ -17,11 +19,12 @@ public class AbstractPersonUser implements Serializable {
      * @param email     email of the person
      * @param password the password of the user
      */
-    public AbstractPersonUser(String fullName, String email, String password) {
+    public AbstractPersonUser(String fullName, String email, String password, String purpose) {
 
         this.fullName = fullName;
         this.email = email;
         this.password = password;
+        this.purpose = purpose;
     }
 
     /**
@@ -45,7 +48,19 @@ public class AbstractPersonUser implements Serializable {
         return email;
     }
 
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
     }
 }

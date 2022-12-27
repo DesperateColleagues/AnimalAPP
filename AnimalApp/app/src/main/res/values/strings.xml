@@ -37,7 +37,7 @@
     <string name="registra_animale">Registra animale</string>
 
     <!-- Stringhe sottostanti riferite alle funzioni del passionate -->
-    <string name="passionate_profile_cardlayout_text">Visualizza le ultime segnalazioni della community!</string>
+    <string name="passionate_profile_cardlayout_text">Visualizza le segnalazioni</string>
     <string name="aggiungi_animale">Aggiungi animale</string>
     <string name="nome_animale">Nome animale</string>
     <string name="specie_animale">Specie animale</string>
@@ -51,16 +51,22 @@
     <string name="seleziona_immagine">Seleziona immagine</string>
     <string name="salva">Salva</string>
     <string name="titolo_immagine">titolo immagine</string>
+    <string name="appuntamenti_recenti">Appuntamenti recenti</string>
+    <string name="tutti_appuntamenti_recenti">Visualizza tutti gli appuntamenti recenti</string>
 
     <!-- Stringhe sottostanti riferite al veterinario -->
     <string name="title_activity_veterinarian_navigation">VeterinarianNavigationActivity</string>
     <string name="title_fragment_veterinarian_profile">Profilo veterinario</string>
+    <string name="title_fragment_veterinarian_animal_list">Lista animali</string>
     <string name="title_fragment_veterinarian_reservations">Appuntamenti</string>
 
     <!-- Stringhe sottostanti riferite alle funzioni del veterinario -->
     <string name="data_appuntamento">data</string>
     <string name="ora_appuntamento">ora</string>
     <string name="aggiungi_prenotazione">Aggiungi prenotazione</string>
+    <string name="aggiungi_diagnosi">Aggiungi diagnosi</string>
+    <string name="modifica_diagnosi">Modifica diagnosi</string>
+    <string name="elimina_diagnosi">Elimina diagnosi</string>
 
     <!-- Stringhe sottostanti riferite agli acquisti -->
     <string name="product">prodotto</string>

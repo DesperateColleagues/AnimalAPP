@@ -71,4 +71,15 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
         return animalList.get(index);
     }
 
+    public Animal getAnimalByMicroChipCode(String microChipCode) {
+        for (Animal animal : animalList) {
+            if (animal.getMicrochipCode().equals(microChipCode)){
+                return animal;
+            }
+        }
+        return null;
+    }
+
+    public void remove(Animal animal) { animalList.remove(animal); }
+
 }

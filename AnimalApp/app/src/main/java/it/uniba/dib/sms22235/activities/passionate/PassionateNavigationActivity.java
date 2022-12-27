@@ -28,8 +28,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentChange;
@@ -41,28 +39,34 @@ import com.yalantis.ucrop.UCrop;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Collections;
 import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.activities.passionate.fragments.PassionateProfileFragment;
+import it.uniba.dib.sms22235.activities.passionate.fragments.PassionateReservationFragment;
+
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAddImageDiaryFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PhotoDiaryFragment;
-import it.uniba.dib.sms22235.activities.passionate.fragments.ProfileFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment;
 
 import it.uniba.dib.sms22235.adapters.PostGridAdapter;
 import it.uniba.dib.sms22235.database.QueryPurchasesManager;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
+import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
+import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class PassionateNavigationActivity extends AppCompatActivity implements
-        ProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener,
+        PassionateProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener,
+        PassionateReservationFragment.PassionateReservationFragmentListener,
         PhotoDiaryFragment.PhotoDiaryFragmentListener,
         Serializable {
 
@@ -72,6 +76,9 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     private transient Passionate passionate;
     private transient LinkedHashSet<Animal> animalSet;
     private transient ArrayList<Purchase> purchasesList;
+    private transient ArrayList<Reservation> passionateReservationsList;
+    private transient ArrayList<Reservation> availableReservationsList;
+    private transient ArrayList<Veterinarian> veterinariansList;
 
     private transient FloatingActionButton fab;
     private transient BottomNavigationView navView;
@@ -192,6 +199,10 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             passionate = (Passionate) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE);
             animalSet = (LinkedHashSet<Animal>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS);
             purchasesList = (ArrayList<Purchase>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_PURCHASES);
+
+            passionateReservationsList = (ArrayList<Reservation>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_RESERVATIONS);
+            availableReservationsList = (ArrayList<Reservation>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.AVAILABLE_RESERVATIONS);
+            veterinariansList = (ArrayList<Veterinarian>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.VETERINARIANS_LIST);
         }
 
         // Init the animal data set if it is null
@@ -202,6 +213,21 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         // Init the purchases data set it is null
         if (purchasesList == null) {
             purchasesList = new ArrayList<>();
+        }
+
+        // Init the available reservations data set it is null
+        if (passionateReservationsList == null) {
+            passionateReservationsList = new ArrayList<>();
+        }
+
+        // Init the passionate reservations data set it is null
+        if (availableReservationsList == null) {
+            availableReservationsList = new ArrayList<>();
+        }
+
+        // Init the purchases data set it is null
+        if (veterinariansList == null) {
+            veterinariansList = new ArrayList<>();
         }
 
         // Build the network request
@@ -503,8 +529,42 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     }
 
     /**
+     * This method is used to get a copy of passionate's reservations list
+     *
+     * @return a copy of the list with passionate's reservations
+     * */
+    public ArrayList<Reservation> getPassionateReservationsList() {
+        ArrayList<Reservation> clonedPassionateReservationsList = new ArrayList<>();
+
+        if (passionateReservationsList != null) {
+            for (Reservation reservation : passionateReservationsList) {
+                clonedPassionateReservationsList.add((Reservation) reservation.clone());
+            }
+        }
+
+        return clonedPassionateReservationsList;
+    }
+
+    /**
+     * This method is used to get a copy of available reservations list
+     *
+     * @return a copy of the list with available reservations
+     * */
+    public ArrayList<Reservation> getAvailableReservationsList(String date) {
+        ArrayList<Reservation> clonedReservationsList = new ArrayList<>();
+
+        for (Reservation reservation : availableReservationsList) {
+            if (date.equals(reservation.getDate())){
+                clonedReservationsList.add((Reservation) reservation.clone());
+            }
+        }
+
+        return clonedReservationsList;
+    }
+    
      * This method is used to restore the visibility at the bottom app bar
      * */
+     
     public void restoreBottomAppBarVisibility(){
         if (navView.getVisibility() == View.GONE && fab.getVisibility() == View.GONE) {
             navView.setVisibility(View.VISIBLE);
@@ -539,4 +599,107 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     public String getPassionateUsername() {
         return passionate.getUsername();
     }
+
+    @Override
+    public void onReservationBooked(@NonNull Reservation reservation) {
+        String dateFormatted = reservation.getDate();
+        String timeFormatted = reservation.getTime();
+
+        availableReservationsList.remove(reservation);
+        reservation.setOwner(getPassionateUsername());
+
+        String docKeyReservation = KeysNamesUtils.CollectionsNames.RESERVATIONS
+                +"_"+ dateFormatted.replaceAll("[-+^/]*", "")
+                +"_"+ timeFormatted;
+
+        db.collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
+                .whereEqualTo(KeysNamesUtils.ReservationFields.DATE, reservation.getDate())
+                .whereEqualTo(KeysNamesUtils.ReservationFields.TIME, reservation.getTime())
+                .whereEqualTo(KeysNamesUtils.ReservationFields.VETERINARIAN, reservation.getVeterinarian())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (!querySnapshot.isEmpty()){
+                            db.collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
+                                    .document(docKeyReservation)
+                                    .set(reservation)
+                                    .addOnSuccessListener(unused -> {
+                                        Toast.makeText(this, "Prenotazione confermata!", Toast.LENGTH_SHORT).show();
+                                    }).addOnFailureListener(e -> {
+                                        Log.d("DEB", e.getMessage());
+                                    });
+                        } else {
+                            Toast.makeText(this, "Si è verificato un errore, provare più tardi.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public List<Animal> getAnimalsByVeterinarian(String veterinarian) {
+        List<Animal> animalsByVeterinarian = new ArrayList<>();
+        Animal animal;
+        Iterator<Animal> it = animalSet.iterator();
+        while (it.hasNext()) {
+            animal = it.next();
+            animalsByVeterinarian.add(animal);
+        }
+
+        return animalsByVeterinarian;
+    }
+
+    @Override
+    public List<Veterinarian> getVeterinarianList() {
+        List<Veterinarian> clonedVeterinarianList = new ArrayList<>();
+
+        for (Veterinarian veterinarian : veterinariansList) {
+            clonedVeterinarianList.add((Veterinarian) veterinarian.clone());
+        }
+
+        return clonedVeterinarianList;
+    }
+
+    @Override
+    public void onAnimalUpdated(@NonNull Animal animal) {
+        if (isConnectionEnabled) {
+            updateAnimalVeterinarian(animal);
+        } else {
+            Toast.makeText(this, "Impossibile modificare l'animale: rete assente",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void updateAnimalVeterinarian(Animal animal) {
+
+        String docKeyAnimal = KeysNamesUtils.RolesNames.ANIMAL
+                + "_" + animal.getMicrochipCode();
+
+        db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                .whereEqualTo(KeysNamesUtils.AnimalFields.MICROCHIP_CODE, animal.getMicrochipCode())
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                                    .document(docKeyAnimal)
+                                    .update(KeysNamesUtils.AnimalFields.VETERINARIAN,animal.getVeterinarian())
+                                    .addOnSuccessListener(unused -> {
+                                        Toast.makeText(this,
+                                                "Animale aggiornato con successo",
+                                                Toast.LENGTH_LONG).show();
+
+                                        // Update the local animal's files
+                                        /*DataManipulationHelper.saveDataInternally(this, animalSet,
+                                                KeysNamesUtils.FileDirsNames.localAnimalsSet(passionate.getEmail()));*/
+                                    })
+                                    .addOnFailureListener(e ->
+                                            Toast.makeText(this, "Errore interno, dati non aggiornati",
+                                                    Toast.LENGTH_SHORT).show());
+                        }
+                    }
+                });
+    }
+
+
 }
