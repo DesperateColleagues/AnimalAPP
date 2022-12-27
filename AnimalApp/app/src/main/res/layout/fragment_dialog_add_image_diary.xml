@@ -9,56 +9,22 @@
         android:id="@+id/photoDiaryImageInsert"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         android:layout_marginBottom="20dp"
         tools:srcCompat="@tools:sample/avatars"
         android:visibility="gone"/>
 
-    <com.google.android.material.textfield.TextInputLayout
+    <Spinner
+        android:id="@+id/spinnerAnimalsAddPhotoDiary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="10dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-        <EditText
-            android:id="@+id/txtInputPostTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/titolo_immagine"
-            android:gravity="center_vertical"
-            android:drawableStart="@drawable/ic_baseline_title_24"
-            android:drawablePadding="10dp"
-            android:inputType="textCapSentences|textNoSuggestions|textMultiLine" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="10dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-    <EditText
-        android:id="@+id/txtInputImageDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minLines="3"
-        android:maxLines="6"
-        android:hint="@string/descrizione_immagine"
-        android:gravity="center_vertical"
-        android:drawableStart="@drawable/ic_baseline_format_color_text_24"
-        android:drawablePadding="10dp"
-        android:inputType="textCapSentences|textNoSuggestions|textMultiLine" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_spinner_role"
+        android:minHeight="48dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -84,6 +50,7 @@
             android:layout_weight="1"
             android:layout_margin="10dp"
             android:text="@string/salva"
+            android:visibility="gone"
             style="?android:attr/buttonBarButtonStyle" />
 
     </LinearLayout>

@@ -1,53 +1,42 @@
 package it.uniba.dib.sms22235.entities.operations;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import org.jetbrains.annotations.Contract;
+
 import java.io.Serializable;
-import java.util.Objects;
+
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class PhotoDiaryPost implements Serializable {
-    private String dirName;
-    private String fileName;
-    private String title;
-    private String description;
+    private String postUri;
+    private final String postAnimal;
 
-    public PhotoDiaryPost(String title, String description) {
-        this.title = title;
-        this.description = description;
+    public PhotoDiaryPost(String postUri, String postAnimal) {
+        this.postUri = postUri;
+        this.postAnimal = postAnimal;
     }
 
-    public String getDescription() {
-        return description;
+    public void setPostUri(String postUri) {
+        this.postUri = postUri;
     }
 
-    public String getDirName() {
-        return dirName;
+    public String getPostUri() {
+        return postUri;
     }
 
-    public String getFileName(){
-        return  fileName;
+    public String getPostAnimal() {
+        return postAnimal;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setDirName(String dirName) {
-        this.dirName = dirName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PhotoDiaryPost that = (PhotoDiaryPost) o;
-        return title.equals(that.title);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(title);
+    @NonNull
+    @Contract("_ -> new")
+    public static PhotoDiaryPost loadPhotoDiaryPost(@NonNull DocumentSnapshot document) {
+        return new PhotoDiaryPost(
+                document.getString(KeysNamesUtils.PhotoDiaryFields.POST_URI),
+                document.getString(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL)
+        );
     }
 }

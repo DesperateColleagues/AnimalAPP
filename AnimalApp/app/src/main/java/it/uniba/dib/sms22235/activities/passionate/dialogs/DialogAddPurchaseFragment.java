@@ -71,11 +71,13 @@ public class DialogAddPurchaseFragment extends DialogFragment
         txtInputDatePurchase = root.findViewById(R.id.txtInputDatePurchase);
         txtInputCategory = root.findViewById(R.id.txtInputCategory);
 
+        // Start the date picker dialog
         txtInputDatePurchase.setOnClickListener(v -> {
             DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(this);
             datePickerDialogFragment.show(requireActivity().getSupportFragmentManager(), "DatePickerDialogFragment");
         });
 
+        // Start the dialog to insert a category
         txtInputCategory.setOnClickListener(v -> {
             DialogAddCategoryFragment dialogAddCategoryFragment = new DialogAddCategoryFragment(this);
             dialogAddCategoryFragment.show(requireActivity().getSupportFragmentManager(), "DialogAddCategoryFragment");
@@ -104,7 +106,7 @@ public class DialogAddPurchaseFragment extends DialogFragment
 
             if(!isEmpty) {
                 boolean isCorrectInput = true;
-
+                // Check numeric fields correctness
                 try {
                     cost = Float.parseFloat(inputCost);
                     amount = Integer.parseInt(inputAmount);
@@ -116,6 +118,7 @@ public class DialogAddPurchaseFragment extends DialogFragment
                 }
 
                 if (isCorrectInput && cost > 0 && amount > 0) {
+                    // Extract the microhip code from the string
                     String microchip = animal.split(" - ")[1];
                     listener.onDialogAddPurchaseFragmentDismissed(new Purchase(
                             microchip, inputProductName,

@@ -1,18 +1,24 @@
 package it.uniba.dib.sms22235.activities.passionate;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -26,18 +32,29 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAddImageDiaryFragment;
+import it.uniba.dib.sms22235.activities.passionate.fragments.PhotoDiaryFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.ProfileFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment;
 
+import it.uniba.dib.sms22235.adapters.PostGridAdapter;
 import it.uniba.dib.sms22235.database.QueryPurchasesManager;
+import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
@@ -46,6 +63,7 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class PassionateNavigationActivity extends AppCompatActivity implements
         ProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener,
+        PhotoDiaryFragment.PhotoDiaryFragmentListener,
         Serializable {
 
     private transient FirebaseFirestore db;
@@ -57,6 +75,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
     private transient FloatingActionButton fab;
     private transient BottomNavigationView navView;
+
+    private transient NavHostFragment navHostFragment;
 
     // Flag that specify whether the connection is enabled or not
     private boolean isConnectionEnabled;
@@ -83,6 +103,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                 for (Purchase purchase : purchasesOfflineList) {
                     registerPurchaseFirebase(purchase);
                 }
+
+                // todo: check safe delete
 
                 // Delete the file once the process is over. If some network error occurs
                 // during onPurchaseRegistered then a new offline file will be created
@@ -124,7 +146,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                 R.id.passionate_pet_care, R.id.passionate_purchase)
                 .build();
 
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+        navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_activity_passionate_navigation);
 
         assert navHostFragment != null;
@@ -165,6 +187,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
         Bundle loginBundle = getIntent().getExtras(); // get the login bundle
 
+        // Extract the bundle data sent from login activity
         if (loginBundle != null) {
             passionate = (Passionate) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE);
             animalSet = (LinkedHashSet<Animal>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS);
@@ -206,49 +229,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         restoreBottomAppBarVisibility();
     }
 
-    private void registerAnimalFirebase(@NonNull Animal animal) {
-        String docKeyAnimal = KeysNamesUtils.RolesNames.ANIMAL
-                + "_" + animal.getMicrochipCode();
-
-        // Check if the microchip code is duplicated first
-        db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
-                .whereEqualTo(KeysNamesUtils.AnimalFields.MICROCHIP_CODE, animal.getMicrochipCode())
-                .get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        // If no animal own that microchip code, then it is possible to insert
-                        if (task.getResult().isEmpty()) {
-                            db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
-                                    .document(docKeyAnimal)
-                                    .set(animal)
-                                    .addOnSuccessListener(unused -> {
-
-                                        Toast.makeText(this,
-                                                "Animale registrato con successo",
-                                                Toast.LENGTH_LONG).show();
-
-                                        // Update the local animal's files
-                                        DataManipulationHelper.saveDataInternally(this, animalSet,
-                                                KeysNamesUtils.FileDirsNames.localAnimalsSet(passionate.getEmail()));
-                                    })
-                                    .addOnFailureListener(e ->
-                                            Toast.makeText(this, "Animale duplicato: " +
-                                                            "codice microchip già esistente",
-                                                    Toast.LENGTH_SHORT).show());
-                        }
-                    }
-                });
-    }
-
-    private void registerPurchaseFirebase(Purchase purchase) {
-        db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
-                .add(purchase)
-                .addOnSuccessListener(documentReference -> Toast.makeText(this,
-                        "Spesa salvata con successo",
-                        Toast.LENGTH_LONG).show())
-                .addOnFailureListener(e -> {
-                    // Add changes to local files
-                });
-    }
+    // SECTION: ENTITY REGISTRATION MANAGEMENT
 
     @Override
     public void onAnimalRegistered(@NonNull Animal animal) {
@@ -312,6 +293,105 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         }
     }
 
+    // SECTION: POST MANAGEMENT
+
+    @Override
+    public void onPostAdded(@NonNull PhotoDiaryPost post) {
+        String fileName = System.currentTimeMillis() + "";
+
+        // Create the storage tree structure
+        String fileReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(getPassionateUsername()) +
+                "/" +
+                KeysNamesUtils.FileDirsNames.passionatePostRefDirAnimal(post.getPostAnimal())
+                + "/" + fileName;
+
+        // Get a reference of the storage by passing the tree structure
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference
+                (fileReference);
+
+        // Give to the user a feedback to wait
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Salvando l'immagine...");
+        progressDialog.show();
+
+        // Start the upload task
+        UploadTask uploadTask = storageReference.putFile(Uri.parse(post.getPostUri()));
+
+        uploadTask.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                task.getResult()
+                        .getStorage().getDownloadUrl().addOnCompleteListener(taskUri -> {
+                            // Set the download post URI
+                            post.setPostUri(taskUri.getResult().toString());
+
+                            // Save the post into the FireStore
+                            db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
+                                    .add(post).addOnSuccessListener(documentReference -> {
+                                        Toast.makeText(PassionateNavigationActivity.this,
+                                                "Caricamento completato con successo", Toast.LENGTH_LONG).show();
+                                        progressDialog.dismiss();
+                                    });
+                        });
+            }
+        });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void loadPost(PostGridAdapter adapter, List<PhotoDiaryPost> postsList) {
+        //  todo: parametrize the animal
+
+        db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
+                .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, "Pab68")
+                .addSnapshotListener((value, error) -> {
+
+                    // Handle the error if the listening is not working
+                    if (error != null) {
+                        Log.w("Error listen", "listen:error", error);
+                        return;
+                    }
+
+                    if (value != null) {
+                        // Check for every document
+                        for (DocumentChange change : value.getDocumentChanges()) {
+                            PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(change.getDocument());
+                            postsList.add(post);
+                        }
+
+                        // Notify the changes on the adapter
+                        Collections.reverse(postsList);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+    }
+
+    // Called when an intent finished and send back its result.
+    // This method is primarily used for the crop intent which is called in the
+    // DialogAddImageDiaryFragment inside the PhotoDiaryFragment
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // If the request is the crop request
+        if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            // Get the instance of the current visible fragment (PhotoDiaryFragment)
+            PhotoDiaryFragment photoDiaryFragment = (PhotoDiaryFragment) navHostFragment
+                    .getChildFragmentManager().getFragments().get(0);
+
+            // Access to the PhotoDiaryFragment child fragment manager in order to get the current
+            // instance of the DialogAddImageDiaryFragment
+            DialogAddImageDiaryFragment dialogAddImageDiaryFragment = (DialogAddImageDiaryFragment)
+                    photoDiaryFragment.getChildFragmentManager().findFragmentByTag("DialogAddImageDiary");
+
+            if (dialogAddImageDiaryFragment != null) {
+                if (data != null) {
+                    // Set the preview cropped image using the instance of the dialog
+                    dialogAddImageDiaryFragment.setPhotoDiaryImageInsert(UCrop.getOutput(data));
+                }
+            }
+        }
+    }
+
     //method to ask permissions
     // todo: improve permissions requests
     public void requestPermission() {
@@ -331,6 +411,60 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                 ActivityCompat.requestPermissions(this,permissions, STORAGE_REQUEST_CODE);
             }
         }
+    }
+
+    /**
+     * This method is used to register an animal into the Firebase firestore
+     *
+     * @param animal the animal to be registered
+     * */
+    private void registerAnimalFirebase(@NonNull Animal animal) {
+        String docKeyAnimal = KeysNamesUtils.RolesNames.ANIMAL
+                + "_" + animal.getMicrochipCode();
+
+        // Check if the microchip code is duplicated first
+        db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                .whereEqualTo(KeysNamesUtils.AnimalFields.MICROCHIP_CODE, animal.getMicrochipCode())
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // If no animal own that microchip code, then it is possible to insert
+                        if (task.getResult().isEmpty()) {
+                            db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                                    .document(docKeyAnimal)
+                                    .set(animal)
+                                    .addOnSuccessListener(unused -> {
+
+                                        Toast.makeText(this,
+                                                "Animale registrato con successo",
+                                                Toast.LENGTH_LONG).show();
+
+                                        // Update the local animal's files
+                                        DataManipulationHelper.saveDataInternally(this, animalSet,
+                                                KeysNamesUtils.FileDirsNames.localAnimalsSet(passionate.getEmail()));
+                                    })
+                                    .addOnFailureListener(e ->
+                                            Toast.makeText(this, "Animale duplicato: " +
+                                                            "codice microchip già esistente",
+                                                    Toast.LENGTH_SHORT).show());
+                        }
+                    }
+                });
+    }
+
+    /**
+     * This method is used to register a purchase into Firebase firestore
+     *
+     * @param purchase the purchase to be registered
+     * */
+    private void registerPurchaseFirebase(Purchase purchase) {
+        db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
+                .add(purchase)
+                .addOnSuccessListener(documentReference -> Toast.makeText(this,
+                        "Spesa salvata con successo",
+                        Toast.LENGTH_LONG).show())
+                .addOnFailureListener(e -> {
+                    // Add changes to local files
+                });
     }
 
     /**
@@ -368,6 +502,9 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         return clonedPurchasesList;
     }
 
+    /**
+     * This method is used to restore the visibility at the bottom app bar
+     * */
     public void restoreBottomAppBarVisibility(){
         if (navView.getVisibility() == View.GONE && fab.getVisibility() == View.GONE) {
             navView.setVisibility(View.VISIBLE);
@@ -375,14 +512,30 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         }
     }
 
-    public FloatingActionButton getFab() {
-        return fab;
-    }
-
+    /**
+     * This method is used to modify the visibility of the bottom app bar
+     *
+     * @param visibility the visibility value
+     * */
     public void setNavViewVisibility(int visibility) {
         navView.setVisibility(visibility);
     }
 
+    /**
+     * This method is used to obtain the global fab used to add new data according
+     * to the current selected fragment
+     *
+     * @return an instance of the global fab
+     * */
+    public FloatingActionButton getFab() {
+        return fab;
+    }
+
+    /**
+     * This method is used to obtain the username of the current logged passionate
+     *
+     * @return the username
+     * */
     public String getPassionateUsername() {
         return passionate.getUsername();
     }
