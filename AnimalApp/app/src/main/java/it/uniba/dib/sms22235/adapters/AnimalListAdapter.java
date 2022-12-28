@@ -17,15 +17,15 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.users.Animal;
 
 public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.ViewHolder> {
-    private ArrayList<Animal> animalList;
-    private ArrayList<Bitmap> animalPic;
+    private final ArrayList<Animal> animalList;
+    private final ArrayList<Bitmap> animalPic;
 
     public AnimalListAdapter (){
         animalList = new ArrayList<>();
         animalPic = new ArrayList<>();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView txtAnimalName;
         ImageView animalPicPreview;
 

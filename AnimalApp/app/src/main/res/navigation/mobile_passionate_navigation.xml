@@ -9,12 +9,11 @@
         android:id="@+id/passionate_profile"
         android:name="it.uniba.dib.sms22235.activities.passionate.fragments.PassionateProfileFragment"
         android:label="@string/title_fragment_passionate_profile"
-        tools:layout="@layout/fragment_passionate_profile" />
-
-    <fragment
-        android:id="@+id/passionate_photo_diary"
-        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.PhotoDiaryFragment"
-        android:label="Photo diary"/>
+        tools:layout="@layout/fragment_passionate_profile" >
+        <action
+            android:id="@+id/action_passionate_profile_to_animalProfile"
+            app:destination="@id/animalProfile" />
+    </fragment>
 
     <fragment
         android:id="@+id/passionate_pet_care"
@@ -37,6 +36,7 @@
     <fragment
         android:id="@+id/filterPurchaseFragment"
         android:name="it.uniba.dib.sms22235.activities.passionate.fragments.FilterPurchaseFragment"
+        tools:layout="@layout/fragment_passionate_filter_purchase"
         android:label="Filtri" >
         <action
             android:id="@+id/action_filterPurchaseFragment_to_passionate_purchase"
@@ -44,4 +44,10 @@
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
+
+    <fragment
+        android:id="@+id/animalProfile"
+        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.AnimalProfile"
+        android:label="AnimalProfile"
+        tools:layout="@layout/fragment_passionate_animal_profile"/>
 </navigation>

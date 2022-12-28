@@ -32,6 +32,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -39,18 +40,17 @@ import com.yalantis.ucrop.UCrop;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Collections;
-import java.util.UUID;
+import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PassionateProfileFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PassionateReservationFragment;
 
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAddImageDiaryFragment;
-import it.uniba.dib.sms22235.activities.passionate.fragments.PhotoDiaryFragment;
+import it.uniba.dib.sms22235.activities.passionate.fragments.animalprofile.PhotoDiaryFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment;
 
 import it.uniba.dib.sms22235.adapters.PostGridAdapter;
@@ -149,8 +149,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.passionate_profile, R.id.passionate_photo_diary,
-                R.id.passionate_pet_care, R.id.passionate_purchase)
+                R.id.passionate_profile, R.id.passionate_pet_care, R.id.passionate_purchase)
                 .build();
 
         navHostFragment = (NavHostFragment) getSupportFragmentManager()
@@ -165,7 +164,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         // Use this method to not bug the app with undesired animation
         navView.setOnNavigationItemSelectedListener(item -> {
             final int PASSIONATE_PROFILE = R.id.passionate_profile;
-            final int PASSIONATE_PHOTO_DIARY = R.id.passionate_photo_diary;
             final int PASSIONATE_PET_CARE = R.id.passionate_pet_care;
             final int PASSIONATE_PURCHASE = R.id.passionate_purchase;
 
@@ -173,10 +171,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                 case PASSIONATE_PROFILE:
                     navController.navigate(R.id.passionate_profile);
                     break;
-                case PASSIONATE_PHOTO_DIARY:
-                    navController.navigate(R.id.passionate_photo_diary);
-                    break;
-                case PASSIONATE_PET_CARE:
+                    case PASSIONATE_PET_CARE:
                     navController.navigate(R.id.passionate_pet_care);
                     break;
                 case PASSIONATE_PURCHASE:
@@ -321,6 +316,35 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
     // SECTION: POST MANAGEMENT
 
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void loadPost(PostGridAdapter adapter, List<PhotoDiaryPost> postsList, String animal) {
+        //  todo: parametrize the animal
+
+        db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
+                .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, animal)
+                .addSnapshotListener((value, error) -> {
+
+                    // Handle the error if the listening is not working
+                    if (error != null) {
+                        Log.w("Error listen", "listen:error", error);
+                        return;
+                    }
+
+                    if (value != null) {
+                        // Check for every document
+                        for (DocumentChange change : value.getDocumentChanges()) {
+                            PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(change.getDocument());
+                            postsList.add(post);
+                        }
+
+                        // Notify the changes on the adapter
+                        Collections.reverse(postsList);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+    }
+
     @Override
     public void onPostAdded(@NonNull PhotoDiaryPost post) {
         String fileName = System.currentTimeMillis() + "";
@@ -360,62 +384,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         });
             }
         });
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    @Override
-    public void loadPost(PostGridAdapter adapter, List<PhotoDiaryPost> postsList) {
-        //  todo: parametrize the animal
-
-        db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
-                .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, "Pab68")
-                .addSnapshotListener((value, error) -> {
-
-                    // Handle the error if the listening is not working
-                    if (error != null) {
-                        Log.w("Error listen", "listen:error", error);
-                        return;
-                    }
-
-                    if (value != null) {
-                        // Check for every document
-                        for (DocumentChange change : value.getDocumentChanges()) {
-                            PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(change.getDocument());
-                            postsList.add(post);
-                        }
-
-                        // Notify the changes on the adapter
-                        Collections.reverse(postsList);
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-    }
-
-    // Called when an intent finished and send back its result.
-    // This method is primarily used for the crop intent which is called in the
-    // DialogAddImageDiaryFragment inside the PhotoDiaryFragment
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // If the request is the crop request
-        if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
-            // Get the instance of the current visible fragment (PhotoDiaryFragment)
-            PhotoDiaryFragment photoDiaryFragment = (PhotoDiaryFragment) navHostFragment
-                    .getChildFragmentManager().getFragments().get(0);
-
-            // Access to the PhotoDiaryFragment child fragment manager in order to get the current
-            // instance of the DialogAddImageDiaryFragment
-            DialogAddImageDiaryFragment dialogAddImageDiaryFragment = (DialogAddImageDiaryFragment)
-                    photoDiaryFragment.getChildFragmentManager().findFragmentByTag("DialogAddImageDiary");
-
-            if (dialogAddImageDiaryFragment != null) {
-                if (data != null) {
-                    // Set the preview cropped image using the instance of the dialog
-                    dialogAddImageDiaryFragment.setPhotoDiaryImageInsert(UCrop.getOutput(data));
-                }
-            }
-        }
     }
 
     //method to ask permissions
@@ -562,9 +530,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         return clonedReservationsList;
     }
     
-     * This method is used to restore the visibility at the bottom app bar
+     /** This method is used to restore the visibility at the bottom app bar
      * */
-     
     public void restoreBottomAppBarVisibility(){
         if (navView.getVisibility() == View.GONE && fab.getVisibility() == View.GONE) {
             navView.setVisibility(View.VISIBLE);
@@ -640,9 +607,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     public List<Animal> getAnimalsByVeterinarian(String veterinarian) {
         List<Animal> animalsByVeterinarian = new ArrayList<>();
         Animal animal;
-        Iterator<Animal> it = animalSet.iterator();
-        while (it.hasNext()) {
-            animal = it.next();
+        for (Animal value : animalSet) {
+            animal = value;
             animalsByVeterinarian.add(animal);
         }
 
@@ -671,7 +637,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
     }
 
-    private void updateAnimalVeterinarian(Animal animal) {
+    private void updateAnimalVeterinarian(@NonNull Animal animal) {
 
         String docKeyAnimal = KeysNamesUtils.RolesNames.ANIMAL
                 + "_" + animal.getMicrochipCode();
@@ -690,8 +656,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                                                 Toast.LENGTH_LONG).show();
 
                                         // Update the local animal's files
-                                        /*DataManipulationHelper.saveDataInternally(this, animalSet,
-                                                KeysNamesUtils.FileDirsNames.localAnimalsSet(passionate.getEmail()));*/
                                     })
                                     .addOnFailureListener(e ->
                                             Toast.makeText(this, "Errore interno, dati non aggiornati",

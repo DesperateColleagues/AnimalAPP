@@ -11,10 +11,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
+
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -37,8 +41,10 @@ import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
 public class PassionateProfileFragment extends Fragment implements DialogAddAnimalFragment.DialogAddAnimalFragmentListener,
         DialogEditAnimalDataFragment.DialogEditAnimalDataFragmentListener {
 
-    PassionateProfileFragment.ProfileFragmentListener listener;
+    private PassionateProfileFragment.ProfileFragmentListener listener;
     private DialogEditAnimalDataFragment dialogEditAnimalDataFragment;
+    private transient NavController controller;
+
 
     public interface ProfileFragmentListener {
         /**
@@ -52,7 +58,6 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
         void onAnimalUpdated(Animal animal);
     }
 
-    private MessageListAdapter messageListAdapter;
     private AnimalListAdapter animalListAdapter;
     private DialogAddAnimalFragment dialogAddAnimalFragment;
 
@@ -74,6 +79,8 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+        controller = Navigation.findNavController(container);
 
         View rootView = inflater.inflate(R.layout.fragment_passionate_profile, container, false);
 
@@ -110,7 +117,7 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
 
             ArrayList<InfoMessage> messages = new ArrayList<>();
 
-            messageListAdapter = new MessageListAdapter(buildStandardMessages(messages));
+            MessageListAdapter messageListAdapter = new MessageListAdapter(buildStandardMessages(messages));
 
             messageRecyclerView.setAdapter(messageListAdapter);
 
@@ -130,7 +137,7 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
             animalRecycleView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), animalRecycleView, new RecyclerTouchListener.ClickListener() {
                 @Override
                 public void onClick(View view, int position) {
-                    // This method is used to request storage permission to the user
+                    /*// This method is used to request storage permission to the user
                     // with that we can save animal images not only on firebase,marcobari@libero.it
 
                     // but also locally, to retrieve them more easily
@@ -140,7 +147,11 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
                     DialogAnimalCardFragment dialogAnimalCardFragment = new DialogAnimalCardFragment(
                             animalListAdapter.getAnimalAtPosition(position));
                     dialogAnimalCardFragment.show(requireActivity().getSupportFragmentManager(),
-                            "DialogAnimalCardFragment");
+                            "DialogAnimalCardFragment");*/
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, animalListAdapter.getAnimalAtPosition(position));
+                    controller.navigate(R.id.action_passionate_profile_to_animalProfile, bundle);
                 }
 
                 @Override
@@ -163,7 +174,9 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
         return rootView;
     }
 
-    private ArrayList<InfoMessage> buildStandardMessages(ArrayList<InfoMessage> messages) {
+    @NonNull
+    @Contract("_ -> param1")
+    private ArrayList<InfoMessage> buildStandardMessages(@NonNull ArrayList<InfoMessage> messages) {
         InfoMessage findings = new InfoMessage(R.string.passionate_profile_cardlayout_text, R.drawable.warningsign);
         InfoMessage recentReservations = new InfoMessage(R.string.tutti_appuntamenti_recenti, 0);
 
@@ -187,7 +200,7 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
     }
 
     @Override
-    public void onDialogChoosedVeterinarian(Animal selectedAnimal, String selectedVeterinarian) {
+    public void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal, String selectedVeterinarian) {
         Animal animal = animalListAdapter.getAnimalByMicroChipCode(selectedAnimal.getMicrochipCode());
         animalListAdapter.remove(animal);
         animal.setVeterinarian(selectedVeterinarian);

@@ -55,7 +55,7 @@ public class DialogAddImageDiaryFragment extends DialogFragment {
     }
 
     private DialogAddImageDiaryFragmentListener listener;
-    private ImageView photoDiaryImageInsert; // todo: find a way to display a preview
+    private ImageView photoDiaryImageInsert;
     private Uri destUri = null;
     private Set<PhotoDiaryPost> photoDiaryPostSet;
     private final List<String> animalList;

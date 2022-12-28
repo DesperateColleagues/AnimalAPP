@@ -7,11 +7,6 @@
         android:title="@string/title_fragment_passionate_profile" />
 
     <item
-        android:id="@+id/passionate_photo_diary"
-        android:icon="@drawable/ic_baseline_collections_bookmark_24"
-        android:title="@string/photo_diary" />
-
-    <item
         android:id="@+id/passionate_pet_care"
         android:icon="@drawable/ic_baseline_local_hospital_24"
         android:title="@string/title_fragment_passionate_reservation" />

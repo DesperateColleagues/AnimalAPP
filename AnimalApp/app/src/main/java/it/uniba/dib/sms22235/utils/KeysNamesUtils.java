@@ -61,6 +61,7 @@ public class KeysNamesUtils {
         public static String ID = "id";
         public static String DESCRIPTION = "description";
         public static String PATH = "path";
+    }
         
     public static class PhotoDiaryFields {
         public static String POST_URI = "postUri";
@@ -112,6 +113,7 @@ public class KeysNamesUtils {
         public static String INTERFACE = "INT";
         public static String MIN_COST = "minCost";
         public static String MAX_COST = "maxCost";
+        public static String ANIMAL = "animal";
     }
 
     public static class FileDirsNames {
