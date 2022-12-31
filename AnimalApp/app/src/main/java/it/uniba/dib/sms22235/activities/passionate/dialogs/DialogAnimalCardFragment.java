@@ -103,7 +103,12 @@ public class DialogAnimalCardFragment extends DialogFragment {
         View root = inflater.inflate(R.layout.fragment_dialog_animal_card, null);
 
         builder.setView(root);
-        builder.setTitle("AnimalCard");
+
+        // Set dialog title
+        View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+        TextView titleText = titleView.findViewById(R.id.dialog_title);
+        titleText.setText("AnimalCard");
+        builder.setCustomTitle(titleView);
 
         // Retrieve the input text views
         TextView txtAnimalCardName = root.findViewById(R.id.txtAnimalCardName);

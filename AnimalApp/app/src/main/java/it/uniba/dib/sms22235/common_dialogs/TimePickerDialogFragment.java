@@ -3,7 +3,6 @@ package it.uniba.dib.sms22235.common_dialogs;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.widget.CalendarView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

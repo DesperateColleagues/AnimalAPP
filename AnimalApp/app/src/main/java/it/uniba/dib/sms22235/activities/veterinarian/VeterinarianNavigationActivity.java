@@ -12,23 +12,16 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.veterinarian.fragments.VeterinarianReservationFragment;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
-import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
@@ -42,6 +35,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     private ArrayList<Reservation> reservationsList;
 
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

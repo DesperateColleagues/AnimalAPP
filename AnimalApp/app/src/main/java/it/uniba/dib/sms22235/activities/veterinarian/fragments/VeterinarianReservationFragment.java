@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.veterinarian.VeterinarianNavigationActivity;
@@ -30,6 +31,7 @@ import it.uniba.dib.sms22235.activities.veterinarian.dialogs.DialogAddReservatio
 import it.uniba.dib.sms22235.adapters.ReservationsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
 
 public class VeterinarianReservationFragment extends Fragment implements
@@ -83,6 +85,7 @@ public class VeterinarianReservationFragment extends Fragment implements
         reservationRecyclerView = view.findViewById(R.id.reservationList);
 
         adapter = new ReservationsAdapter();
+        adapter.setListType(KeysNamesUtils.ReservationListType.VETERINARIAN.getValue());
         adapter.setOnItemClickListener(reservation -> {
 
             new BSDialogVeterinarianFragment(reservation)
@@ -120,7 +123,7 @@ public class VeterinarianReservationFragment extends Fragment implements
                             dialogAddDiagnosisFragment.show(getParentFragmentManager(), "DialogAddDiagnosisFragment");
 
                         } else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                             builder.setTitle("Attenzione!");
                             builder.setMessage("Non puoi aggiungere una diagnosi per un appuntamento non ancora avvenuto!");
                             builder.setNeutralButton("Ho capito",null);
@@ -166,11 +169,9 @@ public class VeterinarianReservationFragment extends Fragment implements
         reservationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
 
         calendarView.setOnDateChangeListener((calendarView, i, i1, i2) -> {
-
             selectedDate = buildDate(i, i1, i2);
             // Retrieving only a specific day reservations
             dayReservationsList = ((VeterinarianNavigationActivity) requireActivity()).getDayReservationsList(selectedDate);
-
             // Removing from the adapter the old reservations, adding the new ones to the adapter and attaching the adapter to the RecyclerView again
             adapter.clearAll();
             adapter.addAllReservations(dayReservationsList);
@@ -253,14 +254,12 @@ public class VeterinarianReservationFragment extends Fragment implements
 
     @Override
     public void onDialogAddDiagnosisDismissed(Diagnosis diagnosis) {
-        String diagnosisID = new StringBuilder()
-                .append("dia_")
-                .append(reservation.getDate().replaceAll("[-+^/]*", ""))
-                .append("_")
-                .append(reservation.getTime())
-                .append("_")
-                .append(reservation.getAnimal())
-                .toString();
+        String diagnosisID = "dia_" +
+                reservation.getDate().replaceAll("[-+^/]*", "") +
+                "_" +
+                reservation.getTime() +
+                "_" +
+                reservation.getAnimal();
         diagnosis.setId(diagnosisID);
         reservation.setDiagnosis(diagnosisID);
         listener.onDiagnosisRegistered(reservation, diagnosis);

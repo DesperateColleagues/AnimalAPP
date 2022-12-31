@@ -12,7 +12,14 @@
         tools:layout="@layout/fragment_passionate_profile" >
         <action
             android:id="@+id/action_passionate_profile_to_animalProfile"
-            app:destination="@id/animalProfile" />
+            app:destination="@id/animalProfile"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_passionate_profile_to_BookedReservationsFragment"
+            app:destination="@id/passionateBookedReservations"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -50,4 +57,10 @@
         android:name="it.uniba.dib.sms22235.activities.passionate.fragments.AnimalProfile"
         android:label="AnimalProfile"
         tools:layout="@layout/fragment_passionate_animal_profile"/>
+
+    <fragment
+        android:id="@+id/passionateBookedReservations"
+        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.PassionateBookedReservationsFragment"
+        android:label="AnimalProfile"
+        tools:layout="@layout/fragment_passionate_booked_reservations"/>
 </navigation>

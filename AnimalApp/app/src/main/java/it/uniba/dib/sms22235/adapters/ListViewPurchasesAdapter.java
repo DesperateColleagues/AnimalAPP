@@ -11,9 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.w3c.dom.Text;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import it.uniba.dib.sms22235.R;

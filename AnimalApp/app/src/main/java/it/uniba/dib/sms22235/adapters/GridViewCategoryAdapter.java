@@ -12,7 +12,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class GridViewCategoryAdapter extends BaseAdapter {
 

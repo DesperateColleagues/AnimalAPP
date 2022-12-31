@@ -5,20 +5,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -29,19 +23,13 @@ import androidx.fragment.app.DialogFragment;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
-import it.uniba.dib.sms22235.entities.users.Animal;
-import it.uniba.dib.sms22235.utils.DataManipulationHelper;
-import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class DialogAddImageDiaryFragment extends DialogFragment {
 

@@ -157,4 +157,17 @@ public class KeysNamesUtils {
             return "animals_" + email;
         }
     }
+
+    public enum ReservationListType {
+        PASSIONATE(0), VETERINARIAN(1);
+        private final int value;
+
+        ReservationListType(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return this.value;
+        }
+    }
 }

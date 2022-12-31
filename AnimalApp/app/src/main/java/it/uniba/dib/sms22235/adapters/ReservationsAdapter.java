@@ -1,6 +1,7 @@
 package it.uniba.dib.sms22235.adapters;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,13 @@ import java.util.ArrayList;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapter.ViewHolder> {
     private ArrayList<Reservation> reservationsList;
     private String currentDate;
     private String currentTime;
+    private int listType;
 
     private OnItemClickListener onItemClickListener;
 
@@ -52,7 +55,22 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
     @Override
     public void onBindViewHolder(@NonNull ReservationsAdapter.ViewHolder holder, int position) {
         Reservation reservation = reservationsList.get(position);
-        String res = reservation.getDate() + " " + reservation.getTime();
+        String res = null;
+        if (listType == KeysNamesUtils.ReservationListType.VETERINARIAN.getValue()) {
+            Log.wtf("WTF", reservation.getOwner() + reservation.getAnimal());
+            if (reservation.getOwner() != null && reservation.getAnimal() != null){
+                res = reservation.getDate() + "@" + reservation.getTime() + " - " + reservation.getOwner();
+            }
+            else if (reservation.getOwner() == null && reservation.getAnimal() == null){
+                res = reservation.getDate() + "@" + reservation.getTime() + " - Non prenotato";
+            } else {
+                res = reservation.getDate() + "@" + reservation.getTime() + " - Sei nel limbo bro";
+            }
+        } else if (listType == KeysNamesUtils.ReservationListType.PASSIONATE.getValue()) {
+            res = reservation.getAnimal() + " - " + reservation.getDate() + " - " + reservation.getVeterinarian();
+        } else {
+            res = reservation.toString();
+        }
         holder.txtReservationInfo.setText(res);
 
         holder.itemReservationCardView.setOnClickListener(v -> {
@@ -61,6 +79,10 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
             }
         });
 
+    }
+
+    public void setListType(int listType) {
+        this.listType = listType;
     }
 
     public void addReservation(Reservation reservation) {

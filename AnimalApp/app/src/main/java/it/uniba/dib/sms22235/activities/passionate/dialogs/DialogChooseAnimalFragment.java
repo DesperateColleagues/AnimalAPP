@@ -7,21 +7,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.common_dialogs.TimePickerDialogFragment;
-import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Animal;
 
 public class DialogChooseAnimalFragment extends DialogFragment {
@@ -50,8 +46,13 @@ public class DialogChooseAnimalFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View root = inflater.inflate(R.layout.fragment_dialog_choose_animal, null);
+
+        // Set dialog title
+        View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+        TextView titleText = titleView.findViewById(R.id.dialog_title);
+        titleText.setText("Scegli animale per cui prenotare");
+        builder.setCustomTitle(titleView);
         builder.setView(root);
-        builder.setTitle("Scegli animale per cui prenotare");
 
         animalListSpinner = root.findViewById(R.id.animalSpinner);
 

@@ -2,6 +2,7 @@
     <string name="app_name">AnimalApp</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="generic_error">An error has occured</string>
 
 
     <!-- Stringhe sottostanti riferite alla registrazione -->
@@ -32,7 +33,7 @@
     <!-- Stringhe sottostanti riferite al passionate -->
     <string name="title_activity_passionate_navigation">PassionateNavigationActivity</string>
     <string name="title_fragment_passionate_profile">Profilo utente</string>
-    <string name="title_fragment_passionate_reservation">Pet care</string>
+    <string name="title_fragment_passionate_reservation">Appuntamenti</string>
     <string name="title_fragment_passionate_purchases">Spese</string>
     <string name="registra_animale">Registra animale</string>
 
@@ -51,14 +52,23 @@
     <string name="seleziona_immagine">Seleziona immagine</string>
     <string name="salva">Salva</string>
     <string name="titolo_immagine">titolo immagine</string>
+
+    <!-- Stringhe sottostanti riferite alle prenotazioni del passionate -->
     <string name="appuntamenti_recenti">Appuntamenti recenti</string>
     <string name="tutti_appuntamenti_recenti">Visualizza tutti gli appuntamenti recenti</string>
+    <string name="appuntamenti_passati">Stai visualizzando: appuntamenti passati</string>
+    <string name="appuntamenti_futuri">Stai visualizzando: appuntamenti futuri</string>
+    <string name="dettagli_animale">Animale:</string>
+    <string name="dettagli_veterinario">Veterinario:</string>
+    <string name="dettagli_data">Data e ora:</string>
 
     <!-- Stringhe sottostanti riferite al veterinario -->
     <string name="title_activity_veterinarian_navigation">VeterinarianNavigationActivity</string>
     <string name="title_fragment_veterinarian_profile">Profilo veterinario</string>
     <string name="title_fragment_veterinarian_animal_list">Lista animali</string>
-    <string name="title_fragment_veterinarian_reservations">Appuntamenti</string>
+    <string name="title_fragment_veterinarian_patients">Pazienti</string>
+    <string name="title_fragment_veterinarian_reservations">Prenotazioni</string>
+
 
     <!-- Stringhe sottostanti riferite alle funzioni del veterinario -->
     <string name="data_appuntamento">data</string>
@@ -80,7 +90,16 @@
     <string name="categorie">Categorie</string>
     <string name="costoh">Costo unitario</string>
     <string name="intervallo_date">Intervallo date</string>
+    <string name="inserimento_spesa">Inserimento spesa</string>
     <string name="date">Date</string>
+
+    <string name="ok">OK</string>
+    <string name="conferma">Conferma</string>
+    <string name="cancella">Cancella</string>
+
+    <string name="notNow">usa Pietraidrica!</string>
+    <string name="notNowMessage">Le parole del Prof. Oak rimbombano:\n\n<i>"C'è un luogo e un momento per ogni cosa! Ma non ora."</i></string>
+    <string name="notNowButton">Premi per continuare</string>
 
     <string-array name="rangeSliderValues">
         <item>0</item>

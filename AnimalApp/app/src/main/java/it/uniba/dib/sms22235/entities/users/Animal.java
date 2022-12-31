@@ -81,7 +81,7 @@ public class Animal implements Serializable, Cloneable {
                 (String) document.get(KeysNamesUtils.AnimalFields.RACE),
                 (String) document.get(KeysNamesUtils.AnimalFields.MICROCHIP_CODE),
                 (String) document.get(KeysNamesUtils.AnimalFields.BIRTH_DATE));
-
+        animal.setVeterinarian((String) document.get(KeysNamesUtils.AnimalFields.VETERINARIAN));
         animal.setOwner((String) document.get(KeysNamesUtils.AnimalFields.OWNER));
 
         return animal;

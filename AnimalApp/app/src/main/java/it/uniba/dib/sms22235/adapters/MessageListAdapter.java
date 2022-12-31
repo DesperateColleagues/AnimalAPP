@@ -1,8 +1,6 @@
 package it.uniba.dib.sms22235.adapters;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +14,15 @@ import java.util.ArrayList;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.InfoMessage;
-import it.uniba.dib.sms22235.entities.users.Animal;
 
 public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.ViewHolder>{
 
     private ArrayList<InfoMessage> infoMessages;
+    private OnItemClickListener onItemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(InfoMessage message);
+    }
 
     public MessageListAdapter(ArrayList<InfoMessage> infoMessages){
         this.infoMessages = infoMessages;
@@ -41,7 +43,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     @NonNull
     @Override
     public MessageListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fragment_passionate_dash_single_card, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fragment_passionate_message_single_card, parent, false));
     }
 
     @Override
@@ -49,6 +51,12 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         InfoMessage message = infoMessages.get(position);
         holder.txtMessageLeftText.setText(message.getLeftText());
         holder.imgMessageRight.setImageResource(message.getRightImage());
+
+        holder.itemView.setOnClickListener(v -> {
+            if (onItemClickListener != null){
+                onItemClickListener.onItemClick(message);
+            }
+        });
     }
 
     public void addMessage(InfoMessage message) {
@@ -58,6 +66,14 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     @Override
     public int getItemCount() {
         return infoMessages.size();
+    }
+
+    public InfoMessage getMessageAtPosition(int index) {
+        return infoMessages.get(index);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
 }

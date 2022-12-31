@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/white"
+                android:textColor="?attr/colorOnSecondary"
                 android:text="Nome animale"
                 android:textSize="20sp"/>
 
@@ -43,7 +43,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="bottom|center"
+                android:gravity="center_horizontal|center_vertical"
                 android:text="Modifica profilo" />
         </LinearLayout>
 
@@ -61,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textColor="@color/white"
+        android:textColor="?attr/colorOnSecondary"
         android:text="Informazioni animale"
         android:layout_marginStart="10dp" />
 

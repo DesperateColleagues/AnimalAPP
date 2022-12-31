@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.veterinarian.VeterinarianNavigationActivity;
+import it.uniba.dib.sms22235.activities.veterinarian.dialogs.DialogAddReservationFragment;
 
 public class VeterinarianProfileFragment extends Fragment {
 
@@ -30,6 +32,10 @@ public class VeterinarianProfileFragment extends Fragment {
                 .getVeterinarianFullName();
 
         ((TextView) rootView.findViewById(R.id.txtVeterinarianWelcome)).setText(title);
+
+        ((VeterinarianNavigationActivity) requireActivity()).getFab().setOnClickListener(v -> {
+            Toast.makeText(getContext(),"Still nothing",Toast.LENGTH_SHORT).show();
+        });
 
         return rootView;
     }

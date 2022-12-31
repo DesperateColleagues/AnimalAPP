@@ -2,7 +2,6 @@ package it.uniba.dib.sms22235.activities.passionate.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.transition.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;

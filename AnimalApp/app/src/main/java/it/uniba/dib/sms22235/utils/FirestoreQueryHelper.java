@@ -7,8 +7,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 public class FirestoreQueryHelper {
 
     private FirebaseFirestore db;
@@ -39,12 +37,8 @@ public class FirestoreQueryHelper {
     public boolean checkStringFieldUniqueness(String collection, String fieldName, String value) {
 
         db.collection(collection).whereEqualTo(fieldName, value).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnCompleteListener(task -> {
 
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-                    }
                 });
 
         return snapshot.isEmpty();

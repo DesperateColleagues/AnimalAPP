@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DateFormat;
@@ -48,6 +49,7 @@ public class DialogAddAnimalFragment extends DialogFragment implements android.a
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                  //key point 2
 
         // Create the inflater and inflate the layout
         LayoutInflater inflater = requireActivity().getLayoutInflater();
@@ -55,7 +57,12 @@ public class DialogAddAnimalFragment extends DialogFragment implements android.a
 
         // Set dialog main options
         builder.setView(root);
-        builder.setTitle("Registrazione Animale");
+
+        // Set dialog title
+        View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+        TextView titleText = titleView.findViewById(R.id.dialog_title);
+        titleText.setText("Registrazione animale");
+        builder.setCustomTitle(titleView);
 
         // Retrieve EditTexts objects from the inflated view
         EditText txtInputAnimalName = root.findViewById(R.id.txtInputAnimalName);

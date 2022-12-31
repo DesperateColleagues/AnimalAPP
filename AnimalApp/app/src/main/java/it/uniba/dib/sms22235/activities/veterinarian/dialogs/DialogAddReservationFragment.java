@@ -15,14 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.google.android.material.timepicker.TimeFormat;
-
 import java.text.DateFormat;
 import java.util.Calendar;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DatePickerDialogFragment;
-import it.uniba.dib.sms22235.activities.veterinarian.fragments.VeterinarianReservationFragment;
 import it.uniba.dib.sms22235.common_dialogs.TimePickerDialogFragment;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 

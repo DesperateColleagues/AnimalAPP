@@ -3,8 +3,6 @@ package it.uniba.dib.sms22235.activities.passionate.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
@@ -27,6 +25,7 @@ import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogChooseAnimalFra
 import it.uniba.dib.sms22235.adapters.ReservationsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Animal;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class PassionateReservationFragment extends Fragment implements DialogChooseAnimalFragment.
         DialogChooseAnimalFragmentListener{
@@ -76,6 +75,7 @@ public class PassionateReservationFragment extends Fragment implements DialogCho
         reservationRecyclerView = view.findViewById(R.id.reservationListPassionate);
 
         adapter = new ReservationsAdapter();
+        adapter.setListType(KeysNamesUtils.ReservationListType.PASSIONATE.getValue());
         adapter.setOnItemClickListener(reservation -> {
 
             this.selectedReservation = reservation;

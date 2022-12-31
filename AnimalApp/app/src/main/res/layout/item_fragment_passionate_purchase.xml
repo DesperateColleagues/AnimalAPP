@@ -72,6 +72,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:text="Spesa"
+                        android:singleLine="false"
+                        android:maxEms="6"
                         android:textSize="16sp"/>
 
                     <TextView

@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -59,7 +60,12 @@ public class DialogAddPurchaseFragment extends DialogFragment
         View root = inflater.inflate(R.layout.fragment_dialog_add_purchase, null);
 
         builder.setView(root);
-        builder.setTitle("Inserimento spesa");
+
+        // Set dialog title
+        View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+        TextView titleText = titleView.findViewById(R.id.dialog_title);
+        titleText.setText(R.string.inserimento_spesa);
+        builder.setCustomTitle(titleView);
 
         // Set the spinner items
         spinnerAnimals = root.findViewById(R.id.spinnerAnimalsAddPurchase);

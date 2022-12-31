@@ -32,7 +32,7 @@ public class AbstractPersonUser implements Serializable, Cloneable {
      *
      * @param email email to check
      *
-     * @return boolean value that indicates the input email correctnes
+     * @return boolean value that indicates the input email correctness
      */
     boolean checkEmail(String email) {
         Pattern pattern = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE);

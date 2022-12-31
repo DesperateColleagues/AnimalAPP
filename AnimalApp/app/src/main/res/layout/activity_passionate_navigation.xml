@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -22,12 +21,14 @@
         android:id="@+id/nav_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
+        android:background="?android:attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu_passionate" />
+        app:menu="@menu/bottom_nav_menu_passionate"
+        app:itemIconTint="@drawable/bottom_nav_bar_colors"
+        app:itemTextColor="@drawable/bottom_nav_bar_colors"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
@@ -35,7 +36,8 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
-        app:tint="@android:color/white"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        app:tint="@android:color/black"
         app:srcCompat="@drawable/ic_baseline_add_24"
         android:backgroundTint="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"

@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:text="@string/benvenuto"
         android:layout_marginHorizontal="15dp"
-        android:textSize="28sp"/>
+        android:textSize="28sp"
+        android:textColor="?attr/colorOnSecondary"/>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -40,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="start|center_vertical"
                 android:layout_weight="1"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:text="@string/passionate_profile_cardlayout_text"
                 android:minHeight="180dp"
                 android:layout_marginHorizontal="15dp"

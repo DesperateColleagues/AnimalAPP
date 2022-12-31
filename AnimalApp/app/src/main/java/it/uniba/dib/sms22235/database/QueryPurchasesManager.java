@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -102,7 +101,7 @@ public class QueryPurchasesManager {
 
         }catch(SQLiteException e){
             // todo: think to good error name
-            Log.d("Cursor error", "errore nel lancio della query");
+            Log.d("Cursor error", "Errore nell'ottenimento delle informazioni dal server interno");
         }
 
         return cursor;

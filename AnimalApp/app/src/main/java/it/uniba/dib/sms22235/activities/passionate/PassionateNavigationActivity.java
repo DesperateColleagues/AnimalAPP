@@ -3,7 +3,6 @@ package it.uniba.dib.sms22235.activities.passionate;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -18,7 +17,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -36,20 +34,17 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.yalantis.ucrop.UCrop;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Collections;
-import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PassionateProfileFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PassionateReservationFragment;
 
-import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAddImageDiaryFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.animalprofile.PhotoDiaryFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment;
 
@@ -522,6 +517,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         ArrayList<Reservation> clonedReservationsList = new ArrayList<>();
 
         for (Reservation reservation : availableReservationsList) {
+            //Log.wtf("Date, i guess", "" + date + " - " + reservation.getDate());
             if (date.equals(reservation.getDate())){
                 clonedReservationsList.add((Reservation) reservation.clone());
             }
@@ -530,8 +526,9 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         return clonedReservationsList;
     }
     
-     /** This method is used to restore the visibility at the bottom app bar
-     * */
+     /* This method is used to restore the visibility at the bottom app bar
+     */
+
     public void restoreBottomAppBarVisibility(){
         if (navView.getVisibility() == View.GONE && fab.getVisibility() == View.GONE) {
             navView.setVisibility(View.VISIBLE);
@@ -606,10 +603,10 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     @Override
     public List<Animal> getAnimalsByVeterinarian(String veterinarian) {
         List<Animal> animalsByVeterinarian = new ArrayList<>();
-        Animal animal;
-        for (Animal value : animalSet) {
-            animal = value;
-            animalsByVeterinarian.add(animal);
+        for (Animal animal : animalSet) {
+            if (veterinarian.equals(animal.getVeterinarian())) {
+                animalsByVeterinarian.add((Animal) animal.clone());
+            }
         }
 
         return animalsByVeterinarian;

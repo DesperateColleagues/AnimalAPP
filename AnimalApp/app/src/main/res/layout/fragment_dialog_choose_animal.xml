@@ -15,6 +15,7 @@
         android:layout_marginRight="30dp"
         android:background="@drawable/bg_spinner_role"
         android:textColor="?attr/colorOnSecondary"
+        android:popupBackground="?attr/colorPrimary"
         android:minHeight="48dp" />
 
     <Button

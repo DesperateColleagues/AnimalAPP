@@ -1,7 +1,5 @@
 package it.uniba.dib.sms22235.entities.operations;
 
-import android.database.Cursor;
-
 import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.DocumentSnapshot;

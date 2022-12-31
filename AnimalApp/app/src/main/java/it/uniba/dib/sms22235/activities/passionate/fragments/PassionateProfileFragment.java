@@ -7,9 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -20,14 +21,16 @@ import androidx.recyclerview.widget.SnapHelper;
 
 import org.jetbrains.annotations.Contract;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Random;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAddAnimalFragment;
-import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogAnimalCardFragment;
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DialogEditAnimalDataFragment;
 import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
 import it.uniba.dib.sms22235.adapters.MessageListAdapter;
@@ -43,6 +46,7 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
 
     private PassionateProfileFragment.ProfileFragmentListener listener;
     private DialogEditAnimalDataFragment dialogEditAnimalDataFragment;
+    private String username;
     private transient NavController controller;
 
 
@@ -84,8 +88,12 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
 
         View rootView = inflater.inflate(R.layout.fragment_passionate_profile, container, false);
 
-        String title = "Benvenuto, " + ((PassionateNavigationActivity) requireActivity())
+        RecyclerView messageRecyclerView = rootView.findViewById(R.id.messagesList);
+        RecyclerView animalRecycleView = rootView.findViewById(R.id.animalList);
+        username = ((PassionateNavigationActivity) requireActivity())
                 .getPassionateUsername();
+
+        String title = "Benvenuto, " + username;
         ((TextView) rootView.findViewById(R.id.txtPassionateWelcome)).setText(title);
 
         LinkedHashSet<Animal> animalSet =
@@ -112,20 +120,45 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
                 // Add the profile pic preview to the adapter
                 animalListAdapter.addPic(image);
             }
-            RecyclerView messageRecyclerView = rootView.findViewById(R.id.messagesList);
-            RecyclerView animalRecycleView = rootView.findViewById(R.id.animalList);
 
             ArrayList<InfoMessage> messages = new ArrayList<>();
 
+            // Setting up the recyclerView to show app messages on the profile page
             MessageListAdapter messageListAdapter = new MessageListAdapter(buildStandardMessages(messages));
-
             messageRecyclerView.setAdapter(messageListAdapter);
-
             messageRecyclerView.setLayoutManager(new LinearLayoutManager(
                     getContext(), RecyclerView.HORIZONTAL, false));
 
+
             SnapHelper helper = new LinearSnapHelper();
             helper.attachToRecyclerView(messageRecyclerView);
+
+            messageListAdapter.setOnItemClickListener(message -> {
+
+            });
+
+            messageRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), messageRecyclerView, new RecyclerTouchListener.ClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+                    if (messageListAdapter.getMessageAtPosition(position).getType().equals(KeysNamesUtils.CollectionsNames.RESERVATIONS)) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(
+                                KeysNamesUtils.BundleKeys.PASSIONATE_RESERVATIONS,
+                                ((PassionateNavigationActivity) requireActivity())
+                                        .getPassionateReservationsList());
+                        controller.navigate(R.id.action_passionate_profile_to_BookedReservationsFragment, bundle);
+                    } else if (messageListAdapter.getMessageAtPosition(position).getType().equals(KeysNamesUtils.CollectionsNames.REPORTS)) {
+                        Toast.makeText(getContext(), "2",Toast.LENGTH_SHORT).show();
+                    } else if (messageListAdapter.getMessageAtPosition(position).getType().equals("notNow")){
+                        notNowDialog(username + " " + getResources().getString(R.string.notNow));
+                    }
+                }
+
+                @Override
+                public void onLongClick(View view, int position) {
+
+                }
+            }));
 
             animalRecycleView.setAdapter(animalListAdapter);
             animalRecycleView.setLayoutManager(new LinearLayoutManager(
@@ -138,7 +171,7 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
                 @Override
                 public void onClick(View view, int position) {
                     /*// This method is used to request storage permission to the user
-                    // with that we can save animal images not only on firebase,marcobari@libero.it
+                    // with that we can save animal images not only on firebase,
 
                     // but also locally, to retrieve them more easily
                     ((PassionateNavigationActivity) requireActivity()).requestPermission();
@@ -177,13 +210,13 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
     @NonNull
     @Contract("_ -> param1")
     private ArrayList<InfoMessage> buildStandardMessages(@NonNull ArrayList<InfoMessage> messages) {
-        InfoMessage findings = new InfoMessage(R.string.passionate_profile_cardlayout_text, R.drawable.warningsign);
-        InfoMessage recentReservations = new InfoMessage(R.string.tutti_appuntamenti_recenti, 0);
+        InfoMessage findings = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_text), R.drawable.warningsign, KeysNamesUtils.CollectionsNames.REPORTS);
+        InfoMessage recentReservations = new InfoMessage(getResources().getString(R.string.tutti_appuntamenti_recenti), 0, KeysNamesUtils.CollectionsNames.RESERVATIONS);
 
         messages.add(findings);
         messages.add(recentReservations);
 
-
+        notNow(messages);
         return messages;
     }
 
@@ -194,7 +227,6 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
         // When the animal is added no profile pic is provided
         animalListAdapter.addPic(null);
         animalListAdapter.notifyItemInserted(animalListAdapter.getItemCount());
-
         // Execute listener method to perform data saving
         listener.onAnimalRegistered(animal);
     }
@@ -208,6 +240,30 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
         animalListAdapter.notifyItemInserted(animalListAdapter.getItemCount());
 
         listener.onAnimalUpdated(animal);
+    }
+
+    private void notNow(ArrayList<InfoMessage> messages) {
+        Random random = new Random(Duration.between(Instant.EPOCH,Instant.now()).toMillis());
+        int number = random.nextInt(100);
+        if(number == 69) {
+            InfoMessage notNow = new InfoMessage(
+                    username + " " + getResources().getString(R.string.notNow),
+                    R.drawable.waterstone,
+                    "notNow");
+            messages.add(notNow);
+        }
+    }
+
+    private void notNowDialog(String title) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setMessage(R.string.notNowMessage);
+        // Set dialog title
+        View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+        TextView titleText = titleView.findViewById(R.id.dialog_title);
+        titleText.setText(title);
+        builder.setCustomTitle(titleView);
+        builder.setNeutralButton(R.string.notNowButton, (dialog, id) -> {});
+        builder.show();
     }
 
 }
