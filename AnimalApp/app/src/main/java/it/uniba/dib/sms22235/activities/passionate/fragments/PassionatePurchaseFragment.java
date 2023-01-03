@@ -36,7 +36,7 @@ import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class PurchaseFragment extends Fragment implements
+public class PassionatePurchaseFragment extends Fragment implements
         DialogAddPurchaseFragment.DialogAddPurchaseFragmentListener,
         FilterPurchaseFragment.FilterPurchaseFragmentListener,
         Serializable {

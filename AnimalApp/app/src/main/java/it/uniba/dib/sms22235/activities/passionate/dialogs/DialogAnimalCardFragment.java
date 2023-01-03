@@ -1,17 +1,23 @@
 package it.uniba.dib.sms22235.activities.passionate.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,71 +33,27 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.activities.passionate.fragments.AnimalProfile;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class DialogAnimalCardFragment extends DialogFragment {
 
-    private Animal animal;
-    private ImageView imgAnimalCardPhoto;
-
-    private final ActivityResultLauncher<Intent> photoUploadAndSaveActivity = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    Intent data = result.getData();
-                    if (data != null && data.getData() != null) {
-                        Uri selectedImageUri = data.getData();
-                        try {
-                            // Get the selected image as a Bitmap
-                            Bitmap selectedImageBitmap = MediaStore.Images.Media.getBitmap(
-                                    requireActivity().getContentResolver(), selectedImageUri);
-
-                            // Prepare the Firebase storage to save data in cloud
-                            FirebaseStorage storage = FirebaseStorage.getInstance();
-                            StorageReference storageRef = storage.getReference();
-                            StorageReference riversRef = storageRef.child(
-                                    "AnimalAPP_Images/" + selectedImageUri.getLastPathSegment());
-
-                            // Start the firebase tak
-                            UploadTask uploadTask = riversRef.putFile(selectedImageUri);
-
-                            Toast.makeText(getContext(),R.string.impostazione_foto_animal_card,
-                                    Toast.LENGTH_LONG).show();
-
-                            // Set the listeners of the upload task
-                            uploadTask
-                                    .addOnFailureListener(exception ->
-                                            Toast.makeText(getContext(),
-                                                    "Errore, si è verificato un errore di rete",
-                                                    Toast.LENGTH_LONG).show())
-
-                                    .addOnSuccessListener(taskSnapshot -> {
-                                        imgAnimalCardPhoto.setImageBitmap(selectedImageBitmap);
-
-                                        DataManipulationHelper.saveBitmapToInternalStorage(
-                                                selectedImageBitmap,
-                                                KeysNamesUtils.FileDirsNames.PROFILE_IMAGES,
-                                                animal.getMicrochipCode() + ".png",
-                                                getContext());
-                                    });
-                        }
-                        catch (IOException | NullPointerException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
+    private final Animal animal;
+    private AnimalProfile.AnimalProfileListener animalProfileListener;
 
     public DialogAnimalCardFragment(Animal animal) {
         this.animal = animal;
     }
+
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
     }
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     public Dialog onCreateDialog(@Nullable Bundle SavedInstanceBundle){
         AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -105,9 +67,9 @@ public class DialogAnimalCardFragment extends DialogFragment {
         builder.setView(root);
 
         // Set dialog title
-        View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+        @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
         TextView titleText = titleView.findViewById(R.id.dialog_title);
-        titleText.setText("AnimalCard");
+        titleText.setText("AnimalCard - Preview");
         builder.setCustomTitle(titleView);
 
         // Retrieve the input text views
@@ -126,31 +88,53 @@ public class DialogAnimalCardFragment extends DialogFragment {
         txtAnimalCardMicroChipCode.setText(microChipText);
         txtAnimalCardBirthDate.setText(animal.getBirthDate());
 
-        imgAnimalCardPhoto = root.findViewById(R.id.animalCardPhoto);
+        ImageView imgAnimalCardPhoto = root.findViewById(R.id.animalCardProfileSend);
+        animalProfileListener.loadProfilePic(animal.getMicrochipCode(), imgAnimalCardPhoto);
 
-        String path =
-                KeysNamesUtils.FileDirsNames.BASE_PATH +
-                KeysNamesUtils.FileDirsNames.ROOT_PREFIX +
-                KeysNamesUtils.FileDirsNames.PROFILE_IMAGES;
+        Button shareButton = root.findViewById(R.id.shareButton);
+        shareButton.setOnClickListener(v -> {
+            Bitmap bitmap = generateSharePic(root);
+            String path = MediaStore.Images.Media.insertImage(requireContext().getContentResolver(),
+                bitmap, animal.getName() + "_" + animal.getMicrochipCode(), null);
+            Uri imageUri =  Uri.parse(path);
 
-        Bitmap image = DataManipulationHelper.loadBitmapFromStorage(path,
-                animal.getMicrochipCode() + ".png");
-        if(image != null) {
-            imgAnimalCardPhoto.setImageBitmap(image);
-        } else {
-            imgAnimalCardPhoto.setImageResource(R.drawable.phd_circle);
-        }
-
-        // Set the listener that starts the intent to select a picture from the device
-        imgAnimalCardPhoto.setOnClickListener(view -> {
-            Intent i = new Intent();
-            i.setType("image/*");
-            i.setAction(Intent.ACTION_GET_CONTENT);
-            // Execute the async task to obtain intent result
-            photoUploadAndSaveActivity.launch(i);
+            Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+            whatsappIntent.setType("image/jpeg");
+            whatsappIntent.setPackage("com.whatsapp");
+            whatsappIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+            try {
+                startActivity(Intent.createChooser(whatsappIntent, "Select"));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(requireContext(), "Whatsapp non installato", Toast.LENGTH_SHORT).show();
+            }
         });
 
         return builder.create();
+    }
+
+    private Bitmap generateSharePic(@NonNull View view) {
+
+        Bitmap viewBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(viewBitmap);
+
+        Drawable bgDrawable = view.getBackground();
+        if (bgDrawable!=null) {
+            //has background drawable, then draw it on the canvas
+            bgDrawable.draw(canvas);
+        }
+        else {
+            //does not have background drawable, then draw white background on the canvas
+            canvas.drawColor(Color.WHITE);
+        }
+
+        // Render the view on the created canvas
+        view.draw(canvas);
+
+        return viewBitmap;
+    }
+
+    public void setAnimalProfileListener(AnimalProfile.AnimalProfileListener animalProfileListener) {
+        this.animalProfileListener = animalProfileListener;
     }
 
 }

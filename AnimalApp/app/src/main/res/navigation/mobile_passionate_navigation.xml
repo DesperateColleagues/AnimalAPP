@@ -30,7 +30,7 @@
 
     <fragment
         android:id="@+id/passionate_purchase"
-        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment"
+        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.PassionatePurchaseFragment"
         android:label="@string/title_fragment_passionate_purchases"
         tools:layout="@layout/fragment_passionate_purchase" >
         <action

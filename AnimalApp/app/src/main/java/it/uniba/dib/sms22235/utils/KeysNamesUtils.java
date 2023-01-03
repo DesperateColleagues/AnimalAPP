@@ -24,6 +24,7 @@ public class KeysNamesUtils {
         public static String RESERVATIONS = "reservations";
         public static String DIAGNOSIS = "diagnosis";
         public static String PHOTO_DIARY = "photoDiary";
+        public static String PHOTO_DIARY_PROFILE = "photoDiaryProfile";
     }
 
     public static class ActorFields {
@@ -155,6 +156,10 @@ public class KeysNamesUtils {
         @Contract(pure = true)
         public static String localAnimalsSet(String email) {
             return "animals_" + email;
+        }
+
+        public static String animalProfilePic(String microchip) {
+            return "profile_" + microchip;
         }
     }
 

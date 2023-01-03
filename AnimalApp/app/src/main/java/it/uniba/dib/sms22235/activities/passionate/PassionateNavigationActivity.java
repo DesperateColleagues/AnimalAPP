@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,10 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentChange;
@@ -42,11 +47,12 @@ import java.util.List;
 import java.util.Collections;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.activities.passionate.fragments.AnimalProfile;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PassionateProfileFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PassionateReservationFragment;
 
 import it.uniba.dib.sms22235.activities.passionate.fragments.animalprofile.PhotoDiaryFragment;
-import it.uniba.dib.sms22235.activities.passionate.fragments.PurchaseFragment;
+import it.uniba.dib.sms22235.activities.passionate.fragments.PassionatePurchaseFragment;
 
 import it.uniba.dib.sms22235.adapters.PostGridAdapter;
 import it.uniba.dib.sms22235.database.QueryPurchasesManager;
@@ -60,9 +66,9 @@ import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class PassionateNavigationActivity extends AppCompatActivity implements
-        PassionateProfileFragment.ProfileFragmentListener, PurchaseFragment.PurchaseFragmentListener,
+        PassionateProfileFragment.ProfileFragmentListener, PassionatePurchaseFragment.PurchaseFragmentListener,
         PassionateReservationFragment.PassionateReservationFragmentListener,
-        PhotoDiaryFragment.PhotoDiaryFragmentListener,
+        PhotoDiaryFragment.PhotoDiaryFragmentListener, AnimalProfile.AnimalProfileListener,
         Serializable {
 
     private transient FirebaseFirestore db;
@@ -77,8 +83,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
     private transient FloatingActionButton fab;
     private transient BottomNavigationView navView;
-
-    private transient NavHostFragment navHostFragment;
 
     // Flag that specify whether the connection is enabled or not
     private boolean isConnectionEnabled;
@@ -147,7 +151,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                 R.id.passionate_profile, R.id.passionate_pet_care, R.id.passionate_purchase)
                 .build();
 
-        navHostFragment = (NavHostFragment) getSupportFragmentManager()
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_activity_passionate_navigation);
 
         assert navHostFragment != null;
@@ -314,8 +318,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void loadPost(PostGridAdapter adapter, List<PhotoDiaryPost> postsList, String animal) {
-        //  todo: parametrize the animal
-
         db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
                 .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, animal)
                 .addSnapshotListener((value, error) -> {
@@ -326,7 +328,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         return;
                     }
 
-                    if (value != null) {
+                    if (value != null && value.getDocumentChanges().size() > 0) {
                         // Check for every document
                         for (DocumentChange change : value.getDocumentChanges()) {
                             PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(change.getDocument());
@@ -364,8 +366,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
         uploadTask.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                task.getResult()
-                        .getStorage().getDownloadUrl().addOnCompleteListener(taskUri -> {
+                task.getResult().getStorage()
+                        .getDownloadUrl().addOnCompleteListener(taskUri -> {
                             // Set the download post URI
                             post.setPostUri(taskUri.getResult().toString());
 
@@ -379,6 +381,80 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         });
             }
         });
+    }
+
+    @Override
+    public void onProfilePicAdded(Uri source, String microchip) {
+        String fileName = KeysNamesUtils.FileDirsNames.animalProfilePic(microchip);
+
+        // Create the storage tree structure
+        String fileReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(getPassionateUsername()) +
+                "/" + fileName;
+
+        // Get a reference of the storage by passing the tree structure
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference
+                (fileReference);
+
+        // Give to the user a feedback to wait
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Salvando l'immagine...");
+        progressDialog.show();
+
+        // Start the upload task
+        UploadTask uploadTask = storageReference.putFile(source);
+        uploadTask.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                task.getResult().getStorage()
+                        .getDownloadUrl().addOnCompleteListener(taskUri -> {
+                            PhotoDiaryPost postProfileImage = new PhotoDiaryPost(taskUri.getResult().toString(), microchip);
+
+                            db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
+                                    .document(KeysNamesUtils.FileDirsNames.animalProfilePic(microchip))
+                                    .delete().addOnCompleteListener(taskDelete -> {
+                                        // Useless to check if the task is successful. The following
+                                        // query has to be executed in both cases
+
+                                        // Save the post into the FireStore
+                                        db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
+                                                .document(KeysNamesUtils.FileDirsNames.animalProfilePic(microchip))
+                                                .set(postProfileImage)
+                                                .addOnSuccessListener(documentReference -> {
+                                                    Toast.makeText(PassionateNavigationActivity.this,
+                                                            "Immagine profilo caricata con successo", Toast.LENGTH_LONG).show();
+                                                    progressDialog.dismiss();
+                                                });
+                                    });
+
+                        });
+            }
+        });
+    }
+
+    @Override
+    public void loadProfilePic(String microchip, ImageView imageView) {
+        db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
+                .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, microchip)
+                .addSnapshotListener((value, error) -> {
+
+                    // Handle the error if the listening is not working
+                    if (error != null) {
+                        Log.w("Error listen", "listen:error", error);
+                        return;
+                    }
+
+                    if (value != null) {
+
+                        if (value.getDocumentChanges().size() > 0) {
+                            // The profile image document collection can contain one document per animal
+                            DocumentChange change = value.getDocumentChanges().get(0);
+
+                            // Extract the post and load it with GLIDE
+                            PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(change.getDocument());
+                            Glide.with(this).load(post.getPostUri()).into(imageView);
+                        }
+                    }
+
+                });
     }
 
     //method to ask permissions
@@ -661,6 +737,5 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                     }
                 });
     }
-
 
 }

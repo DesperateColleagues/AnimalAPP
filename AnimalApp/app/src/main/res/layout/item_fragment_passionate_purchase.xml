@@ -21,7 +21,7 @@
             android:layout_marginBottom="3dp"
             android:focusable="false"
             android:clickable="false"
-            android:backgroundTint="?attr/colorSecondary"
+            android:backgroundTint="?attr/colorPrimary"
             app:cardCornerRadius="10dp">
 
             <LinearLayout
