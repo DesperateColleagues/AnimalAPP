@@ -16,4 +16,9 @@
         android:id="@+id/veterinarian_reservation"
         android:icon="@drawable/ic_baseline_calendar_month_24"
         android:title="@string/title_fragment_veterinarian_reservations"/>
+
+    <item
+        android:id="@+id/veterinarian_requests"
+        android:icon="@drawable/ic_baseline_question_answer_24"
+        android:title="@string/title_fragment_requests"/>
 </menu>

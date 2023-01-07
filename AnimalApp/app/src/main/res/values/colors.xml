@@ -20,4 +20,5 @@
     <color name="dark_accent">#b2fab4</color>
     <color name="dark_onMain">#ffffff</color>
     <color name="dark_textColor">#ffffff</color>
+    <color name="dark_bg">#212121</color>
 </resources>

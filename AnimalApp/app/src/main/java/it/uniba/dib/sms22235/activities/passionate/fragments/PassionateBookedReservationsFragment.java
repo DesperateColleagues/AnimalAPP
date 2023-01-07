@@ -90,7 +90,7 @@ public class PassionateBookedReservationsFragment extends Fragment {
             adapter.clearAll();
             adapter.addAllReservations(currentReservationsList);
             reservationRecyclerView.setAdapter(adapter);
-            if(currentType == ResType.FUTURE.getValue()) {
+            if (currentType == ResType.FUTURE.getValue()) {
                 updateState();
                 btnReservationType.setText(R.string.appuntamenti_passati);
             } else if (currentType == ResType.PAST.getValue()) {
@@ -115,7 +115,7 @@ public class PassionateBookedReservationsFragment extends Fragment {
         // getting current time in millis
         long currentDate = ZonedDateTime.now().toInstant().toEpochMilli();
 
-        if(lastType == ResType.FUTURE.getValue()) {
+        if (lastType == ResType.FUTURE.getValue()) {
             for (Reservation reservation : passionateReservationsList) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
                 LocalDate date = LocalDate.parse(reservation.getDate(), formatter);
@@ -125,7 +125,7 @@ public class PassionateBookedReservationsFragment extends Fragment {
                     currentReservationsList.add(reservation);
                 }
             }
-        } else if(lastType == ResType.PAST.getValue()) {
+        } else if (lastType == ResType.PAST.getValue()) {
             for (Reservation reservation : passionateReservationsList) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
                 LocalDate date = LocalDate.parse(reservation.getDate(), formatter);

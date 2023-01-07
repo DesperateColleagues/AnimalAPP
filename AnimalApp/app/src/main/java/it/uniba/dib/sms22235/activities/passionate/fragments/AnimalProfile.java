@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -163,13 +164,14 @@ public class AnimalProfile extends Fragment {
         Canvas canvas = new Canvas(viewBitmap);
 
         Drawable bgDrawable = linearLayout.getBackground();
-        if (bgDrawable!=null) {
+        if (bgDrawable != null) {
             //has background drawable, then draw it on the canvas
             bgDrawable.draw(canvas);
         }
         else {
             //does not have background drawable, then draw white background on the canvas
-            canvas.drawColor(Color.WHITE);
+            //canvas.drawColor(Color.WHITE);
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         }
 
         // Render the view on the created canvas

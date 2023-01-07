@@ -20,6 +20,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.activities.ActivityInterface;
 import it.uniba.dib.sms22235.activities.veterinarian.fragments.VeterinarianReservationFragment;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
@@ -27,7 +28,8 @@ import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class VeterinarianNavigationActivity extends AppCompatActivity implements
-        VeterinarianReservationFragment.VeterinarianReservationFragmentListener {
+        VeterinarianReservationFragment.VeterinarianReservationFragmentListener,
+        ActivityInterface {
 
     private FloatingActionButton fab;
     private FirebaseFirestore db;
@@ -45,7 +47,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         BottomNavigationView navViewVeterinarian = findViewById(R.id.nav_view_vet);
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.veterinarian_profile, R.id.veterinarian_reservation
+                R.id.veterinarian_profile, R.id.veterinarian_reservation, R.id.veterinarian_requests
         ).build();
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
@@ -174,6 +176,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
     public String getVeterinarianEmail(){ return veterinarian.getEmail(); }
 
+    @Override
     public FloatingActionButton getFab() {
         return fab;
     }

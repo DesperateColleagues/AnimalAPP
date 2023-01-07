@@ -22,4 +22,9 @@
         android:name="it.uniba.dib.sms22235.activities.veterinarian.fragments.VeterinarianReservationFragment"
         android:label="@string/title_fragment_veterinarian_reservations"/>
 
+    <fragment
+        android:id="@+id/veterinarian_requests"
+        android:name="it.uniba.dib.sms22235.common_views.RequestsFragment"
+        android:label="@string/title_fragment_requests"/>
+
 </navigation>

@@ -8,12 +8,18 @@
 
     <item
         android:id="@+id/passionate_pet_care"
-        android:icon="@drawable/ic_baseline_local_hospital_24"
+        android:icon="@drawable/ic_baseline_calendar_month_24"
         android:title="@string/title_fragment_passionate_reservation" />
 
     <item
         android:id="@+id/passionate_purchase"
         android:icon="@drawable/ic_baseline_shopping_cart_24"
         android:title="@string/title_fragment_passionate_purchases" />
+
+
+    <item
+        android:id="@+id/passionate_requests"
+        android:icon="@drawable/ic_baseline_question_answer_24"
+        android:title="@string/title_fragment_requests"/>
 
 </menu>

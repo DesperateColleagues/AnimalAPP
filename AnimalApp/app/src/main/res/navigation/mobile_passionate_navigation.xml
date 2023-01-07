@@ -63,4 +63,9 @@
         android:name="it.uniba.dib.sms22235.activities.passionate.fragments.PassionateBookedReservationsFragment"
         android:label="AnimalProfile"
         tools:layout="@layout/fragment_passionate_booked_reservations"/>
+
+    <fragment
+        android:id="@+id/passionate_requests"
+        android:name="it.uniba.dib.sms22235.common_views.RequestsFragment"
+        android:label="@string/title_fragment_requests"/>
 </navigation>

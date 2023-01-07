@@ -17,7 +17,7 @@ public class Veterinarian extends AbstractPersonUser implements  Serializable, C
 
     @Override
     public String toString() {
-        return fullName + " - " + clinicName  + " - " + email + " - " + phoneNumber;
+        return fullName + " - " + clinicName  + "\n" + email + " - " + phoneNumber;
     }
 
     /**

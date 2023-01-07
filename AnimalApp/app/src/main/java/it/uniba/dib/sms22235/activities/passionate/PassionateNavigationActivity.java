@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Collections;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.activities.ActivityInterface;
 import it.uniba.dib.sms22235.activities.passionate.fragments.AnimalProfile;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PassionateProfileFragment;
 import it.uniba.dib.sms22235.activities.passionate.fragments.PassionateReservationFragment;
@@ -69,6 +70,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         PassionateProfileFragment.ProfileFragmentListener, PassionatePurchaseFragment.PurchaseFragmentListener,
         PassionateReservationFragment.PassionateReservationFragmentListener,
         PhotoDiaryFragment.PhotoDiaryFragmentListener, AnimalProfile.AnimalProfileListener,
+        ActivityInterface,
         Serializable {
 
     private transient FirebaseFirestore db;
@@ -148,7 +150,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.passionate_profile, R.id.passionate_pet_care, R.id.passionate_purchase)
+                R.id.passionate_profile, R.id.passionate_pet_care, R.id.passionate_purchase, R.id.passionate_requests)
                 .build();
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
@@ -165,16 +167,20 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             final int PASSIONATE_PROFILE = R.id.passionate_profile;
             final int PASSIONATE_PET_CARE = R.id.passionate_pet_care;
             final int PASSIONATE_PURCHASE = R.id.passionate_purchase;
+            final int PASSIONATE_REQUESTS = R.id.passionate_requests;
 
             switch (item.getItemId()) {
                 case PASSIONATE_PROFILE:
-                    navController.navigate(R.id.passionate_profile);
+                    navController.navigate(PASSIONATE_PROFILE);
                     break;
                     case PASSIONATE_PET_CARE:
-                    navController.navigate(R.id.passionate_pet_care);
+                    navController.navigate(PASSIONATE_PET_CARE);
                     break;
                 case PASSIONATE_PURCHASE:
-                    navController.navigate(R.id.passionate_purchase);
+                    navController.navigate(PASSIONATE_PURCHASE);
+                    break;
+                case PASSIONATE_REQUESTS:
+                    navController.navigate(PASSIONATE_REQUESTS);
                     break;
             }
             return true;
@@ -621,6 +627,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         navView.setVisibility(visibility);
     }
 
+    @Override
     /**
      * This method is used to obtain the global fab used to add new data according
      * to the current selected fragment
