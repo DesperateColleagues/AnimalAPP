@@ -42,7 +42,7 @@
 
     <fragment
         android:id="@+id/filterPurchaseFragment"
-        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.FilterPurchaseFragment"
+        android:name="it.uniba.dib.sms22235.activities.passionate.fragments.PassionateFilterPurchaseFragment"
         tools:layout="@layout/fragment_passionate_filter_purchase"
         android:label="Filtri" >
         <action
@@ -67,5 +67,14 @@
     <fragment
         android:id="@+id/passionate_requests"
         android:name="it.uniba.dib.sms22235.common_views.RequestsFragment"
+        android:label="@string/title_fragment_requests">
+        <action
+            android:id="@+id/action_passionate_requests_to_passionate_request_detail"
+            app:destination="@id/passionate_request_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/passionate_request_detail"
+        android:name="it.uniba.dib.sms22235.common_views.RequestDetailFragment"
         android:label="@string/title_fragment_requests"/>
 </navigation>

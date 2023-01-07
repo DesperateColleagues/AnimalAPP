@@ -129,7 +129,7 @@ public class AnimalProfile extends Fragment {
 
         Button shareProfile = view.findViewById(R.id.btnShareProfile);
         shareProfile.setOnClickListener(v -> {
-            generateSharePic();
+            //generateSharePic();
             DialogAnimalCardFragment animalCardFragment = new DialogAnimalCardFragment(mAnimal);
             animalCardFragment.setAnimalProfileListener(listener);
             animalCardFragment.show(getChildFragmentManager(), "DialogAnimalCardFragment");

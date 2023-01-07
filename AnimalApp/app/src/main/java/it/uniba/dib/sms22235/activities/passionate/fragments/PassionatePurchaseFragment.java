@@ -38,7 +38,7 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class PassionatePurchaseFragment extends Fragment implements
         DialogAddPurchaseFragment.DialogAddPurchaseFragmentListener,
-        FilterPurchaseFragment.FilterPurchaseFragmentListener,
+        PassionateFilterPurchaseFragment.FilterPurchaseFragmentListener,
         Serializable {
 
     public interface PurchaseFragmentListener {

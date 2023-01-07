@@ -25,6 +25,15 @@
     <fragment
         android:id="@+id/veterinarian_requests"
         android:name="it.uniba.dib.sms22235.common_views.RequestsFragment"
+        android:label="@string/title_fragment_requests">
+        <action
+            android:id="@+id/action_veterinarian_requests_to_veterinatian_request_detail"
+            app:destination="@id/veterinatian_request_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/veterinatian_request_detail"
+        android:name="it.uniba.dib.sms22235.common_views.RequestDetailFragment"
         android:label="@string/title_fragment_requests"/>
 
 </navigation>

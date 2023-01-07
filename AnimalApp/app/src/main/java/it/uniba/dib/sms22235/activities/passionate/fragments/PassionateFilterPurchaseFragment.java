@@ -36,7 +36,7 @@ import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 
-public class FilterPurchaseFragment extends Fragment {
+public class PassionateFilterPurchaseFragment extends Fragment {
 
     public interface FilterPurchaseFragmentListener {
         ArrayList<Purchase> onFiltersAdded(String owner, List<String> animals, List<String> categories, Interval<Float> costs, String dateFrom, String dateTo);
@@ -130,10 +130,9 @@ public class FilterPurchaseFragment extends Fragment {
         minMaxCosts.add(maxCost);
         costRangeSlider.setValues(minMaxCosts);
 
-        // TODO: optimize this code to assign a right number of step for every interval
-
         float intervalSlider = maxCost - minCost;
 
+        // Set the interval slider
         if (intervalSlider == 0){
             costRangeSlider.setStepSize(maxCost);
         } else if (intervalSlider > 0 && intervalSlider <= 50){
@@ -146,6 +145,7 @@ public class FilterPurchaseFragment extends Fragment {
             costRangeSlider.setStepSize(intervalSlider / 100);
         }
 
+        // Fill the chip group
         if (animaList.size() > 0) {
             for(String entry : animaList) {
                 @SuppressLint("InflateParams") Chip chip = (Chip) getLayoutInflater()
@@ -157,6 +157,7 @@ public class FilterPurchaseFragment extends Fragment {
             }
         }
 
+        // Fill the chip group
         for (String category : categories) {
             @SuppressLint("InflateParams") Chip chip = (Chip) getLayoutInflater()
                     .inflate(R.layout.item_chip_fragment_filter, null);

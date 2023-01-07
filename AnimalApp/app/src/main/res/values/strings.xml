@@ -103,6 +103,7 @@
 
     <!-- Stringhe sottostanti riferite alle richieste -->
     <string name="title_fragment_requests">Richieste &amp; offerte</string>
+    <string name="descrizione">Descrizione</string>
 
     <string-array name="rangeSliderValues">
         <item>0</item>
