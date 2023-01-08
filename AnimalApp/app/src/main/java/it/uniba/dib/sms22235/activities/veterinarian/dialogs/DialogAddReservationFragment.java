@@ -20,7 +20,7 @@ import java.util.Calendar;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.dialogs.DatePickerDialogFragment;
-import it.uniba.dib.sms22235.common_dialogs.TimePickerDialogFragment;
+import it.uniba.dib.sms22235.common_dialogs.DialogTimePickerFragment;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 
 public class DialogAddReservationFragment extends DialogFragment implements android.app.DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -60,7 +60,7 @@ public class DialogAddReservationFragment extends DialogFragment implements andr
         });
 
         txtInputReservationTime.setOnClickListener(v -> {
-            TimePickerDialogFragment timePickerFragment = new TimePickerDialogFragment(this);
+            DialogTimePickerFragment timePickerFragment = new DialogTimePickerFragment(this);
             timePickerFragment.show(getParentFragmentManager(), "TimePickerFragment");
         });
 

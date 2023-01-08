@@ -14,15 +14,16 @@
         tools:ignore="UselessParent"
         >
 
+
+        <!-- android:backgroundTint="?attr/colorPrimary" alla Cardview-->
         <androidx.cardview.widget.CardView
             android:id="@+id/itemRequestCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="4dp"
-            android:backgroundTint="?attr/colorPrimary"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
@@ -36,13 +37,15 @@
 
                 <TextView
                     android:id="@+id/txtRequestTitle"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/black"
-                    android:textSize="17sp"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:textSize="16sp"
                     />
 
                 <LinearLayout
@@ -52,43 +55,47 @@
 
                     <TextView
                         android:id="@+id/txtRequestType"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center_horizontal"
-                        android:textColor="@color/black"
-                        android:textSize="17sp"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:textSize="16sp"
+                        android:text="@string/oggetto"
                         />
 
                     <TextView
                         android:id="@+id/txtRequestOperationType"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
                         android:layout_width="match_parent"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:textColor="@color/black"
-                        android:textSize="17sp"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:textSize="16sp"
+                        android:text="@string/operation"
                         />
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/txtRequestBody"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:id="@+id/txtRequestOwner"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/black"
-                    android:textSize="17sp"
-                    android:inputType="textMultiLine"
-                    android:scrollbars="vertical"
-                    android:lines="8"
-                    android:maxLines="10"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:textSize="16sp"
                     />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/requestDividerStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dividerThickness="10dp" />
 
             </LinearLayout>
 

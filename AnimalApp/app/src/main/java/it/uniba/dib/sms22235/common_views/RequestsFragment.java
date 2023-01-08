@@ -1,29 +1,28 @@
 package it.uniba.dib.sms22235.common_views;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -31,31 +30,35 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.ActivityInterface;
 import it.uniba.dib.sms22235.adapters.RequestAdapter;
+import it.uniba.dib.sms22235.common_dialogs.DialogAddRequest;
 import it.uniba.dib.sms22235.entities.operations.Request;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class RequestsFragment extends Fragment implements DialogAddRequest.DialogAddRequestListener {
 
     private ArrayList<Request> requestsList;
+    private ArrayList<Request> subRequestsList;
     private RecyclerView requestsRecyclerView;
     private RequestAdapter adapter;
     private transient NavController controller;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        adapter = new RequestAdapter();
-        requestsList = new ArrayList<>();
-    }
+    private FirebaseAuth auth;
+    private FirebaseFirestore db;
+    private boolean isMine = false;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        adapter = new RequestAdapter();
+        subRequestsList = new ArrayList<>();
+        requestsList = new ArrayList<>();
         controller = Navigation.findNavController(container);
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         return inflater.inflate(R.layout.fragment_requests, container, false);
     }
 
@@ -74,6 +77,7 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
 
         ChipGroup requestsParamsChipGroup = view.findViewById(R.id.requestsParamsChipGroup);
         requestsRecyclerView = view.findViewById(R.id.requestsRecyclerList);
+        adapter.setContext(requireContext());
 
         // Fill chip
         for (String s : requestTypes) {
@@ -85,46 +89,49 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
             requestsParamsChipGroup.addView(chip);
         }
 
-        loadRequest();
+        loadRequest(); // initially load requests
 
-        adapter.setOnItemClickListener(request -> {
-            // Intent here. Messaging app intent here. Indipendent from the type.
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("Richiesta", request);
-            controller.navigate(R.id.action_passionate_requests_to_passionate_request_detail, bundle);
+        Button btnChangeViewRequest = view.findViewById(R.id.btnChangeViewRequest);
+        btnChangeViewRequest.setOnClickListener(view1 -> {
+            adapter.clearAll();
 
-            //if (request.getRequestType().equals("Animale")) {
-                /* if RequestType is animal, we need to visualize a QR code that
-                   is used to "metaphorically send" an animal to a new owner.
-                   The QR code will be used as a checksum. Hopefully it will contain
-                   all the animal data. It will be scanned by another istance of the app
-                   (e.g. the phone of the new owner) and checked.
-                 */
-            /*} else if (request.getRequestType().equals("Aiuto")) {
-
-            } else if (request.getRequestType().equals("Stallo")) {
-            }*/
+            if (!isMine) {
+                btnChangeViewRequest.setText(getResources().getString(R.string.richieste_mie));
+                loadMineRequests();
+                isMine = true;
+            } else {
+                btnChangeViewRequest.setText(getResources().getString(R.string.richieste_altri));
+                loadOtherRequests();
+                isMine = false;
+            }
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void onRequestAdded(Request request) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+    public void onRequestAdded(@NonNull Request request, String animalMicrochip) {
 
-        String email = auth.getCurrentUser().getEmail();
+        String email = Objects.requireNonNull(auth.getCurrentUser()).getEmail();
         request.setUserEmail(email);
+        request.setAnimal(animalMicrochip);
 
         requestsList.add(request);
+
         db.collection(KeysNamesUtils.CollectionsNames.REQUESTS)
-                .add(request)
+                .document(request.getId())
+                .set(request)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(getContext(), "Richiesta aggiunta correttamente", Toast.LENGTH_SHORT).show();
                 });
+
+        if (isMine) {
+            subRequestsList.add(request);
+            adapter.setRequestsList(subRequestsList);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void loadRequest() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(KeysNamesUtils.CollectionsNames.REQUESTS).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -132,16 +139,78 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
 
                         if (!snapshots.isEmpty()) {
                             for (DocumentSnapshot documentSnapshot : snapshots.getDocuments()){
-                                requestsList.add(Request.loadRequest(documentSnapshot));
+                                Request request = Request.loadRequest(documentSnapshot);
+                                requestsList.add(request);
                             }
-                            adapter.setRequestsList(requestsList);
 
-                            requestsRecyclerView.setAdapter(adapter);
-                            requestsRecyclerView.setLayoutManager(new LinearLayoutManager(
-                                    getContext(), LinearLayoutManager.VERTICAL, false
-                            ));
+                            loadOtherRequests();
                         }
                     }
                 });
     }
+
+    private void loadOtherRequests() {
+        subRequestsList.clear();
+        for (Request r : requestsList) {
+            if (!r.getUserEmail().equals(Objects.requireNonNull(auth.getCurrentUser()).getEmail())) {
+                subRequestsList.add(r);
+            }
+        }
+
+        adapter.setRequestsList(subRequestsList);
+
+        requestsRecyclerView.setAdapter(adapter);
+        requestsRecyclerView.setLayoutManager(new LinearLayoutManager(
+                getContext(), LinearLayoutManager.VERTICAL, false
+        ));
+
+        adapter.setOnItemClickListener(request -> {
+            // Intent here. Messaging app intent here. Indipendent from the type.
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(KeysNamesUtils.CollectionsNames.REQUESTS, request);
+            controller.navigate(R.id.action_passionate_requests_to_passionate_request_detail, bundle);
+        });
+    }
+
+    private void loadMineRequests() {
+        subRequestsList.clear();
+        for (Request r : requestsList) {
+            if (r.getUserEmail().equals(Objects.requireNonNull(auth.getCurrentUser()).getEmail())) {
+                subRequestsList.add(r);
+            }
+        }
+
+        adapter.setRequestsList(subRequestsList);
+
+        requestsRecyclerView.setAdapter(adapter);
+        requestsRecyclerView.setLayoutManager(new LinearLayoutManager(
+                getContext(), LinearLayoutManager.VERTICAL, false
+        ));
+
+        adapter.setOnItemClickListener(request -> {
+            if (!request.getIsCompleted()) {
+                Toast.makeText(getContext(), ""+request.getIsCompleted(), Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                builder.setMessage(getResources().getString(R.string.conferma_richiesta_messaggio));
+                // Set dialog title
+                View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+                TextView titleText = titleView.findViewById(R.id.dialog_title);
+                titleText.setText(getResources().getString(R.string.conferma_richiesta_titolo));
+                builder.setCustomTitle(titleView);
+                builder.setPositiveButton(getResources().getString(R.string.conferma), (dialog, id) -> {
+                    request.setIsCompleted(true);
+                    db.collection(KeysNamesUtils.CollectionsNames.REQUESTS)
+                            .document(request.getId())
+                            .set(request)
+                            .addOnSuccessListener(unused -> {
+                                Toast.makeText(getContext(), "Aggiornamento completato con successo", Toast.LENGTH_SHORT).show();
+                                // todo update data set
+                            });
+
+                });
+                builder.show();
+            }
+        });
+    }
+
 }

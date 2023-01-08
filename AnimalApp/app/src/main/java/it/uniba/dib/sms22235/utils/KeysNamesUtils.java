@@ -117,6 +117,15 @@ public class KeysNamesUtils {
         public static String ANIMAL = "animal";
     }
 
+    public static class RequestFields {
+        public static String REQUEST_TITLE = "requestTitle";
+        public static String REQUEST_BODY = "requestBody";
+        public static String USER_EMAIL = "userEmail";
+        public static String REQUEST_COMPLETED = "completed";
+        public static String R_TYPE_OFFER = "offer";
+        public static String R_TYPE_REQUEST = "request";
+    }
+
     public static class FileDirsNames {
         public static String BASE_PATH = "/data/user/0/it.uniba.dib.sms22235/";
         public static String ROOT_PREFIX = "app_";

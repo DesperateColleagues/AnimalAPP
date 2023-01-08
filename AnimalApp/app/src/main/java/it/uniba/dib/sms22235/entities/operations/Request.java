@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class Request implements Serializable {
 
@@ -14,15 +15,16 @@ public class Request implements Serializable {
     private String operationType;
     private String requestType;
     private String userEmail;
-    private boolean completed;
+    private boolean isCompleted;
+    private String animal;
 
-    public Request(String id, String requestTitle, String requestBody, String operationType, String requestType) {
-        this.id = id;
+    public Request(String requestTitle, String requestBody, String operationType, String requestType) {
         this.requestTitle = requestTitle;
         this.requestBody = requestBody;
         this.operationType = operationType;
         this.requestType = requestType;
-        this.completed = false;
+        this.isCompleted = false;
+        id = UUID.randomUUID().toString();
     }
 
     public String getId() {
@@ -69,23 +71,37 @@ public class Request implements Serializable {
         this.userEmail = userEmail;
     }
 
+    public String getAnimal() {
+        return animal;
+    }
+
+    public void setAnimal(String animal) {
+        this.animal = animal;
+    }
+
+    public boolean getIsCompleted() {
+        return isCompleted;
+    }
+
+    public void setIsCompleted(boolean completed) {
+        this.isCompleted = completed;
+    }
+
     @NonNull
     public static Request loadRequest(@NonNull DocumentSnapshot document) {
-        Request request = new Request("",
+        Request request = new Request(
                 (String) document.get("requestTitle"),
                 (String) document.get("requestBody"),
                 (String) document.get("operationType"),
                 (String) document.get("requestType"));
+
         request.setUserEmail((String) document.get("userEmail"));
+        request.setAnimal((String) document.get("animal"));
+        request.setId((String) document.get("id"));
+        request.setIsCompleted(Boolean.TRUE.equals(document.getBoolean("isCompleted")));
 
         return request;
     }
 
-    public boolean isCompleted() {
-        return completed;
-    }
 
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
 }

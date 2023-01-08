@@ -1,6 +1,9 @@
 package it.uniba.dib.sms22235.adapters;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.divider.MaterialDivider;
+
 import java.util.ArrayList;
 
 import it.uniba.dib.sms22235.R;
@@ -18,6 +23,11 @@ import it.uniba.dib.sms22235.entities.operations.Request;
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHolder> {
     private ArrayList<Request> requestsList;
     private OnItemClickListener onItemClickListener;
+    private Context context;
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
@@ -40,8 +50,14 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
 
         holder.txtRequestOperationType.setText(request.getOperationType());
         holder.txtRequestType.setText(request.getRequestType());
-        holder.txtRequestBody.setText(request.getRequestBody());
         holder.txtRequestTitle.setText(request.getRequestTitle());
+        holder.txtRequestOwner.setText(request.getUserEmail());
+
+        if (request.getIsCompleted()) {
+            TypedValue value = new TypedValue();
+            context.getTheme().resolveAttribute(android.R.attr.colorPrimary, value, true);
+            holder.requestDividerStatus.setBackgroundColor(value.data);
+        }
 
         holder.itemRequestCardView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
@@ -57,20 +73,27 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtRequestTitle;
-        TextView txtRequestBody;
         TextView txtRequestType;
         TextView txtRequestOperationType;
+        TextView txtRequestOwner;
+        MaterialDivider requestDividerStatus;
         CardView itemRequestCardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtRequestTitle = itemView.findViewById(R.id.txtRequestTitle);
-            txtRequestBody = itemView.findViewById(R.id.txtRequestBody);
             txtRequestType = itemView.findViewById(R.id.txtRequestType);
             txtRequestOperationType = itemView.findViewById(R.id.txtRequestOperationType);
+            txtRequestOwner = itemView.findViewById(R.id.txtRequestOwner);
+            requestDividerStatus = itemView.findViewById(R.id.requestDividerStatus);
             itemRequestCardView = itemView.findViewById(R.id.itemRequestCardView);
+
         }
 
+    }
+
+    public void clearAll() {
+        requestsList.clear();
     }
 
     public interface OnItemClickListener {

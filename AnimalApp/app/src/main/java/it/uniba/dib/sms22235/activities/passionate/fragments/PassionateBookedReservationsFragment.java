@@ -79,6 +79,7 @@ public class PassionateBookedReservationsFragment extends Fragment {
 
         recreateList();
         updateState();
+
         adapter.addAllReservations(currentReservationsList);
         reservationRecyclerView.setAdapter(adapter);
 

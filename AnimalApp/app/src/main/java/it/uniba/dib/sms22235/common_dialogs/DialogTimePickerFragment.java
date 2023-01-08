@@ -12,12 +12,12 @@ import androidx.fragment.app.Fragment;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class TimePickerDialogFragment extends DialogFragment {
+public class DialogTimePickerFragment extends DialogFragment {
 
     private final Fragment parent;
 
 
-    public TimePickerDialogFragment(Fragment parent) {
+    public DialogTimePickerFragment(Fragment parent) {
         this.parent = parent;
     }
 

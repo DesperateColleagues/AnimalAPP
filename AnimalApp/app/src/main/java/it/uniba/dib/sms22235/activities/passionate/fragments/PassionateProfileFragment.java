@@ -150,7 +150,17 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
                     } else if (messageListAdapter.getMessageAtPosition(position).getType().equals(KeysNamesUtils.CollectionsNames.REPORTS)) {
                         Toast.makeText(getContext(), "2",Toast.LENGTH_SHORT).show();
                     } else if (messageListAdapter.getMessageAtPosition(position).getType().equals("notNow")){
-                        notNowDialog(username + " " + getResources().getString(R.string.notNow));
+                        notNowDialog(
+                                username + " " + getResources().getString(R.string.notNow),
+                                getResources().getString(R.string.notNowMessage),
+                                getResources().getString(R.string.notNowButton)
+                                );
+                    } else if (messageListAdapter.getMessageAtPosition(position).getType().equals("ascanio")){
+                        notNowDialog(
+                                username + " " + getResources().getString(R.string.ascanio),
+                                getResources().getString(R.string.ascanioMessage),
+                                getResources().getString(R.string.ascanioButton)
+                        );
                     }
                 }
 
@@ -252,17 +262,24 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
                     "notNow");
             messages.add(notNow);
         }
+        if(number == 81) {
+            InfoMessage ascanio = new InfoMessage(
+                    username + " " + getResources().getString(R.string.ascanio),
+                    R.drawable.ascanio,
+                    "ascanio");
+            messages.add(ascanio);
+        }
     }
 
-    private void notNowDialog(String title) {
+    private void notNowDialog(String title, String message, String buttonMessage) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setMessage(R.string.notNowMessage);
+        builder.setMessage(message);
         // Set dialog title
         View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
         TextView titleText = titleView.findViewById(R.id.dialog_title);
         titleText.setText(title);
         builder.setCustomTitle(titleView);
-        builder.setNeutralButton(R.string.notNowButton, (dialog, id) -> {});
+        builder.setNeutralButton(buttonMessage, (dialog, id) -> {});
         builder.show();
     }
 

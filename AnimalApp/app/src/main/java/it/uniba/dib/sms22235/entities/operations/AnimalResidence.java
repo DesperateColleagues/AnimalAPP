@@ -4,9 +4,46 @@ import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Owner;
 
 public class AnimalResidence {
-    private Owner owner;
-    private Animal animal;
+    private String animal;
     private String startDate;
     private String endDate;
     boolean isTemp;
+
+    public AnimalResidence(String animal, String startDate, boolean isTemp) {
+        this.animal = animal;
+        this.startDate = startDate;
+        this.isTemp = isTemp;
+    }
+
+    public String getAnimal() {
+        return animal;
+    }
+
+    public void setAnimal(String animal) {
+        this.animal = animal;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public boolean isTemp() {
+        return isTemp;
+    }
+
+    public void setTemp(boolean temp) {
+        isTemp = temp;
+    }
 }

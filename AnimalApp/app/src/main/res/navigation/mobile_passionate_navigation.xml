@@ -75,6 +75,6 @@
 
     <fragment
         android:id="@+id/passionate_request_detail"
-        android:name="it.uniba.dib.sms22235.common_views.RequestDetailFragment"
+        android:name="it.uniba.dib.sms22235.common_dialogs.DialogRequestDetailFragment"
         android:label="@string/title_fragment_requests"/>
 </navigation>

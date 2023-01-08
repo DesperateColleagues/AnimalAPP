@@ -137,7 +137,7 @@ public class AnimalProfile extends Fragment {
 
         // Set the text view with the mAnimal data
         if (mAnimal != null) {
-            TextView txtAnimalNameProfile = view.findViewById(R.id.txtAnimalNameProfile);
+            TextView txtAnimalNameProfile = view.findViewById(R.id.requestTitle);
             TextView txtInfoAnimal = view.findViewById(R.id.txtInfoAnimal);
 
             txtAnimalNameProfile.setText(mAnimal.getName());
