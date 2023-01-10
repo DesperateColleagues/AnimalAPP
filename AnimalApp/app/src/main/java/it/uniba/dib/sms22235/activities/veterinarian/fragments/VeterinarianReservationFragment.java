@@ -1,5 +1,6 @@
 package it.uniba.dib.sms22235.activities.veterinarian.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -193,6 +194,7 @@ public class VeterinarianReservationFragment extends Fragment implements
     }
 
     // Basically a method to reconstruct a String from day, month and year expressed as Integers
+    @NonNull
     private String buildDate(int intYear, int intMonth, int intDay) {
         StringBuilder stringBuilder = new StringBuilder();
         if (intDay > 0 && intDay < 10) {
@@ -209,7 +211,7 @@ public class VeterinarianReservationFragment extends Fragment implements
         return stringBuilder.toString();
     }
 
-    private boolean checkIfDateDiagnosable(String selectedDate, String selectedTime) {
+    private boolean checkIfDateDiagnosable(@NonNull String selectedDate, String selectedTime) {
         boolean isDateDiagnosable = true;
 
         String[] selectedDateArray = selectedDate.split("/");
@@ -229,7 +231,7 @@ public class VeterinarianReservationFragment extends Fragment implements
         return isDateDiagnosable;
     }
 
-    private boolean checkIfTimeDiagnosable(String selected) {
+    private boolean checkIfTimeDiagnosable(@NonNull String selected) {
 
         String[] selectedTimeArray = selected.split(":");
         String[] currentTimeArray = this.currentTime.split(":");
@@ -241,9 +243,10 @@ public class VeterinarianReservationFragment extends Fragment implements
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void onDialogAddReservationDismissed(Reservation reservation){
-        String email = ((VeterinarianNavigationActivity) requireActivity()).getVeterinarianEmail();
+    public void onDialogAddReservationDismissed(@NonNull Reservation reservation){
+        String email = ((VeterinarianNavigationActivity) requireActivity()).getUserId();
         reservation.setVeterinarian(email);
         if(reservation.getDate().equals(selectedDate)){
             adapter.addReservation(reservation);
@@ -253,7 +256,7 @@ public class VeterinarianReservationFragment extends Fragment implements
     }
 
     @Override
-    public void onDialogAddDiagnosisDismissed(Diagnosis diagnosis) {
+    public void onDialogAddDiagnosisDismissed(@NonNull Diagnosis diagnosis) {
         String diagnosisID = "dia_" +
                 reservation.getDate().replaceAll("[-+^/]*", "") +
                 "_" +

@@ -31,30 +31,6 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <RadioGroup
-        android:id="@+id/requestTypeRadio"
-        android:layout_marginTop="15dp"
-        android:gravity="center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginEnd="30dp"
-        android:layout_marginStart="30dp">
-
-        <RadioButton
-            android:id="@+id/radio_request"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/richiesta"
-            android:textAlignment="center"/>
-
-        <RadioButton
-            android:id="@+id/radio_offer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/offerta"/>
-    </RadioGroup>
-
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -75,7 +51,7 @@
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="?attr/colorSecondary"
                 app:checkedIcon="@drawable/ic_baseline_check_24"
-                android:text="Animale"
+                android:text="Offerta animale"
                 android:id="@+id/chipAnimal"
                 style="@style/Widget.MaterialComponents.Chip.Choice" />
 
@@ -93,7 +69,7 @@
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="?attr/colorSecondary"
                 app:checkedIcon="@drawable/ic_baseline_check_24"
-                android:text="Stallo"
+                android:text="Offerta stallo"
                 android:id="@+id/chipHome"
                 style="@style/Widget.MaterialComponents.Chip.Choice" />
 

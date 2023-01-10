@@ -18,13 +18,14 @@ public class KeysNamesUtils {
         public static String ACTORS = "actors";
         public static String PURCHASES = "purchases";
         public static String ANIMALS = "animals";
-        public static String OWNERSHIP = "ownership";
         public static String REQUESTS = "request";
         public static String REPORTS = "reports";
         public static String RESERVATIONS = "reservations";
         public static String DIAGNOSIS = "diagnosis";
         public static String PHOTO_DIARY = "photoDiary";
         public static String PHOTO_DIARY_PROFILE = "photoDiaryProfile";
+        public static String BACKBENCH = "backbench";
+        public static String RESIDENCE = "residence";
     }
 
     public static class ActorFields {
@@ -56,6 +57,12 @@ public class KeysNamesUtils {
         public static String DATE = "date";
         public static String TIME = "time";
         public static String DIAGNOSIS = "diagnosis";
+    }
+
+    public static class BackbenchFields {
+        public static String DESCRIPTION = "description";
+        public static String OWNER = "owner";
+        public static String DOWNLOADABLE_IMAGE = "downloadableImage";
     }
 
     public static class DiagnosisFields {
@@ -131,6 +138,7 @@ public class KeysNamesUtils {
         public static String ROOT_PREFIX = "app_";
         public static String PROFILE_IMAGES = "AnimalAPP_images";
         public static String ADD_PURCHASE = "add_purchase";
+        public static String BACKBENCH_POST = "backbench_post";
         public static String ADD_ANIMAL = "add_animal";
 
         /**
@@ -167,8 +175,16 @@ public class KeysNamesUtils {
             return "animals_" + email;
         }
 
+        @NonNull
+        @Contract(pure = true)
         public static String animalProfilePic(String microchip) {
             return "profile_" + microchip;
+        }
+
+        @NonNull
+        @Contract(pure = true)
+        public static String backBenchPic(String email) {
+            return  "backbench_" + email;
         }
     }
 

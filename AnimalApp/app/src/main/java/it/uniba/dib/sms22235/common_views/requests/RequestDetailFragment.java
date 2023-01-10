@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.common_dialogs;
+package it.uniba.dib.sms22235.common_views.requests;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,19 +6,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
+import it.uniba.dib.sms22235.activities.ActivityInterface;
+import it.uniba.dib.sms22235.common_views.backbench.BackBenchFragment;
 import it.uniba.dib.sms22235.entities.operations.Request;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class DialogRequestDetailFragment extends Fragment {
+public class RequestDetailFragment extends Fragment {
 
     private Request request;
 
@@ -40,19 +47,13 @@ public class DialogRequestDetailFragment extends Fragment {
         Button sendMail = view.findViewById(R.id.btnSendMail);
 
         TextView txtRequestDetailsTitle = view.findViewById(R.id.txtRequestDetailsTitle);
-        TextView txtRequestDetailsRorO = view.findViewById(R.id.txtRequestDetailsRorO);
         TextView txtRequestDetailsEntityType = view.findViewById(R.id.txtRequestDetailsEntityType);
         TextView txtRequestDetailsBody = view.findViewById(R.id.txtRequestDetailsBody);
 
         txtRequestDetailsTitle.setText(request.getRequestTitle());
         txtRequestDetailsBody.setText(request.getRequestBody());
 
-        txtRequestDetailsRorO.setText(new StringBuilder()
-                .append(getContext().getResources().getString(R.string.oggetto))
-                .append(": ")
-                .append(request.getOperationType())
-        );
-
+        // Setup request details messages
         txtRequestDetailsEntityType.setText(
                 new StringBuilder()
                         .append(getContext().getResources().getString(R.string.operation))
@@ -69,31 +70,48 @@ public class DialogRequestDetailFragment extends Fragment {
             startActivity(Intent.createChooser(intent, getResources().getString(R.string.sendMail)));
         });
 
-        /*
-        *
-        * Official approach
-        *
-        * public void composeEmail(String[] addresses, String subject) {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
-}
-        * */
+        // Manage backbenches requests
+        if (request.getRequestType().equals("Offerta stallo")) {
 
-        /*confirmRequest.setOnClickListener(v -> {
-            if (request.getRequestType().equals("Stallo")){
-                //AnimalResidence temporaryResidence = new AnimalResidence();
-                request.setCompleted(true);
-            } else if (request.getRequestType().equals("Animale")){
-                Toast.makeText(getContext(), "Funzione da implementare",Toast.LENGTH_SHORT).show();
-            } else if (request.getRequestType().equals("Aiuto")){
-                request.setCompleted(true);
-                // query
-            }
-        });*/
+            ViewPager viewpagerRequests = view.findViewById(R.id.viewpagerRequests);
+            viewpagerRequests.setVisibility(View.VISIBLE);
+
+            view.findViewById(R.id.infoDivider).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.txtRequestDetailsTitle2).setVisibility(View.VISIBLE);
+
+            Adapter adapter = new Adapter(getChildFragmentManager());
+            adapter.addFragment(new BackBenchFragment(request.getUserEmail()));
+
+            viewpagerRequests.setAdapter(adapter);
+        }
+    }
+
+    static class Adapter extends FragmentPagerAdapter {
+        private Fragment fragment;
+
+
+        public Adapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return 1;
+        }
+
+        public void addFragment(Fragment fragment) {
+            this.fragment = fragment;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "Informazioni stallo";
+        }
     }
 }

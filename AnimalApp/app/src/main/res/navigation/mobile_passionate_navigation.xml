@@ -66,15 +66,15 @@
 
     <fragment
         android:id="@+id/passionate_requests"
-        android:name="it.uniba.dib.sms22235.common_views.RequestsFragment"
+        android:name="it.uniba.dib.sms22235.common_views.requests.RequestsFragment"
         android:label="@string/title_fragment_requests">
         <action
             android:id="@+id/action_passionate_requests_to_passionate_request_detail"
-            app:destination="@id/passionate_request_detail" />
+            app:destination="@id/request_detail" />
     </fragment>
 
     <fragment
-        android:id="@+id/passionate_request_detail"
-        android:name="it.uniba.dib.sms22235.common_dialogs.DialogRequestDetailFragment"
+        android:id="@+id/request_detail"
+        android:name="it.uniba.dib.sms22235.common_views.requests.RequestDetailFragment"
         android:label="@string/title_fragment_requests"/>
 </navigation>

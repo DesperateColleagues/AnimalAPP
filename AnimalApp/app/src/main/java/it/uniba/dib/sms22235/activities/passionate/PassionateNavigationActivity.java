@@ -28,9 +28,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentChange;
@@ -150,7 +147,10 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.passionate_profile, R.id.passionate_pet_care, R.id.passionate_purchase, R.id.passionate_requests)
+                R.id.passionate_profile,
+                R.id.passionate_pet_care,
+                R.id.passionate_purchase,
+                R.id.passionate_requests)
                 .build();
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
@@ -285,7 +285,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     @Override
     public void onPurchaseRegistered(@NonNull Purchase purchase) {
 
-        purchase.setOwner(getPassionateUsername());
+        purchase.setOwner(getUserId());
 
         purchasesList.add(purchase);
 
@@ -353,7 +353,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         String fileName = System.currentTimeMillis() + "";
 
         // Create the storage tree structure
-        String fileReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(getPassionateUsername()) +
+        String fileReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(getUserId()) +
                 "/" +
                 KeysNamesUtils.FileDirsNames.passionatePostRefDirAnimal(post.getPostAnimal())
                 + "/" + fileName;
@@ -394,7 +394,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         String fileName = KeysNamesUtils.FileDirsNames.animalProfilePic(microchip);
 
         // Create the storage tree structure
-        String fileReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(getPassionateUsername()) +
+        String fileReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(getUserId()) +
                 "/" + fileName;
 
         // Get a reference of the storage by passing the tree structure
@@ -638,12 +638,22 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         return fab;
     }
 
+    @Override
+    public FirebaseFirestore getFireStoreInstance() {
+        return db;
+    }
+
+    @Override
+    public FirebaseStorage getStorageInstance() {
+        return FirebaseStorage.getInstance();
+    }
+
     /**
      * This method is used to obtain the username of the current logged passionate
      *
      * @return the username
      * */
-    public String getPassionateUsername() {
+    public String getUserId() {
         return passionate.getUsername();
     }
 
@@ -653,7 +663,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         String timeFormatted = reservation.getTime();
 
         availableReservationsList.remove(reservation);
-        reservation.setOwner(getPassionateUsername());
+        reservation.setOwner(getUserId());
 
         String docKeyReservation = KeysNamesUtils.CollectionsNames.RESERVATIONS
                 +"_"+ dateFormatted.replaceAll("[-+^/]*", "")

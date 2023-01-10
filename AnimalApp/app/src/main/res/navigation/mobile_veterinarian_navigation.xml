@@ -23,17 +23,23 @@
         android:label="@string/title_fragment_veterinarian_reservations"/>
 
     <fragment
+        android:id="@+id/veterinarian_backbench"
+        tools:layout="@layout/fragment_backbench"
+        android:name="it.uniba.dib.sms22235.common_views.backbench.BackBenchFragment"
+        android:label="BackBenchFragment" />
+
+    <fragment
         android:id="@+id/veterinarian_requests"
-        android:name="it.uniba.dib.sms22235.common_views.RequestsFragment"
+        android:name="it.uniba.dib.sms22235.common_views.requests.RequestsFragment"
         android:label="@string/title_fragment_requests">
         <action
             android:id="@+id/action_veterinarian_requests_to_veterinatian_request_detail"
-            app:destination="@id/veterinatian_request_detail" />
+            app:destination="@id/request_detail" />
     </fragment>
 
     <fragment
-        android:id="@+id/veterinatian_request_detail"
-        android:name="it.uniba.dib.sms22235.common_dialogs.DialogRequestDetailFragment"
+        android:id="@+id/request_detail"
+        android:name="it.uniba.dib.sms22235.common_views.requests.RequestDetailFragment"
         android:label="@string/title_fragment_requests"/>
 
 </navigation>

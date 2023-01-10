@@ -64,7 +64,7 @@ public class PassionateFilterPurchaseFragment extends Fragment {
 
         controller = Navigation.findNavController(container);
 
-        owner = ((PassionateNavigationActivity) requireActivity()).getPassionateUsername();
+        owner = ((PassionateNavigationActivity) requireActivity()).getUserId();
 
         if (arguments != null) {
             // Retrieve the animal list

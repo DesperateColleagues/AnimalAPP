@@ -124,7 +124,7 @@ public class PassionatePurchaseFragment extends Fragment implements
                 .getFab();
         fab.setVisibility(View.VISIBLE);
 
-        String owner = ((PassionateNavigationActivity) requireActivity()).getPassionateUsername();
+        String owner = ((PassionateNavigationActivity) requireActivity()).getUserId();
 
         // Get the fab from the activity and set the listener
         fab.setOnClickListener(v -> {

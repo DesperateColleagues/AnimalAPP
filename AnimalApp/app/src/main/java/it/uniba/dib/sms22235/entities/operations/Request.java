@@ -12,16 +12,14 @@ public class Request implements Serializable {
     private String id;
     private String requestTitle;
     private String requestBody;
-    private String operationType;
     private String requestType;
     private String userEmail;
     private boolean isCompleted;
     private String animal;
 
-    public Request(String requestTitle, String requestBody, String operationType, String requestType) {
+    public Request(String requestTitle, String requestBody, String requestType) {
         this.requestTitle = requestTitle;
         this.requestBody = requestBody;
-        this.operationType = operationType;
         this.requestType = requestType;
         this.isCompleted = false;
         id = UUID.randomUUID().toString();
@@ -49,14 +47,6 @@ public class Request implements Serializable {
 
     public void setRequestBody(String requestBody) {
         this.requestBody = requestBody;
-    }
-
-    public String getOperationType() {
-        return operationType;
-    }
-
-    public void setOperationType(String operationType) {
-        this.operationType = operationType;
     }
 
     public String getRequestType() {
@@ -92,7 +82,6 @@ public class Request implements Serializable {
         Request request = new Request(
                 (String) document.get("requestTitle"),
                 (String) document.get("requestBody"),
-                (String) document.get("operationType"),
                 (String) document.get("requestType"));
 
         request.setUserEmail((String) document.get("userEmail"));

@@ -91,7 +91,7 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
         RecyclerView messageRecyclerView = rootView.findViewById(R.id.messagesList);
         RecyclerView animalRecycleView = rootView.findViewById(R.id.animalList);
         username = ((PassionateNavigationActivity) requireActivity())
-                .getPassionateUsername();
+                .getUserId();
 
         String title = "Benvenuto, " + username;
         ((TextView) rootView.findViewById(R.id.txtPassionateWelcome)).setText(title);

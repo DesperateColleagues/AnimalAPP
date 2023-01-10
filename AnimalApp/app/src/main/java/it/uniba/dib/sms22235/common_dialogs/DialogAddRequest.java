@@ -17,12 +17,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.datepicker.MaterialDatePicker;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashSet;
 
 import it.uniba.dib.sms22235.R;
@@ -57,42 +63,20 @@ public class DialogAddRequest extends DialogFragment {
             opType = KeysNamesUtils.RequestFields.R_TYPE_OFFER;
         }
 
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
 
-        LayoutInflater inflater = requireActivity().getLayoutInflater();//get the layout inflater
-        @SuppressLint("InflateParams") View root = inflater.inflate(R.layout.fragment_dialog_add_request, null);//inflate the layout of the view with this new layout
-
-        // todo: add ente
-        if (requireActivity() instanceof VeterinarianNavigationActivity ) {
-            root.findViewById(R.id.requestTypeRadio).setVisibility(View.GONE);
-        }
-
-        builder.setView(root);
+        //inflate the layout of the view with this new layout
+        @SuppressLint("InflateParams") View root = inflater.inflate(R.layout.fragment_dialog_add_request, null);
+        manageChipVisibilityByRole(root);
 
         Spinner spinnerRequestAnimal = root.findViewById(R.id.spinnerRequestAnimal);
 
         // Set dialog title
-        View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+        @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
         TextView titleText = titleView.findViewById(R.id.dialog_title);
-        titleText.setText("Aggiunta nuova richiesta/offerta");
+        titleText.setText("Aggiunta nuova richiesta");
         builder.setCustomTitle(titleView);
         builder.setView(root);
-
-        // todo add title
-
-        final String [] requestTypes = {"Animale", "Aiuto", "Stallo"};
-
-        RadioGroup requestTypeRadioGroup = root.findViewById(R.id.requestTypeRadio);
-        requestTypeRadioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
-
-            // find the radiobutton by returned id
-            String selectedRequestType = (String) ((RadioButton) root.findViewById(radioGroup.getCheckedRadioButtonId())).getText();
-            if (selectedRequestType.equals(KeysNamesUtils.RequestFields.R_TYPE_REQUEST)) {
-                opType = getResources().getString(R.string.richiesta);
-            }
-            else if (selectedRequestType.equals(KeysNamesUtils.RequestFields.R_TYPE_OFFER)) {
-                opType = getResources().getString(R.string.offerta);
-            }
-        });
 
         ChipGroup requestsParamsChipGroup = root.findViewById(R.id.requestsParamsChipGroupDialog);
 
@@ -100,7 +84,8 @@ public class DialogAddRequest extends DialogFragment {
         requestsParamsChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
             try {
                 String selectedChip = (String) ((Chip) root.findViewById(group.getCheckedChipId())).getText();
-                if ((selectedChip.equals("Animale") || selectedChip.equals("Stallo")) && opType.equals(KeysNamesUtils.RequestFields.R_TYPE_OFFER)) {
+                if ((selectedChip.equals("Offerta animale"))
+                        && opType.equals(KeysNamesUtils.RequestFields.R_TYPE_OFFER)) {
 
                     // The spinner could be visible only if the Activity is the one of the Passionate
                     if (requireActivity() instanceof PassionateNavigationActivity) {
@@ -115,10 +100,10 @@ public class DialogAddRequest extends DialogFragment {
                 } else {
                     spinnerRequestAnimal.setVisibility(View.GONE);
                 }
+
             } catch(NullPointerException n) {
                 spinnerRequestAnimal.setVisibility(View.GONE);
             }
-
         });
 
         EditText txtRequestTitleInput = root.findViewById(R.id.txtRequestTitleInput);
@@ -150,7 +135,6 @@ public class DialogAddRequest extends DialogFragment {
                 listener.onRequestAdded(new Request(
                         requestTitle,
                         requestBody,
-                        opType,
                         requestType), animalMicrochip);
                 dismiss();
             } else {
@@ -170,5 +154,20 @@ public class DialogAddRequest extends DialogFragment {
         }
 
         return list;
+    }
+
+    private void manageChipVisibilityByRole(View root) {
+        if (requireActivity() instanceof  PassionateNavigationActivity) {
+            root.findViewById(R.id.chipHome).setVisibility(View.GONE);
+        } else {
+            root.findViewById(R.id.chipHome).setVisibility(View.VISIBLE);
+        }
+
+        if (requireActivity() instanceof VeterinarianNavigationActivity) {
+            root.findViewById(R.id.chipAnimal).setVisibility(View.GONE);
+        } else {
+            root.findViewById(R.id.chipAnimal).setVisibility(View.VISIBLE);
+        }
+
     }
 }

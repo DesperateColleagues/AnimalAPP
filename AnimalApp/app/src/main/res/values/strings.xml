@@ -104,7 +104,7 @@
     <string name="richiesta">Richiesta</string>
     <string name="operation">Tipo</string>
     <string name="oggetto">Oggetto</string>
-    <string name="sendMail">Invia e-mail</string>
+    <string name="sendMail">Avvisa conversazione tramite e-mail</string>
     <string name="richieste_mie">Visualizzazione: personali</string>
     <string name="richieste_altri">Visualizzazione: altri utenti</string>
     <string name="conferma_richiesta_titolo">Sei sicuro?</string>

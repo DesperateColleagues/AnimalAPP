@@ -7,11 +7,13 @@ public class AnimalResidence {
     private String animal;
     private String startDate;
     private String endDate;
+    private String residenceOwner;
     boolean isTemp;
 
-    public AnimalResidence(String animal, String startDate, boolean isTemp) {
-        this.animal = animal;
+    public AnimalResidence(String startDate, String endDate, String residenceOwner, boolean isTemp) {
         this.startDate = startDate;
+        this.residenceOwner = residenceOwner;
+        this.endDate = endDate;
         this.isTemp = isTemp;
     }
 
@@ -21,6 +23,10 @@ public class AnimalResidence {
 
     public void setAnimal(String animal) {
         this.animal = animal;
+    }
+
+    public String getResidenceOwner() {
+        return residenceOwner;
     }
 
     public String getStartDate() {

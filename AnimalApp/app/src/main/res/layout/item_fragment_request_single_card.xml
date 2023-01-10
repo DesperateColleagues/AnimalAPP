@@ -14,7 +14,6 @@
         tools:ignore="UselessParent"
         >
 
-
         <!-- android:backgroundTint="?attr/colorPrimary" alla Cardview-->
         <androidx.cardview.widget.CardView
             android:id="@+id/itemRequestCardView"
@@ -45,8 +44,14 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:textColor="?attr/colorOnSecondary"
-                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
                     />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dividerThickness="1dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

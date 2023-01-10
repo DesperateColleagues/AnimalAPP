@@ -16,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 
@@ -36,7 +37,6 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     private Veterinarian veterinarian;
     private ArrayList<Reservation> reservationsList;
 
-
     @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +47,11 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         BottomNavigationView navViewVeterinarian = findViewById(R.id.nav_view_vet);
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.veterinarian_profile, R.id.veterinarian_reservation, R.id.veterinarian_requests
+                R.id.veterinarian_profile,
+                R.id.veterinarian_animal_list,
+                R.id.veterinarian_reservation,
+                R.id.veterinarian_requests,
+                R.id.veterinarian_backbench
         ).build();
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
@@ -68,7 +72,6 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
             veterinarian = (Veterinarian) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.VETERINARIAN);
             reservationsList = (ArrayList<Reservation>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.VETERINARIAN_RESERVATIONS);
         }
-
     }
 
     @Override
@@ -174,11 +177,30 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         return clonedReservationsList;
     }
 
-    public String getVeterinarianEmail(){ return veterinarian.getEmail(); }
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStackImmediate();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public String getUserId(){ return veterinarian.getEmail(); }
 
     @Override
     public FloatingActionButton getFab() {
         return fab;
+    }
+
+    @Override
+    public FirebaseFirestore getFireStoreInstance() {
+        return db;
+    }
+
+    @Override
+    public FirebaseStorage getStorageInstance() {
+        return FirebaseStorage.getInstance();
     }
 
     public String getVeterinarianFullName(){ return veterinarian.getFullName(); }

@@ -2,7 +2,6 @@ package it.uniba.dib.sms22235.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +47,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Request request = requestsList.get(position);
 
-        holder.txtRequestOperationType.setText(request.getOperationType());
         holder.txtRequestType.setText(request.getRequestType());
         holder.txtRequestTitle.setText(request.getRequestTitle());
         holder.txtRequestOwner.setText(request.getUserEmail());
@@ -71,7 +69,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         return requestsList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtRequestTitle;
         TextView txtRequestType;
         TextView txtRequestOperationType;
@@ -89,7 +87,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
             itemRequestCardView = itemView.findViewById(R.id.itemRequestCardView);
 
         }
-
     }
 
     public void clearAll() {

@@ -33,7 +33,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         reservationsList.remove(reservation);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView txtReservationInfo;
         CardView itemReservationCardView;
 
@@ -55,7 +55,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
     @Override
     public void onBindViewHolder(@NonNull ReservationsAdapter.ViewHolder holder, int position) {
         Reservation reservation = reservationsList.get(position);
-        String res = null;
+        String res = "";
         if (listType == KeysNamesUtils.ReservationListType.VETERINARIAN.getValue()) {
             Log.wtf("WTF", reservation.getOwner() + reservation.getAnimal());
             if (reservation.getOwner() != null && reservation.getAnimal() != null){
@@ -106,7 +106,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         return reservationsList.get(index);
     }
 
-    private boolean checkIfDateDiagnosable(String selectedDate, String selectedTime) {
+    private boolean checkIfDateDiagnosable(@NonNull String selectedDate, String selectedTime) {
         boolean isDateDiagnosable = true;
 
         String[] selectedDateArray = selectedDate.split("/");
@@ -126,16 +126,12 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         return isDateDiagnosable;
     }
 
-    private boolean checkIfTimeDiagnosable(String selected) {
+    private boolean checkIfTimeDiagnosable(@NonNull String selected) {
 
         String[] selectedTimeArray = selected.split(":");
         String[] currentTimeArray = this.currentTime.split(":");
 
-        if (selectedTimeArray[0].compareTo(currentTimeArray[0]) > 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return selectedTimeArray[0].compareTo(currentTimeArray[0]) <= 0;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

@@ -5,11 +5,10 @@
         android:id="@+id/veterinarian_profile"
         android:icon="@drawable/ic_baseline_account_circle_24"
         android:title="@string/title_fragment_veterinarian_profile"/>
-        <!-- Cambiare stringa hardcodata, presente in strings.xml-->
 
     <item
         android:id="@+id/veterinarian_animal_list"
-        android:icon="@drawable/ic_baseline_pets_24"
+        android:icon="@drawable/pets2"
         android:title="@string/title_fragment_veterinarian_animal_list"/>
 
     <item
@@ -21,4 +20,10 @@
         android:id="@+id/veterinarian_requests"
         android:icon="@drawable/ic_baseline_question_answer_24"
         android:title="@string/title_fragment_requests"/>
+
+    <item
+        android:id="@+id/veterinarian_backbench"
+        android:icon="@drawable/ic_baseline_house_siding_24"
+        android:title="Gestione stallo"/>
+
 </menu>

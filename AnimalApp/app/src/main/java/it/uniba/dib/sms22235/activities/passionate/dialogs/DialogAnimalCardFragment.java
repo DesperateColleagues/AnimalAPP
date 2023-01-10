@@ -1,7 +1,6 @@
 package it.uniba.dib.sms22235.activities.passionate.dialogs;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -17,26 +16,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import java.io.IOException;
-
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.fragments.AnimalProfile;
 import it.uniba.dib.sms22235.entities.users.Animal;
-import it.uniba.dib.sms22235.utils.DataManipulationHelper;
-import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class DialogAnimalCardFragment extends DialogFragment {
 
