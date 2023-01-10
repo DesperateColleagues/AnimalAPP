@@ -23,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.UUID;
+
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.fragments.AnimalProfile;
 import it.uniba.dib.sms22235.entities.users.Animal;
@@ -30,12 +32,12 @@ import it.uniba.dib.sms22235.entities.users.Animal;
 public class DialogAnimalCardFragment extends DialogFragment {
 
     private final Animal animal;
+    private Button shareButton;
     private AnimalProfile.AnimalProfileListener animalProfileListener;
 
     public DialogAnimalCardFragment(Animal animal) {
         this.animal = animal;
     }
-
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -80,16 +82,16 @@ public class DialogAnimalCardFragment extends DialogFragment {
         ImageView imgAnimalCardPhoto = root.findViewById(R.id.animalCardProfileSend);
         animalProfileListener.loadProfilePic(animal.getMicrochipCode(), imgAnimalCardPhoto);
 
-        Button shareButton = root.findViewById(R.id.shareButton);
+        shareButton = root.findViewById(R.id.shareButton);
         shareButton.setOnClickListener(v -> {
-            Bitmap bitmap = generateSharePic(root);
+
+            Bitmap bitmap = generateSharePic(root.findViewById(R.id.drawableView));
             String path = MediaStore.Images.Media.insertImage(requireContext().getContentResolver(),
-                bitmap, animal.getName() + "_" + animal.getMicrochipCode(), null);
+                bitmap, UUID.randomUUID().toString(), null);
             Uri imageUri =  Uri.parse(path);
 
             Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
             whatsappIntent.setType("image/jpeg");
-            whatsappIntent.setPackage("com.whatsapp");
             whatsappIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
             try {
                 startActivity(Intent.createChooser(whatsappIntent, "Select"));
@@ -102,7 +104,6 @@ public class DialogAnimalCardFragment extends DialogFragment {
     }
 
     private Bitmap generateSharePic(@NonNull View view) {
-
         Bitmap viewBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(viewBitmap);
 

@@ -3,6 +3,7 @@
     <style name="roundedImageViewRounded"
         parent="">
         <item name="cornerSize">50%</item>
+        <item name="background">@android:color/transparent</item>
     </style>
 
     <style name="AnimalCardRoundedDialog" parent="Theme.AppCompat.Light.Dialog.Alert">

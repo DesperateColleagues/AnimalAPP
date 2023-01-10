@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="400dp"
+    android:layout_height="500dp"
     android:background="@drawable/dialog_bg"
     android:orientation="vertical">
 
@@ -17,10 +17,18 @@
             android:background="@drawable/dialog_bg"
             android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/drawableView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dialog_bg"
+            android:orientation="vertical">
+
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/animalCardProfileSend"
                 android:layout_width="170dp"
                 android:layout_height="170dp"
+                android:padding="0.5dp"
                 android:scaleType="centerCrop"
                 android:layout_marginBottom="15dp"
                 android:layout_gravity="center"
@@ -92,6 +100,8 @@
                 android:textSize="20sp"
                 android:textColor="?attr/colorOnSecondary"
                 android:textAlignment="center"/>
+
+        </LinearLayout>
 
             <Button
                 android:id="@+id/shareButton"

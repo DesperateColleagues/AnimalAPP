@@ -1,5 +1,6 @@
 package it.uniba.dib.sms22235.activities.passionate.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,10 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -30,8 +36,14 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
+import org.w3c.dom.Text;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
@@ -113,10 +125,10 @@ public class AnimalProfile extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String info = "- Specie: " + mAnimal.getAnimalSpecies() +
-                "\n- Razza: " + mAnimal.getRace() +
-                "\n- Data di nascita: " + mAnimal.getBirthDate() +
-                "\n- Codice microchip: " + mAnimal.getMicrochipCode();
+        String info = "- <b>Specie</b>: " + mAnimal.getAnimalSpecies() +
+                "\n<br>- <b>Razza</b>: " + mAnimal.getRace() +
+                "\n<br>- <b>Data di nascita</b>: " + mAnimal.getBirthDate() +
+                "\n<br>- <b>Codice microchip</b>: " + mAnimal.getMicrochipCode();
 
         ViewPager viewPager = view.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -129,7 +141,6 @@ public class AnimalProfile extends Fragment {
 
         Button shareProfile = view.findViewById(R.id.btnShareProfile);
         shareProfile.setOnClickListener(v -> {
-            //generateSharePic();
             DialogAnimalCardFragment animalCardFragment = new DialogAnimalCardFragment(mAnimal);
             animalCardFragment.setAnimalProfileListener(listener);
             animalCardFragment.show(getChildFragmentManager(), "DialogAnimalCardFragment");
@@ -142,7 +153,7 @@ public class AnimalProfile extends Fragment {
 
             txtAnimalNameProfile.setText(mAnimal.getName());
 
-            txtInfoAnimal.setText(info);
+            txtInfoAnimal.setText(Html.fromHtml(info, Html.FROM_HTML_MODE_LEGACY));
         }
 
         animalPicPreview.setOnClickListener(v -> {
@@ -153,31 +164,45 @@ public class AnimalProfile extends Fragment {
         });
     }
 
-    private Bitmap generateSharePic() {
+    private Bitmap generateBitmap(){
+        //inflate layout
+        @SuppressLint("InflateParams") LinearLayout root = (LinearLayout) LayoutInflater.from(requireContext())
+                .inflate(R.layout.fragment_dialog_animal_card, null, false);
 
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(requireContext()).inflate(R.layout.fragment_dialog_animal_card, null, false);
-        ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(800, 600);
-        linearLayout.setLayoutParams(params);
+        ((TextView) root.findViewById(R.id.txtAnimalCardName)).setText(mAnimal.getName());
+        ((TextView) root.findViewById(R.id.txtAnimalCardSpecies)).setText(mAnimal.getAnimalSpecies());
+        ((TextView) root.findViewById(R.id.txtAnimalCardRace)).setText(mAnimal.getRace());
+        ((TextView) root.findViewById(R.id.txtAnimalCardMicrochipCode)).setText(mAnimal.getMicrochipCode());
+        ((TextView) root.findViewById(R.id.txtAnimalCardBirthDate)).setText(mAnimal.getBirthDate());
 
-        Bitmap viewBitmap = Bitmap.createBitmap(linearLayout.getWidth(), linearLayout.getHeight(),
-                Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(viewBitmap);
+        ImageView imgAnimalCardPhoto = root.findViewById(R.id.animalCardProfileSend);
+        listener.loadProfilePic(mAnimal.getMicrochipCode(), imgAnimalCardPhoto);
 
-        Drawable bgDrawable = linearLayout.getBackground();
-        if (bgDrawable != null) {
-            //has background drawable, then draw it on the canvas
-            bgDrawable.draw(canvas);
-        }
-        else {
-            //does not have background drawable, then draw white background on the canvas
-            //canvas.drawColor(Color.WHITE);
-            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        }
+        //reference View with image
+        root.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        Bitmap bitmap = Bitmap.createBitmap(root.getMeasuredWidth(), root.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        root.layout(0, 0, root.getMeasuredWidth(), root.getMeasuredHeight());
+        root.draw(canvas);
 
-        // Render the view on the created canvas
-        linearLayout.draw(canvas);
+        return bitmap;
+    }
 
-        return viewBitmap;
+    @NonNull
+    private View prepareViewImage() {
+        @SuppressLint("InflateParams") LinearLayout root = (LinearLayout) LayoutInflater.from(requireContext())
+                .inflate(R.layout.fragment_dialog_animal_card, null, false);
+
+        ((TextView) root.findViewById(R.id.txtAnimalCardName)).setText(mAnimal.getName());
+        ((TextView) root.findViewById(R.id.txtAnimalCardSpecies)).setText(mAnimal.getAnimalSpecies());
+        ((TextView) root.findViewById(R.id.txtAnimalCardRace)).setText(mAnimal.getRace());
+        ((TextView) root.findViewById(R.id.txtAnimalCardMicrochipCode)).setText(mAnimal.getMicrochipCode());
+        ((TextView) root.findViewById(R.id.txtAnimalCardBirthDate)).setText(mAnimal.getBirthDate());
+
+        ImageView imgAnimalCardPhoto = root.findViewById(R.id.animalCardProfileSend);
+        listener.loadProfilePic(mAnimal.getMicrochipCode(), imgAnimalCardPhoto);
+
+        return root;
     }
 
     private void setupViewPager(@NonNull ViewPager viewPager) {
