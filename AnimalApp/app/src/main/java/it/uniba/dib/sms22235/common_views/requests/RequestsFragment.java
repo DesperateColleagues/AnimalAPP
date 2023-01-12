@@ -2,6 +2,7 @@ package it.uniba.dib.sms22235.common_views.requests;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,7 +101,10 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
                     .inflate(R.layout.item_chip_fragment_filter, null);
             chip.setText(s);
             chip.setCloseIcon(null);
-            chip.setOnClickListener(v -> chip.setSelected(true));
+            chip.setTextColor(Color.BLACK);
+            chip.setOnClickListener(v -> {
+                chip.setSelected(true);
+            });
             requestsParamsChipGroup.addView(chip);
         }
 

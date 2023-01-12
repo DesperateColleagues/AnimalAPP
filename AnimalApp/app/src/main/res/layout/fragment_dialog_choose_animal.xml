@@ -13,9 +13,10 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
+        android:spinnerMode="dropdown"
         android:background="@drawable/bg_spinner_role"
         android:textColor="?attr/colorOnSecondary"
-        android:popupBackground="?attr/colorPrimary"
+        android:popupBackground="@drawable/bg_spinner_dropdown"
         android:minHeight="48dp" />
 
     <Button

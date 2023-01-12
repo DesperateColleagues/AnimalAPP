@@ -52,8 +52,9 @@
                 app:chipBackgroundColor="?attr/colorSecondary"
                 app:checkedIcon="@drawable/ic_baseline_check_24"
                 android:text="Offerta animale"
-                android:id="@+id/chipAnimal"
-                style="@style/Widget.MaterialComponents.Chip.Choice" />
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:textColor="@color/black"
+                android:id="@+id/chipAnimal" />
 
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
@@ -62,7 +63,8 @@
                 app:checkedIcon="@drawable/ic_baseline_check_24"
                 android:text="Aiuto"
                 android:id="@+id/chipHelp"
-                style="@style/Widget.MaterialComponents.Chip.Choice" />
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:textColor="@color/black"/>
 
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
@@ -71,7 +73,8 @@
                 app:checkedIcon="@drawable/ic_baseline_check_24"
                 android:text="Offerta stallo"
                 android:id="@+id/chipHome"
-                style="@style/Widget.MaterialComponents.Chip.Choice" />
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:textColor="@color/black"/>
 
         </com.google.android.material.chip.ChipGroup>
 

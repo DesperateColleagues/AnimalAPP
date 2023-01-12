@@ -13,8 +13,6 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 public class Veterinarian extends AbstractPersonUser implements  Serializable, Cloneable {
     private String clinicName, phoneNumber;
 
-    public Veterinarian() {}
-
     @Override
     public String toString() {
         return fullName + " - " + clinicName  + "\n" + email + " - " + phoneNumber;
