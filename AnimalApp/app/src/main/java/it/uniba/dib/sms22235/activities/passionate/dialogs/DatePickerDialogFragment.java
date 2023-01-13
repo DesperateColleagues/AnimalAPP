@@ -34,7 +34,6 @@ public class DatePickerDialogFragment extends DialogFragment  {
         int day = c.get(Calendar.DAY_OF_MONTH);
 
 
-
         // Create a new instance of DatePickerDialogFrag and return it
         return new android.app.DatePickerDialog(getContext(),
                 (DatePickerDialog.OnDateSetListener) parent, year, month, day);

@@ -1,14 +1,12 @@
 package it.uniba.dib.sms22235.common_views.requests;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,18 +19,16 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
@@ -40,11 +36,13 @@ import it.uniba.dib.sms22235.activities.ActivityInterface;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.activities.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.adapters.RequestAdapter;
+import it.uniba.dib.sms22235.common_dialogs.BsdDialogQr;
 import it.uniba.dib.sms22235.common_dialogs.BsdDialogRequest;
 import it.uniba.dib.sms22235.common_dialogs.DialogAddRequest;
 import it.uniba.dib.sms22235.common_dialogs.DialogRequestBackbench;
 import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.Request;
+import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class RequestsFragment extends Fragment implements DialogAddRequest.DialogAddRequestListener,
@@ -204,7 +202,6 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
             } else if (requireActivity() instanceof VeterinarianNavigationActivity) {
                 controller.navigate(R.id.request_detail, bundle);
             }
-
         });
     }
 
@@ -232,32 +229,22 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
         // Manage the click on logged user's requests
         adapter.setOnItemClickListener(request -> {
             if (!request.getIsCompleted() && request.getRequestType().equals("Aiuto")) {
-                manageHelpRequests(request);
+                confirmRequest(request);
             }
 
             if (!request.getIsCompleted() && request.getRequestType().equals("Offerta stallo")) {
-                BsdDialogRequest bsdDialogRequest = new BsdDialogRequest(request);
-
-                bsdDialogRequest.setOnUpdateRequestListener(() -> {
-                    DialogRequestBackbench dialogRequestBackbench = new DialogRequestBackbench(request);
-                    dialogRequestBackbench.setListener(this);
-                    dialogRequestBackbench.show(getChildFragmentManager(), "DialogRequestBackbench");
-                });
-
-                bsdDialogRequest.setOnConfirmRequestListener(() -> {
-                    manageHelpRequests(request);
-                });
-
-                bsdDialogRequest.show(getChildFragmentManager(), "BsdDialogRequest");
-
+                manageBackbenchRequest(request);
             }
+
+            if (!request.getIsCompleted() && request.getRequestType().equals("Offerta animale")) {
+                manageAnimalRequest(request);
+            }
+
         });
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void manageHelpRequests(@NonNull Request request) {
-            Toast.makeText(getContext(), "" + request.getIsCompleted(), Toast.LENGTH_SHORT).show();
-
+    private void confirmRequest(@NonNull Request request) {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             builder.setMessage(getResources().getString(R.string.conferma_richiesta_messaggio));
             // Set dialog title
@@ -283,6 +270,36 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
             builder.show();
     }
 
+    private void manageBackbenchRequest(Request request) {
+        BsdDialogRequest bsdDialogRequest = new BsdDialogRequest(request);
+
+        bsdDialogRequest.setOnUpdateRequestListener(() -> {
+            DialogRequestBackbench dialogRequestBackbench = new DialogRequestBackbench(request);
+            dialogRequestBackbench.setListener(this);
+            dialogRequestBackbench.show(getChildFragmentManager(), "DialogRequestBackbench");
+        });
+
+        bsdDialogRequest.setOnConfirmRequestListener(() -> {
+            confirmRequest(request);
+        });
+
+        bsdDialogRequest.show(getChildFragmentManager(), "BsdDialogRequest");
+    }
+
+    private void manageAnimalRequest(@NonNull Request request) {
+        db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                .whereEqualTo(KeysNamesUtils.AnimalFields.MICROCHIP_CODE, request.getAnimal().split(" - ")[1])
+                .get()
+                .addOnSuccessListener(query -> {
+                    List<DocumentSnapshot> snapshots = query.getDocuments();
+
+                    if (snapshots.size() > 0) {
+                        Animal animal = Animal.loadAnimal(snapshots.get(0));
+                        BsdDialogQr bsdDialogQr = new BsdDialogQr(animal.getMicrochipCode(), animal.getName(), animal.getOwner());
+                        bsdDialogQr.show(getChildFragmentManager(), "BsdDialogQr");
+                    }
+                });
+    }
     @Override
     public void onValueAdded(@NonNull AnimalResidence residence, Request request) {
         String id = residence.getAnimal() + "_" + residence.getResidenceOwner() + "_" + residence.getStartDate();

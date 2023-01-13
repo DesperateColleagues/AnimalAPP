@@ -1,29 +1,19 @@
 package it.uniba.dib.sms22235.activities.passionate.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
+
 import android.text.Html;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -162,47 +152,6 @@ public class AnimalProfile extends Fragment {
             i.setAction(Intent.ACTION_GET_CONTENT);
             photoUploadAndSaveActivity.launch(i);
         });
-    }
-
-    private Bitmap generateBitmap(){
-        //inflate layout
-        @SuppressLint("InflateParams") LinearLayout root = (LinearLayout) LayoutInflater.from(requireContext())
-                .inflate(R.layout.fragment_dialog_animal_card, null, false);
-
-        ((TextView) root.findViewById(R.id.txtAnimalCardName)).setText(mAnimal.getName());
-        ((TextView) root.findViewById(R.id.txtAnimalCardSpecies)).setText(mAnimal.getAnimalSpecies());
-        ((TextView) root.findViewById(R.id.txtAnimalCardRace)).setText(mAnimal.getRace());
-        ((TextView) root.findViewById(R.id.txtAnimalCardMicrochipCode)).setText(mAnimal.getMicrochipCode());
-        ((TextView) root.findViewById(R.id.txtAnimalCardBirthDate)).setText(mAnimal.getBirthDate());
-
-        ImageView imgAnimalCardPhoto = root.findViewById(R.id.animalCardProfileSend);
-        listener.loadProfilePic(mAnimal.getMicrochipCode(), imgAnimalCardPhoto);
-
-        //reference View with image
-        root.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        Bitmap bitmap = Bitmap.createBitmap(root.getMeasuredWidth(), root.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        root.layout(0, 0, root.getMeasuredWidth(), root.getMeasuredHeight());
-        root.draw(canvas);
-
-        return bitmap;
-    }
-
-    @NonNull
-    private View prepareViewImage() {
-        @SuppressLint("InflateParams") LinearLayout root = (LinearLayout) LayoutInflater.from(requireContext())
-                .inflate(R.layout.fragment_dialog_animal_card, null, false);
-
-        ((TextView) root.findViewById(R.id.txtAnimalCardName)).setText(mAnimal.getName());
-        ((TextView) root.findViewById(R.id.txtAnimalCardSpecies)).setText(mAnimal.getAnimalSpecies());
-        ((TextView) root.findViewById(R.id.txtAnimalCardRace)).setText(mAnimal.getRace());
-        ((TextView) root.findViewById(R.id.txtAnimalCardMicrochipCode)).setText(mAnimal.getMicrochipCode());
-        ((TextView) root.findViewById(R.id.txtAnimalCardBirthDate)).setText(mAnimal.getBirthDate());
-
-        ImageView imgAnimalCardPhoto = root.findViewById(R.id.animalCardProfileSend);
-        listener.loadProfilePic(mAnimal.getMicrochipCode(), imgAnimalCardPhoto);
-
-        return root;
     }
 
     private void setupViewPager(@NonNull ViewPager viewPager) {

@@ -30,6 +30,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -67,8 +68,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         PassionateProfileFragment.ProfileFragmentListener, PassionatePurchaseFragment.PurchaseFragmentListener,
         PassionateReservationFragment.PassionateReservationFragmentListener,
         PhotoDiaryFragment.PhotoDiaryFragmentListener, AnimalProfile.AnimalProfileListener,
-        ActivityInterface,
-        Serializable {
+        ActivityInterface, Serializable {
 
     private transient FirebaseFirestore db;
     private transient QueryPurchasesManager queryPurchases;
@@ -352,6 +352,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     public void onPostAdded(@NonNull PhotoDiaryPost post) {
         String fileName = System.currentTimeMillis() + "";
 
+        post.setFileName(fileName);
+
         // Create the storage tree structure
         String fileReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(getUserId()) +
                 "/" +
@@ -379,7 +381,9 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
                             // Save the post into the FireStore
                             db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
-                                    .add(post).addOnSuccessListener(documentReference -> {
+                                    .document(fileName)
+                                    .set(post)
+                                    .addOnSuccessListener(documentReference -> {
                                         Toast.makeText(PassionateNavigationActivity.this,
                                                 "Caricamento completato con successo", Toast.LENGTH_LONG).show();
                                         progressDialog.dismiss();
@@ -646,6 +650,11 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     @Override
     public FirebaseStorage getStorageInstance() {
         return FirebaseStorage.getInstance();
+    }
+
+    @Override
+    public FirebaseAuth getAuthInstance() {
+        return FirebaseAuth.getInstance();
     }
 
     /**

@@ -14,6 +14,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -197,6 +198,12 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     public FirebaseFirestore getFireStoreInstance() {
         return db;
     }
+
+    @Override
+    public FirebaseAuth getAuthInstance() {
+        return FirebaseAuth.getInstance();
+    }
+
 
     @Override
     public FirebaseStorage getStorageInstance() {

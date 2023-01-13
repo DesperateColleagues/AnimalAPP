@@ -74,7 +74,7 @@ public class KeysNamesUtils {
     public static class PhotoDiaryFields {
         public static String POST_URI = "postUri";
         public static String POST_ANIMAL = "postAnimal";
-        public static String POST_PATH = "postPath";
+        public static String FILE_NAME = "fileName";
     }
         
     public static class PurchaseFields {

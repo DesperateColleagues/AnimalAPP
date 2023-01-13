@@ -84,8 +84,7 @@ public class DialogAddRequest extends DialogFragment {
         requestsParamsChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
             try {
                 String selectedChip = (String) ((Chip) root.findViewById(group.getCheckedChipId())).getText();
-                if ((selectedChip.equals("Offerta animale"))
-                        && opType.equals(KeysNamesUtils.RequestFields.R_TYPE_OFFER)) {
+                if ((selectedChip.equals("Offerta animale"))) {
 
                     // The spinner could be visible only if the Activity is the one of the Passionate
                     if (requireActivity() instanceof PassionateNavigationActivity) {

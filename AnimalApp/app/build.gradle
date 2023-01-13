@@ -53,6 +53,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-storage'
 
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+    implementation 'com.google.zxing:core:3.4.1'
+
     implementation 'com.github.krokyze:ucropnedit:2.2.6-2'
 
     implementation 'com.github.bumptech.glide:glide:4.14.2'
