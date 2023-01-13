@@ -1,8 +1,8 @@
 package it.uniba.dib.sms22235.common_views.requests;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,30 +19,19 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
-import org.w3c.dom.Document;
-
-import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.activities.ActivityInterface;
-import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.common_views.backbench.BackBenchFragment;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.entities.operations.Request;
@@ -88,7 +77,7 @@ public class RequestDetailFragment extends Fragment {
                                     .set(animal)
                                     .addOnSuccessListener(unused -> {
                                         try {
-                                            manageChangeOwner(storage, db, microchip, oldOwner);
+                                            manageChangeOwnerPosts(storage, db, microchip, oldOwner);
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
@@ -187,10 +176,10 @@ public class RequestDetailFragment extends Fragment {
      * @param microchip the microchip code of the animal
      * @param oldOwner the old owner of the animal
      * */
-    private void manageChangeOwner(FirebaseStorage storage, @NonNull FirebaseFirestore db, String microchip, String oldOwner) throws IOException {
+    private void manageChangeOwnerPosts(FirebaseStorage storage, @NonNull FirebaseFirestore db, String microchip, String oldOwner) throws IOException {
         // Give to the user a feedback to wait
         ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Spostando l'immagine...");
+        progressDialog.setMessage("Spostando i post...");
         progressDialog.show();
 
         // Create the storage tree structure
@@ -255,12 +244,116 @@ public class RequestDetailFragment extends Fragment {
 
                                                             currentReference.delete();
                                                             progressDialog.dismiss();
+
+
+                                                            // Change profile image as well
+                                                            try {
+                                                                manageChangeOwnerProfilePic(storage, db, microchip, oldOwner);
+                                                            } catch (IOException e) {
+                                                                e.printStackTrace();
+                                                            }
                                                         });
                                             });
                                         }
                                     });
                                 });
                             }
+                        }
+                    }
+                });
+    }
+
+    /**
+     * This method is used to upload all the references to animal's posts
+     *
+     * @param storage the firebase storage reference
+     * @param db the firestore reference
+     * @param microchip the microchip code of the animal
+     * @param oldOwner the old owner of the animal
+     * */
+    private void manageChangeOwnerProfilePic(FirebaseStorage storage, @NonNull FirebaseFirestore db, String microchip, String oldOwner) throws IOException {
+        // Give to the user a feedback to wait
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Spostando l'immagine profilo...");
+        progressDialog.show();
+
+        // Create the storage tree structure
+        String currentFolderReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(oldOwner) +
+                "/";
+
+        // Obtain the posts' list of that specific animal
+        db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
+                .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, microchip)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<DocumentSnapshot> posts = task.getResult().getDocuments();
+
+                        if (posts.size() > 0) {
+                            // Scan every post retrieved
+                            DocumentSnapshot snapshot = posts.get(0);
+                            PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(snapshot);
+
+                            // Build the file name of the current post
+                            String fileName = post.getFileName();
+                            String fileReference = currentFolderReference + fileName;
+
+                            // Obtain a reference of the storage
+                            StorageReference currentReference = storage.getReference(fileReference);
+
+                            // Set a limit of bytes
+                            final long ONE_MEGABYTE = 1024 * 1024;
+
+                            // Get the bytes of the file from the reference of the storage
+                            currentReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                                // Retrieve the new owner of the animal via the ActivityInterface
+                                String newOwner = ((ActivityInterface) requireActivity()).getUserId();
+
+                                // Create the new reference to the folder in the storage,
+                                // the reference of the new file. Then it is possible to obtain
+                                // a new storage reference
+                                String newFolderReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(newOwner) +
+                                        "/" ;
+                                String newFileReference = newFolderReference + fileName;
+                                StorageReference newReference = storage.getReference(newFileReference);
+
+                                // Put the retrieved bytes into the storage and update
+                                // the FireStore reference of the post
+                                newReference.putBytes(bytes).addOnCompleteListener(taskChangeFileLocation -> {
+                                    if (taskChangeFileLocation.isSuccessful()) {
+                                        taskChangeFileLocation.getResult().getStorage()
+                                                .getDownloadUrl().addOnCompleteListener(taskUri -> {
+
+                                                    // Set the download post URI
+                                                    post.setPostUri(taskUri.getResult().toString());
+
+                                                    // Save the post into the FireStore deleting the old reference
+                                                    db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
+                                                            .document(fileName)
+                                                            .set(post)
+                                                            .addOnSuccessListener(documentReference -> {
+                                                                Toast.makeText(getContext(),
+                                                                        "Caricamento completato con successo", Toast.LENGTH_LONG).show();
+
+                                                                currentReference.delete();
+                                                                progressDialog.dismiss();
+
+                                                                request.setIsCompleted(true);
+                                                                db.collection(KeysNamesUtils.CollectionsNames.REQUESTS)
+                                                                        .document(request.getId())
+                                                                        .set(request)
+                                                                        .addOnSuccessListener(unused -> {
+                                                                            Toast.makeText(getContext(),
+                                                                                    "Aggiornamento completato con successo", Toast.LENGTH_SHORT).show();
+
+                                                                            // todo: switch Activity
+                                                                            // todo: refactor with Tasks.whenAllComplete()
+                                                                        });
+                                                            });
+                                                });
+                                    }
+                                });
+                            });
                         }
                     }
                 });

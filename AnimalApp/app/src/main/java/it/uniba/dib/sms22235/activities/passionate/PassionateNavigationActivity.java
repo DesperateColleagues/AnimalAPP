@@ -417,6 +417,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                 task.getResult().getStorage()
                         .getDownloadUrl().addOnCompleteListener(taskUri -> {
                             PhotoDiaryPost postProfileImage = new PhotoDiaryPost(taskUri.getResult().toString(), microchip);
+                            postProfileImage.setFileName(fileName);
 
                             db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
                                     .document(KeysNamesUtils.FileDirsNames.animalProfilePic(microchip))
