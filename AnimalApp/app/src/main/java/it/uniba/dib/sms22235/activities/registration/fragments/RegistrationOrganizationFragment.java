@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.security.NoSuchAlgorithmException;
+
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.users.Organization;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 /**
  * This fragment contains the logic of an organization's registration
@@ -33,9 +37,8 @@ public class RegistrationOrganizationFragment extends Fragment {
          * Triggered when the organization completes its sign up process
          *
          * @param org the organization to register
-         * @param pwd the password of the user
          * */
-        void onOrganizationRegistered(Organization org, String pwd);
+        void onOrganizationRegistered(Organization org);
     }
 
     private RegistrationOrganizationFragmentListener listener;
@@ -99,8 +102,24 @@ public class RegistrationOrganizationFragment extends Fragment {
 
             // Communicate to the RegistrationActivity that the organization can be registered
             if (!isEmptyInput && isInputCorrect) {
+
+                // Encode the password before saving it
+                try {
+                    password = InputFieldCheck.encodePassword(password);
+                    Log.wtf("password", password);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+
+                //todo: try to embed into the spinner a value, unlinked from the text inside it
+                if (purpose.equals("Ente pubblico")) {
+                    purpose = KeysNamesUtils.RolesNames.PUBLIC_ORGANIZATION;
+                } else {
+                    purpose = KeysNamesUtils.RolesNames.PRIVATE_ORGANIZATION;
+                }
+
                 listener.onOrganizationRegistered(
-                        new Organization(organizationName, purpose, email, phoneNumber), password
+                        new Organization(organizationName, email, phoneNumber, password, purpose)
                 );
             }
 

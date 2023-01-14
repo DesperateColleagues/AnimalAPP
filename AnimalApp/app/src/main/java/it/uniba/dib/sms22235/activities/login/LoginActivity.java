@@ -10,6 +10,7 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.activities.organization.OrganizationNavigationActivity;
 import it.uniba.dib.sms22235.activities.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.activities.registration.RegistrationActivity;
 import it.uniba.dib.sms22235.activities.veterinarian.VeterinarianNavigationActivity;
@@ -185,6 +187,8 @@ public class LoginActivity extends AppCompatActivity {
                                             // Get the role of the user by splitting the document name
                                             String role = docName.split("_")[0];
 
+                                            Log.wtf("Role",role);
+
                                             /*
                                              * Check what is the role of the logged user. Retrieve
                                              * actors' data by the document and store them into the
@@ -342,8 +346,9 @@ public class LoginActivity extends AppCompatActivity {
                                                     newActivityRunning(VeterinarianNavigationActivity.class, bundle);
                                                 });
 
-                                            } else if (role.equals(KeysNamesUtils.RolesNames.ORGANIZATION)) {
+                                            } else if (role.equals(KeysNamesUtils.RolesNames.PUBLIC_ORGANIZATION) || role.equals(KeysNamesUtils.RolesNames.PRIVATE_ORGANIZATION)) {
                                                 Organization org = Organization.loadOrganization(document);
+                                                newActivityRunning(OrganizationNavigationActivity.class, null);
                                             }
                                         }
                                     });

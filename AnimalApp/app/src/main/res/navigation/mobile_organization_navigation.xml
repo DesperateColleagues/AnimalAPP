@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/organization_profile">
+
+    <fragment
+        android:id="@+id/organization_profile"
+        android:name="it.uniba.dib.sms22235.activities.organization.fragments.OrganizationProfileFragment"
+        android:label="Profilo organizzazione"
+        tools:layout="@layout/fragment_organization_profile" />
+
+</navigation>

@@ -346,6 +346,14 @@ public class RequestDetailFragment extends Fragment {
                                                                             Toast.makeText(getContext(),
                                                                                     "Aggiornamento completato con successo", Toast.LENGTH_SHORT).show();
 
+
+                                                                            /*AlertDialog.Builder reloadDialogBuilder = new AlertDialog.Builder(getContext());
+                                                                            final AlertDialog reloadDialog = reloadDialogBuilder.create();
+                                                                            reloadDialog.setCancelable(false);
+                                                                            reloadDialog.setMessage("Devi rieffettuare l'accesso per confermare");
+                                                                            reloadDialog.setPositiveButton("OK", (dialog, which) -> SWITCH ACTIVITY);
+                                                                            reloadDialog.show();*/
+
                                                                             // todo: switch Activity
                                                                             // todo: refactor with Tasks.whenAllComplete()
                                                                         });

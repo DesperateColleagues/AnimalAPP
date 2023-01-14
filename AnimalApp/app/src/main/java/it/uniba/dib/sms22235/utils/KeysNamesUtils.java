@@ -10,7 +10,8 @@ public class KeysNamesUtils {
     public static class RolesNames {
         public static String VETERINARIAN = "vet";
         public static String COMMON_USER = "cus";
-        public static String ORGANIZATION = "org";
+        public static String PUBLIC_ORGANIZATION = "orgpub";
+        public static String PRIVATE_ORGANIZATION = "orgpri";
         public static String ANIMAL = "ani";
     }
 

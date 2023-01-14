@@ -67,7 +67,7 @@ public class RegistrationActivity extends AppCompatActivity
                                                 .addOnSuccessListener(unused -> {
                                                     // Show a message to let the user know
                                                     Toast.makeText(this, "Registrazione avvenuta con successo",
-                                                            Toast.LENGTH_LONG)
+                                                                    Toast.LENGTH_LONG)
                                                             .show();
 
                                                     DataManipulationHelper.saveDataInternally(
@@ -119,14 +119,14 @@ public class RegistrationActivity extends AppCompatActivity
     }
 
     @Override
-    public void onOrganizationRegistered(@NonNull Organization org, String pwd) {
+    public void onOrganizationRegistered(@NonNull Organization org) {
         // First register the organization with Firebase auth system
         // in order to authenticate it during login
-        mAuth.createUserWithEmailAndPassword(org.getEmail(), pwd)
+        mAuth.createUserWithEmailAndPassword(org.getEmail(), org.getPassword())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         // Save the organization instance on the DB
-                        String docKey = KeysNamesUtils.RolesNames.ORGANIZATION
+                        String docKey = org.getPurpose()
                                 + "_" + org.getEmail();
 
                         db.collection(KeysNamesUtils.CollectionsNames.ACTORS)
@@ -134,7 +134,7 @@ public class RegistrationActivity extends AppCompatActivity
                                 .set(org)
                                 // TODO: switch the activity to LoginActivity or DashboardActivity
                                 .addOnSuccessListener(unused -> Log.d("REG", "Registrazione avvenuta con successo"))
-                                .addOnFailureListener(e -> Log.d("DEB", e.getMessage()));
+                                .addOnFailureListener(e -> Log.d("CrashOrg", e.getMessage()));
 
                     } else {
                         Toast.makeText(RegistrationActivity.this, "Email già usata.", Toast.LENGTH_SHORT).show();

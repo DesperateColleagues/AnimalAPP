@@ -8,24 +8,14 @@ import org.jetbrains.annotations.Contract;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class Organization implements Owner {
+public class Organization extends AbstractPersonUser {
     private String orgName;
-    private String purpose;
     private String phoneNumber;
-    private String email;
 
-    public Organization() {}
-
-    public Organization(String name, String purpose, String email, String phoneNumber) {
-        this.orgName = name;
-        this.email = email;
-        this.purpose = purpose;
+    public Organization(String orgName, String email, String phoneNumber, String password, String purpose) {
+        super(null, email, password, purpose);
+        this.orgName = orgName;
         this.phoneNumber = phoneNumber;
-    }
-
-    @Override
-    public String OwnerName() {
-        return orgName;
     }
 
     // need this method because of FireBase
@@ -38,7 +28,7 @@ public class Organization implements Owner {
     }
 
     public String getPurpose() {
-        return purpose;
+        return super.purpose;
     }
 
     public String getEmail() {
@@ -57,9 +47,10 @@ public class Organization implements Owner {
     public static Organization loadOrganization(@NonNull DocumentSnapshot document){
         return new Organization(
                 (String) document.get(KeysNamesUtils.ActorFields.ORG_NAME),
-                (String) document.get(KeysNamesUtils.ActorFields.PURPOSE),
                 (String) document.get(KeysNamesUtils.ActorFields.EMAIL),
-                (String) document.get(KeysNamesUtils.ActorFields.PHONE_NUMBER)
+                (String) document.get(KeysNamesUtils.ActorFields.PHONE_NUMBER),
+                (String) document.get(KeysNamesUtils.ActorFields.PASSWORD),
+                (String) document.get(KeysNamesUtils.ActorFields.PURPOSE)
         );
     }
 }

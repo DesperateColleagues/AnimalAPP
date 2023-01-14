@@ -36,9 +36,15 @@
                 android:value="" />
         </activity>
 
-        <activity android:name="com.journeyapps.barcodescanner.CaptureActivity"
-            android:screenOrientation="portrait"
-            tools:replace="screenOrientation"/>
+        <activity
+            android:name=".activities.organization.OrganizationNavigationActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"
+            android:label="TITLE">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
 
         <activity
             android:name=".activities.veterinarian.VeterinarianNavigationActivity"
@@ -49,6 +55,11 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <activity android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="portrait"
+            tools:replace="screenOrientation"/>
+
 
         <activity android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="fullSensor"
