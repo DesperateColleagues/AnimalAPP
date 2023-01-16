@@ -100,7 +100,6 @@ public class QueryPurchasesManager {
             cursor = db.rawQuery(query, null);
 
         }catch(SQLiteException e){
-            // todo: think to good error name
             Log.d("Cursor error", "Errore nell'ottenimento delle informazioni dal server interno");
         }
 
@@ -130,7 +129,7 @@ public class QueryPurchasesManager {
         return cursor;
     }
 
-    public Cursor getMinimumPurchaseValue(String owner){
+    public Cursor getMinimumPurchaseValue(String owner) {
         String query = "SELECT MIN(" + KeysNamesUtils.PurchaseFields.COST + ") AS minCost" +
                 " FROM " + KeysNamesUtils.CollectionsNames.PURCHASES +
                 " WHERE " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + owner + "';";
@@ -147,7 +146,7 @@ public class QueryPurchasesManager {
         return cursor;
     }
 
-    public Cursor getMaximumPurchaseValue(String owner){
+    public Cursor getMaximumPurchaseValue(String owner) {
         String query = "SELECT MAX(" + KeysNamesUtils.PurchaseFields.COST + ") AS maxCost" +
                 " FROM " + KeysNamesUtils.CollectionsNames.PURCHASES +
                 " WHERE " + KeysNamesUtils.PurchaseFields.OWNER + " = '" + owner + "';";
@@ -170,7 +169,6 @@ public class QueryPurchasesManager {
         StringBuilder query = new StringBuilder();
         query.append("SELECT * FROM ").append(KeysNamesUtils.CollectionsNames.PURCHASES).append("\n");
 
-        //TODO: decidere se lasciare la query in due parti o costruirla direttamente in query
         StringBuilder where = new StringBuilder();
         where.append("WHERE ").append(KeysNamesUtils.PurchaseFields.OWNER).append(" = '").append(owner).append("'");
 
@@ -233,6 +231,4 @@ public class QueryPurchasesManager {
 
         return query.toString();
     }
-
-
 }

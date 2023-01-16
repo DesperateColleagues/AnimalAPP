@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/organization_profile"
-        android:name="it.uniba.dib.sms22235.activities.organization.fragments.OrganizationProfileFragment"
+        android:name="it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationProfileFragment"
         android:label="Profilo organizzazione"
         tools:layout="@layout/fragment_organization_profile" />
 

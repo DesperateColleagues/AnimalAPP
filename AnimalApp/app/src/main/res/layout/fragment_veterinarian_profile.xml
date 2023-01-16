@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.veterinarian.fragments.VeterinarianProfileFragment">
+    tools:context=".tasks.veterinarian.fragments.VeterinarianProfileFragment">
 
     <TextView
         android:id="@+id/txtVeterinarianWelcome"

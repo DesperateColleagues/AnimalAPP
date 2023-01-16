@@ -7,30 +7,30 @@
 
     <fragment
         android:id="@+id/veterinarian_profile"
-        android:name="it.uniba.dib.sms22235.activities.veterinarian.fragments.VeterinarianProfileFragment"
+        android:name="it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianProfileFragment"
         android:label="@string/title_fragment_veterinarian_profile"
         tools:layout="@layout/fragment_veterinarian_profile" />
 
     <fragment
         android:id="@+id/veterinarian_animal_list"
-        android:name="it.uniba.dib.sms22235.activities.veterinarian.fragments.VeterinarianAnimalListFragment"
+        android:name="it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianAnimalListFragment"
         android:label="@string/title_fragment_veterinarian_animal_list"
         tools:layout="@layout/fragment_veterinarian_animal_list" />
 
     <fragment
         android:id="@+id/veterinarian_reservation"
-        android:name="it.uniba.dib.sms22235.activities.veterinarian.fragments.VeterinarianReservationFragment"
+        android:name="it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianReservationFragment"
         android:label="@string/title_fragment_veterinarian_reservations"/>
 
     <fragment
         android:id="@+id/veterinarian_backbench"
         tools:layout="@layout/fragment_backbench"
-        android:name="it.uniba.dib.sms22235.common_views.backbench.BackBenchFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.backbenches.BackBenchFragment"
         android:label="BackBenchFragment" />
 
     <fragment
         android:id="@+id/veterinarian_requests"
-        android:name="it.uniba.dib.sms22235.common_views.requests.RequestsFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.requests.RequestsFragment"
         android:label="@string/title_fragment_requests">
         <action
             android:id="@+id/action_veterinarian_requests_to_veterinatian_request_detail"
@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/request_detail"
-        android:name="it.uniba.dib.sms22235.common_views.requests.RequestDetailFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.requests.RequestDetailFragment"
         android:label="@string/title_fragment_requests"/>
 
 </navigation>

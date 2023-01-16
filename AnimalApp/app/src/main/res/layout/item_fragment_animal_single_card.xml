@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="5dp"
-    tools:context=".activities.registration.fragments.AnimalGridFragment">
+    tools:context=".tasks.registration.fragments.AnimalGridFragment">
 
     <RelativeLayout
         android:layout_width="wrap_content"
