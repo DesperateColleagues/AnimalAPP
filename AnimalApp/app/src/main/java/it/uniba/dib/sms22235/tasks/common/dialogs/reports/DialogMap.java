@@ -3,7 +3,6 @@ package it.uniba.dib.sms22235.tasks.common.dialogs.reports;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import androidx.fragment.app.DialogFragment;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
-import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -34,9 +32,7 @@ import it.uniba.dib.sms22235.R;
 
 public class DialogMap extends DialogFragment {
 
-    private GeoPoint location;
-    private MapView mapView;
-    private IMapController mapController;
+    private final GeoPoint location;
     private DialogMapListener listener;
 
     public interface DialogMapListener {
@@ -62,11 +58,11 @@ public class DialogMap extends DialogFragment {
 
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
 
-        mapView = root.findViewById(R.id.map);
+        MapView mapView = root.findViewById(R.id.map);
         mapView.setTileSource(TileSourceFactory.MAPNIK);
         mapView.setBuiltInZoomControls(false);
         mapView.setMultiTouchControls(true);
-        mapController = mapView.getController();
+        IMapController mapController = mapView.getController();
 
         mapController.setZoom(18);
         mapView.setMaxZoomLevel(20d);
@@ -85,10 +81,10 @@ public class DialogMap extends DialogFragment {
             }
 
             @Override
-            public boolean onSingleTapConfirmed(final MotionEvent e, final MapView mapView) {
+            public boolean onSingleTapConfirmed(@NonNull final MotionEvent e, @NonNull final MapView mapView) {
 
                 @SuppressLint("UseCompatLoadingForDrawables") final Drawable marker =
-                        requireContext().getResources().getDrawable(org.osmdroid.library.R.drawable.marker_default_focused_base);
+                        requireContext().getResources().getDrawable(R.drawable.ic_baseline_my_location_24);
 
                 Projection proj = mapView.getProjection();
                 GeoPoint loc = (GeoPoint) proj.fromPixels((int)e.getX(), (int)e.getY());
@@ -99,11 +95,11 @@ public class DialogMap extends DialogFragment {
                 mapItem.setMarker(marker);
                 overlayArray.add(mapItem);
 
-                if(anotherItemizedIconOverlay==null){
+                if(anotherItemizedIconOverlay==null) {
                     anotherItemizedIconOverlay = new ItemizedIconOverlay<>(requireContext(), overlayArray,null);
                     mapView.getOverlays().add(anotherItemizedIconOverlay);
                     mapView.invalidate();
-                }else{
+                } else {
                     mapView.getOverlays().remove(anotherItemizedIconOverlay);
                     mapView.invalidate();
                     anotherItemizedIconOverlay = new ItemizedIconOverlay<>(requireContext(), overlayArray,null);

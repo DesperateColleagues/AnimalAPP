@@ -32,7 +32,7 @@ import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
-import it.uniba.dib.sms22235.tasks.common.dialogs.requests.BsdDialogRequest;
+import it.uniba.dib.sms22235.tasks.common.dialogs.CustomBsdDialog;
 import it.uniba.dib.sms22235.tasks.common.dialogs.requests.DialogAddRequest;
 import it.uniba.dib.sms22235.tasks.common.dialogs.requests.DialogRequestBackbench;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
@@ -270,7 +270,7 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
     }
 
     private void manageBackbenchRequest(Request request) {
-        BsdDialogRequest bsdDialogRequest = new BsdDialogRequest(request);
+        CustomBsdDialog bsdDialogRequest = new CustomBsdDialog();
 
         bsdDialogRequest.setOnUpdateRequestListener(() -> {
             DialogRequestBackbench dialogRequestBackbench = new DialogRequestBackbench(request);

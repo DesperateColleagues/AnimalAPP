@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,6 +41,9 @@ public class ReportsDashboardFragment extends Fragment {
             controller = Navigation.findNavController(container);
         }
 
+        ((NavigationActivityInterface) requireActivity()).getFab().setVisibility(View.GONE);
+        ((NavigationActivityInterface) requireActivity()).setNavViewVisibility(View.GONE);
+
         return inflater.inflate(R.layout.fragment_reports_dashboard, container, false);
     }
 
@@ -59,8 +63,12 @@ public class ReportsDashboardFragment extends Fragment {
 
     private void setupViewPager(@NonNull ViewPager viewPager) {
         Adapter adapter = new Adapter(getChildFragmentManager());
-        adapter.addFragment(new ReportsListFragment(true), "Segnalazioni community");
-        adapter.addFragment(new ReportsListFragment(false), "Mie segnalazioni");
+
+        ReportsListFragment communityList = new ReportsListFragment(false, controller);
+        ReportsListFragment myList = new ReportsListFragment(true, controller);
+
+        adapter.addFragment(communityList, "Segnalazioni community");
+        adapter.addFragment(myList, "Mie segnalazioni");
         viewPager.setAdapter(adapter);
     }
 

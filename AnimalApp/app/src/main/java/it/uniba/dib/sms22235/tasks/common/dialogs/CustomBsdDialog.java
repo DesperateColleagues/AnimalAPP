@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.common.dialogs.requests;
+package it.uniba.dib.sms22235.tasks.common.dialogs;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,17 +13,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Request;
 
-public class BsdDialogRequest extends BottomSheetDialogFragment {
+public class CustomBsdDialog extends BottomSheetDialogFragment {
 
-    private final Request request;
-
-    private OnDeleteRequestListener onDeleteRequestListener;
     private OnUpdateRequestListener onUpdateRequestListener;
     private OnConfirmRequestListener onConfirmRequestListener;
-
-    public BsdDialogRequest(Request request) {
-        this.request = request;
-    }
 
     @Nullable
     @Override
@@ -38,19 +31,7 @@ public class BsdDialogRequest extends BottomSheetDialogFragment {
             onUpdateRequestListener.onUpdate();
         });
 
-        root.findViewById(R.id.btnOnDeleteRequest).setOnClickListener(v -> {
-            onDeleteRequestListener.onDelete();
-        });
-
-        if (request.getRequestType().equals("Offerta stallo")) {
-            root.findViewById(R.id.btnOnDeleteRequest).setVisibility(View.GONE);
-        }
-
         return root;
-    }
-
-    public interface OnDeleteRequestListener {
-        void onDelete();
     }
 
     public interface OnUpdateRequestListener {
@@ -63,10 +44,6 @@ public class BsdDialogRequest extends BottomSheetDialogFragment {
 
     public void setOnConfirmRequestListener(OnConfirmRequestListener onConfirmRequestListener) {
         this.onConfirmRequestListener = onConfirmRequestListener;
-    }
-
-    public void setOnDeleteRequestListener(OnDeleteRequestListener onDeleteRequestListener) {
-        this.onDeleteRequestListener = onDeleteRequestListener;
     }
 
     public void setOnUpdateRequestListener(OnUpdateRequestListener onUpdateRequestListener) {

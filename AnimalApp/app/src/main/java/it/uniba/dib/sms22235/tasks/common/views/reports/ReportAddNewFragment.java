@@ -1,28 +1,26 @@
 package it.uniba.dib.sms22235.tasks.common.views.reports;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.net.wifi.MloLink;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,20 +28,14 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -54,14 +46,15 @@ import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.entities.operations.Backbench;
 import it.uniba.dib.sms22235.entities.operations.Report;
-import it.uniba.dib.sms22235.entities.users.Passionate;
+import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.reports.DialogMap;
 import it.uniba.dib.sms22235.tasks.common.dialogs.reports.DialogReportAddInfo;
@@ -90,7 +83,6 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
 
     private boolean isAdd = true;
 
-    private LocationManager locationManager;
     private Location mLocation;
     private FusedLocationProviderClient client;
 
@@ -163,9 +155,25 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ReportDetailsAddAnimalFragment reportDetailsAddAnimalFragment = new ReportDetailsAddAnimalFragment();
-
         // Get the field to insert the report
+        Spinner spinner = view.findViewById(R.id.spinnerReportAnimal);
+        LinkedHashSet<Animal> animalSet = ((PassionateNavigationActivity) requireActivity()).getAnimalSet();
+
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_spinner_dropdown_item, buildSpinnerEntries(animalSet));
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+
+        CheckBox checkBox = view.findViewById(R.id.checkBoxRep);
+        checkBox.setOnClickListener(v -> {
+            if (spinner.getVisibility() == View.VISIBLE) {
+                spinner.setVisibility(View.GONE);
+            } else {
+                spinner.setVisibility(View.VISIBLE);
+            }
+        });
+
+        report.setReportHelpPictureUri("");
 
         txtReportDetailTitle = view.findViewById(R.id.txtReportDetailTitle);
         txtReportDescription = view.findViewById(R.id.txtReportDescription);
@@ -198,35 +206,62 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
 
         btnReportConfirm.setOnClickListener(v -> {
             if (requireActivity() instanceof PassionateNavigationActivity) {
-                report.setReportAnimal(reportDetailsAddAnimalFragment.getSpinnerSelectedItem());
+                report.setReportAnimal((String) spinner.getSelectedItem());
             } else {
                 report.setReportAnimal("");
             }
 
-            if (report.isReportReady()) {
+            if (report.reportReady()) {
                 Toast.makeText(getContext(), "Report pronto per essere inserito", Toast.LENGTH_SHORT).show();
 
-                // todo insert into firebase
+                if (report.getReportHelpPictureUri().equals("")) {
+                    db.collection(KeysNamesUtils.CollectionsNames.REPORTS)
+                            .document(report.getReportId())
+                            .set(report);
+                } else {
+                    String fileName = KeysNamesUtils.FileDirsNames.reportPic(ownerEmail);
+
+                    // Create the storage tree structure
+                    String fileReference = KeysNamesUtils.FileDirsNames.REPORT_POST +
+                            "/" + fileName;
+
+                    StorageReference storageReference = storage.getReference(fileReference);
+
+                    // Give to the user a feedback to wait
+                    ProgressDialog progressDialog = new ProgressDialog(getContext());
+                    progressDialog.setMessage("Salvando l'immagine...");
+                    progressDialog.show();
+
+                    // Start the upload task
+                    UploadTask uploadTask = storageReference.putFile(Uri.parse(report.getReportHelpPictureUri()));
+
+                    uploadTask.addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            task.getResult().getStorage()
+                                    .getDownloadUrl().addOnCompleteListener(taskUri -> {
+                                        report.setReportHelpPictureUri(taskUri.getResult().toString());
+
+                                        db.collection(KeysNamesUtils.CollectionsNames.REPORTS)
+                                                .document(report.getReportId())
+                                                .set(report)
+                                                .addOnSuccessListener(unused -> {
+                                                    Toast.makeText(getContext(), "Segnalazione inserita con successo", Toast.LENGTH_SHORT).show();
+                                                    progressDialog.dismiss();
+                                                });
+                                    });
+                        }
+                    });
+                }
             }
         });
 
         manageLayoutVisibilities();
-
-        if (requireActivity() instanceof PassionateNavigationActivity) {
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.replace(R.id.frame, reportDetailsAddAnimalFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
-        } else {
-            view.findViewById(R.id.frame).setVisibility(View.GONE);
-        }
     }
 
     @SuppressLint("MissingPermission")
-    private void getCurrentLocation()
-    {
+    private void getCurrentLocation() {
         // Initialize Location manager
-        locationManager = (LocationManager)requireActivity().getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
         // Check condition
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
@@ -275,14 +310,6 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
         }
     }
 
-    private void manageLayoutVisibilities() {
-        if (!isAdd) {
-            txtReportDescription.setVisibility(View.GONE);
-            btnReportConfirm.setVisibility(View.GONE);
-            btnAddReportTitleAndDescription.setVisibility(View.GONE);
-        }
-    }
-
     @Override
     public void onPositionConfirmed(double latitude, double longitude) {
         Geocoder geocoder = new Geocoder(requireContext());
@@ -290,6 +317,8 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
         try {
             // Get the address from the GeoCoder using the founded latitude and longitude
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 5);
+
+            txtPositionSumUp.setVisibility(View.VISIBLE);
 
             if (addresses.size() > 0) {
                 txtPositionSumUp.setText(addresses.get(0).getAddressLine(0));
@@ -324,30 +353,28 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
      * @param email the email of the user whose adding the preview pic
      * */
     private void addReportPic(Uri uri, String email) {
-        String fileName = KeysNamesUtils.FileDirsNames.reportPic(email);
 
-        // Create the storage tree structure
-        String fileReference = KeysNamesUtils.FileDirsNames.REPORT_POST +
-                "/" + fileName;
 
-        StorageReference storageReference = storage.getReference(fileReference);
 
-        // Give to the user a feedback to wait
-        ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Salvando l'immagine...");
-        progressDialog.show();
+    }
 
-        // Start the upload task
-        UploadTask uploadTask = storageReference.putFile(uri);
+    private void manageLayoutVisibilities() {
+        if (!isAdd) {
+            txtReportDescription.setVisibility(View.GONE);
+            btnReportConfirm.setVisibility(View.GONE);
+            btnAddReportTitleAndDescription.setVisibility(View.GONE);
+        }
+    }
 
-        uploadTask.addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                task.getResult().getStorage()
-                        .getDownloadUrl().addOnCompleteListener(taskUri ->
-                                // Set the uri for the report object
-                                report.setReportHelpPictureUri(taskUri.getResult().toString()));
-            }
-        });
+    @NonNull
+    private ArrayList<String> buildSpinnerEntries(@NonNull LinkedHashSet<Animal> animals) {
+        ArrayList<String> list = new ArrayList<>();
+
+        for (Animal animal : animals) {
+            list.add(animal.toString());
+        }
+
+        return list;
     }
 
 }

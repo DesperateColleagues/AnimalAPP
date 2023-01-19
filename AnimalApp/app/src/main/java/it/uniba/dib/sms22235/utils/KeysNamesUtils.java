@@ -77,6 +77,19 @@ public class KeysNamesUtils {
         public static String POST_ANIMAL = "postAnimal";
         public static String FILE_NAME = "fileName";
     }
+
+    public static class ReportsFields {
+        public static String REPORT_ID = "reportId";
+        public static String REPORTER = "reporter";
+        public static String REPORT_TITLE = "reportTitle";
+        public static String REPORT_DESCRIPTION = "reportDescription";
+        public static String REPORT_ADDRESS = "reportAddress";
+        public static String REPORT_ANIMAL = "reportAnimal";
+        public static String REPORT_HELP_PICTURE_URI = "reportHelpPictureUri";
+        public static String LAT = "lat";
+        public static String LON = "lon";
+        public static String COMPLETED = "completed";
+    }
         
     public static class PurchaseFields {
         public static String ID = "id";

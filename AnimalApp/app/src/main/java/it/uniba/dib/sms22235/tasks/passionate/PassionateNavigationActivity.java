@@ -112,8 +112,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                     registerPurchaseFirebase(purchase);
                 }
 
-                // todo: check safe delete
-
                 // Delete the file once the process is over. If some network error occurs
                 // during onPurchaseRegistered then a new offline file will be created
                 // and will contain all the purchases that didn't make the upload to fire store

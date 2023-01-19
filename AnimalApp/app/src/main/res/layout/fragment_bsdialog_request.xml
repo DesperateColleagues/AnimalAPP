@@ -65,32 +65,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <LinearLayout
-        android:id="@+id/btnOnDeleteRequest"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_baseline_delete_24"
-            android:adjustViewBounds="true"
-            app:tint="?attr/colorOnSecondary"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textSize="16sp"
-            android:text="Elimina"
-            android:textColor="?attr/colorOnSecondary"
-            />
-    </LinearLayout>
-
-
-
 
 </LinearLayout>

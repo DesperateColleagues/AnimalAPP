@@ -30,8 +30,8 @@
         android:id="@+id/checkBoxRep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
-        android:text="Nascondi dati animale" />
+        android:layout_gravity="start"
+        android:layout_margin="15dp"
+        android:text="Segnalazione senza animale personale" />
 
 </LinearLayout>

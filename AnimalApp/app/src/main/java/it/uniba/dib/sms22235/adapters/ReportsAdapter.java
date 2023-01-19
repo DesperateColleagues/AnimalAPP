@@ -2,6 +2,7 @@ package it.uniba.dib.sms22235.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +12,18 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.divider.MaterialDivider;
+
 import java.util.ArrayList;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Report;
-import it.uniba.dib.sms22235.entities.operations.Request;
 
 public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.ViewHolder>{
 
     private Context context;
     private ArrayList<Report> reportsList;
+    private ViewHolder.OnItemClickListener onItemClickListener;
 
     public void setContext(Context context) {
         this.context = context;
@@ -39,7 +42,23 @@ public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // todo implement bind
+        Report report = reportsList.get(position);
+
+        holder.txtReportTitle.setText(report.getReportTitle());
+        holder.txtReportReporter.setText(report.getReporter());
+        holder.txtReportAddress.setText(report.getReportAddress());
+
+        if (report.getCompleted()) {
+            TypedValue value = new TypedValue();
+            context.getTheme().resolveAttribute(android.R.attr.colorPrimary, value, true);
+            holder.requestDividerStatus.setBackgroundColor(value.data);
+        }
+
+        holder.itemReportCardView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(report);
+            }
+        });
     }
 
     @Override
@@ -47,24 +66,30 @@ public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.ViewHold
         return reportsList.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtReportTitle;
         TextView txtReportReporter;
+        TextView txtReportAddress;
+        MaterialDivider requestDividerStatus;
 
         CardView itemReportCardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
             txtReportTitle = itemView.findViewById(R.id.txtReportTitle);
             txtReportReporter = itemView.findViewById(R.id.txtReportReporter);
-
+            txtReportAddress = itemView.findViewById(R.id.txtReportAddress);
+            requestDividerStatus = itemView.findViewById(R.id.requestDividerStatus);
             itemReportCardView = itemView.findViewById(R.id.itemReportCardView);
         }
 
         public interface OnItemClickListener {
-            void onItemClick(Request request);
+            void onItemClick(Report report);
         }
     }
 
-
+    public void setOnItemClickListener(ViewHolder.OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
 }
