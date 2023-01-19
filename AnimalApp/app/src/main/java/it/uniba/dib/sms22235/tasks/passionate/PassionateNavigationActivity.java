@@ -38,14 +38,17 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.osmdroid.config.Configuration;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Collections;
 
+import it.uniba.dib.sms22235.BuildConfig;
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.ActivityInterface;
+import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.AnimalProfile;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateProfileFragment;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateReservationFragment;
@@ -68,7 +71,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         PassionateProfileFragment.ProfileFragmentListener, PassionatePurchaseFragment.PurchaseFragmentListener,
         PassionateReservationFragment.PassionateReservationFragmentListener,
         PhotoDiaryFragment.PhotoDiaryFragmentListener, AnimalProfile.AnimalProfileListener,
-        ActivityInterface, Serializable {
+        NavigationActivityInterface, Serializable {
 
     private transient FirebaseFirestore db;
     private transient QueryPurchasesManager queryPurchases;
@@ -139,6 +142,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
 
         setContentView(R.layout.activity_passionate_navigation);
 
@@ -468,26 +473,119 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                 });
     }
 
-    //method to ask permissions
-    // todo: improve permissions requests
-    public void requestPermission() {
-        String permissionRead = Manifest.permission.READ_EXTERNAL_STORAGE;
-        String permissionWrite = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+    @Override
+    public void onReservationBooked(@NonNull Reservation reservation) {
+        String dateFormatted = reservation.getDate();
+        String timeFormatted = reservation.getTime();
 
-        int grantRead = ContextCompat.checkSelfPermission(this,permissionRead);
-        int grantWrite = ContextCompat.checkSelfPermission(this, permissionWrite);
+        availableReservationsList.remove(reservation);
+        reservation.setOwner(getUserId());
 
-        String [] permissions = {permissionRead,permissionWrite};
+        String docKeyReservation = KeysNamesUtils.CollectionsNames.RESERVATIONS
+                +"_"+ dateFormatted.replaceAll("[-+^/]*", "")
+                +"_"+ timeFormatted;
 
-        if(grantRead != PackageManager.PERMISSION_GRANTED || grantWrite != PackageManager.PERMISSION_GRANTED) {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissionRead) && ActivityCompat.shouldShowRequestPermissionRationale(this, permissionWrite)) {
-                //TODO Dialog
-            } else {
-                int STORAGE_REQUEST_CODE = 1;
-                ActivityCompat.requestPermissions(this,permissions, STORAGE_REQUEST_CODE);
+        db.collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
+                .whereEqualTo(KeysNamesUtils.ReservationFields.DATE, reservation.getDate())
+                .whereEqualTo(KeysNamesUtils.ReservationFields.TIME, reservation.getTime())
+                .whereEqualTo(KeysNamesUtils.ReservationFields.VETERINARIAN, reservation.getVeterinarian())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (!querySnapshot.isEmpty()){
+                            db.collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
+                                    .document(docKeyReservation)
+                                    .set(reservation)
+                                    .addOnSuccessListener(unused -> {
+                                        Toast.makeText(this, "Prenotazione confermata!", Toast.LENGTH_SHORT).show();
+                                    }).addOnFailureListener(e -> {
+                                        Log.d("DEB", e.getMessage());
+                                    });
+                        } else {
+                            Toast.makeText(this, "Si è verificato un errore, provare più tardi.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public List<Animal> getAnimalsByVeterinarian(String veterinarian) {
+        List<Animal> animalsByVeterinarian = new ArrayList<>();
+        for (Animal animal : animalSet) {
+            if (veterinarian.equals(animal.getVeterinarian())) {
+                animalsByVeterinarian.add((Animal) animal.clone());
             }
         }
+
+        return animalsByVeterinarian;
     }
+
+    @Override
+    public List<Veterinarian> getVeterinarianList() {
+        List<Veterinarian> clonedVeterinarianList = new ArrayList<>();
+
+        for (Veterinarian veterinarian : veterinariansList) {
+            clonedVeterinarianList.add((Veterinarian) veterinarian.clone());
+        }
+
+        return clonedVeterinarianList;
+    }
+
+    @Override
+    public void onAnimalUpdated(@NonNull Animal animal) {
+        if (isConnectionEnabled) {
+            updateAnimalVeterinarian(animal);
+        } else {
+            Toast.makeText(this, "Impossibile modificare l'animale: rete assente",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    // NavigationActivityInterface overrides methods
+
+    @Override
+    public void restoreBottomAppBarVisibility(){
+        if (navView.getVisibility() == View.GONE && fab.getVisibility() == View.GONE) {
+            navView.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void setNavViewVisibility(int visibility) {
+        navView.setVisibility(visibility);
+    }
+
+    @Override
+    public FloatingActionButton getFab() {
+        return fab;
+    }
+
+    @Override
+    public FirebaseFirestore getFireStoreInstance() {
+        return db;
+    }
+
+    @Override
+    public FirebaseStorage getStorageInstance() {
+        return FirebaseStorage.getInstance();
+    }
+
+    @Override
+    public FirebaseAuth getAuthInstance() {
+        return FirebaseAuth.getInstance();
+    }
+
+    @Override
+    public String getUserId() {
+        return passionate.getUsername();
+    }
+
+
+    // Methods used to better manage certain operations
+
 
     /**
      * This method is used to register an animal into the Firebase firestore
@@ -612,130 +710,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
         return clonedReservationsList;
     }
-    
-     /* This method is used to restore the visibility at the bottom app bar
-     */
-
-    public void restoreBottomAppBarVisibility(){
-        if (navView.getVisibility() == View.GONE && fab.getVisibility() == View.GONE) {
-            navView.setVisibility(View.VISIBLE);
-            fab.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /**
-     * This method is used to modify the visibility of the bottom app bar
-     *
-     * @param visibility the visibility value
-     * */
-    public void setNavViewVisibility(int visibility) {
-        navView.setVisibility(visibility);
-    }
-
-    @Override
-    /**
-     * This method is used to obtain the global fab used to add new data according
-     * to the current selected fragment
-     *
-     * @return an instance of the global fab
-     * */
-    public FloatingActionButton getFab() {
-        return fab;
-    }
-
-    @Override
-    public FirebaseFirestore getFireStoreInstance() {
-        return db;
-    }
-
-    @Override
-    public FirebaseStorage getStorageInstance() {
-        return FirebaseStorage.getInstance();
-    }
-
-    @Override
-    public FirebaseAuth getAuthInstance() {
-        return FirebaseAuth.getInstance();
-    }
-
-    /**
-     * This method is used to obtain the username of the current logged passionate
-     *
-     * @return the username
-     * */
-    public String getUserId() {
-        return passionate.getUsername();
-    }
-
-    @Override
-    public void onReservationBooked(@NonNull Reservation reservation) {
-        String dateFormatted = reservation.getDate();
-        String timeFormatted = reservation.getTime();
-
-        availableReservationsList.remove(reservation);
-        reservation.setOwner(getUserId());
-
-        String docKeyReservation = KeysNamesUtils.CollectionsNames.RESERVATIONS
-                +"_"+ dateFormatted.replaceAll("[-+^/]*", "")
-                +"_"+ timeFormatted;
-
-        db.collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
-                .whereEqualTo(KeysNamesUtils.ReservationFields.DATE, reservation.getDate())
-                .whereEqualTo(KeysNamesUtils.ReservationFields.TIME, reservation.getTime())
-                .whereEqualTo(KeysNamesUtils.ReservationFields.VETERINARIAN, reservation.getVeterinarian())
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        QuerySnapshot querySnapshot = task.getResult();
-                        if (!querySnapshot.isEmpty()){
-                            db.collection(KeysNamesUtils.CollectionsNames.RESERVATIONS)
-                                    .document(docKeyReservation)
-                                    .set(reservation)
-                                    .addOnSuccessListener(unused -> {
-                                        Toast.makeText(this, "Prenotazione confermata!", Toast.LENGTH_SHORT).show();
-                                    }).addOnFailureListener(e -> {
-                                        Log.d("DEB", e.getMessage());
-                                    });
-                        } else {
-                            Toast.makeText(this, "Si è verificato un errore, provare più tardi.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
-    @Override
-    public List<Animal> getAnimalsByVeterinarian(String veterinarian) {
-        List<Animal> animalsByVeterinarian = new ArrayList<>();
-        for (Animal animal : animalSet) {
-            if (veterinarian.equals(animal.getVeterinarian())) {
-                animalsByVeterinarian.add((Animal) animal.clone());
-            }
-        }
-
-        return animalsByVeterinarian;
-    }
-
-    @Override
-    public List<Veterinarian> getVeterinarianList() {
-        List<Veterinarian> clonedVeterinarianList = new ArrayList<>();
-
-        for (Veterinarian veterinarian : veterinariansList) {
-            clonedVeterinarianList.add((Veterinarian) veterinarian.clone());
-        }
-
-        return clonedVeterinarianList;
-    }
-
-    @Override
-    public void onAnimalUpdated(@NonNull Animal animal) {
-        if (isConnectionEnabled) {
-            updateAnimalVeterinarian(animal);
-        } else {
-            Toast.makeText(this, "Impossibile modificare l'animale: rete assente",
-                    Toast.LENGTH_SHORT).show();
-        }
-
-    }
 
     private void updateAnimalVeterinarian(@NonNull Animal animal) {
 
@@ -763,6 +737,27 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         }
                     }
                 });
+    }
+
+    //method to ask permissions
+    // todo: improve permissions requests
+    public void requestPermission() {
+        String permissionRead = Manifest.permission.READ_EXTERNAL_STORAGE;
+        String permissionWrite = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+        int grantRead = ContextCompat.checkSelfPermission(this,permissionRead);
+        int grantWrite = ContextCompat.checkSelfPermission(this, permissionWrite);
+
+        String [] permissions = {permissionRead,permissionWrite};
+
+        if(grantRead != PackageManager.PERMISSION_GRANTED || grantWrite != PackageManager.PERMISSION_GRANTED) {
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissionRead) && ActivityCompat.shouldShowRequestPermissionRationale(this, permissionWrite)) {
+                //TODO Dialog
+            } else {
+                int STORAGE_REQUEST_CODE = 1;
+                ActivityCompat.requestPermissions(this,permissions, STORAGE_REQUEST_CODE);
+            }
+        }
     }
 
 }

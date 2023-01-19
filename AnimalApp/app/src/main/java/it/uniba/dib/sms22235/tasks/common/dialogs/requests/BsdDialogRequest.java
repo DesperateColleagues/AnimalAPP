@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.common.dialogs;
+package it.uniba.dib.sms22235.tasks.common.dialogs.requests;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

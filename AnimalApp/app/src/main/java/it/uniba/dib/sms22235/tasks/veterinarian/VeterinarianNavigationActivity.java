@@ -2,6 +2,7 @@ package it.uniba.dib.sms22235.tasks.veterinarian;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,7 +23,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.util.ArrayList;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.ActivityInterface;
+import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianReservationFragment;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
@@ -31,12 +32,13 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class VeterinarianNavigationActivity extends AppCompatActivity implements
         VeterinarianReservationFragment.VeterinarianReservationFragmentListener,
-        ActivityInterface {
+        NavigationActivityInterface {
 
     private FloatingActionButton fab;
     private FirebaseFirestore db;
     private Veterinarian veterinarian;
     private ArrayList<Reservation> reservationsList;
+    private transient  BottomNavigationView navViewVeterinarian;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -45,7 +47,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
         setContentView(R.layout.activity_veterinarian_navigation);
 
-        BottomNavigationView navViewVeterinarian = findViewById(R.id.nav_view_vet);
+        navViewVeterinarian = findViewById(R.id.nav_view_vet);
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.veterinarian_profile,
@@ -200,15 +202,28 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
+    public FirebaseStorage getStorageInstance() {
+        return FirebaseStorage.getInstance();
+    }
+
+    public String getVeterinarianFullName(){ return veterinarian.getFullName(); }
+
+    @Override
     public FirebaseAuth getAuthInstance() {
         return FirebaseAuth.getInstance();
     }
 
 
     @Override
-    public FirebaseStorage getStorageInstance() {
-        return FirebaseStorage.getInstance();
+    public void restoreBottomAppBarVisibility(){
+        if (navViewVeterinarian.getVisibility() == View.GONE && fab.getVisibility() == View.GONE) {
+            navViewVeterinarian.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
+        }
     }
 
-    public String getVeterinarianFullName(){ return veterinarian.getFullName(); }
+    @Override
+    public void setNavViewVisibility(int visibility) {
+        navViewVeterinarian.setVisibility(visibility);
+    }
 }

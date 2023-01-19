@@ -36,7 +36,7 @@ import java.io.File;
 import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.ActivityInterface;
+import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.entities.operations.Backbench;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
@@ -103,8 +103,8 @@ public class BackBenchFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        db = ((ActivityInterface) requireActivity()).getFireStoreInstance();
-        storage = ((ActivityInterface) requireActivity()).getStorageInstance();
+        db = ((NavigationActivityInterface) requireActivity()).getFireStoreInstance();
+        storage = ((NavigationActivityInterface) requireActivity()).getStorageInstance();
 
         return inflater.inflate(R.layout.fragment_backbench, container, false);
     }
@@ -114,10 +114,10 @@ public class BackBenchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (!isInsideRequest) {
-            ownerEmail = ((ActivityInterface) requireActivity()).getUserId();
+            ownerEmail = ((NavigationActivityInterface) requireActivity()).getUserId();
         }
 
-        ((ActivityInterface) requireActivity()).getFab().setVisibility(View.GONE);
+        ((NavigationActivityInterface) requireActivity()).getFab().setVisibility(View.GONE);
 
         // Create a new backbench instance and load its info
         backbench = new Backbench(ownerEmail);

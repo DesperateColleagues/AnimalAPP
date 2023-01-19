@@ -1,13 +1,14 @@
 package it.uniba.dib.sms22235.tasks;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
 /**
  * This interface determines the common operation of the NavigationActivities
  ** */
-public interface ActivityInterface {
+public interface NavigationActivityInterface {
     /**
      * This method is used to obtain an instance of the global fab in order to attach listeners
      *
@@ -29,6 +30,14 @@ public interface ActivityInterface {
      * */
     FirebaseStorage getStorageInstance();
 
+
+    /**
+     * This method returns an instance of the auth object instantiated int the activity
+     *
+     * @return the auth instance
+     * */
+    FirebaseAuth getAuthInstance();
+
     /**
      * This method returns the id of the current logged user
      *
@@ -36,4 +45,17 @@ public interface ActivityInterface {
      * and username for passionates)
      * */
     String getUserId();
+
+    /**
+     * This method is used to modify the visibility of the bottom app bar
+     *
+     * @param visibility the visibility value
+     * */
+    void setNavViewVisibility(int visibility);
+
+
+    /**
+     * This method is used to restore the normal visibility to the nav bar
+     * */
+    void restoreBottomAppBarVisibility();
 }

@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.ActivityInterface;
+import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.views.backbenches.BackBenchFragment;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.entities.operations.Request;
@@ -46,8 +46,8 @@ public class RequestDetailFragment extends Fragment {
         if (result.getContents() == null) {
             Toast.makeText(getContext(), "Attaccati al cazzo", Toast.LENGTH_SHORT).show();
         } else {
-            FirebaseStorage storage = ((ActivityInterface) requireActivity()).getStorageInstance();
-            FirebaseFirestore db = ((ActivityInterface) requireActivity()).getFireStoreInstance();
+            FirebaseStorage storage = ((NavigationActivityInterface) requireActivity()).getStorageInstance();
+            FirebaseFirestore db = ((NavigationActivityInterface) requireActivity()).getFireStoreInstance();
 
             // Take the result of QR intent
             String [] split = result.getContents().split(" - ");
@@ -66,7 +66,7 @@ public class RequestDetailFragment extends Fragment {
                     .addOnSuccessListener(query -> {
                         if (query.size() > 0) {
                             Animal animal = Animal.loadAnimal(query.getDocuments().get(0));
-                            animal.setOwner(Objects.requireNonNull(((ActivityInterface) requireActivity()).getUserId()));
+                            animal.setOwner(Objects.requireNonNull(((NavigationActivityInterface) requireActivity()).getUserId()));
 
                             String docKeyAnimal = KeysNamesUtils.RolesNames.ANIMAL
                                     + "_" + animal.getMicrochipCode();
@@ -212,7 +212,7 @@ public class RequestDetailFragment extends Fragment {
                                 // Get the bytes of the file from the reference of the storage
                                 currentReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                                     // Retrieve the new owner of the animal via the ActivityInterface
-                                    String newOwner = ((ActivityInterface) requireActivity()).getUserId();
+                                    String newOwner = ((NavigationActivityInterface) requireActivity()).getUserId();
 
                                     // Create the new reference to the folder in the storage,
                                     // the reference of the new file. Then it is possible to obtain
@@ -306,7 +306,7 @@ public class RequestDetailFragment extends Fragment {
                             // Get the bytes of the file from the reference of the storage
                             currentReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                                 // Retrieve the new owner of the animal via the ActivityInterface
-                                String newOwner = ((ActivityInterface) requireActivity()).getUserId();
+                                String newOwner = ((NavigationActivityInterface) requireActivity()).getUserId();
 
                                 // Create the new reference to the folder in the storage,
                                 // the reference of the new file. Then it is possible to obtain

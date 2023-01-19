@@ -1,5 +1,6 @@
 package it.uniba.dib.sms22235.tasks.passionate.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -48,7 +49,7 @@ public class DialogChooseAnimalFragment extends DialogFragment {
         View root = inflater.inflate(R.layout.fragment_dialog_choose_animal, null);
 
         // Set dialog title
-        View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+        @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
         TextView titleText = titleView.findViewById(R.id.dialog_title);
         titleText.setText("Scegli animale per cui prenotare");
         builder.setCustomTitle(titleView);

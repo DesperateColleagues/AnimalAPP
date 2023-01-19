@@ -31,14 +31,14 @@ import java.util.List;
 import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.ActivityInterface;
-import it.uniba.dib.sms22235.tasks.common.dialogs.BsdDialogRequest;
-import it.uniba.dib.sms22235.tasks.common.dialogs.DialogAddRequest;
-import it.uniba.dib.sms22235.tasks.common.dialogs.DialogRequestBackbench;
+import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
+import it.uniba.dib.sms22235.tasks.common.dialogs.requests.BsdDialogRequest;
+import it.uniba.dib.sms22235.tasks.common.dialogs.requests.DialogAddRequest;
+import it.uniba.dib.sms22235.tasks.common.dialogs.requests.DialogRequestBackbench;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.adapters.RequestAdapter;
-import it.uniba.dib.sms22235.tasks.common.dialogs.BsdDialogQr;
+import it.uniba.dib.sms22235.tasks.common.dialogs.requests.BsdDialogQr;
 import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.Request;
 import it.uniba.dib.sms22235.entities.users.Animal;
@@ -69,7 +69,7 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
 
         // Get the instances of firebase objects
         auth = FirebaseAuth.getInstance();
-        db = ((ActivityInterface) requireActivity()).getFireStoreInstance();
+        db = ((NavigationActivityInterface) requireActivity()).getFireStoreInstance();
 
         return inflater.inflate(R.layout.fragment_requests, container, false);
     }
@@ -78,9 +78,9 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((ActivityInterface) requireActivity()).getFab().setVisibility(View.VISIBLE);
+        ((NavigationActivityInterface) requireActivity()).getFab().setVisibility(View.VISIBLE);
 
-        ((ActivityInterface) requireActivity()).getFab().setOnClickListener(v -> {
+        ((NavigationActivityInterface) requireActivity()).getFab().setOnClickListener(v -> {
             DialogAddRequest dialogAddRequest = new DialogAddRequest();
             dialogAddRequest.setListener(this);
             dialogAddRequest.show(getChildFragmentManager(), "DialogAddRequest");

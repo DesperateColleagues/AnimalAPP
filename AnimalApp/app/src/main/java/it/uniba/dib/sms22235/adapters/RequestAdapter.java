@@ -85,12 +85,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
             txtRequestOwner = itemView.findViewById(R.id.txtRequestOwner);
             requestDividerStatus = itemView.findViewById(R.id.requestDividerStatus);
             itemRequestCardView = itemView.findViewById(R.id.itemRequestCardView);
-
         }
-    }
-
-    public void clearAll() {
-        requestsList.clear();
     }
 
     public interface OnItemClickListener {

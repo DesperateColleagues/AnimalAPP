@@ -8,31 +8,21 @@
     android:layout_marginLeft="30dp"
     android:layout_marginRight="30dp">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/txtRequestDetailsTitle"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txtRequestDetailsTitle"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnSecondary"
-                    android:textSize="20sp"/>
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnSecondary"
+            android:textSize="20sp"/>
 
 
             </LinearLayout>
@@ -129,11 +119,6 @@
                 android:textStyle="bold"
                 android:visibility="gone"
                 android:text="Scannerizza codice Qr"/>
-
-
-        </LinearLayout>
-
-    </ScrollView>
 
 
 

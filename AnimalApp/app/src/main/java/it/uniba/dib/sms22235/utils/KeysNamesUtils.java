@@ -140,7 +140,7 @@ public class KeysNamesUtils {
         public static String PROFILE_IMAGES = "AnimalAPP_images";
         public static String ADD_PURCHASE = "add_purchase";
         public static String BACKBENCH_POST = "backbench_post";
-        public static String ADD_ANIMAL = "add_animal";
+        public static String REPORT_POST = "report_post";
 
         /**
          * Method that helps to obtain the name of the directory where posts' images
@@ -186,6 +186,12 @@ public class KeysNamesUtils {
         @Contract(pure = true)
         public static String backBenchPic(String email) {
             return  "backbench_" + email;
+        }
+
+        @NonNull
+        @Contract(pure = true)
+        public static String reportPic(String email) {
+            return "report_" + email;
         }
     }
 

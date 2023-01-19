@@ -148,7 +148,7 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
                                         .getPassionateReservationsList());
                         controller.navigate(R.id.action_passionate_profile_to_BookedReservationsFragment, bundle);
                     } else if (messageListAdapter.getMessageAtPosition(position).getType().equals(KeysNamesUtils.CollectionsNames.REPORTS)) {
-                        Toast.makeText(getContext(), "2",Toast.LENGTH_SHORT).show();
+                        controller.navigate(R.id.action_passionate_profile_to_reportsDashboardFragment);
                     } else if (messageListAdapter.getMessageAtPosition(position).getType().equals("notNow")){
                         notNowDialog(
                                 username + " " + getResources().getString(R.string.notNow),

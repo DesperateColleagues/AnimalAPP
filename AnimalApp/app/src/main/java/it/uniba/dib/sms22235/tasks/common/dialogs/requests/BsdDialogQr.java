@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.common.dialogs;
+package it.uniba.dib.sms22235.tasks.common.dialogs.requests;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;

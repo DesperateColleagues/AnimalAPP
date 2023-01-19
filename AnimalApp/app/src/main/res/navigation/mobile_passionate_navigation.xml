@@ -20,6 +20,11 @@
             app:destination="@id/passionateBookedReservations"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_passionate_profile_to_reportsDashboardFragment"
+            app:destination="@id/reportsDashboardFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -67,7 +72,8 @@
     <fragment
         android:id="@+id/passionate_requests"
         android:name="it.uniba.dib.sms22235.tasks.common.views.requests.RequestsFragment"
-        android:label="@string/title_fragment_requests">
+        android:label="@string/title_fragment_requests"
+        tools:layout="@layout/fragment_requests">
         <action
             android:id="@+id/action_passionate_requests_to_passionate_request_detail"
             app:destination="@id/request_detail" />
@@ -76,5 +82,24 @@
     <fragment
         android:id="@+id/request_detail"
         android:name="it.uniba.dib.sms22235.tasks.common.views.requests.RequestDetailFragment"
-        android:label="@string/title_fragment_requests"/>
+        android:label="@string/title_fragment_requests"
+        tools:layout="@layout/fragment_request_details"/>
+
+    <fragment
+        android:id="@+id/reportsDashboardFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.reports.ReportsDashboardFragment"
+        android:label="ReportsDashboardFragment"
+        tools:layout="@layout/fragment_reports_dashboard">
+        <action
+            android:id="@+id/action_reportsDashboardFragment_to_reportDetailsFragment"
+            app:destination="@id/reportDetailsFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/reportDetailsFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.reports.ReportAddNewFragment"
+        android:label="ReportDetailsFragment"
+        tools:layout="@layout/fragment_reports_add_new"/>
 </navigation>
