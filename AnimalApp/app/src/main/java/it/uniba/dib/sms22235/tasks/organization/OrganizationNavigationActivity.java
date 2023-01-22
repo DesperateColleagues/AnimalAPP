@@ -13,10 +13,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.entities.users.Organization;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class OrganizationNavigationActivity extends AppCompatActivity {
 
     private FloatingActionButton fab;
+    private transient Organization organization;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +41,13 @@ public class OrganizationNavigationActivity extends AppCompatActivity {
         NavController navController = navHostFragment.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navViewVeterinarian, navController);
+
+        Bundle loginBundle = getIntent().getExtras(); // get the login bundle
+
+        // Extract the bundle data sent from login activity
+        if (loginBundle != null) {
+            organization = (Organization) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.ORGANZIATION);
+        }
 
         fab = findViewById(R.id.floatingActionButton_organization);
         }

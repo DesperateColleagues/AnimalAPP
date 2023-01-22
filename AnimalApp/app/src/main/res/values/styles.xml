@@ -24,4 +24,9 @@
         <item name="background">@android:color/transparent</item>
     </style>
 
+    <style name="Widget.App.ProgressDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:windowBackground">@drawable/bg_animal_card</item>
+    </style>
+
 </resources>

@@ -107,7 +107,7 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
                             KeysNamesUtils.FileDirsNames.PROFILE_IMAGES;
 
             // Init the recycler
-            animalListAdapter = new AnimalListAdapter();
+            animalListAdapter = new AnimalListAdapter(RecyclerView.HORIZONTAL);
 
             for (Animal animal : animalSet) {
                 // Set the animals in the adapter

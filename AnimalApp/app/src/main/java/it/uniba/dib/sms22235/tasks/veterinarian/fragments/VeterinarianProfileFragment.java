@@ -32,6 +32,8 @@ public class VeterinarianProfileFragment extends Fragment {
 
         ((TextView) rootView.findViewById(R.id.txtVeterinarianWelcome)).setText(title);
 
+        ((VeterinarianNavigationActivity) requireActivity()).getFab().setVisibility(View.VISIBLE);
+
         ((VeterinarianNavigationActivity) requireActivity()).getFab().setOnClickListener(v -> {
             Toast.makeText(getContext(),"Still nothing",Toast.LENGTH_SHORT).show();
         });

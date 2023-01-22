@@ -26,12 +26,14 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -39,6 +41,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import org.osmdroid.config.Configuration;
+import org.osmdroid.library.BuildConfig;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -46,13 +49,18 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Collections;
 
-import it.uniba.dib.sms22235.BuildConfig;
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.adapters.DiagnosisAdapter;
+import it.uniba.dib.sms22235.adapters.ExamsAdapter;
+import it.uniba.dib.sms22235.entities.operations.Diagnosis;
+import it.uniba.dib.sms22235.entities.operations.Exam;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.AnimalProfile;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateProfileFragment;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateReservationFragment;
 
+import it.uniba.dib.sms22235.tasks.passionate.fragments.animalprofile.DiagnosisFragment;
+import it.uniba.dib.sms22235.tasks.passionate.fragments.animalprofile.ExamsFragment;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.animalprofile.PhotoDiaryFragment;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionatePurchaseFragment;
 
@@ -68,10 +76,15 @@ import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class PassionateNavigationActivity extends AppCompatActivity implements
-        PassionateProfileFragment.ProfileFragmentListener, PassionatePurchaseFragment.PurchaseFragmentListener,
+        PassionateProfileFragment.ProfileFragmentListener,
+        PassionatePurchaseFragment.PurchaseFragmentListener,
         PassionateReservationFragment.PassionateReservationFragmentListener,
-        PhotoDiaryFragment.PhotoDiaryFragmentListener, AnimalProfile.AnimalProfileListener,
-        NavigationActivityInterface, Serializable {
+        PhotoDiaryFragment.PhotoDiaryFragmentListener,
+        AnimalProfile.AnimalProfileListener,
+        DiagnosisFragment.DiagnosisFragmentListener,
+        ExamsFragment.ExamsFragmentListener,
+        NavigationActivityInterface,
+        Serializable {
 
     private transient FirebaseFirestore db;
     private transient QueryPurchasesManager queryPurchases;
@@ -352,6 +365,50 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void getAnimalDiagnosis(DiagnosisAdapter adapter, RecyclerView recyclerView, String animal){
+        db.collection(KeysNamesUtils.CollectionsNames.DIAGNOSIS)
+                .whereEqualTo(KeysNamesUtils.DiagnosisFields.ANIMAL, animal)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (!querySnapshot.isEmpty()){
+                            List<DocumentSnapshot> diagnosisDocuments = task.getResult().getDocuments();
+                            for (DocumentSnapshot snapshot : diagnosisDocuments) {
+                                adapter.addDiagnosis(Diagnosis.loadDiagnosis(snapshot));
+                                Log.wtf("Diagnosi", Diagnosis.loadDiagnosis(snapshot).toString());
+                            }
+                        }
+                        recyclerView.setAdapter(adapter);
+                        } else {
+                            Toast.makeText(this, "Nessuna diagnosi presente.", Toast.LENGTH_SHORT).show();
+                        }
+                });
+    }
+
+    @Override
+    public void getAnimalExams(ExamsAdapter adapter, RecyclerView recyclerView, String animal){
+        db.collection(KeysNamesUtils.CollectionsNames.EXAMS)
+                .whereEqualTo(KeysNamesUtils.ExamsFields.EXAM_ANIMAL, animal)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (!querySnapshot.isEmpty()){
+                            List<DocumentSnapshot> examsDocuments = task.getResult().getDocuments();
+                            for (DocumentSnapshot snapshot : examsDocuments) {
+                                adapter.addExam(Exam.loadExam(snapshot));
+                                Log.wtf("Esami", Exam.loadExam(snapshot).toString());
+                            }
+                        }
+                        recyclerView.setAdapter(adapter);
+                    } else {
+                        Toast.makeText(this, "Nessun esame presente.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    @Override
     public void onPostAdded(@NonNull PhotoDiaryPost post) {
         String fileName = System.currentTimeMillis() + "";
 
@@ -409,7 +466,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                 (fileReference);
 
         // Give to the user a feedback to wait
-        ProgressDialog progressDialog = new ProgressDialog(this);
+        ProgressDialog progressDialog = new ProgressDialog(this,R.style.Widget_App_ProgressDialog);
         progressDialog.setMessage("Salvando l'immagine...");
         progressDialog.show();
 
@@ -417,7 +474,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         UploadTask uploadTask = storageReference.putFile(source);
         uploadTask.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                task.getResult().getStorage()
+                task.getResult()
+                        .getStorage()
                         .getDownloadUrl().addOnCompleteListener(taskUri -> {
                             PhotoDiaryPost postProfileImage = new PhotoDiaryPost(taskUri.getResult().toString(), microchip);
                             postProfileImage.setFileName(fileName);
@@ -444,6 +502,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         });
     }
 
+    /* This method is used to load the animal profile pic in AnimalProfile */
     @Override
     public void loadProfilePic(String microchip, ImageView imageView) {
         db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
@@ -757,5 +816,4 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             }
         }
     }
-
 }

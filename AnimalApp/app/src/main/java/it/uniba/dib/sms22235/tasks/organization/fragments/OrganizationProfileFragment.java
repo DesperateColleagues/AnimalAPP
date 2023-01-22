@@ -18,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -32,9 +34,12 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.tasks.organization.OrganizationNavigationActivity;
 
 public class OrganizationProfileFragment extends Fragment {
+
+    private FirebaseAuth mAuth;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -45,11 +50,13 @@ public class OrganizationProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_organization_profile, container, false);
 
+        mAuth = FirebaseAuth.getInstance();
+
         TextView organizationWelcome = rootView.findViewById(R.id.txtOrganizationWelcome);
-        organizationWelcome.setText("Benvenuto");
+        organizationWelcome.setText("Benvenuto, " + mAuth.getCurrentUser().getEmail());
 
         Context ctx = requireContext();
-        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+        /*Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
         MapView map = rootView.findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
@@ -64,7 +71,7 @@ public class OrganizationProfileFragment extends Fragment {
         map.setMaxZoomLevel(19.3d);
 
 
-        /*ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
         items.add(new OverlayItem("Title", "Description", new GeoPoint(40.9202986785771, 17.02601805879099)));
         // Lat/Lon decimal degrees
 
@@ -73,7 +80,7 @@ public class OrganizationProfileFragment extends Fragment {
 
         ((OrganizationNavigationActivity) requireActivity()).getFab().setOnClickListener(v -> {
             Toast.makeText(getContext(),"Still nothing, but organizations",Toast.LENGTH_SHORT).show();
-        });*/
+        });
 
         rootView.findViewById(R.id.testButton).setOnClickListener(v -> {
             double latitude = 40.9202986785771;
@@ -86,7 +93,7 @@ public class OrganizationProfileFragment extends Fragment {
             Uri uri = Uri.parse(uriString);
             Intent intent = new Intent(android.content.Intent.ACTION_VIEW, uri);
             startActivity(intent);
-        });
+        });*/
 
         return rootView;
     }

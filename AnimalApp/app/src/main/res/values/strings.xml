@@ -54,6 +54,7 @@
     <string name="titolo_immagine">titolo immagine</string>
 
     <!-- Stringhe sottostanti riferite alle prenotazioni del passionate -->
+    <string name="aggiungi_appuntamento">Aggiungi appuntamento</string>
     <string name="appuntamenti_recenti">Appuntamenti recenti</string>
     <string name="tutti_appuntamenti_recenti">Visualizza tutti gli appuntamenti recenti</string>
     <string name="appuntamenti_passati">Stai visualizzando: appuntamenti passati</string>
@@ -77,6 +78,8 @@
     <string name="aggiungi_diagnosi">Aggiungi diagnosi</string>
     <string name="modifica_diagnosi">Modifica diagnosi</string>
     <string name="elimina_diagnosi">Elimina diagnosi</string>
+    <string name="proprietario_animale_vet_list">Proprietario:</string>
+    <string name="nome_animale_vet_list">Nome:</string>
 
     <!-- Stringhe sottostanti riferite agli acquisti -->
     <string name="product">prodotto</string>

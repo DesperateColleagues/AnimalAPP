@@ -23,6 +23,7 @@ public class KeysNamesUtils {
         public static String REPORTS = "reports";
         public static String RESERVATIONS = "reservations";
         public static String DIAGNOSIS = "diagnosis";
+        public static String EXAMS = "exams";
         public static String PHOTO_DIARY = "photoDiary";
         public static String PHOTO_DIARY_PROFILE = "photoDiaryProfile";
         public static String BACKBENCH = "backbench";
@@ -70,6 +71,7 @@ public class KeysNamesUtils {
         public static String ID = "id";
         public static String DESCRIPTION = "description";
         public static String PATH = "path";
+        public static String ANIMAL = "animal";
     }
         
     public static class PhotoDiaryFields {
@@ -89,6 +91,14 @@ public class KeysNamesUtils {
         public static String LAT = "lat";
         public static String LON = "lon";
         public static String COMPLETED = "completed";
+    }
+
+    public static class ExamsFields {
+        public static String EXAM_ID = "examID";
+        public static String EXAM_ANIMAL = "animal";
+        public static String EXAM_TYPE = "examType";
+        public static String EXAM_DESCRIPTION = "description";
+        public static String EXAM_OUTCOME = "outcome";
     }
         
     public static class PurchaseFields {
@@ -125,6 +135,7 @@ public class KeysNamesUtils {
     public static class BundleKeys {
         public static String PASSIONATE = "passionate";
         public static String VETERINARIAN = "veterinarian";
+        public static String ORGANZIATION = "organization";
         public static String VETERINARIAN_RESERVATIONS = "veterinarian_reservations";
         public static String PASSIONATE_RESERVATIONS = "passionate_reservations";
         public static String AVAILABLE_RESERVATIONS = "available_reservations";

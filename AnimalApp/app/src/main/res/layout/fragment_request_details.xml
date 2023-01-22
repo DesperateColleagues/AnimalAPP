@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_marginLeft="30dp"
-    android:layout_marginRight="30dp">
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,6 +42,8 @@
                 android:id="@+id/txtRequestDetailsEntityType"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?attr/colorOnSecondary"
@@ -53,6 +55,8 @@
                 android:id="@+id/txtRequestDetailsBody"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?attr/colorOnSecondary"
@@ -119,7 +123,5 @@
                 android:textStyle="bold"
                 android:visibility="gone"
                 android:text="Scannerizza codice Qr"/>
-
-
 
 </LinearLayout>

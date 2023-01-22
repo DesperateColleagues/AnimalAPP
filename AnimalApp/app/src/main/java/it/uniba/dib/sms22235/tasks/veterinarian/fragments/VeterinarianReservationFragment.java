@@ -178,6 +178,7 @@ public class VeterinarianReservationFragment extends Fragment implements
             reservationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
         });
 
+        ((VeterinarianNavigationActivity) requireActivity()).getFab().setVisibility(View.VISIBLE);
         // Event listener for the fab
         ((VeterinarianNavigationActivity) requireActivity()).getFab().setOnClickListener(v -> {
 
@@ -262,6 +263,7 @@ public class VeterinarianReservationFragment extends Fragment implements
                 "_" +
                 reservation.getAnimal();
         diagnosis.setId(diagnosisID);
+        diagnosis.setAnimal(reservation.getAnimal());
         reservation.setDiagnosis(diagnosisID);
         listener.onDiagnosisRegistered(reservation, diagnosis);
     }

@@ -50,6 +50,9 @@ public class BackBenchFragment extends Fragment {
     private String ownerEmail;
     boolean isInsideRequest = false;
 
+    private Button btnAddBackBenchImage;
+    private Button btnAddBackBenchDescription;
+
     public BackBenchFragment() {
         // not supported
     }
@@ -123,7 +126,7 @@ public class BackBenchFragment extends Fragment {
         backbench = new Backbench(ownerEmail);
         loadBackbenchInfo(ownerEmail);
 
-        Button btnAddBackBenchImage = view.findViewById(R.id.btnAddBackBenchImage);
+        btnAddBackBenchImage = view.findViewById(R.id.btnAddBackBenchImage);
 
         if (isInsideRequest) {
             btnAddBackBenchImage.setVisibility(View.GONE);
@@ -136,7 +139,7 @@ public class BackBenchFragment extends Fragment {
             photoUploadAndSaveActivity.launch(i);
         });
 
-        Button btnAddBackBenchDescription = view.findViewById(R.id.btnAddBackBenchDescription);
+        btnAddBackBenchDescription = view.findViewById(R.id.btnAddBackBenchDescription);
 
         if (isInsideRequest) {
             btnAddBackBenchDescription.setVisibility(View.GONE);
@@ -151,11 +154,9 @@ public class BackBenchFragment extends Fragment {
 
             // todo: refactor dialog
 
-            AlertDialog dialog = new AlertDialog.Builder(getContext())
-                    .setTitle("Title")
-                    .setMessage("Inserisci una descrizione per il tuo stallo")
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                     .setView(inputEditTextField)
-                    .setPositiveButton("OK", (dialogInterface, i) -> {
+                    .setPositiveButton("Conferma", (dialogInterface, i) -> {
                         String description = inputEditTextField.getText().toString();
 
                         if (!description.equals("")) {
@@ -169,10 +170,15 @@ public class BackBenchFragment extends Fragment {
                                                     Toast.LENGTH_SHORT).show());
                         }
                     })
-                    .setNegativeButton("Cancel", null)
-                    .create();
+                    .setNegativeButton("Annulla", null);
 
-            dialog.show();
+            // Set dialog title
+            View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+            TextView titleText = titleView.findViewById(R.id.dialog_title);
+            titleText.setText("Inserisci descrizione stallo");
+            builder.setCustomTitle(titleView);
+
+            builder.create().show();
         });
     }
 
@@ -243,7 +249,11 @@ public class BackBenchFragment extends Fragment {
                             // Extract the post and load it with GLIDE
                             backbench = Backbench.loadBackbench(change.getDocument());
                             txtBackbenchDescription.setText(backbench.getDescription());
-                            Glide.with(requireContext()).load(backbench.getDownloadableImage()).into(imgBackbench);
+                            if(!backbench.getDescription().equals("")) {
+                                btnAddBackBenchDescription.setText("Modifica");
+                            }
+                            Glide.with(requireContext()).load(backbench.getDownloadableImage()).into(imgBackbench); //todo check edit
+                            btnAddBackBenchImage.setText("Modifica immagine stallo");
                         }
                     }
                 });

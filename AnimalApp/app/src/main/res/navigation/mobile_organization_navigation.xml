@@ -11,4 +11,11 @@
         android:label="Profilo organizzazione"
         tools:layout="@layout/fragment_organization_profile" />
 
+    <fragment
+        android:id="@+id/organization_import_data"
+        android:name="it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationImportDataFragment"
+        android:label="Importa dati animali"
+        tools:layout="@layout/fragment_organization_import_data" />
+
+
 </navigation>

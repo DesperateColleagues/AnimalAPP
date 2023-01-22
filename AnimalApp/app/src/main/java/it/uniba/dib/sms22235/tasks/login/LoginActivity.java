@@ -347,8 +347,10 @@ public class LoginActivity extends AppCompatActivity {
                                                 });
 
                                             } else if (role.equals(KeysNamesUtils.RolesNames.PUBLIC_ORGANIZATION) || role.equals(KeysNamesUtils.RolesNames.PRIVATE_ORGANIZATION)) {
+                                                Bundle bundle = new Bundle();
                                                 Organization org = Organization.loadOrganization(document);
-                                                newActivityRunning(OrganizationNavigationActivity.class, null);
+                                                bundle.putSerializable(KeysNamesUtils.BundleKeys.ORGANZIATION, org);
+                                                newActivityRunning(OrganizationNavigationActivity.class, bundle);
                                             }
                                         }
                                     });

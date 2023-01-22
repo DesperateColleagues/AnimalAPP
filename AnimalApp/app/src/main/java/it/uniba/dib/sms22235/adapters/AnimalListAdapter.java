@@ -1,7 +1,10 @@
 package it.uniba.dib.sms22235.adapters;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,20 +22,29 @@ import it.uniba.dib.sms22235.entities.users.Animal;
 public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.ViewHolder> {
     private final ArrayList<Animal> animalList;
     private final ArrayList<Bitmap> animalPic;
+    protected final int orientation;
+    private Context context;
 
-    public AnimalListAdapter (){
+    public AnimalListAdapter(int orientation) {
         animalList = new ArrayList<>();
         animalPic = new ArrayList<>();
+        this.orientation = orientation;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView txtAnimalName;
         ImageView animalPicPreview;
+        TextView txtAnimalOwner;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             txtAnimalName = itemView.findViewById(R.id.txtAnimalName);
-            animalPicPreview = itemView.findViewById(R.id.animalPicPreview);
+            animalPicPreview = itemView.findViewById(R.id.animalPic);
+            txtAnimalOwner = itemView.findViewById(R.id.txtAnimalOwner);
         }
     }
 
@@ -40,16 +52,33 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
     @NonNull
     @Override
     public AnimalListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fragment_animal_single_card, null));
+        if (orientation == RecyclerView.HORIZONTAL) {
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fragment_animal_single_square_card, null));
+        } else { //orientation == RecyclerView.VERTICAL
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fragment_animal_single_ribbon_card, null));
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull AnimalListAdapter.ViewHolder holder, int position) {
-        holder.txtAnimalName.setText(animalList.get(position).getName());
 
-        if (animalPic.get(position) != null) {
-            holder.animalPicPreview.setVisibility(View.VISIBLE);
-            holder.animalPicPreview.setImageBitmap(animalPic.get(position));
+        if(orientation == RecyclerView.HORIZONTAL) {
+            holder.txtAnimalName.setText(animalList.get(position).getName());
+            if (animalPic.get(position) != null) {
+                holder.animalPicPreview.setVisibility(View.VISIBLE);
+                holder.animalPicPreview.setImageBitmap(animalPic.get(position));
+            }
+        } else {
+            holder.txtAnimalName.setText(
+                    String.format("%s%s", context.getResources()
+                            .getString(R.string.nome_animale_vet_list),
+                            animalList.get(position).getName())
+            );
+            holder.txtAnimalOwner.setText(
+                    String.format("%s%s", context.getResources()
+                                    .getString(R.string.proprietario_animale_vet_list),
+                            animalList.get(position).getOwner())
+            );
         }
 
     }

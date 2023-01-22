@@ -17,15 +17,4 @@
         android:textSize="28sp"
         android:textColor="?attr/colorOnSecondary"/>
 
-    <org.osmdroid.views.MapView
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/testButton"
-        android:text="TEST"/>
-
 </LinearLayout>

@@ -4,5 +4,10 @@
     <item
         android:id="@+id/organization_profile"
         android:icon="@drawable/ic_baseline_account_circle_24"
-        android:title="TITOLO" />
+        android:title="Profilo" />
+
+    <item
+        android:id="@+id/organization_import_data"
+        android:icon="@drawable/ic_baseline_import_export_24"
+        android:title="Importazione dati" />
 </menu>

@@ -89,8 +89,4 @@
             android:textColor="?attr/colorOnSecondary"
             />
     </LinearLayout>
-
-
-
-
 </LinearLayout>

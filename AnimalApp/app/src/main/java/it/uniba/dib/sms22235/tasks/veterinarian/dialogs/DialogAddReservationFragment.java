@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
@@ -49,7 +50,12 @@ public class DialogAddReservationFragment extends DialogFragment implements andr
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View root = inflater.inflate(R.layout.fragment_dialog_add_reservation, null);
         builder.setView(root);
-        builder.setTitle("Aggiunta appuntamento");
+
+        // Set dialog title
+        View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+        TextView titleText = titleView.findViewById(R.id.dialog_title);
+        titleText.setText(getResources().getString(R.string.aggiungi_appuntamento));
+        builder.setCustomTitle(titleView);
 
         txtInputReservationDate = root.findViewById(R.id.txtInputReservationDate);
         txtInputReservationTime = root.findViewById(R.id.txtInputReservationTime);

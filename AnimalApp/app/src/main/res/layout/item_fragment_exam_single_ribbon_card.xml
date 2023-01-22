@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="4dp"
-    >
+    android:padding="5dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -14,38 +14,43 @@
         tools:ignore="UselessParent">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/itemReservationCardView"
+            android:id="@+id/itemExamCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="4dp"
-            android:backgroundTint="?attr/colorPrimary"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
-            app:cardCornerRadius="12dp">
+            app:cardCornerRadius="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:gravity="center">
 
                 <TextView
-                    android:id="@+id/txtReservationInfo"
+                    android:id="@+id/txtExamInfo"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textColor="@color/black"
-                    android:textSize="17sp"
-                    />
+                    android:layout_gravity="center"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:gravity="center"
+                    android:textSize="16sp" />
+
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dividerThickness="10dp" />
 
             </LinearLayout>
-
         </androidx.cardview.widget.CardView>
     </RelativeLayout>
 

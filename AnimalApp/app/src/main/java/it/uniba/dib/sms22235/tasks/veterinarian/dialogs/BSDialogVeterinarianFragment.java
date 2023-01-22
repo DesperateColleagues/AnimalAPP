@@ -29,7 +29,7 @@ public class BSDialogVeterinarianFragment extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_bsdialog_veterinarian, container, false);
+        View root = inflater.inflate(R.layout.fragment_bsdialog_diagnosis_veterinarian, container, false);
         root.findViewById(R.id.btnOnDeleteDiagnosis).setOnClickListener(v -> {
             onDeleteListener.onDelete();
         });
@@ -39,6 +39,8 @@ public class BSDialogVeterinarianFragment extends BottomSheetDialogFragment {
         root.findViewById(R.id.btnOnAddDiagnosis).setOnClickListener(v -> {
             onAddDiagnosisListener.onAddDiagnosis();
         });
+
+        //TODO aggiungere un ulteriore layer: un BSD per la selezione tra esami e diagnosi, e poi dei dialog appositi per visualizzare le relative info
 
 
         return root;

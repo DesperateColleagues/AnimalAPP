@@ -12,18 +12,25 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
+import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
+import it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianAnimalListFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianReservationFragment;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
@@ -32,10 +39,12 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class VeterinarianNavigationActivity extends AppCompatActivity implements
         VeterinarianReservationFragment.VeterinarianReservationFragmentListener,
+        VeterinarianAnimalListFragment.VeterinarianAnimalListFragmentListener,
         NavigationActivityInterface {
 
     private FloatingActionButton fab;
     private FirebaseFirestore db;
+    private FirebaseAuth auth;
     private Veterinarian veterinarian;
     private ArrayList<Reservation> reservationsList;
     private transient  BottomNavigationView navViewVeterinarian;
@@ -164,6 +173,26 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
                                             Toast.makeText(this, "Errore interno, dati non aggiornati",
                                                     Toast.LENGTH_SHORT).show());
                         }
+                    }
+                });
+    }
+
+    public void getAssistedAnimals(AnimalListAdapter adapter, RecyclerView recyclerView) {
+        auth = FirebaseAuth.getInstance();
+
+        db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                .whereEqualTo(KeysNamesUtils.AnimalFields.VETERINARIAN,
+                        Objects.requireNonNull(auth.getCurrentUser()).getEmail())
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            List<DocumentSnapshot> assistedAnimalsDocuments = task.getResult().getDocuments();
+                            for (DocumentSnapshot snapshot : assistedAnimalsDocuments) {
+                                adapter.addAnimal(Animal.loadAnimal(snapshot));
+                                Log.wtf("LISTA", Animal.loadAnimal(snapshot).toString());
+                            }
+                        }
+                        recyclerView.setAdapter(adapter);
                     }
                 });
     }

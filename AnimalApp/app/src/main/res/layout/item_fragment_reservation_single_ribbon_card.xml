@@ -13,14 +13,13 @@
         android:layout_height="wrap_content"
         tools:ignore="UselessParent">
 
-        <!-- android:backgroundTint="?attr/colorPrimary" alla Cardview-->
         <androidx.cardview.widget.CardView
-            android:id="@+id/itemReportCardView"
+            android:id="@+id/itemReservationCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
             android:layout_marginBottom="4dp"
             android:clickable="true"
             android:focusable="true"
@@ -34,46 +33,18 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/txtReportTitle"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
+                    android:id="@+id/txtReservationInfo"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:textColor="?attr/colorOnSecondary"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:dividerThickness="1dp" />
-
-                <TextView
-                    android:id="@+id/txtReportReporter"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textColor="?attr/colorOnSecondary"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/txtReportAddress"
-                    android:layout_margin="10dp"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textColor="?attr/colorOnSecondary"
-                    android:textSize="16sp" />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/requestDividerStatus"
+                    android:id="@+id/reservationDividerStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:dividerThickness="10dp" />

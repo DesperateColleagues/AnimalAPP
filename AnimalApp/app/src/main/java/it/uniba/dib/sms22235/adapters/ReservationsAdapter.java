@@ -49,7 +49,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
     @NonNull
     @Override
     public ReservationsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fragment_reservation_single_card, null));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fragment_reservation_single_ribbon_card, null));
     }
 
     @Override
