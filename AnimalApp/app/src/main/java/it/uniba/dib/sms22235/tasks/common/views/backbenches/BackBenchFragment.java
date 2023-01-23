@@ -129,6 +129,7 @@ public class BackBenchFragment extends Fragment {
         btnAddBackBenchImage = view.findViewById(R.id.btnAddBackBenchImage);
 
         if (isInsideRequest) {
+            view.findViewById(R.id.txtBackbenchTitle).setVisibility(View.GONE);
             btnAddBackBenchImage.setVisibility(View.GONE);
         }
 

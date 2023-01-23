@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.passionate.fragments;
+package it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -30,12 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.entities.operations.Diagnosis;
-import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
-import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAnimalCardFragment;
-import it.uniba.dib.sms22235.tasks.passionate.fragments.animalprofile.DiagnosisFragment;
-import it.uniba.dib.sms22235.tasks.passionate.fragments.animalprofile.ExamsFragment;
-import it.uniba.dib.sms22235.tasks.passionate.fragments.animalprofile.PhotoDiaryFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.dialogs.DialogAnimalCardFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.animalprofile.DiagnosisFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.animalprofile.ExamsFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.animalprofile.PhotoDiaryFragment;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 

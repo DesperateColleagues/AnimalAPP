@@ -14,7 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.registration.fragments.RegistrationOrganizationFragment;
 import it.uniba.dib.sms22235.tasks.registration.fragments.RegistrationPersonFragment;
 import it.uniba.dib.sms22235.utils.DataManipulationHelper;

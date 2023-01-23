@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.entities.operations.Request;
 import it.uniba.dib.sms22235.entities.users.Animal;

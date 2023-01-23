@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.passionate.fragments;
+package it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Locale;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
-import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogChooseAnimalFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.dialogs.DialogChooseAnimalFragment;
 import it.uniba.dib.sms22235.adapters.ReservationsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Animal;

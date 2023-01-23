@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.passionate.fragments.animalprofile;
+package it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.animalprofile;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,24 +13,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.adapters.DiagnosisAdapter;
-import it.uniba.dib.sms22235.entities.users.Animal;
+import it.uniba.dib.sms22235.adapters.ExamsAdapter;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 
-public class DiagnosisFragment extends Fragment {
+public class ExamsFragment extends Fragment {
 
-    private final String animal;
-    private RecyclerView diagnosisRecyclerView;
-    private DiagnosisAdapter adapter;
-    private DiagnosisFragmentListener listener;
+    private String animal;
+    private RecyclerView examsRecyclerView;
+    private ExamsAdapter adapter;
 
-    public DiagnosisFragment(String animal) {
+    public ExamsFragment(String animal) {
         this.animal = animal;
     }
 
-    public interface DiagnosisFragmentListener {
-        void getAnimalDiagnosis(DiagnosisAdapter adapter, RecyclerView recyclerView, String animal);
+    public interface ExamsFragmentListener {
+        void getAnimalExams(ExamsAdapter adapter, RecyclerView recyclerView, String animal);
     }
+
+
+    private ExamsFragment.ExamsFragmentListener listener;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -38,7 +39,7 @@ public class DiagnosisFragment extends Fragment {
 
         try {
             // Attach the listener to the Fragment
-            listener = (DiagnosisFragment.DiagnosisFragmentListener) context;
+            listener = (ExamsFragment.ExamsFragmentListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(
                     (activity != null ? activity.toString() : null)
@@ -57,13 +58,16 @@ public class DiagnosisFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        diagnosisRecyclerView = view.findViewById(R.id.recyclerVerticalList);
+        examsRecyclerView = view.findViewById(R.id.recyclerVerticalList);
 
-        adapter = new DiagnosisAdapter();
+        adapter = new ExamsAdapter();
 
-        listener.getAnimalDiagnosis(adapter, diagnosisRecyclerView, animal);
+        adapter.setContext(getContext());
 
-        diagnosisRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false));
+        listener.getAnimalExams(adapter, examsRecyclerView, animal);
+
+        examsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false));
 
     }
+
 }

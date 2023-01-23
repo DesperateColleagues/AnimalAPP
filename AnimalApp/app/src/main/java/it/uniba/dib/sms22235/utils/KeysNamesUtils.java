@@ -135,7 +135,7 @@ public class KeysNamesUtils {
     public static class BundleKeys {
         public static String PASSIONATE = "passionate";
         public static String VETERINARIAN = "veterinarian";
-        public static String ORGANZIATION = "organization";
+        public static String ORGANIZATION = "organization";
         public static String VETERINARIAN_RESERVATIONS = "veterinarian_reservations";
         public static String PASSIONATE_RESERVATIONS = "passionate_reservations";
         public static String AVAILABLE_RESERVATIONS = "available_reservations";
@@ -147,13 +147,18 @@ public class KeysNamesUtils {
         public static String MIN_COST = "minCost";
         public static String MAX_COST = "maxCost";
         public static String ANIMAL = "animal";
+        public static String REPORT_UPDATE = "reportUpdate";
+        public static String REPORT_MODE_ADD = "reportModeUpdate";
     }
 
     public static class RequestFields {
         public static String REQUEST_TITLE = "requestTitle";
         public static String REQUEST_BODY = "requestBody";
         public static String USER_EMAIL = "userEmail";
-        public static String REQUEST_COMPLETED = "completed";
+        public static String REQUEST_COMPLETED = "isCompleted";
+        public static String REQUEST_ID = "id";
+        public static String REQUEST_ANIMAL = "animal";
+        public static String REQUEST_TYPE = "requestType";
         public static String R_TYPE_OFFER = "offer";
         public static String R_TYPE_REQUEST = "request";
     }

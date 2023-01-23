@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.passionate.fragments;
+package it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -29,9 +28,9 @@ import java.util.List;
 import java.util.Random;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
-import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAddAnimalFragment;
-import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogEditAnimalDataFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.dialogs.DialogAddAnimalFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.dialogs.DialogEditAnimalDataFragment;
 import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
 import it.uniba.dib.sms22235.adapters.MessageListAdapter;
 import it.uniba.dib.sms22235.entities.operations.InfoMessage;

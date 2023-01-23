@@ -7,6 +7,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.io.Serializable;
 import java.util.UUID;
 
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
+
 public class Request implements Serializable {
 
     private String id;
@@ -80,14 +82,14 @@ public class Request implements Serializable {
     @NonNull
     public static Request loadRequest(@NonNull DocumentSnapshot document) {
         Request request = new Request(
-                (String) document.get("requestTitle"),
-                (String) document.get("requestBody"),
-                (String) document.get("requestType"));
+                (String) document.get(KeysNamesUtils.RequestFields.REQUEST_TITLE),
+                (String) document.get(KeysNamesUtils.RequestFields.REQUEST_BODY),
+                (String) document.get(KeysNamesUtils.RequestFields.REQUEST_TYPE));
 
-        request.setUserEmail((String) document.get("userEmail"));
-        request.setAnimal((String) document.get("animal"));
-        request.setId((String) document.get("id"));
-        request.setIsCompleted(Boolean.TRUE.equals(document.getBoolean("isCompleted")));
+        request.setUserEmail((String) document.get(KeysNamesUtils.RequestFields.USER_EMAIL));
+        request.setAnimal((String) document.get(KeysNamesUtils.RequestFields.REQUEST_ANIMAL));
+        request.setId((String) document.get(KeysNamesUtils.RequestFields.REQUEST_ID));
+        request.setIsCompleted(Boolean.TRUE.equals(document.getBoolean(KeysNamesUtils.RequestFields.REQUEST_COMPLETED)));
 
         return request;
     }

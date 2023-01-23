@@ -4,9 +4,11 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.io.Serializable;
+
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class Report {
+public class Report implements Serializable {
     private String reportId;
     private String reporter;
     private String reportTitle;

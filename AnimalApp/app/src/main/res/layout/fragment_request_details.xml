@@ -4,25 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/txtRequestDetailsTitle"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnSecondary"
-            android:textSize="20sp"/>
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtRequestDetailsTitle"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:textSize="20sp"/>
 
 
             </LinearLayout>
@@ -82,7 +88,7 @@
 
             <TextView
                 android:id="@+id/txtRequestDetailsTitle2"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -93,14 +99,13 @@
                 android:text="Antemprima stallo"
                 android:textSize="18sp"/>
 
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/viewpagerRequests"
+            <FrameLayout
+                android:id="@+id/frameBackbench"
                 android:visibility="gone"
                 android:fillViewport="true"
                 android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                android:layout_height="match_parent" />
 
             <Button
                 android:id="@+id/btnShowAnimalProfile"
@@ -123,5 +128,10 @@
                 android:textStyle="bold"
                 android:visibility="gone"
                 android:text="Scannerizza codice Qr"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
 
 </LinearLayout>

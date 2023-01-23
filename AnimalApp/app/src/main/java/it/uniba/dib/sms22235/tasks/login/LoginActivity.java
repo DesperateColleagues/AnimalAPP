@@ -27,7 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.organization.OrganizationNavigationActivity;
-import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.registration.RegistrationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 
@@ -349,7 +349,7 @@ public class LoginActivity extends AppCompatActivity {
                                             } else if (role.equals(KeysNamesUtils.RolesNames.PUBLIC_ORGANIZATION) || role.equals(KeysNamesUtils.RolesNames.PRIVATE_ORGANIZATION)) {
                                                 Bundle bundle = new Bundle();
                                                 Organization org = Organization.loadOrganization(document);
-                                                bundle.putSerializable(KeysNamesUtils.BundleKeys.ORGANZIATION, org);
+                                                bundle.putSerializable(KeysNamesUtils.BundleKeys.ORGANIZATION, org);
                                                 newActivityRunning(OrganizationNavigationActivity.class, bundle);
                                             }
                                         }

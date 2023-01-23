@@ -46,7 +46,7 @@ public class OrganizationNavigationActivity extends AppCompatActivity {
 
         // Extract the bundle data sent from login activity
         if (loginBundle != null) {
-            organization = (Organization) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.ORGANZIATION);
+            organization = (Organization) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.ORGANIZATION);
         }
 
         fab = findViewById(R.id.floatingActionButton_organization);

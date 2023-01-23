@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.passionate;
+package it.uniba.dib.sms22235.tasks.common.views.requests.passionate;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -55,14 +55,14 @@ import it.uniba.dib.sms22235.adapters.ExamsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.entities.operations.Exam;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
-import it.uniba.dib.sms22235.tasks.passionate.fragments.AnimalProfile;
-import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateProfileFragment;
-import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateReservationFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.PassionateProfileFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.PassionateReservationFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.animalprofile.DiagnosisFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.AnimalProfile;
 
-import it.uniba.dib.sms22235.tasks.passionate.fragments.animalprofile.DiagnosisFragment;
-import it.uniba.dib.sms22235.tasks.passionate.fragments.animalprofile.ExamsFragment;
-import it.uniba.dib.sms22235.tasks.passionate.fragments.animalprofile.PhotoDiaryFragment;
-import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionatePurchaseFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.animalprofile.ExamsFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.animalprofile.PhotoDiaryFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.PassionatePurchaseFragment;
 
 import it.uniba.dib.sms22235.adapters.PostGridAdapter;
 import it.uniba.dib.sms22235.database.QueryPurchasesManager;
@@ -177,9 +177,10 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         // Set up the navigation system
         NavController navController = navHostFragment.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(navView, navController);
 
         // Use this method to not bug the app with undesired animation
-        navView.setOnNavigationItemSelectedListener(item -> {
+        /*navView.setOnNavigationItemSelectedListener(item -> {
             final int PASSIONATE_PROFILE = R.id.passionate_profile;
             final int PASSIONATE_PET_CARE = R.id.passionate_pet_care;
             final int PASSIONATE_PURCHASE = R.id.passionate_purchase;
@@ -200,7 +201,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                     break;
             }
             return true;
-        });
+        });*/
 
         fab = findViewById(R.id.floatingActionButton);
 

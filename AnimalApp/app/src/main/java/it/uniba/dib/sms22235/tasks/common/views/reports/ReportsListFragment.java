@@ -14,7 +14,6 @@ import androidx.navigation.NavController;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -65,7 +64,7 @@ public class ReportsListFragment extends Fragment {
         btnAddReport.setOnClickListener(v ->
                 navController.navigate(R.id.action_reportsDashboardFragment_to_reportDetailsFragment));
 
-        if (isMine) {
+        if (!isMine) {
             btnAddReport.setVisibility(View.GONE);
         }
 
@@ -96,7 +95,11 @@ public class ReportsListFragment extends Fragment {
                                 CustomBsdDialog customBsdDialog = new CustomBsdDialog();
 
                                 customBsdDialog.setOnUpdateRequestListener(() -> {
-                                   // todo
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable(KeysNamesUtils.BundleKeys.REPORT_UPDATE, report);
+                                    bundle.putBoolean(KeysNamesUtils.BundleKeys.REPORT_MODE_ADD, false);
+                                    navController.navigate(R.id.action_reportsDashboardFragment_to_reportDetailsFragment, bundle);
+                                    customBsdDialog.dismiss();
                                 });
 
                                 customBsdDialog.setOnConfirmRequestListener(() -> {
@@ -136,9 +139,5 @@ public class ReportsListFragment extends Fragment {
                         }
                     });
         }
-    }
-
-    public Button getBtnAddReport() {
-        return btnAddReport;
     }
 }

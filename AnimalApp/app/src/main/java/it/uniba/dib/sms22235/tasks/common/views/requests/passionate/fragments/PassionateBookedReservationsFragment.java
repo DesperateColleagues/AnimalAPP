@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.passionate.fragments;
+package it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
-import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogReservationDetailsFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.dialogs.DialogReservationDetailsFragment;
 import it.uniba.dib.sms22235.adapters.ReservationsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;

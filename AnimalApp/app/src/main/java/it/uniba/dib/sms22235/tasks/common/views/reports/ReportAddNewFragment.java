@@ -30,7 +30,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -58,21 +60,17 @@ import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.reports.DialogMap;
 import it.uniba.dib.sms22235.tasks.common.dialogs.reports.DialogReportAddInfo;
-import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMapListener, DialogReportAddInfo.DialogReportAddInfoListener {
+public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMapListener,
+        DialogReportAddInfo.DialogReportAddInfoListener {
 
     private ImageView imgReport;
 
     private TextView txtReportDetailTitle;
     private TextView txtReportDescription;
     private TextView txtPositionSumUp;
-
-    private Button btnAddReportTitleAndDescription;
-    private Button btnReportConfirm;
-    private Button btnPosition;
-    private Button btnAddReportImage;
 
     private FirebaseFirestore db;
     private FirebaseStorage storage;
@@ -85,6 +83,8 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
 
     private Location mLocation;
     private FusedLocationProviderClient client;
+
+    private NavController controller;
 
     private final ActivityResultLauncher<Intent> cropResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), resCrop -> {
@@ -132,21 +132,33 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         client = LocationServices.getFusedLocationProviderClient(requireActivity());
     }
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         assert container != null;
 
+        controller = Navigation.findNavController(container);
+
         db = ((NavigationActivityInterface) requireActivity()).getFireStoreInstance();
         storage = ((NavigationActivityInterface) requireActivity()).getStorageInstance();
         ownerEmail = Objects.requireNonNull(((NavigationActivityInterface) requireActivity())
                 .getAuthInstance().getCurrentUser()).getEmail();
 
-        // Create a first instance of the report
-        report = new Report(UUID.randomUUID().toString(), ownerEmail);
+        Bundle arguments = getArguments();
+
+        if (arguments != null) {
+            report = (Report) arguments.getSerializable(KeysNamesUtils.BundleKeys.REPORT_UPDATE);
+            Toast.makeText(getContext(), "" + report.getReportDescription() , Toast.LENGTH_SHORT).show();
+            isAdd = arguments.getBoolean(KeysNamesUtils.BundleKeys.REPORT_MODE_ADD);
+        } else {
+            // Create a first instance of the report
+            report = new Report(UUID.randomUUID().toString(), ownerEmail);
+        }
 
         return inflater.inflate(R.layout.fragment_reports_add_new, container, false);
     }
@@ -156,6 +168,7 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
         super.onViewCreated(view, savedInstanceState);
 
         // Get the field to insert the report
+
         Spinner spinner = view.findViewById(R.id.spinnerReportAnimal);
         LinkedHashSet<Animal> animalSet = ((PassionateNavigationActivity) requireActivity()).getAnimalSet();
 
@@ -173,19 +186,23 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
             }
         });
 
-        report.setReportHelpPictureUri("");
-
         txtReportDetailTitle = view.findViewById(R.id.txtReportDetailTitle);
         txtReportDescription = view.findViewById(R.id.txtReportDescription);
         txtPositionSumUp = view.findViewById(R.id.txtPositionSumUp);
 
-        btnAddReportTitleAndDescription = view.findViewById(R.id.btnAddReportTitleAndDescription);
-        btnReportConfirm = view.findViewById(R.id.btnReportConfirm);
-        btnPosition = view.findViewById(R.id.btnPosition);
-        btnAddReportImage = view.findViewById(R.id.btnAddReportImage);
+        Button btnAddReportTitleAndDescription = view.findViewById(R.id.btnAddReportTitleAndDescription);
+        Button btnReportConfirm = view.findViewById(R.id.btnReportConfirm);
+        Button btnPosition = view.findViewById(R.id.btnPosition);
+        Button btnAddReportImage = view.findViewById(R.id.btnAddReportImage);
 
         imgReport = view.findViewById(R.id.imgReport);
         imgReport.setVisibility(View.GONE);
+
+        if (!isAdd) {
+            loadInfoToUpdateReport();
+        } else {
+            report.setReportHelpPictureUri("");
+        }
 
         // Call a dialog to add a title and a description to the report
         btnAddReportTitleAndDescription.setOnClickListener(v -> {
@@ -204,6 +221,7 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
             photoUploadAndSaveActivity.launch(i);
         });
 
+        // Confirm the report by checking fields and by adding it to the FireStore
         btnReportConfirm.setOnClickListener(v -> {
             if (requireActivity() instanceof PassionateNavigationActivity) {
                 report.setReportAnimal((String) spinner.getSelectedItem());
@@ -211,19 +229,26 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
                 report.setReportAnimal("");
             }
 
+            // If the obligatory fields are filled then the report is ready to be submitted
             if (report.reportReady()) {
                 Toast.makeText(getContext(), "Report pronto per essere inserito", Toast.LENGTH_SHORT).show();
 
+                // If the picture uri is empty, just save the report to the FireStore
+                // otherwise save the report's picture and the report reference to FireStore
                 if (report.getReportHelpPictureUri().equals("")) {
                     db.collection(KeysNamesUtils.CollectionsNames.REPORTS)
                             .document(report.getReportId())
-                            .set(report);
+                            .set(report)
+                            .addOnSuccessListener(unused -> {
+                                Toast.makeText(getContext(), "Segnalazione inserita con successo", Toast.LENGTH_SHORT).show();
+                                controller.popBackStack();
+                            });
                 } else {
-                    String fileName = KeysNamesUtils.FileDirsNames.reportPic(ownerEmail);
+                    String fileName = report.getReportId();
 
                     // Create the storage tree structure
                     String fileReference = KeysNamesUtils.FileDirsNames.REPORT_POST +
-                            "/" + fileName;
+                            "/" + KeysNamesUtils.FileDirsNames.reportPic(ownerEmail) + "/" + fileName;
 
                     StorageReference storageReference = storage.getReference(fileReference);
 
@@ -247,6 +272,7 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
                                                 .addOnSuccessListener(unused -> {
                                                     Toast.makeText(getContext(), "Segnalazione inserita con successo", Toast.LENGTH_SHORT).show();
                                                     progressDialog.dismiss();
+                                                    controller.popBackStack();
                                                 });
                                     });
                         }
@@ -346,23 +372,25 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
         report.setReportDescription(description);
     }
 
-    /**
-     * This method is used to add the preview image of the report
-     *
-     * @param uri the uri of the image to add
-     * @param email the email of the user whose adding the preview pic
-     * */
-    private void addReportPic(Uri uri, String email) {
 
+    private void loadInfoToUpdateReport() {
+        txtReportDescription.setVisibility(View.VISIBLE);
+        txtPositionSumUp.setVisibility(View.VISIBLE);
 
+        txtReportDetailTitle.setText(report.getReportTitle());
+        txtReportDescription.setText(report.getReportDescription());
+        txtPositionSumUp.setText(report.getReportAddress());
+
+        if (!report.getReportHelpPictureUri().equals("")) {
+            imgReport.setVisibility(View.VISIBLE);
+            Glide.with(requireContext()).load(Uri.parse(report.getReportHelpPictureUri())).into(imgReport);
+        }
 
     }
 
     private void manageLayoutVisibilities() {
-        if (!isAdd) {
+        if  (isAdd) {
             txtReportDescription.setVisibility(View.GONE);
-            btnReportConfirm.setVisibility(View.GONE);
-            btnAddReportTitleAndDescription.setVisibility(View.GONE);
         }
     }
 

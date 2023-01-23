@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -130,16 +132,15 @@ public class RequestDetailFragment extends Fragment {
         // Manage backbenches requests
         if (request.getRequestType().equals("Offerta stallo")) {
 
-            ViewPager viewpagerRequests = view.findViewById(R.id.viewpagerRequests);
-            viewpagerRequests.setVisibility(View.VISIBLE);
+            FrameLayout frameLayout = view.findViewById(R.id.frameBackbench);
+            frameLayout.setVisibility(View.VISIBLE);
 
             view.findViewById(R.id.infoDivider).setVisibility(View.VISIBLE);
             view.findViewById(R.id.txtRequestDetailsTitle2).setVisibility(View.VISIBLE);
 
-            Adapter adapter = new Adapter(getChildFragmentManager());
-            adapter.addFragment(new BackBenchFragment(request.getUserEmail()));
-
-            viewpagerRequests.setAdapter(adapter);
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.add(R.id.frameBackbench, new BackBenchFragment(request.getUserEmail()));
+            transaction.commit();
         }
 
         // Manage animal request

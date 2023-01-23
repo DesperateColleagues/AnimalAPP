@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/passionate_profile"
-        android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateProfileFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.PassionateProfileFragment"
         android:label="@string/title_fragment_passionate_profile"
         tools:layout="@layout/fragment_passionate_profile" >
         <action
@@ -29,13 +29,13 @@
 
     <fragment
         android:id="@+id/passionate_pet_care"
-        android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateReservationFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.PassionateReservationFragment"
         android:label="@string/title_fragment_passionate_reservation"
         tools:layout="@layout/fragment_passionate_calendar_reservation" />
 
     <fragment
         android:id="@+id/passionate_purchase"
-        android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionatePurchaseFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.PassionatePurchaseFragment"
         android:label="@string/title_fragment_passionate_purchases"
         tools:layout="@layout/fragment_passionate_purchase" >
         <action
@@ -47,7 +47,7 @@
 
     <fragment
         android:id="@+id/filterPurchaseFragment"
-        android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateFilterPurchaseFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.PassionateFilterPurchaseFragment"
         tools:layout="@layout/fragment_passionate_filter_purchase"
         android:label="Filtri" >
         <action
@@ -59,13 +59,13 @@
 
     <fragment
         android:id="@+id/animalProfile"
-        android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.AnimalProfile"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.AnimalProfile"
         android:label="AnimalProfile"
         tools:layout="@layout/fragment_passionate_animal_profile"/>
 
     <fragment
         android:id="@+id/passionateBookedReservations"
-        android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateBookedReservationsFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.PassionateBookedReservationsFragment"
         android:label="AnimalProfile"
         tools:layout="@layout/fragment_passionate_booked_reservations"/>
 
@@ -93,6 +93,7 @@
         <action
             android:id="@+id/action_reportsDashboardFragment_to_reportDetailsFragment"
             app:destination="@id/reportDetailsFragment"
+            app:popUpTo="@id/reportsDashboardFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>

@@ -65,6 +65,7 @@
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_baseline_post_add_24"
                     android:text="Aggiungi"
+                    android:gravity="end"
                     android:textSize="14sp"/>
 
             </LinearLayout>
@@ -108,6 +109,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:gravity="end"
                     android:text="Aggiungi" />
 
             </LinearLayout>
@@ -148,6 +150,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 style="?android:attr/buttonBarButtonStyle"
+                android:gravity="end"
                 android:text="Aggiungi"/>
 
         </LinearLayout>

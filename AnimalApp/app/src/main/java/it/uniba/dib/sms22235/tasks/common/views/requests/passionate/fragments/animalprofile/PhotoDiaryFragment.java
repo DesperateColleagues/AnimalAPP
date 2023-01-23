@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.passionate.fragments.animalprofile;
+package it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.animalprofile;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.adapters.PostGridAdapter;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 
