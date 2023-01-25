@@ -84,7 +84,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="20dp"
                 android:drawableTop="@drawable/ic_baseline_email_24"
-                android:text="Contatta per email"/>
+                android:text="@string/sendMail"/>
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"

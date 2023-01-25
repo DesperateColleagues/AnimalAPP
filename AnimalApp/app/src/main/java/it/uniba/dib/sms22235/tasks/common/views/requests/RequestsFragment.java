@@ -1,7 +1,6 @@
 package it.uniba.dib.sms22235.tasks.common.views.requests;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -86,24 +84,9 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
             dialogAddRequest.show(getChildFragmentManager(), "DialogAddRequest");
         });
 
-        final String [] requestTypes = {"Animale", "Aiuto", "Stallo"};
-
         ChipGroup requestsParamsChipGroup = view.findViewById(R.id.requestsParamsChipGroup);
         requestsRecyclerView = view.findViewById(R.id.requestsRecyclerList);
         adapter.setContext(requireContext());
-
-        // Fill chip
-        for (String s : requestTypes) {
-            @SuppressLint("InflateParams") Chip chip = (Chip) getLayoutInflater()
-                    .inflate(R.layout.item_chip_fragment_filter, null);
-            chip.setText(s);
-            chip.setCloseIcon(null);
-            chip.setTextColor(Color.BLACK);
-            chip.setOnClickListener(v -> {
-                chip.setSelected(true);
-            });
-            requestsParamsChipGroup.addView(chip);
-        }
 
         // initially load requests
         loadRequest();

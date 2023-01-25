@@ -25,17 +25,46 @@
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="16dp">
-
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/requestsParamsChipGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:chipSpacingHorizontal="15dp"
+            app:singleSelection="true"
             app:singleLine="true">
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipBackgroundColor="?attr/colorSecondary"
+                app:checkedIcon="@drawable/ic_baseline_check_24"
+                android:text="Offerta animale"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:textColor="@color/black"
+                android:id="@+id/chipAnimal" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipBackgroundColor="?attr/colorSecondary"
+                app:checkedIcon="@drawable/ic_baseline_check_24"
+                android:text="Aiuto"
+                android:id="@+id/chipHelp"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:textColor="@color/black"/>
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipBackgroundColor="?attr/colorSecondary"
+                app:checkedIcon="@drawable/ic_baseline_check_24"
+                android:text="Offerta stallo"
+                android:id="@+id/chipHome"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:textColor="@color/black"/>
 
         </com.google.android.material.chip.ChipGroup>
 

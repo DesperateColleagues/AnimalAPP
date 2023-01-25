@@ -29,6 +29,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
@@ -79,9 +80,9 @@ public class AnimalProfile extends Fragment implements
     private Animal mAnimal;
     private AnimalProfileListener listenerAPF;
     private UpdateVeterinarianNameOnChoose listenerPPF;
-    private int colorPrimary;
-    private int background;
     private DialogEditAnimalDataFragment dialogEditAnimalDataFragment;
+
+    private boolean isShowOnlyMode = false;
 
     // Used to launch the callback to retrieve intent's results
     private final ActivityResultLauncher<Intent> photoUploadAndSaveActivity = registerForActivityResult(
@@ -102,7 +103,9 @@ public class AnimalProfile extends Fragment implements
         try {
             // Attach the listener to the Fragment
             listenerAPF = (AnimalProfileListener) context;
-            listenerPPF = (UpdateVeterinarianNameOnChoose) context;
+            if ((getActivity()) instanceof PassionateNavigationActivity) {
+                listenerPPF = (UpdateVeterinarianNameOnChoose) context;
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(
                     (activity != null ? activity.toString() : null)
@@ -122,14 +125,8 @@ public class AnimalProfile extends Fragment implements
         // Get the arguments obtained from the navigation
         if (arguments != null) {
             mAnimal = (Animal) arguments.get(KeysNamesUtils.BundleKeys.ANIMAL);
+            isShowOnlyMode = arguments.getBoolean(KeysNamesUtils.BundleKeys.ANIMAL_SHOW_ONLY);
         }
-
-        TypedValue typedValueBackground = new TypedValue();
-        requireActivity().getTheme().resolveAttribute(android.R.attr.windowBackground, typedValueBackground, true);
-        background = typedValueBackground.data;
-        TypedValue typedValueColorPrimary = new TypedValue();
-        requireActivity().getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValueColorPrimary, true);
-        colorPrimary = typedValueColorPrimary.data;
 
         return inflater.inflate(R.layout.fragment_animal_profile, container, false);
     }
@@ -174,7 +171,8 @@ public class AnimalProfile extends Fragment implements
 
         Button updateProfile = view.findViewById(R.id.btnUpdateProfile);
         Button shareProfile = view.findViewById(R.id.btnShareProfile);
-        if ((getActivity()) instanceof PassionateNavigationActivity) {
+
+        if ((getActivity()) instanceof PassionateNavigationActivity && !isShowOnlyMode) {
 
             animalPicPreview.setOnClickListener(v -> {
                 Intent i = new Intent();
@@ -221,7 +219,9 @@ public class AnimalProfile extends Fragment implements
         String animal = mAnimal.getMicrochipCode();
 
         if ((getActivity()) instanceof PassionateNavigationActivity) {
-            adapter.addFragment(new PhotoDiaryFragment(animal), "Photo diary");
+            PhotoDiaryFragment photoDiaryFragment = new PhotoDiaryFragment(animal);
+            photoDiaryFragment.setShowOnlyMode(isShowOnlyMode);
+            adapter.addFragment(photoDiaryFragment, "Photo diary");
         }
         adapter.addFragment(new DiagnosisFragment(animal), "Diagnosi");
         adapter.addFragment(new ExamsFragment(animal),"Esami"); //TODO:Stringhe
@@ -262,7 +262,9 @@ public class AnimalProfile extends Fragment implements
     @Override
     public void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal, String selectedVeterinarian) {
         mAnimal.setVeterinarian(selectedVeterinarian);
-        listenerPPF.onDialogChoosedVeterinarian(mAnimal, selectedVeterinarian);
+        if ((getActivity()) instanceof PassionateNavigationActivity) {
+            listenerPPF.onDialogChoosedVeterinarian(mAnimal, selectedVeterinarian);
+        }
         listenerAPF.onAnimalUpdated(mAnimal);
     }
 }

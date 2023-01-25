@@ -147,6 +147,7 @@ public class KeysNamesUtils {
         public static String MIN_COST = "minCost";
         public static String MAX_COST = "maxCost";
         public static String ANIMAL = "animal";
+        public static String ANIMAL_SHOW_ONLY = "showOnly";
         public static String REPORT_UPDATE = "reportUpdate";
         public static String REPORT_MODE_ADD = "reportModeUpdate";
         public static String REPORT_SHOW = "reportShow";

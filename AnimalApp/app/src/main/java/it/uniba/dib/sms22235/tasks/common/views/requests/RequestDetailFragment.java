@@ -1,7 +1,9 @@
 package it.uniba.dib.sms22235.tasks.common.views.requests;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -41,6 +45,7 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 public class RequestDetailFragment extends Fragment {
 
     private Request request;
+    private transient NavController navController;
 
     // Manage Qr scanning
     private final ActivityResultLauncher<ScanOptions> qrDecodeLauncher = registerForActivityResult(new ScanContract(), result -> {
@@ -96,12 +101,19 @@ public class RequestDetailFragment extends Fragment {
             request = (Request) bundle.getSerializable(KeysNamesUtils.CollectionsNames.REQUESTS);
         }
 
+        assert container != null;
+        navController = Navigation.findNavController(container);
+
         return inflater.inflate(R.layout.fragment_request_details,container,false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ((NavigationActivityInterface) requireActivity()).getFab().setVisibility(View.GONE);
+        ((NavigationActivityInterface) requireActivity()).setNavViewVisibility(View.GONE);
+
         Button sendMail = view.findViewById(R.id.btnSendMail);
 
         TextView txtRequestDetailsTitle = view.findViewById(R.id.txtRequestDetailsTitle);
@@ -120,12 +132,7 @@ public class RequestDetailFragment extends Fragment {
         );
 
         sendMail.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/html");
-            intent.putExtra(Intent.EXTRA_EMAIL, request.getUserEmail());
-            intent.putExtra(Intent.EXTRA_SUBJECT, request.getRequestTitle());
-            intent.putExtra(Intent.EXTRA_TEXT, request.getRequestBody());
-            startActivity(Intent.createChooser(intent, getResources().getString(R.string.sendMail)));
+            composeEmail(new String [] {request.getUserEmail()}, request.getRequestTitle());
         });
 
         // Manage backbenches requests
@@ -146,7 +153,17 @@ public class RequestDetailFragment extends Fragment {
         if (request.getRequestType().equals("Offerta animale")) {
             Button btnShowAnimalProfile = view.findViewById(R.id.btnShowAnimalProfile);
             btnShowAnimalProfile.setOnClickListener(v -> {
-                // todo show animal profile
+                ((NavigationActivityInterface) requireActivity()).getFireStoreInstance()
+                        .collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                        .whereEqualTo(KeysNamesUtils.AnimalFields.MICROCHIP_CODE, request.getAnimal().split(" - ")[1])
+                        .get()
+                        .addOnSuccessListener(query -> {
+                            Animal animal = Animal.loadAnimal(query.getDocuments().get(0));
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, animal);
+                            bundle.putBoolean(KeysNamesUtils.BundleKeys.ANIMAL_SHOW_ONLY, true);
+                            navController.navigate(R.id.action_request_detail_to_animalProfile, bundle);
+                        });
             });
 
             Button btnConfirmAnimalRequestQr = view.findViewById(R.id.btnConfirmAnimalRequestQr);
@@ -154,7 +171,7 @@ public class RequestDetailFragment extends Fragment {
                 ScanOptions options = new ScanOptions();
                 options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
                 options.setPrompt("Scannerizza il QR code"); // todo translate
-                options.setBeepEnabled(true);
+                options.setBeepEnabled(false);
                 options.setBarcodeImageEnabled(true);
                 options.setOrientationLocked(false);
 
@@ -366,32 +383,15 @@ public class RequestDetailFragment extends Fragment {
                 });
     }
 
-    static class Adapter extends FragmentPagerAdapter {
-        private Fragment fragment;
+    @SuppressLint("QueryPermissionsNeeded")
+    private void composeEmail(String[] addresses, String subject) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 
-
-        public Adapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @NonNull
-        @Override
-        public Fragment getItem(int position) {
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-            return 1;
-        }
-
-        public void addFragment(Fragment fragment) {
-            this.fragment = fragment;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return "Informazioni stallo";
-        }
+        startActivity(intent);
     }
+
+
 }

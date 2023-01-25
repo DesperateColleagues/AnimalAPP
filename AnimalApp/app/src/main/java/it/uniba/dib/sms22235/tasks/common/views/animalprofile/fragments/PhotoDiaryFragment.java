@@ -29,6 +29,7 @@ import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
+import it.uniba.dib.sms22235.tasks.common.dialogs.animalprofile.DialogShowImage;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.adapters.PostGridAdapter;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
@@ -59,6 +60,8 @@ public class PhotoDiaryFragment extends Fragment {
     private PhotoDiaryFragmentListener listener;
     private List<PhotoDiaryPost> posts;
     private String animalMicrochip;
+
+    private boolean isShowOnlyMode;
 
     private final ActivityResultLauncher<Intent> cropResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), resCrop -> {
@@ -106,6 +109,10 @@ public class PhotoDiaryFragment extends Fragment {
 
     public PhotoDiaryFragment() {
         // not supported
+    }
+
+    public void setShowOnlyMode(boolean showOnlyMode) {
+        isShowOnlyMode = showOnlyMode;
     }
 
     public PhotoDiaryFragment(String animalMicrochip) {
@@ -158,6 +165,15 @@ public class PhotoDiaryFragment extends Fragment {
             Toast.makeText(getContext(), "Non dovresti essere qui.", Toast.LENGTH_SHORT).show();
             btnAddAnimalPost.setVisibility(View.GONE);
         }
+
+        if (isShowOnlyMode) {
+            btnAddAnimalPost.setVisibility(View.GONE);
+        }
+
+        postGridAdapter.setOnItemClickListener(uri -> {
+            DialogShowImage dialogShowImage = new DialogShowImage(uri);
+            dialogShowImage.show(getChildFragmentManager(), "DialogShowImage");
+        });
 
         RecyclerView diaryRecycler = view.findViewById(R.id.diaryRecycler);
         diaryRecycler.setLayoutManager(new GridLayoutManager(context, 3));

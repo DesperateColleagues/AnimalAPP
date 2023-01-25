@@ -18,6 +18,7 @@
         android:textColor="?attr/colorOnSecondary"/>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewVeterinarian"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"

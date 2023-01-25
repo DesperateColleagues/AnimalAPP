@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
@@ -36,6 +38,11 @@ public class VeterinarianProfileFragment extends Fragment {
 
         ((VeterinarianNavigationActivity) requireActivity()).getFab().setOnClickListener(v -> {
             Toast.makeText(getContext(),"Still nothing",Toast.LENGTH_SHORT).show();
+        });
+
+        rootView.findViewById(R.id.cardViewVeterinarian).setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(container) ;
+            navController.navigate(R.id.action_passionate_profile_to_reportsDashboardFragment);
         });
 
         return rootView;

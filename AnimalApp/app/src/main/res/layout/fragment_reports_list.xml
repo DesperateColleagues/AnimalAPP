@@ -16,6 +16,32 @@
         android:textStyle="bold"
         android:text="Aggiungi una segnalazione"/>
 
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:id="@+id/linearLocationFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSecondary"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Restringi l'area di ricerca"/>
+
+        <Button
+            android:id="@+id/btnDistance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
+            android:text="Tutte"/>
+
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerReports"
         android:layout_width="match_parent"

@@ -1,6 +1,7 @@
 package it.uniba.dib.sms22235.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +17,12 @@ import java.util.List;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
+import it.uniba.dib.sms22235.entities.operations.Report;
 
 public class PostGridAdapter extends RecyclerView.Adapter<PostGridAdapter.ViewHolder> {
     private final List<PhotoDiaryPost> posts;
     private final Context context;
+    private ViewHolder.OnItemClickListener onItemClickListener;
 
     public PostGridAdapter(Context context, List<PhotoDiaryPost>posts) {
         this.context = context;
@@ -39,6 +42,12 @@ public class PostGridAdapter extends RecyclerView.Adapter<PostGridAdapter.ViewHo
 
         // Use glide to display the post using its URI
         Glide.with(context).load(post.getPostUri()).into(holder.photoEntry);
+
+        holder.photoEntry.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(post.getPostUri());
+            }
+        });
     }
 
     @Override
@@ -54,6 +63,14 @@ public class PostGridAdapter extends RecyclerView.Adapter<PostGridAdapter.ViewHo
             super(itemView);
             photoEntry = itemView.findViewById(R.id.photoEntry);
         }
+
+        public interface OnItemClickListener {
+            void onItemClick(String uri);
+        }
+    }
+
+    public void setOnItemClickListener(ViewHolder.OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
 }

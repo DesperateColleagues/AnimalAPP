@@ -31,6 +31,7 @@
         <activity
             android:name=".tasks.passionate.PassionateNavigationActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_passionate_navigation">
             <meta-data
@@ -41,6 +42,7 @@
         <activity
             android:name=".tasks.organization.OrganizationNavigationActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"
             android:label="TITLE">
             <meta-data
@@ -51,6 +53,7 @@
         <activity
             android:name=".tasks.veterinarian.VeterinarianNavigationActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_veterinarian_navigation">
             <meta-data
@@ -69,6 +72,7 @@
 
         <activity
             android:name=".tasks.registration.RegistrationActivity"
+            android:screenOrientation="portrait"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -77,6 +81,7 @@
 
         <activity
             android:name=".tasks.login.LoginActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
