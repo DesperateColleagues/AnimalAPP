@@ -14,7 +14,33 @@
         android:text="@string/benvenuto"
         android:layout_marginHorizontal="15dp"
         android:textSize="28sp"
+        android:layout_marginBottom="10dp"
         android:textColor="?attr/colorOnSecondary"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Collegamenti rapidi"
+            android:layout_gravity="center_vertical"
+            android:textSize="22sp"
+            android:textColor="?attr/colorOnSecondary"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="7"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24"/>
+
+    </LinearLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -74,13 +100,25 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/animalList"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="15dp"
+            android:text="Animali di proprietà"
+            android:textSize="22sp"
+            android:textColor="?attr/colorOnSecondary" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/animalList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"/>
 

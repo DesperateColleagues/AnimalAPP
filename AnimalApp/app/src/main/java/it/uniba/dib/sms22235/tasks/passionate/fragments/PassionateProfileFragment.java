@@ -127,7 +127,6 @@ public class PassionateProfileFragment extends Fragment implements
             messageRecyclerView.setLayoutManager(new LinearLayoutManager(
                     getContext(), RecyclerView.HORIZONTAL, false));
 
-
             SnapHelper helper = new LinearSnapHelper();
             helper.attachToRecyclerView(messageRecyclerView);
 
@@ -215,9 +214,13 @@ public class PassionateProfileFragment extends Fragment implements
     @Contract("_ -> param1")
     private ArrayList<InfoMessage> buildStandardMessages(@NonNull ArrayList<InfoMessage> messages) {
         InfoMessage findings = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_text), R.drawable.warningsign, KeysNamesUtils.CollectionsNames.REPORTS);
+        InfoMessage showVeterinarians = new InfoMessage("Visualizza veterinari", R.drawable.fra_rrc_doctor_no_green, KeysNamesUtils.CollectionsNames.ACTORS);
+        InfoMessage showOrganizations = new InfoMessage("Visualizza organizzazioni", R.drawable.fra_rrc_organization_no_green, KeysNamesUtils.CollectionsNames.ACTORS);
         InfoMessage recentReservations = new InfoMessage(getResources().getString(R.string.tutti_appuntamenti_recenti), 0, KeysNamesUtils.CollectionsNames.RESERVATIONS);
 
         messages.add(findings);
+        messages.add(showVeterinarians);
+        messages.add(showOrganizations);
         messages.add(recentReservations);
 
         notNow(messages);
