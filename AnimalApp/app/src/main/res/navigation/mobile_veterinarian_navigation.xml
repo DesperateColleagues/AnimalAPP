@@ -67,13 +67,13 @@
         tools:layout="@layout/fragment_reports_dashboard">
         <action
             android:id="@+id/action_reportsDashboardFragment_to_reportDetailsFragment"
-            app:destination="@id/reportDetailsFragment"
+            app:destination="@id/reportAddNewFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
 
     <fragment
-        android:id="@+id/reportDetailsFragment"
+        android:id="@+id/reportAddNewFragment"
         android:name="it.uniba.dib.sms22235.tasks.common.views.reports.ReportAddNewFragment"
         android:label="Dettagli segnalazione"
         tools:layout="@layout/fragment_reports_add_new"/>

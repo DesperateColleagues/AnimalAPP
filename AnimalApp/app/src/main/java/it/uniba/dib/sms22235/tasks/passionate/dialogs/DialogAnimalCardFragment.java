@@ -27,6 +27,7 @@ import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
+
 import it.uniba.dib.sms22235.entities.users.Animal;
 
 public class DialogAnimalCardFragment extends DialogFragment {

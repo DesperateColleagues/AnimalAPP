@@ -84,7 +84,7 @@ public class DialogMap extends DialogFragment {
             public boolean onSingleTapConfirmed(@NonNull final MotionEvent e, @NonNull final MapView mapView) {
 
                 @SuppressLint("UseCompatLoadingForDrawables") final Drawable marker =
-                        requireContext().getResources().getDrawable(R.drawable.ic_baseline_my_location_24);
+                        requireContext().getResources().getDrawable(org.osmdroid.library.R.drawable.marker_default);
 
                 Projection proj = mapView.getProjection();
                 GeoPoint loc = (GeoPoint) proj.fromPixels((int)e.getX(), (int)e.getY());
@@ -95,7 +95,7 @@ public class DialogMap extends DialogFragment {
                 mapItem.setMarker(marker);
                 overlayArray.add(mapItem);
 
-                if(anotherItemizedIconOverlay==null) {
+                if(anotherItemizedIconOverlay == null) {
                     anotherItemizedIconOverlay = new ItemizedIconOverlay<>(requireContext(), overlayArray,null);
                     mapView.getOverlays().add(anotherItemizedIconOverlay);
                     mapView.invalidate();

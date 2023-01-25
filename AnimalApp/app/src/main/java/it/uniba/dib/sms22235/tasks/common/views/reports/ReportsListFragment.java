@@ -72,6 +72,7 @@ public class ReportsListFragment extends Fragment {
         reportsAdapter.setContext(requireContext());
         RecyclerView recyclerView = view.findViewById(R.id.recyclerReports);
 
+        // Manage reports of the current logged user
         if (isMine) {
             db.collection(KeysNamesUtils.CollectionsNames.REPORTS)
                     .whereEqualTo(KeysNamesUtils.ReportsFields.REPORTER, Objects.requireNonNull(auth.getCurrentUser()).getEmail())
@@ -91,9 +92,12 @@ public class ReportsListFragment extends Fragment {
 
                             recyclerView.setAdapter(reportsAdapter);
 
+                            // Set a listener that specify what to do when a mine reports is clicked
                             reportsAdapter.setOnItemClickListener(report -> {
                                 CustomBsdDialog customBsdDialog = new CustomBsdDialog();
 
+                                // Manage the update of a request by opening the ReportAddNewFragment
+                                // with the value of the report that's about to be modifies
                                 customBsdDialog.setOnUpdateRequestListener(() -> {
                                     Bundle bundle = new Bundle();
                                     bundle.putSerializable(KeysNamesUtils.BundleKeys.REPORT_UPDATE, report);
@@ -102,6 +106,7 @@ public class ReportsListFragment extends Fragment {
                                     customBsdDialog.dismiss();
                                 });
 
+                                // Manage report's confirmation by updating its reference of the FireStore
                                 customBsdDialog.setOnConfirmRequestListener(() -> {
                                         report.setCompleted(true);
 
@@ -119,6 +124,7 @@ public class ReportsListFragment extends Fragment {
                         }
                     });
         } else {
+            // Manage community's reports
             db.collection(KeysNamesUtils.CollectionsNames.REPORTS)
                     .whereNotEqualTo(KeysNamesUtils.ReportsFields.REPORTER, Objects.requireNonNull(auth.getCurrentUser()).getEmail())
                     .get().addOnSuccessListener(queryDocumentSnapshots -> {
@@ -136,7 +142,15 @@ public class ReportsListFragment extends Fragment {
                                     RecyclerView.VERTICAL, false));
 
                             recyclerView.setAdapter(reportsAdapter);
+
+                            // Set a listener that specify what to do when a community reports is clicked
+                            reportsAdapter.setOnItemClickListener(report -> {
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable(KeysNamesUtils.BundleKeys.REPORT_SHOW, report);
+                                navController.navigate(R.id.action_reportsDashboardFragment_to_reportDetailFragment, bundle);
+                            });
                         }
+
                     });
         }
     }

@@ -149,6 +149,7 @@ public class KeysNamesUtils {
         public static String ANIMAL = "animal";
         public static String REPORT_UPDATE = "reportUpdate";
         public static String REPORT_MODE_ADD = "reportModeUpdate";
+        public static String REPORT_SHOW = "reportShow";
     }
 
     public static class RequestFields {

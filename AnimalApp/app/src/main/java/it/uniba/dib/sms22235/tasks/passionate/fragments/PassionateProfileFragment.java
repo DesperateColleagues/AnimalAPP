@@ -28,13 +28,13 @@ import java.util.Random;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
+import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAddAnimalFragment;
 import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogEditAnimalDataFragment;
 import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
 import it.uniba.dib.sms22235.adapters.MessageListAdapter;
 import it.uniba.dib.sms22235.entities.operations.InfoMessage;
 import it.uniba.dib.sms22235.entities.users.Animal;
-import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.utils.RecyclerTouchListener;

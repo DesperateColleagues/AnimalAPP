@@ -30,9 +30,10 @@ import java.util.List;
 import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
+
+import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.entities.operations.Interval;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
-import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 

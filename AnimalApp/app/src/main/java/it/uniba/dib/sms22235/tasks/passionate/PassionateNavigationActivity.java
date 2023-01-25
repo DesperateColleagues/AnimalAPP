@@ -60,6 +60,10 @@ import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDiaryFragment;
+import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateProfileFragment;
+import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateReservationFragment;
+
+import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionatePurchaseFragment;
 
 import it.uniba.dib.sms22235.adapters.PostGridAdapter;
 import it.uniba.dib.sms22235.database.QueryPurchasesManager;
@@ -69,9 +73,6 @@ import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
-import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateProfileFragment;
-import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionatePurchaseFragment;
-import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateReservationFragment;
 import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
@@ -179,30 +180,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         NavController navController = navHostFragment.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-
-        // Use this method to not bug the app with undesired animation
-        /*navView.setOnNavigationItemSelectedListener(item -> {
-            final int PASSIONATE_PROFILE = R.id.passionate_profile;
-            final int PASSIONATE_PET_CARE = R.id.passionate_pet_care;
-            final int PASSIONATE_PURCHASE = R.id.passionate_purchase;
-            final int PASSIONATE_REQUESTS = R.id.passionate_requests;
-
-            switch (item.getItemId()) {
-                case PASSIONATE_PROFILE:
-                    navController.navigate(PASSIONATE_PROFILE);
-                    break;
-                    case PASSIONATE_PET_CARE:
-                    navController.navigate(PASSIONATE_PET_CARE);
-                    break;
-                case PASSIONATE_PURCHASE:
-                    navController.navigate(PASSIONATE_PURCHASE);
-                    break;
-                case PASSIONATE_REQUESTS:
-                    navController.navigate(PASSIONATE_REQUESTS);
-                    break;
-            }
-            return true;
-        });*/
 
         fab = findViewById(R.id.floatingActionButton);
 

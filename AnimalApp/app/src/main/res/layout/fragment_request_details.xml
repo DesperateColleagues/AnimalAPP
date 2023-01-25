@@ -69,9 +69,8 @@
 
             <Button
                 android:id="@+id/btnSendMail"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
                 style="?android:attr/buttonBarButtonStyle"
+                android:drawableTop="@drawable/ic_baseline_email_24"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
