@@ -86,14 +86,13 @@ public class Reservation implements Serializable, Cloneable {
      * */
     @NonNull
     public static Reservation loadReservation (@NonNull DocumentSnapshot document) {
-        Reservation reservation = new Reservation(
+
+        return new Reservation(
                 (String) document.get(KeysNamesUtils.ReservationFields.DATE),
                 (String) document.get(KeysNamesUtils.ReservationFields.TIME),
                 (String) document.get(KeysNamesUtils.ReservationFields.VETERINARIAN),
                 (String) document.get(KeysNamesUtils.ReservationFields.ANIMAL),
                 (String) document.get(KeysNamesUtils.ReservationFields.OWNER));
-
-        return reservation;
     }
 
     @NonNull

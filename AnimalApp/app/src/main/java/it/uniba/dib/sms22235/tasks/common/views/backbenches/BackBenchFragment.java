@@ -200,7 +200,7 @@ public class BackBenchFragment extends Fragment {
 
 
         // Give to the user a feedback to wait
-        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        ProgressDialog progressDialog = new ProgressDialog(requireContext(),R.style.Widget_App_ProgressDialog);
         progressDialog.setMessage("Salvando l'immagine...");
         progressDialog.show();
 
@@ -214,12 +214,9 @@ public class BackBenchFragment extends Fragment {
                             db.collection(KeysNamesUtils.CollectionsNames.BACKBENCH)
                                     .document(KeysNamesUtils.FileDirsNames.backBenchPic(email))
                                     .set(backbench)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            Toast.makeText(getContext(), "Immagine stallo caricata", Toast.LENGTH_SHORT).show();
-                                            progressDialog.dismiss();
-                                        }
+                                    .addOnSuccessListener(unused -> {
+                                        Toast.makeText(getContext(), "Immagine stallo caricata", Toast.LENGTH_SHORT).show();
+                                        progressDialog.dismiss();
                                     });
                         });
             }

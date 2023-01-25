@@ -2,17 +2,11 @@ package it.uniba.dib.sms22235.tasks.organization.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Canvas;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,21 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.osmdroid.api.IMapController;
-import org.osmdroid.config.Configuration;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.Projection;
-import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
-import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.OverlayItem;
-
-import java.util.ArrayList;
-import java.util.Locale;
-
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.tasks.organization.OrganizationNavigationActivity;
 
 public class OrganizationProfileFragment extends Fragment {
@@ -53,7 +33,9 @@ public class OrganizationProfileFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         TextView organizationWelcome = rootView.findViewById(R.id.txtOrganizationWelcome);
-        organizationWelcome.setText("Benvenuto, " + mAuth.getCurrentUser().getEmail());
+        organizationWelcome.setText("Benvenuto, " + mAuth.getCurrentUser().toString());
+
+        ((OrganizationNavigationActivity) requireActivity()).getFab().setVisibility(View.GONE);
 
         Context ctx = requireContext();
         /*Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));

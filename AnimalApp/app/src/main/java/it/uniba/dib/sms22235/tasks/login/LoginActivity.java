@@ -27,7 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.organization.OrganizationNavigationActivity;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.registration.RegistrationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 

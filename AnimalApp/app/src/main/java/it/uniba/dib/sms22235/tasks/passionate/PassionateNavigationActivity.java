@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.common.views.requests.passionate;
+package it.uniba.dib.sms22235.tasks.passionate;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -55,14 +55,11 @@ import it.uniba.dib.sms22235.adapters.ExamsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.entities.operations.Exam;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.PassionateProfileFragment;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.PassionateReservationFragment;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.animalprofile.DiagnosisFragment;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.AnimalProfile;
+import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
+import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.animalprofile.ExamsFragment;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.animalprofile.PhotoDiaryFragment;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.PassionatePurchaseFragment;
+import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFragment;
+import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDiaryFragment;
 
 import it.uniba.dib.sms22235.adapters.PostGridAdapter;
 import it.uniba.dib.sms22235.database.QueryPurchasesManager;
@@ -72,6 +69,9 @@ import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
+import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateProfileFragment;
+import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionatePurchaseFragment;
+import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateReservationFragment;
 import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
@@ -79,10 +79,11 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         PassionateProfileFragment.ProfileFragmentListener,
         PassionatePurchaseFragment.PurchaseFragmentListener,
         PassionateReservationFragment.PassionateReservationFragmentListener,
-        PhotoDiaryFragment.PhotoDiaryFragmentListener,
-        AnimalProfile.AnimalProfileListener,
         DiagnosisFragment.DiagnosisFragmentListener,
+        AnimalProfile.AnimalProfileListener,
+        AnimalProfile.UpdateVeterinarianNameOnChoose,
         ExamsFragment.ExamsFragmentListener,
+        PhotoDiaryFragment.PhotoDiaryFragmentListener,
         NavigationActivityInterface,
         Serializable {
 
@@ -426,7 +427,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                 (fileReference);
 
         // Give to the user a feedback to wait
-        ProgressDialog progressDialog = new ProgressDialog(this);
+        ProgressDialog progressDialog = new ProgressDialog(this,R.style.Widget_App_ProgressDialog);
         progressDialog.setMessage("Salvando l'immagine...");
         progressDialog.show();
 
@@ -601,6 +602,24 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void checkIfAtHome(Animal animal, ImageView image) {/*
+        db.collection(KeysNamesUtils.CollectionsNames.RESIDENCE)
+                .whereEqualTo("animal", animal.getMicrochipCode())
+                .whereEqualTo("date", "currentdate")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (!querySnapshot.isEmpty()){
+                            image.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_house_siding_24));
+                        } else {
+                            image.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_home_24));
+                        }
+                    }
+                });*/
+    }
+
     // NavigationActivityInterface overrides methods
 
     @Override
@@ -760,7 +779,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         ArrayList<Reservation> clonedReservationsList = new ArrayList<>();
 
         for (Reservation reservation : availableReservationsList) {
-            //Log.wtf("Date, i guess", "" + date + " - " + reservation.getDate());
             if (date.equals(reservation.getDate())){
                 clonedReservationsList.add((Reservation) reservation.clone());
             }
@@ -816,5 +834,11 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                 ActivityCompat.requestPermissions(this,permissions, STORAGE_REQUEST_CODE);
             }
         }
+    }
+
+    @Override
+    public void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal, String selectedVeterinarian) {
+        selectedAnimal.setVeterinarian(selectedVeterinarian);
+        onAnimalUpdated(selectedAnimal);
     }
 }

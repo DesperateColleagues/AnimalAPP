@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -178,7 +177,7 @@ public class RequestDetailFragment extends Fragment {
      * */
     private void manageChangeOwnerPosts(FirebaseStorage storage, @NonNull FirebaseFirestore db, String microchip, String oldOwner) throws IOException {
         // Give to the user a feedback to wait
-        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        ProgressDialog progressDialog = new ProgressDialog(requireContext(),R.style.Widget_App_ProgressDialog);
         progressDialog.setMessage("Spostando i post...");
         progressDialog.show();
 
@@ -273,7 +272,7 @@ public class RequestDetailFragment extends Fragment {
      * */
     private void manageChangeOwnerProfilePic(FirebaseStorage storage, @NonNull FirebaseFirestore db, String microchip, String oldOwner) throws IOException {
         // Give to the user a feedback to wait
-        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        ProgressDialog progressDialog = new ProgressDialog(requireContext(),R.style.Widget_App_ProgressDialog);
         progressDialog.setMessage("Spostando l'immagine profilo...");
         progressDialog.show();
 

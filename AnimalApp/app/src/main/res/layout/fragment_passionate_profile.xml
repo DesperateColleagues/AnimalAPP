@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".tasks.common.views.requests.passionate.fragments.PassionateProfileFragment">
+    tools:context=".tasks.passionate.fragments.PassionateProfileFragment">
 
     <TextView
         android:id="@+id/txtPassionateWelcome"

@@ -2,8 +2,6 @@ package it.uniba.dib.sms22235.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +17,7 @@ import com.google.android.material.divider.MaterialDivider;
 import java.util.ArrayList;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.entities.operations.Exam;
-import it.uniba.dib.sms22235.entities.operations.Reservation;
-import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class ExamsAdapter extends RecyclerView.Adapter<ExamsAdapter.ViewHolder> {
     private ArrayList<Exam> examsList;

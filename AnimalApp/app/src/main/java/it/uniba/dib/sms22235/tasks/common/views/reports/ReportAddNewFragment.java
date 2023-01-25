@@ -60,7 +60,7 @@ import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.reports.DialogMap;
 import it.uniba.dib.sms22235.tasks.common.dialogs.reports.DialogReportAddInfo;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMapListener,
@@ -253,7 +253,7 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
                     StorageReference storageReference = storage.getReference(fileReference);
 
                     // Give to the user a feedback to wait
-                    ProgressDialog progressDialog = new ProgressDialog(getContext());
+                    ProgressDialog progressDialog = new ProgressDialog(requireContext(),R.style.Widget_App_ProgressDialog);
                     progressDialog.setMessage("Salvando l'immagine...");
                     progressDialog.show();
 

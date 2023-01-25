@@ -1,8 +1,5 @@
 package it.uniba.dib.sms22235.entities.operations;
 
-import it.uniba.dib.sms22235.entities.users.Animal;
-import it.uniba.dib.sms22235.entities.users.Owner;
-
 public class AnimalResidence {
     private String animal;
     private String startDate;

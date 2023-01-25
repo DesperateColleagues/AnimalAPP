@@ -1,7 +1,6 @@
 package it.uniba.dib.sms22235.adapters;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,6 @@ import java.util.ArrayList;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
-import it.uniba.dib.sms22235.entities.operations.Reservation;
-import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class DiagnosisAdapter extends RecyclerView.Adapter<DiagnosisAdapter.ViewHolder> {
     private ArrayList<Diagnosis> diagnosisList;

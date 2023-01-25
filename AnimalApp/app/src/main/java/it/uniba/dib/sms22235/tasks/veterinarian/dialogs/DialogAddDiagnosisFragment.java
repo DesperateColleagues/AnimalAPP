@@ -1,5 +1,6 @@
 package it.uniba.dib.sms22235.tasks.veterinarian.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -37,7 +38,11 @@ public class DialogAddDiagnosisFragment extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View root = inflater.inflate(R.layout.fragment_dialog_add_diagnosis, null);
         builder.setView(root);
-        builder.setTitle("Aggiunta diagnosi");
+
+        @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+        TextView titleText = titleView.findViewById(R.id.dialog_title);
+        titleText.setText("Aggiunta diagnosi");
+        builder.setCustomTitle(titleView);
 
         txtInputDiagnosisDescription = root.findViewById(R.id.txtInputDiagnosisDescription);
 

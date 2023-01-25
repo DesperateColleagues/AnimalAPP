@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments;
+package it.uniba.dib.sms22235.tasks.passionate.fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -24,24 +24,25 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Random;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.PassionateNavigationActivity;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.dialogs.DialogAddAnimalFragment;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.dialogs.DialogEditAnimalDataFragment;
+import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
+import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAddAnimalFragment;
+import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogEditAnimalDataFragment;
 import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
 import it.uniba.dib.sms22235.adapters.MessageListAdapter;
 import it.uniba.dib.sms22235.entities.operations.InfoMessage;
 import it.uniba.dib.sms22235.entities.users.Animal;
-import it.uniba.dib.sms22235.entities.users.Veterinarian;
+import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
 
-public class PassionateProfileFragment extends Fragment implements DialogAddAnimalFragment.DialogAddAnimalFragmentListener,
-        DialogEditAnimalDataFragment.DialogEditAnimalDataFragmentListener {
+public class PassionateProfileFragment extends Fragment implements
+        DialogAddAnimalFragment.DialogAddAnimalFragmentListener,
+        DialogEditAnimalDataFragment.DialogEditAnimalDataFragmentListener,
+        AnimalProfile.UpdateVeterinarianNameOnChoose {
 
     private PassionateProfileFragment.ProfileFragmentListener listener;
     private DialogEditAnimalDataFragment dialogEditAnimalDataFragment;
@@ -57,8 +58,6 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
          * @param animal the animal to register
          * */
         void onAnimalRegistered(Animal animal);
-        List<Veterinarian> getVeterinarianList();
-        void onAnimalUpdated(Animal animal);
     }
 
     private AnimalListAdapter animalListAdapter;
@@ -150,15 +149,15 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
                         controller.navigate(R.id.action_passionate_profile_to_reportsDashboardFragment);
                     } else if (messageListAdapter.getMessageAtPosition(position).getType().equals("notNow")){
                         notNowDialog(
-                                username + " " + getResources().getString(R.string.notNow),
-                                getResources().getString(R.string.notNowMessage),
-                                getResources().getString(R.string.notNowButton)
+                                username + " " + getResources().getString(R.string.not_now),
+                                getResources().getString(R.string.not_now_message),
+                                getResources().getString(R.string.not_now_button)
                                 );
                     } else if (messageListAdapter.getMessageAtPosition(position).getType().equals("ascanio")){
                         notNowDialog(
                                 username + " " + getResources().getString(R.string.ascanio),
-                                getResources().getString(R.string.ascanioMessage),
-                                getResources().getString(R.string.ascanioButton)
+                                getResources().getString(R.string.ascanio_message),
+                                getResources().getString(R.string.ascanio_button)
                         );
                     }
                 }
@@ -181,7 +180,6 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
                 public void onClick(View view, int position) {
                     /*// This method is used to request storage permission to the user
                     // with that we can save animal images not only on firebase,
-
                     // but also locally, to retrieve them more easily
                     ((PassionateNavigationActivity) requireActivity()).requestPermission();
 
@@ -198,10 +196,7 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
 
                 @Override
                 public void onLongClick(View view, int position) {
-                    dialogEditAnimalDataFragment.setAnimal(animalListAdapter.getAnimalAtPosition(position));
-                    dialogEditAnimalDataFragment.setVeterinarianList(listener.getVeterinarianList());
-                    dialogEditAnimalDataFragment.show(requireActivity().getSupportFragmentManager(),
-                            "DialogEditAnimalDataFragment");
+                    //not needed
                 }
             }));
 
@@ -242,13 +237,10 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
 
     @Override
     public void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal, String selectedVeterinarian) {
-        Animal animal = animalListAdapter.getAnimalByMicroChipCode(selectedAnimal.getMicrochipCode());
-        animalListAdapter.remove(animal);
-        animal.setVeterinarian(selectedVeterinarian);
-        animalListAdapter.addAnimal(animal);
+        animalListAdapter.remove(selectedAnimal);
+        selectedAnimal.setVeterinarian(selectedVeterinarian);
+        animalListAdapter.addAnimal(selectedAnimal);
         animalListAdapter.notifyItemInserted(animalListAdapter.getItemCount());
-
-        listener.onAnimalUpdated(animal);
     }
 
     private void notNow(ArrayList<InfoMessage> messages) {
@@ -256,7 +248,7 @@ public class PassionateProfileFragment extends Fragment implements DialogAddAnim
         int number = random.nextInt(100);
         if(number == 69) {
             InfoMessage notNow = new InfoMessage(
-                    username + " " + getResources().getString(R.string.notNow),
+                    username + " " + getResources().getString(R.string.not_now),
                     R.drawable.waterstone,
                     "notNow");
             messages.add(notNow);

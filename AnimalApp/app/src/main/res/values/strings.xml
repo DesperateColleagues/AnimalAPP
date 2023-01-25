@@ -7,8 +7,8 @@
 
     <!-- Stringhe sottostanti riferite alla registrazione -->
     <string name="animalapp_login">AnimalApp - Login</string>
-    <string name="email">email</string>
-    <string name="password">password</string>
+    <string name="email">E-Mail</string>
+    <string name="password">Password</string>
     <string name="password_dimenticata">Password dimenticata?</string>
     <string name="login">Login</string>
     <string name="registrati">Registrati</string>
@@ -23,17 +23,17 @@
     <string name="codice_fiscale">Codice Fiscale</string>
     <string name="nome_clinica">Nome clinica</string>
     <string name="scelta_ruolo">Scelta ruolo</string>
-    <string name="username">username</string>
-    <string name="nome_e_cognome">nome completo</string>
-    <string name="telefono">telefono</string>
-    <string name="nome_ente">nome ente</string>
-    <string name="scopo_ente">scopo ente</string>
-    <string name="descrizione_ente">descrizione ente</string>
+    <string name="username">Username</string>
+    <string name="nome_e_cognome">Nome completo</string>
+    <string name="telefono">Telefono</string>
+    <string name="nome_ente">Nome ente</string>
+    <string name="scopo_ente">Scopo ente</string>
+    <string name="descrizione_ente">Descrizione ente</string>
 
     <!-- Stringhe sottostanti riferite al passionate -->
     <string name="title_activity_passionate_navigation">PassionateNavigationActivity</string>
-    <string name="title_fragment_passionate_profile">Profilo utente</string>
-    <string name="title_fragment_passionate_reservation">Appuntamenti</string>
+    <string name="title_fragment_passionate_profile">Home</string>
+    <string name="title_fragment_passionate_reservation">Prenotazioni</string>
     <string name="title_fragment_passionate_purchases">Spese</string>
     <string name="registra_animale">Registra animale</string>
 
@@ -51,7 +51,7 @@
     <string name="descrizione_immagine">Descrizione immagine</string>
     <string name="seleziona_immagine">Seleziona immagine</string>
     <string name="salva">Salva</string>
-    <string name="titolo_immagine">titolo immagine</string>
+    <string name="titolo_immagine">Titolo immagine</string>
 
     <!-- Stringhe sottostanti riferite alle prenotazioni del passionate -->
     <string name="aggiungi_appuntamento">Aggiungi appuntamento</string>
@@ -65,7 +65,7 @@
 
     <!-- Stringhe sottostanti riferite al veterinario -->
     <string name="title_activity_veterinarian_navigation">VeterinarianNavigationActivity</string>
-    <string name="title_fragment_veterinarian_profile">Profilo veterinario</string>
+    <string name="title_fragment_veterinarian_profile">Home Vet</string>
     <string name="title_fragment_veterinarian_animal_list">Lista animali</string>
     <string name="title_fragment_veterinarian_patients">Pazienti</string>
     <string name="title_fragment_veterinarian_reservations">Prenotazioni</string>
@@ -96,6 +96,8 @@
     <string name="inserimento_spesa">Inserimento spesa</string>
     <string name="date">Date</string>
 
+    <!-- Stringhe sottostanti utili per dialogs -->
+
     <string name="ok">OK</string>
     <string name="conferma">Conferma</string>
     <string name="cancella">Cancella</string>
@@ -113,18 +115,24 @@
     <string name="conferma_richiesta_titolo">Sei sicuro?</string>
     <string name="conferma_richiesta_messaggio">Vuoi contrassegnare come "completata" questo elemento?</string>
 
+    <string name="animal_profile_infos">
+        ·<b>Specie:</b>* \n·<b>Razza:</b>*\n<br/>·<b>Data di nascita:</b>*\n<br/>·<b>Codice microchip:*</b>
+    </string>
+
     <!-- Perchè non lasciare qualche easter egg? -->
 
-    <string name="notNow">usa Pietraidrica!</string>
-    <string name="notNowMessage">Le parole del Prof. Oak rimbombano:\n\n<i>"C'è un luogo e un momento per ogni cosa! Ma non ora."</i></string>
-    <string name="notNowButton">Premi per continuare</string>
+    <string name="not_now">usa Pietraidrica!</string>
+    <string name="not_now_message">Le parole del Prof. Oak rimbombano:\n\n<i>"C'è un luogo e un momento per ogni cosa! Ma non ora."</i></string>
+    <string name="not_now_button">Premi per continuare</string>
 
     <!-- Stavo programmando le richieste. A mezzanotte dell'otto di Gennaio. Che fai, non aggiungi un altro easter egg? -->
 
     <string name="ascanio">lascia entrare Ascanio!</string>
-    <string name="ascanioMessage"><i>Hey, lascia entrare Ascanio, dall\'otto di gennaio\nPerciò, limarla è tosta: esce, ma non mi rosica</i></string>
-    <string name="ascanioButton">Il bucio le brucia!</string>
+    <string name="ascanio_message"><i>Hey, lascia entrare Ascanio, dall\'otto di gennaio\nPerciò, limarla è tosta: esce, ma non mi rosica</i></string>
+    <string name="ascanio_button">Il bucio le brucia!</string>
 
+    <!-- Stringhe sottostanti riferite all'ente e alle sue funzioni -->
+    <string name="empty_list">Non c\'è niente qui, per ora</string>
 
     <string-array name="rangeSliderValues">
         <item>0</item>

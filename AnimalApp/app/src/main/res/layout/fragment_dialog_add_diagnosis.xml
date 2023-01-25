@@ -22,7 +22,7 @@
         android:maxLines="10"
         android:textSize="17sp"
         android:hint="Inserisci riassunto breve della visita"
-        android:textColorHint="?attr/colorOnPrimary"
+        android:textColorHint="?attr/colorOnSecondary"
         tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
     <LinearLayout

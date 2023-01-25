@@ -2,9 +2,7 @@ package it.uniba.dib.sms22235.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,6 +83,10 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
 
     public void addAnimal(Animal animal) {
         animalList.add(animal);
+    }
+
+    public void addAllAnimals(ArrayList<Animal> list) {
+        animalList.addAll(list);
     }
 
     public void addPic(Bitmap bitmap) {

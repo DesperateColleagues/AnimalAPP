@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.common.views.requests.passionate.dialogs;
+package it.uniba.dib.sms22235.tasks.passionate.dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -26,7 +26,7 @@ import androidx.fragment.app.DialogFragment;
 import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.AnimalProfile;
+import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 import it.uniba.dib.sms22235.entities.users.Animal;
 
 public class DialogAnimalCardFragment extends DialogFragment {

@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.util.UUID;
-
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class Backbench {

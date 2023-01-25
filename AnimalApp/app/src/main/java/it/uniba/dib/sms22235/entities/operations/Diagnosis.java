@@ -63,13 +63,12 @@ public class Diagnosis implements Serializable {
      * */
     @NonNull
     public static Diagnosis loadDiagnosis (@NonNull DocumentSnapshot document) {
-        Diagnosis diagnosis = new Diagnosis(
+
+        return new Diagnosis(
                 (String) document.get(KeysNamesUtils.DiagnosisFields.ID),
                 (String) document.get(KeysNamesUtils.DiagnosisFields.DESCRIPTION),
                 (String) document.get(KeysNamesUtils.DiagnosisFields.PATH),
                 (String) document.get(KeysNamesUtils.DiagnosisFields.ANIMAL)
         );
-
-        return diagnosis;
     }
 }

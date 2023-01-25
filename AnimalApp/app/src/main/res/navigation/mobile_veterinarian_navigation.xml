@@ -6,6 +6,12 @@
     app:startDestination="@+id/veterinarian_profile">
 
     <fragment
+        android:id="@+id/animalProfile"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile"
+        android:label="AnimalProfile"
+        tools:layout="@layout/fragment_animal_profile"/>
+
+    <fragment
         android:id="@+id/veterinarian_profile"
         android:name="it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianProfileFragment"
         android:label="@string/title_fragment_veterinarian_profile"
@@ -21,7 +27,13 @@
         android:id="@+id/veterinarian_animal_list"
         android:name="it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianAnimalListFragment"
         android:label="@string/title_fragment_veterinarian_animal_list"
-        tools:layout="@layout/fragment_veterinarian_animal_list" />
+        tools:layout="@layout/fragment_veterinarian_animal_list">
+        <action
+            android:id="@+id/action_veterinarian_animal_list_to_animalProfile"
+            app:destination="@id/animalProfile"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/veterinarian_reservation"
@@ -51,7 +63,7 @@
     <fragment
         android:id="@+id/reportsDashboardFragment"
         android:name="it.uniba.dib.sms22235.tasks.common.views.reports.ReportsDashboardFragment"
-        android:label="ReportsDashboardFragment"
+        android:label="Dashboard segnalazioni"
         tools:layout="@layout/fragment_reports_dashboard">
         <action
             android:id="@+id/action_reportsDashboardFragment_to_reportDetailsFragment"
@@ -63,7 +75,7 @@
     <fragment
         android:id="@+id/reportDetailsFragment"
         android:name="it.uniba.dib.sms22235.tasks.common.views.reports.ReportAddNewFragment"
-        android:label="ReportDetailsFragment"
+        android:label="Dettagli segnalazione"
         tools:layout="@layout/fragment_reports_add_new"/>
 
 </navigation>

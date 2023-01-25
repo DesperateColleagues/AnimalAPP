@@ -235,11 +235,7 @@ public class VeterinarianReservationFragment extends Fragment implements
         String[] selectedTimeArray = selected.split(":");
         String[] currentTimeArray = this.currentTime.split(":");
 
-        if (selectedTimeArray[0].compareTo(currentTimeArray[0]) > 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return selectedTimeArray[0].compareTo(currentTimeArray[0]) <= 0;
     }
 
     @SuppressLint("NotifyDataSetChanged")

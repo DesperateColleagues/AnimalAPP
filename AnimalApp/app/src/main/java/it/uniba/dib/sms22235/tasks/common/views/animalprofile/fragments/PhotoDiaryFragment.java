@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.animalprofile;
+package it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -27,9 +28,11 @@ import java.util.List;
 import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
+import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.adapters.PostGridAdapter;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
+import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 
 public class PhotoDiaryFragment extends Fragment {
 
@@ -111,7 +114,7 @@ public class PhotoDiaryFragment extends Fragment {
 
     @Override
     public void onAttach(@NonNull Context context) {
-        PassionateNavigationActivity activity = (PassionateNavigationActivity) getActivity();
+        NavigationActivityInterface activity = (NavigationActivityInterface) getActivity();
 
         try {
             // Attach the listener to the Fragment
@@ -141,17 +144,24 @@ public class PhotoDiaryFragment extends Fragment {
         PostGridAdapter postGridAdapter = new PostGridAdapter(context, posts);
 
         Button btnAddAnimalPost = view.findViewById(R.id.btnAddAnimalPost);
-        btnAddAnimalPost.setOnClickListener(v -> {
-            Intent i = new Intent();
-            i.setType("image/*");
-            i.setAction(Intent.ACTION_GET_CONTENT);
-            photoUploadAndSaveActivity.launch(i);
-        });
+
+        if ((getActivity()) instanceof PassionateNavigationActivity) {
+            btnAddAnimalPost.setOnClickListener(v -> {
+                Intent i = new Intent();
+                i.setType("image/*");
+                i.setAction(Intent.ACTION_GET_CONTENT);
+                photoUploadAndSaveActivity.launch(i);
+            });
+        } else if ((getActivity()) instanceof VeterinarianNavigationActivity){
+            btnAddAnimalPost.setVisibility(View.GONE);
+        } else {
+            Toast.makeText(getContext(), "Non dovresti essere qui.", Toast.LENGTH_SHORT).show();
+            btnAddAnimalPost.setVisibility(View.GONE);
+        }
 
         RecyclerView diaryRecycler = view.findViewById(R.id.diaryRecycler);
         diaryRecycler.setLayoutManager(new GridLayoutManager(context, 3));
         diaryRecycler.setAdapter(postGridAdapter);
-
         listener.loadPost(postGridAdapter, posts, animalMicrochip);
     }
 }

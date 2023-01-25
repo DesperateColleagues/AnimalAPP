@@ -20,7 +20,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.dialogs.DatePickerDialogFragment;
+import it.uniba.dib.sms22235.tasks.passionate.dialogs.DatePickerDialogFragment;
 import it.uniba.dib.sms22235.tasks.common.dialogs.DialogTimePickerFragment;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -8,11 +7,11 @@
 
     <ImageView
         android:id="@+id/appLogoLogin"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:src="@drawable/activity_login_icon"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -20,6 +19,11 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <!--
+            android:text="angelovalentino@libero.it"
+            android:text="marcobari@libero.it"
+        -->
 
         <EditText
             android:id="@+id/txtInputOrgEmail"
@@ -31,6 +35,7 @@
             android:ems="10"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
+            android:text="ente2@gmail.com"
             android:minHeight="48dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -54,6 +59,7 @@
             android:inputType="textPassword"
             android:minHeight="48dp"
             android:textColorHint="#2E7D32"
+            android:text="123456"
             android:importantForAutofill="no" />
 
     </com.google.android.material.textfield.TextInputLayout>

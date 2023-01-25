@@ -1,5 +1,6 @@
-package it.uniba.dib.sms22235.tasks.common.views.requests.passionate.dialogs;
+package it.uniba.dib.sms22235.tasks.passionate.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,10 +34,6 @@ public class DialogEditAnimalDataFragment extends DialogFragment {
 
     public void setAnimal(Animal animal) {
         this.animal = animal;
-    }
-
-    public List<Veterinarian> getVeterinarianList() {
-        return veterinarianList;
     }
 
     public void setVeterinarianList(List<Veterinarian> veterinarianList) {
@@ -73,13 +71,16 @@ public class DialogEditAnimalDataFragment extends DialogFragment {
 
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View root = inflater.inflate(R.layout.fragment_dialog_choose_animal, null);
-
         builder.setView(root);
-        builder.setTitle("Modifica informazioni animale");
+
+        @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+        TextView titleText = titleView.findViewById(R.id.dialog_title);
+        titleText.setText("Modifica informazioni animale");
+        builder.setCustomTitle(titleView);
 
         veterinarianListSpinner = root.findViewById(R.id.animalSpinner);
 
-        VeterinarianArrayAdapter dataAdapter = new VeterinarianArrayAdapter(getContext(), android.R.layout.simple_spinner_item, veterinarianList);
+        VeterinarianArrayAdapter dataAdapter = new VeterinarianArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, veterinarianList);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         veterinarianListSpinner.setAdapter(dataAdapter);

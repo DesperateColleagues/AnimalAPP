@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments;
+package it.uniba.dib.sms22235.tasks.passionate.fragments;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -27,13 +27,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.PassionateNavigationActivity;
-import it.uniba.dib.sms22235.tasks.common.views.requests.passionate.dialogs.DialogAddPurchaseFragment;
+import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAddPurchaseFragment;
 import it.uniba.dib.sms22235.adapters.ListViewPurchasesAdapter;
 import it.uniba.dib.sms22235.database.QueryPurchasesManager;
 import it.uniba.dib.sms22235.entities.operations.Interval;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
+import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class PassionatePurchaseFragment extends Fragment implements

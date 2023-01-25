@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.common.views.requests.passionate.dialogs;
+package it.uniba.dib.sms22235.tasks.passionate.dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -100,9 +101,11 @@ public class DialogAddImageDiaryFragment extends DialogFragment {
 
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View root = inflater.inflate(R.layout.fragment_dialog_add_image_diary, null);
-
         builder.setView(root);
-        builder.setTitle("Aggiunta al photo diary");
+
+        @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+        TextView titleText = titleView.findViewById(R.id.dialog_title);
+        titleText.setText("Aggiunta al photo diary");
 
         photoDiaryImageInsert = root.findViewById(R.id.photoDiaryImageInsert);
         Spinner spinnerAnimalsAddPhotoDiary = root.findViewById(R.id.spinnerAnimalsAddPhotoDiary);

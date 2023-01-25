@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:autofillHints=""
             android:drawableStart="@drawable/ic_baseline_pets_24"
+            android:drawableTint="?attr/colorPrimary"
             android:drawablePadding="10dp"
             android:ems="10"
             android:inputType="textPersonName"

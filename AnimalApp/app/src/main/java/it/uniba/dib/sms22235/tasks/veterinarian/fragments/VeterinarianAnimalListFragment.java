@@ -10,17 +10,23 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
+import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
+import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
 
 public class VeterinarianAnimalListFragment extends Fragment {
 
     private RecyclerView assistedAnimalRecyclerView;
     private AnimalListAdapter adapter;
+    private transient NavController controller;
 
     public interface VeterinarianAnimalListFragmentListener {
         void getAssistedAnimals(AnimalListAdapter adapter, RecyclerView recyclerView);
@@ -44,9 +50,11 @@ public class VeterinarianAnimalListFragment extends Fragment {
         super.onAttach(context);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        controller = Navigation.findNavController(container);
+
         View rootView = inflater.inflate(R.layout.fragment_veterinarian_animal_list, container, false);
 
         assistedAnimalRecyclerView = rootView.findViewById(R.id.veterinarianAssistedAnimalList);
@@ -59,6 +67,22 @@ public class VeterinarianAnimalListFragment extends Fragment {
 
         assistedAnimalRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
 
+        assistedAnimalRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), assistedAnimalRecyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, adapter.getAnimalAtPosition(position));
+                controller.navigate(R.id.action_veterinarian_animal_list_to_animalProfile, bundle);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+
+        ((NavigationActivityInterface) requireActivity()).setNavViewVisibility(View.VISIBLE);
         ((VeterinarianNavigationActivity) requireActivity()).getFab().setVisibility(View.GONE);
         ((VeterinarianNavigationActivity) requireActivity()).getFab().setOnClickListener(v -> {
             Toast.makeText(getContext(),"Still nothing, but with animals",Toast.LENGTH_SHORT).show();

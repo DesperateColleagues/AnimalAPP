@@ -1,10 +1,12 @@
-package it.uniba.dib.sms22235.tasks.common.views.requests.passionate.fragments.animalprofile;
+package it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.DiagnosisAdapter;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
+import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 
 public class DiagnosisFragment extends Fragment {
 
@@ -56,12 +60,24 @@ public class DiagnosisFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Button btnAddAnimalOperation = view.findViewById(R.id.btnAddAnimalOperation);
+        if ((getActivity()) instanceof VeterinarianNavigationActivity) {
+            btnAddAnimalOperation.setVisibility(View.VISIBLE);
+            btnAddAnimalOperation.setText(getResources().getString(R.string.aggiungi_diagnosi));
+            btnAddAnimalOperation.setOnClickListener(v -> {
+                Toast.makeText(getContext(), "Inserimento nuova diagnosi", Toast.LENGTH_SHORT).show();
+            });
+        } else if ((getActivity()) instanceof PassionateNavigationActivity){
+            btnAddAnimalOperation.setVisibility(View.GONE);
+        } else {
+            Toast.makeText(getContext(), "Non dovresti essere qui.", Toast.LENGTH_SHORT).show();
+            btnAddAnimalOperation.setVisibility(View.GONE);
+        }
+
         diagnosisRecyclerView = view.findViewById(R.id.recyclerVerticalList);
-
         adapter = new DiagnosisAdapter();
-
         listener.getAnimalDiagnosis(adapter, diagnosisRecyclerView, animal);
-
         diagnosisRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false));
 
     }
