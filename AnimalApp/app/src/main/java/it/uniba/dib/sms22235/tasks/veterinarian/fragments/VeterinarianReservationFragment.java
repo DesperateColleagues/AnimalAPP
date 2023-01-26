@@ -7,16 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,17 +21,14 @@ import java.util.Locale;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
-import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.BSDialogVeterinarianFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.DialogAddDiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.DialogAddReservationFragment;
 import it.uniba.dib.sms22235.adapters.ReservationsAdapter;
-import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class VeterinarianReservationFragment extends Fragment implements
-        DialogAddReservationFragment.DialogAddReservationFragmentListener,
-        DialogAddDiagnosisFragment.DialogAddDiagnosisFragmentListener {
+        DialogAddReservationFragment.DialogAddReservationFragmentListener {
 
     private CalendarView calendarView;
     private RecyclerView reservationRecyclerView;
@@ -51,7 +44,6 @@ public class VeterinarianReservationFragment extends Fragment implements
 
     public interface VeterinarianReservationFragmentListener {
         void onReservationRegistered(Reservation reservation);
-        void onDiagnosisRegistered(Reservation reservation, Diagnosis diagnosis);
     }
 
     VeterinarianReservationFragmentListener listener;
@@ -85,7 +77,7 @@ public class VeterinarianReservationFragment extends Fragment implements
 
         adapter = new ReservationsAdapter();
         adapter.setListType(KeysNamesUtils.ReservationListType.VETERINARIAN.getValue());
-        adapter.setOnItemClickListener(reservation -> {
+        /*adapter.setOnItemClickListener(reservation -> {
 
             new BSDialogVeterinarianFragment(reservation)
                     .setOnAddDiagnosisListener(() -> {
@@ -101,7 +93,7 @@ public class VeterinarianReservationFragment extends Fragment implements
                         // If the reservation happened before now, the vet would be able to upload a diagnosis
                         if (checkIfDateDiagnosable(selectedDate, selectedTime)) {/*
 
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AnimalCardRoundedDialog);
                                 builder.setTitle("Aggiunta diagnosi");
 
                                 final EditText input = new EditText(getContext());
@@ -117,7 +109,7 @@ public class VeterinarianReservationFragment extends Fragment implements
 
                                         .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
-                                builder.show();*/
+                                builder.show();
 
                             dialogAddDiagnosisFragment.show(getParentFragmentManager(), "DialogAddDiagnosisFragment");
 
@@ -149,7 +141,7 @@ public class VeterinarianReservationFragment extends Fragment implements
                         Toast.makeText(getContext(), "MODIFICA APPUNTAMENTO", Toast.LENGTH_SHORT).show();
                     })
                     .show(getParentFragmentManager(), "TAG");
-        });
+        });*/
 
         // These methods allows to retrieve the current date and the current time. We need them to
         // specify if a reservation inside the recycler view is allowed to have a diagnose liked
@@ -248,19 +240,5 @@ public class VeterinarianReservationFragment extends Fragment implements
         }
         adapter.notifyDataSetChanged();
         listener.onReservationRegistered(reservation);
-    }
-
-    @Override
-    public void onDialogAddDiagnosisDismissed(@NonNull Diagnosis diagnosis) {
-        String diagnosisID = "dia_" +
-                reservation.getDate().replaceAll("[-+^/]*", "") +
-                "_" +
-                reservation.getTime() +
-                "_" +
-                reservation.getAnimal();
-        diagnosis.setId(diagnosisID);
-        diagnosis.setAnimal(reservation.getAnimal());
-        reservation.setDiagnosis(diagnosisID);
-        listener.onDiagnosisRegistered(reservation, diagnosis);
     }
 }

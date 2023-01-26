@@ -142,31 +142,6 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
                 });
     }
 
-    @Override
-    public void onDiagnosisRegistered(Reservation reservation, Diagnosis diagnosis) {
-
-        db.collection(KeysNamesUtils.CollectionsNames.DIAGNOSIS)
-                .whereEqualTo(KeysNamesUtils.DiagnosisFields.ID, diagnosis.getId())
-                .get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().isEmpty()) {
-                            db.collection(KeysNamesUtils.CollectionsNames.DIAGNOSIS)
-                                    .document(diagnosis.getId())
-                                    .set(diagnosis)
-                                    .addOnSuccessListener(unused -> {
-                                        updateReservation(reservation, diagnosis.getId());
-                                        Toast.makeText(this,
-                                                "Diagnosi inserita con successo",
-                                                Toast.LENGTH_LONG).show();
-                                    })
-                                    .addOnFailureListener(e ->
-                                            Toast.makeText(this, "Errore interno, dati non aggiornati",
-                                                    Toast.LENGTH_SHORT).show());
-                        }
-                    }
-                });
-    }
-
     private void updateReservation(Reservation reservation, String diagnosisID) {
         String dateFormatted = reservation.getDate();
         String timeFormatted = reservation.getTime();
@@ -466,7 +441,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void getAnimalDiagnosis(DiagnosisAdapter adapter, RecyclerView recyclerView, String animal){
+    public void getAnimalDiagnosis(DiagnosisAdapter adapter, RecyclerView recyclerView, String animal, DiagnosisAdapter.OnItemClickListener onClickListener){
         db.collection(KeysNamesUtils.CollectionsNames.DIAGNOSIS)
                 .whereEqualTo(KeysNamesUtils.DiagnosisFields.ANIMAL, animal)
                 .get()
@@ -480,6 +455,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
                                 Log.wtf("Diagnosi", Diagnosis.loadDiagnosis(snapshot).toString());
                             }
                         }
+                        adapter.setOnItemClickListener(onClickListener);
                         recyclerView.setAdapter(adapter);
                     } else {
                         Toast.makeText(this, "Nessuna diagnosi presente.", Toast.LENGTH_SHORT).show();

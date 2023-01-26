@@ -20,45 +20,64 @@ import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 public class DialogAddDiagnosisFragment extends DialogFragment {
 
     private TextView txtInputDiagnosisDescription;
+    private DialogAddDiagnosisFragment.DialogAddDiagnosisFragmentListener listener;
+    private Diagnosis diagnosis;
 
     public interface DialogAddDiagnosisFragmentListener{
         void onDialogAddDiagnosisDismissed(Diagnosis diagnosis);
     }
 
-    private DialogAddDiagnosisFragment.DialogAddDiagnosisFragmentListener listener;
+    public DialogAddDiagnosisFragment() {}
 
-    public void setListener(DialogAddDiagnosisFragment.DialogAddDiagnosisFragmentListener listener) {
-        this.listener = listener;
+    public DialogAddDiagnosisFragment(Diagnosis diagnosis) {
+        this.diagnosis = diagnosis;
     }
 
     @Nullable
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AnimalCardRoundedDialog);
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View root = inflater.inflate(R.layout.fragment_dialog_add_diagnosis, null);
         builder.setView(root);
 
         @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
-        TextView titleText = titleView.findViewById(R.id.dialog_title);
-        titleText.setText("Aggiunta diagnosi");
-        builder.setCustomTitle(titleView);
 
         txtInputDiagnosisDescription = root.findViewById(R.id.txtInputDiagnosisDescription);
 
-        Button btnAddDiagnosisFile = root.findViewById(R.id.btnAddDiagnosisFile);
+        TextView titleText = titleView.findViewById(R.id.dialog_title);
 
+        if (diagnosis != null) {
+            titleText.setText(getResources().getString(R.string.modifica_diagnosi));
+            txtInputDiagnosisDescription.setText(diagnosis.getDescription());
+        } else {
+            titleText.setText(getResources().getString(R.string.aggiungi_diagnosi));
+        }
+        builder.setCustomTitle(titleView);
+
+        Button btnAddDiagnosisFile = root.findViewById(R.id.btnAddDiagnosisFile);
         btnAddDiagnosisFile.setOnClickListener(view -> {
             Toast.makeText(getContext(), "Feature will be implemented soon!", Toast.LENGTH_SHORT).show();
         });
 
+
         Button btnConfirmAddDiagnosis = root.findViewById(R.id.btnAddDiagnosis);
         btnConfirmAddDiagnosis.setOnClickListener(v -> {
-            String diagnosis = txtInputDiagnosisDescription.getText().toString();
-            listener.onDialogAddDiagnosisDismissed(new Diagnosis(diagnosis,null));
+            if (diagnosis != null) {
+                String description = txtInputDiagnosisDescription.getText().toString();
+                diagnosis.setDescription(description);
+                listener.onDialogAddDiagnosisDismissed(diagnosis);
+            } else {
+                String description = txtInputDiagnosisDescription.getText().toString();
+                listener.onDialogAddDiagnosisDismissed(new Diagnosis(description,null));
+            }
             dismiss();
         });
 
         return builder.create();
+    }
+
+    public void setListener(DialogAddDiagnosisFragment.DialogAddDiagnosisFragmentListener listener) {
+        this.listener = listener;
     }
 }

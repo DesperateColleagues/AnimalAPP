@@ -5,6 +5,8 @@ import androidx.annotation.NonNull;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.Serializable;
+import java.util.Objects;
+import java.util.UUID;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
@@ -14,9 +16,13 @@ public class Diagnosis implements Serializable {
     private String description;
     private String path;
     private String animal;
+    private String dateAdded;
+    private String timeAdded;
 
     public Diagnosis(String description, String path) {
+        this.id = UUID.randomUUID().toString();
         this.description = description;
+        this.path = path;
     }
 
     public Diagnosis(String id, String description, String path, String animal) {
@@ -32,6 +38,18 @@ public class Diagnosis implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDateAdded() {
+        return dateAdded;
+    }
+
+    public void setDateAdded(String dateAdded) {
+        this.dateAdded = dateAdded;
+    }
+
+    public void setTimeAdded(String timeAdded) {
+        this.timeAdded = timeAdded;
     }
 
     public String getDescription() {
@@ -63,12 +81,27 @@ public class Diagnosis implements Serializable {
      * */
     @NonNull
     public static Diagnosis loadDiagnosis (@NonNull DocumentSnapshot document) {
-
-        return new Diagnosis(
+        Diagnosis diagnosis = new Diagnosis(
                 (String) document.get(KeysNamesUtils.DiagnosisFields.ID),
                 (String) document.get(KeysNamesUtils.DiagnosisFields.DESCRIPTION),
                 (String) document.get(KeysNamesUtils.DiagnosisFields.PATH),
                 (String) document.get(KeysNamesUtils.DiagnosisFields.ANIMAL)
         );
+        diagnosis.setDateAdded((String) document.get(KeysNamesUtils.DiagnosisFields.DATE_ADDED));
+        diagnosis.setTimeAdded((String) document.get(KeysNamesUtils.DiagnosisFields.TIME_ADDED));
+        return diagnosis;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Diagnosis diagnosis = (Diagnosis) o;
+        return id.equals(diagnosis.id) && animal.equals(diagnosis.animal) && dateAdded.equals(diagnosis.dateAdded) && timeAdded.equals(diagnosis.timeAdded);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, animal, dateAdded, timeAdded);
     }
 }

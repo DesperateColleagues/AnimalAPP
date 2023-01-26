@@ -344,7 +344,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void getAnimalDiagnosis(DiagnosisAdapter adapter, RecyclerView recyclerView, String animal){
+    public void getAnimalDiagnosis(DiagnosisAdapter adapter, RecyclerView recyclerView, String animal, DiagnosisAdapter.OnItemClickListener onClickListener){
         db.collection(KeysNamesUtils.CollectionsNames.DIAGNOSIS)
                 .whereEqualTo(KeysNamesUtils.DiagnosisFields.ANIMAL, animal)
                 .get()

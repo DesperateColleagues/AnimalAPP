@@ -67,7 +67,7 @@ public class ExamsFragment extends Fragment {
         Button btnAddAnimalOperation = view.findViewById(R.id.btnAddAnimalOperation);
         if ((getActivity()) instanceof VeterinarianNavigationActivity) {
             btnAddAnimalOperation.setVisibility(View.VISIBLE);
-            btnAddAnimalOperation.setText(getResources().getString(R.string.aggiungi_diagnosi));
+            btnAddAnimalOperation.setText(getResources().getString(R.string.aggiungi_esame));
             btnAddAnimalOperation.setOnClickListener(v -> {
                 Toast.makeText(getContext(), "Inserimento nuovo esame", Toast.LENGTH_SHORT).show();
             });

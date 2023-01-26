@@ -45,7 +45,7 @@
             android:id="@+id/txtInputReservationTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_baseline_calendar_month_24"
+            android:drawableStart="@drawable/ic_baseline_access_time_24"
             android:drawablePadding="10dp"
             android:ems="10"
             android:cursorVisible="false"

@@ -14,17 +14,11 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 
 
-public class BSDialogVeterinarianFragment extends BottomSheetDialogFragment {
+public class BSDialogEditDiagnosisFragment extends BottomSheetDialogFragment {
 
-
-    private final Reservation reservation;
     private OnDeleteListener onDeleteListener;
-    private OnAddDiagnosisListener onAddDiagnosisListener;
     private OnUpgradeListener onUpgradeListener;
-
-    public BSDialogVeterinarianFragment(Reservation reservation) {
-        this.reservation = reservation;
-    }
+    private OnShowListener onShowListener;
 
     @Nullable
     @Override
@@ -36,28 +30,24 @@ public class BSDialogVeterinarianFragment extends BottomSheetDialogFragment {
         root.findViewById(R.id.btnOnUpgradeDiagnosis).setOnClickListener(v -> {
             onUpgradeListener.onUpgrade();
         });
-        root.findViewById(R.id.btnOnAddDiagnosis).setOnClickListener(v -> {
-            onAddDiagnosisListener.onAddDiagnosis();
+        root.findViewById(R.id.btnOnShowDiagnosis).setOnClickListener(v -> {
+            onShowListener.onShow();
         });
-
-        //TODO aggiungere un ulteriore layer: un BSD per la selezione tra esami e diagnosi, e poi dei dialog appositi per visualizzare le relative info
-
-
         return root;
     }
 
-    public BSDialogVeterinarianFragment setOnDeleteListener(OnDeleteListener onDeleteListener) {
+    public BSDialogEditDiagnosisFragment setOnDeleteListener(OnDeleteListener onDeleteListener) {
         this.onDeleteListener = onDeleteListener;
         return this;
     }
 
-    public BSDialogVeterinarianFragment setOnAddDiagnosisListener(OnAddDiagnosisListener onAddDiagnosisListener) {
-        this.onAddDiagnosisListener = onAddDiagnosisListener;
+    public BSDialogEditDiagnosisFragment setOnUpgradeListener(OnUpgradeListener onUpgradeListener) {
+        this.onUpgradeListener = onUpgradeListener;
         return this;
     }
 
-    public BSDialogVeterinarianFragment setOnUpgradeListener(OnUpgradeListener onUpgradeListener) {
-        this.onUpgradeListener = onUpgradeListener;
+    public BSDialogEditDiagnosisFragment setOnShowListener(OnShowListener onShowListener) {
+        this.onShowListener = onShowListener;
         return this;
     }
 
@@ -65,12 +55,12 @@ public class BSDialogVeterinarianFragment extends BottomSheetDialogFragment {
         void onDelete();
     }
 
-    public interface OnAddDiagnosisListener{
-        void onAddDiagnosis();
-    }
-
     public interface OnUpgradeListener{
         void onUpgrade();
+    }
+
+    public interface OnShowListener {
+        void onShow();
     }
 
 }

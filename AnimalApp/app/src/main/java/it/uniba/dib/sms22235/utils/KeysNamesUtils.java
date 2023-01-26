@@ -72,6 +72,8 @@ public class KeysNamesUtils {
         public static String DESCRIPTION = "description";
         public static String PATH = "path";
         public static String ANIMAL = "animal";
+        public static String DATE_ADDED = "dateAdded";
+        public static String TIME_ADDED = "timeAdded";
     }
         
     public static class PhotoDiaryFields {

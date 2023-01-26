@@ -51,7 +51,12 @@ public class DiagnosisAdapter extends RecyclerView.Adapter<DiagnosisAdapter.View
     public void onBindViewHolder(@NonNull DiagnosisAdapter.ViewHolder holder, int position) {
         Diagnosis diagnosis = diagnosisList.get(position);
 
-        holder.txtDiagnosisInfo.setText(diagnosis.getId());
+        String info = new StringBuilder()
+                .append("Diagnosi aggiunta in data: ")
+                .append(diagnosis.getDateAdded())
+                .toString();
+
+        holder.txtDiagnosisInfo.setText(info);
 
         holder.itemDiagnosisCardView.setOnClickListener(v -> {
             if (onItemClickListener != null){

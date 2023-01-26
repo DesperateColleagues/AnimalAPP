@@ -15,7 +15,6 @@ public class Reservation implements Serializable, Cloneable {
     private String veterinarian;
     private String date;
     private String time;
-    private String diagnosis;
 
     public void setDate(String date) {
         this.date = date;
@@ -23,10 +22,6 @@ public class Reservation implements Serializable, Cloneable {
 
     public void setTime(String time) {
         this.time = time;
-    }
-
-    public String getDiagnosis() {
-        return diagnosis;
     }
 
     public String getAnimal() {
@@ -60,10 +55,6 @@ public class Reservation implements Serializable, Cloneable {
         this.animal = animal;
     }
 
-    public void setDiagnosis(String diagnosis) {
-        this.diagnosis = diagnosis;
-    }
-
     public String getDate() {
         return date;
     }
@@ -86,7 +77,6 @@ public class Reservation implements Serializable, Cloneable {
      * */
     @NonNull
     public static Reservation loadReservation (@NonNull DocumentSnapshot document) {
-
         return new Reservation(
                 (String) document.get(KeysNamesUtils.ReservationFields.DATE),
                 (String) document.get(KeysNamesUtils.ReservationFields.TIME),

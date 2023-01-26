@@ -76,8 +76,10 @@
     <string name="ora_appuntamento">ora</string>
     <string name="aggiungi_prenotazione">Aggiungi prenotazione</string>
     <string name="aggiungi_diagnosi">Aggiungi diagnosi</string>
+    <string name="mostra_diagnosi">Mostra diagnosi</string>
     <string name="modifica_diagnosi">Modifica diagnosi</string>
     <string name="elimina_diagnosi">Elimina diagnosi</string>
+    <string name="aggiungi_esame">Aggiungi esame</string>
     <string name="proprietario_animale_vet_list">Proprietario:</string>
     <string name="nome_animale_vet_list">Nome:</string>
 

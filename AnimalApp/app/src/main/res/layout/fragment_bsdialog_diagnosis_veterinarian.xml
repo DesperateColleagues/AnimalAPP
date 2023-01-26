@@ -8,7 +8,7 @@
     android:paddingBottom="8dp">
 
     <LinearLayout
-        android:id="@+id/btnOnAddDiagnosis"
+        android:id="@+id/btnOnShowDiagnosis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
@@ -18,16 +18,16 @@
             android:layout_width="24dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_baseline_add_24"
+            android:src="@drawable/ic_baseline_edit_note_24"
             android:adjustViewBounds="true"
-            app:tint="?attr/colorOnSecondary" />
+            app:tint="?attr/colorOnSecondary"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:textSize="16sp"
-            android:text="@string/aggiungi_diagnosi"
+            android:text="@string/mostra_diagnosi"
             android:textColor="?attr/colorOnSecondary"
             />
     </LinearLayout>

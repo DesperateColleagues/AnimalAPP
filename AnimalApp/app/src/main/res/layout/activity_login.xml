@@ -23,6 +23,7 @@
         <!--
             android:text="angelovalentino@libero.it"
             android:text="marcobari@libero.it"
+            android:text="ente2@gmail.com"
         -->
 
         <EditText
@@ -35,7 +36,7 @@
             android:ems="10"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
-            android:text="ente2@gmail.com"
+            android:text="angelovalentino@libero.it"
             android:minHeight="48dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
