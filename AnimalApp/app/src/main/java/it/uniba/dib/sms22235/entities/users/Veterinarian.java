@@ -11,7 +11,7 @@ import java.io.Serializable;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class Veterinarian extends AbstractPersonUser implements  Serializable, Cloneable {
-    private String clinicName, phoneNumber;
+    private String clinicName, phoneNumber, clinicAddress;
 
     @Override
     public String toString() {
@@ -24,10 +24,16 @@ public class Veterinarian extends AbstractPersonUser implements  Serializable, C
      * @param clinicName the name of the clinic
      * @param phoneNumber the phone number of the veterinary used as contact
      */
-    public Veterinarian(String fullName, String email, String clinicName, String phoneNumber, String password, String purpose) {
+    public Veterinarian(String fullName, String email, String clinicName, String phoneNumber,
+                        String password, String purpose, String clinicAddress) {
         super(fullName, email, password, purpose);
         this.clinicName = clinicName;
         this.phoneNumber = phoneNumber;
+        this.clinicAddress = clinicAddress;
+    }
+
+    public String getClinicAddress() {
+        return clinicAddress;
     }
 
     @Override
@@ -64,7 +70,8 @@ public class Veterinarian extends AbstractPersonUser implements  Serializable, C
                 (String) document.get(KeysNamesUtils.ActorFields.CLINIC_NAME),
                 (String) document.get(KeysNamesUtils.ActorFields.PHONE_NUMBER),
                 (String) document.get(KeysNamesUtils.ActorFields.PASSWORD),
-                (String) document.get(KeysNamesUtils.ActorFields.PURPOSE)
+                (String) document.get(KeysNamesUtils.ActorFields.PURPOSE),
+                (String) document.get("clinicAddress")
         );
     }
 
@@ -72,7 +79,7 @@ public class Veterinarian extends AbstractPersonUser implements  Serializable, C
     @NonNull
     @Override
     public Object clone() {
-        Object o = null;
+        Object o;
         try {
             o = super.clone();
         } catch (CloneNotSupportedException e) {

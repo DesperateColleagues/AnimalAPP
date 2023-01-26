@@ -20,13 +20,16 @@ import androidx.recyclerview.widget.SnapHelper;
 
 import org.jetbrains.annotations.Contract;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Random;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAddAnimalFragment;
@@ -146,6 +149,14 @@ public class PassionateProfileFragment extends Fragment implements
                         controller.navigate(R.id.action_passionate_profile_to_BookedReservationsFragment, bundle);
                     } else if (messageListAdapter.getMessageAtPosition(position).getType().equals(KeysNamesUtils.CollectionsNames.REPORTS)) {
                         controller.navigate(R.id.action_passionate_profile_to_reportsDashboardFragment);
+                    } else if (messageListAdapter.getMessageAtPosition(position).getType().equals(KeysNamesUtils.RolesNames.VETERINARIAN)) {
+                        Bundle bundle = new Bundle();
+
+                        List<Veterinarian> veterinarians = ((PassionateNavigationActivity) requireActivity()).getVeterinarianList();
+                        bundle.putSerializable(KeysNamesUtils.BundleKeys.VETERINARIANS_LIST,
+                                (Serializable) veterinarians);
+
+                        controller.navigate(R.id.action_passionate_profile_to_passionateVeterinarianListFragment, bundle);
                     } else if (messageListAdapter.getMessageAtPosition(position).getType().equals("notNow")){
                         notNowDialog(
                                 username + " " + getResources().getString(R.string.not_now),
@@ -214,8 +225,8 @@ public class PassionateProfileFragment extends Fragment implements
     @Contract("_ -> param1")
     private ArrayList<InfoMessage> buildStandardMessages(@NonNull ArrayList<InfoMessage> messages) {
         InfoMessage findings = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_text), R.drawable.warningsign, KeysNamesUtils.CollectionsNames.REPORTS);
-        InfoMessage showVeterinarians = new InfoMessage("Visualizza veterinari", R.drawable.fra_rrc_doctor_no_green, KeysNamesUtils.CollectionsNames.ACTORS);
-        InfoMessage showOrganizations = new InfoMessage("Visualizza organizzazioni", R.drawable.fra_rrc_organization_no_green, KeysNamesUtils.CollectionsNames.ACTORS);
+        InfoMessage showVeterinarians = new InfoMessage("Visualizza veterinari", R.drawable.fra_rrc_doctor_no_green, KeysNamesUtils.RolesNames.VETERINARIAN);
+        InfoMessage showOrganizations = new InfoMessage("Visualizza organizzazioni", R.drawable.fra_rrc_organization_no_green, KeysNamesUtils.RolesNames.VETERINARIAN);
         InfoMessage recentReservations = new InfoMessage(getResources().getString(R.string.tutti_appuntamenti_recenti), 0, KeysNamesUtils.CollectionsNames.RESERVATIONS);
 
         messages.add(findings);

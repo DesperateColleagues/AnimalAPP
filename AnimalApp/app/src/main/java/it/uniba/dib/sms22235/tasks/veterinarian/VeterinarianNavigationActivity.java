@@ -30,6 +30,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -66,7 +68,6 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
     private FloatingActionButton fab;
     private FirebaseFirestore db;
-    private FirebaseAuth auth;
     private Veterinarian veterinarian;
     private ArrayList<Reservation> reservationsList;
     private transient  BottomNavigationView navViewVeterinarian;
@@ -102,10 +103,17 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         db = FirebaseFirestore.getInstance();
 
         Bundle loginBundle = getIntent().getExtras();
+
         if (loginBundle != null){
             veterinarian = (Veterinarian) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.VETERINARIAN);
             reservationsList = (ArrayList<Reservation>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.VETERINARIAN_RESERVATIONS);
         }
+
+        if (reservationsList == null) {
+            reservationsList = new ArrayList<>();
+        }
+
+        Toast.makeText(getApplicationContext(), "" + veterinarian.getClinicAddress(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -251,7 +259,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     }
 
     public void getAssistedAnimals(AnimalListAdapter adapter, RecyclerView recyclerView) {
-        auth = FirebaseAuth.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
 
         db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
                 .whereEqualTo(KeysNamesUtils.AnimalFields.VETERINARIAN,

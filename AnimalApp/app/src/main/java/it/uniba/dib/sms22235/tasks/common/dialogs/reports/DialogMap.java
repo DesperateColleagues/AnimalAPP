@@ -118,9 +118,7 @@ public class DialogMap extends DialogFragment {
                             dialog.dismiss();
                             dismiss();
                         }))
-                        .setNegativeButton("Annulla", (dialog, which) -> {
-                            dialog.dismiss();
-                        });
+                        .setNegativeButton("Annulla", (dialog, which) -> dialog.dismiss());
 
                 builder.show();
 

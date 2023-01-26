@@ -3,6 +3,7 @@ package it.uniba.dib.sms22235.tasks.registration;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.registration.fragments.RegistrationOrganizationFragment;
 import it.uniba.dib.sms22235.tasks.registration.fragments.RegistrationPersonFragment;
+import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.entities.users.Organization;
@@ -45,6 +47,11 @@ public class RegistrationActivity extends AppCompatActivity
     public void onPassionateRegistered(@NonNull Passionate passionate) {
         // First register the user with Firebase auth system
         // in order to authenticate him during login
+
+        // Give to the user a feedback to wait
+        ProgressDialog progressDialog = new ProgressDialog(this,R.style.Widget_App_ProgressDialog);
+        progressDialog.setMessage("Registrando l'utente...");
+        progressDialog.show();
 
         db.collection(KeysNamesUtils.CollectionsNames.ACTORS)
                 .whereEqualTo(KeysNamesUtils.ActorFields.USERNAME, passionate.getUsername())
@@ -78,6 +85,9 @@ public class RegistrationActivity extends AppCompatActivity
                                                     // Go to the profile fragment of the passionate
                                                     Bundle bundle = new Bundle();
                                                     bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE, passionate);
+
+                                                    progressDialog.dismiss();
+
                                                     newActivityRunning(PassionateNavigationActivity.class, bundle);
                                                 })
                                                 .addOnFailureListener(e -> Log.d("DEB", e.getMessage()));
@@ -99,6 +109,11 @@ public class RegistrationActivity extends AppCompatActivity
     public void onVeterinaryRegistered(@NonNull Veterinarian veterinarian) {
         // First register the veterinary with Firebase auth system
         // in order to authenticate him during login
+        // Give to the user a feedback to wait
+        ProgressDialog progressDialog = new ProgressDialog(this,R.style.Widget_App_ProgressDialog);
+        progressDialog.setMessage("Registrando il veterinario...");
+        progressDialog.show();
+
         mAuth.createUserWithEmailAndPassword(veterinarian.getEmail(), veterinarian.getPassword())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
@@ -109,8 +124,13 @@ public class RegistrationActivity extends AppCompatActivity
                         db.collection(KeysNamesUtils.CollectionsNames.ACTORS)
                                 .document(docKey)
                                 .set(veterinarian)
-                                // TODO: switch the activity to LoginActivity or DashboardActivity
-                                .addOnSuccessListener(unused -> Log.d("REG", "Registrazione avvenuta con successo"))
+                                .addOnSuccessListener(unused -> {
+                                    Log.d("REG", "Registrazione avvenuta con successo");
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable(KeysNamesUtils.BundleKeys.VETERINARIAN, veterinarian);
+                                    progressDialog.dismiss();
+                                    newActivityRunning(VeterinarianNavigationActivity.class, bundle);
+                                })
                                 .addOnFailureListener(e -> Log.d("DEB", e.getMessage()));
                     } else {
                         Toast.makeText(RegistrationActivity.this, "Email già usata.", Toast.LENGTH_SHORT).show();

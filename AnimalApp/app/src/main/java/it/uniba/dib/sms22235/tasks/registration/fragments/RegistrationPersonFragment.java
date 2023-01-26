@@ -1,6 +1,7 @@
 package it.uniba.dib.sms22235.tasks.registration.fragments;
 
 import it.uniba.dib.sms22235.tasks.registration.RegistrationActivity;
+import it.uniba.dib.sms22235.tasks.registration.dialogs.DialogAddAddress;
 import it.uniba.dib.sms22235.utils.InputFieldCheck;
 
 import android.content.Context;
@@ -19,6 +20,8 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.w3c.dom.Text;
+
 import java.security.NoSuchAlgorithmException;
 
 import it.uniba.dib.sms22235.R;
@@ -33,7 +36,7 @@ import it.uniba.dib.sms22235.entities.users.Veterinarian;
  *
  * @author Giacomo Detomaso
  * */
-public class RegistrationPersonFragment extends Fragment {
+public class RegistrationPersonFragment extends Fragment implements DialogAddAddress.DialogAddAddressListener {
 
     public interface RegistrationPersonFragmentListener {
         /**
@@ -55,6 +58,7 @@ public class RegistrationPersonFragment extends Fragment {
 
     // The role of the actor who is registering: it can be a user or a veterinary
     private String role;
+    private String address;
 
     // The listener used to communicate with the RegistrationActivity
     private RegistrationPersonFragmentListener listener;
@@ -63,6 +67,9 @@ public class RegistrationPersonFragment extends Fragment {
     private TextInputLayout layoutTxtInputClinicName;
     private TextInputLayout layoutTxtInputPhoneNumber;
     private TextInputLayout layoutTxtInputUsername;
+    private TextInputLayout layoutTxtInputAddress;
+
+    private EditText txtInputAddress;
 
     public RegistrationPersonFragment() {
         // Required empty public constructor
@@ -93,6 +100,9 @@ public class RegistrationPersonFragment extends Fragment {
         layoutTxtInputUsername = view.findViewById(R.id.layoutTxtInputUsername);
         layoutTxtInputPhoneNumber = view.findViewById(R.id.layoutTxtInputPhoneNumber);
         layoutTxtInputClinicName = view.findViewById(R.id.layoutTxtInputClinicName);
+        layoutTxtInputAddress = view.findViewById(R.id.layoutTxtInputAddress);
+
+        txtInputAddress = view.findViewById(R.id.txtInputAddress);
 
         // Get the arguments passed by the navigation object
         Bundle arguments = getArguments();
@@ -112,6 +122,12 @@ public class RegistrationPersonFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        view.findViewById(R.id.txtInputAddress).setOnClickListener(v -> {
+            DialogAddAddress dialogAddAddress = new DialogAddAddress();
+            dialogAddAddress.setListener(this);
+            dialogAddAddress.show(getChildFragmentManager(), "DialogAddAddress");
+        });
+
         Button btnConfirmRegistration = view.findViewById(R.id.btnConfirmRegistration);
 
         // Add the onClickListener to the Button
@@ -129,7 +145,7 @@ public class RegistrationPersonFragment extends Fragment {
 
             // Evaluate this expression to check if the three common fields are empty or not
             // The flag isEmptyInput will be true if the three strings are empty, false otherwise
-            boolean isEmptyInput = name.equals("") || email.equals("") || password.equals("");
+            boolean isEmptyInput = name.equals("") || email.equals("") || password.equals("") || address.equals("");
 
             boolean isInputCorrect = InputFieldCheck.isEmailValid(email) && InputFieldCheck.isPasswordValid(password);
 
@@ -171,7 +187,7 @@ public class RegistrationPersonFragment extends Fragment {
                     if (!isEmptyInput && isInputCorrect) {
                         // Delegate the Activity to register the veterinary on the FireStore
                         listener.onVeterinaryRegistered(
-                                new Veterinarian(name, email, clinicName, phoneNumber, password, role));
+                                new Veterinarian(name, email, clinicName, phoneNumber, password, role, address));
                     }
 
                     if (!InputFieldCheck.isNumberValid(phoneNumber)){
@@ -207,7 +223,14 @@ public class RegistrationPersonFragment extends Fragment {
         } else if (role.equals(KeysNamesUtils.RolesNames.VETERINARIAN)){
             layoutTxtInputClinicName.setVisibility(View.VISIBLE);
             layoutTxtInputPhoneNumber.setVisibility(View.VISIBLE);
+            layoutTxtInputAddress.setVisibility(View.VISIBLE);
             layoutTxtInputUsername.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onAddressConfirmed(String address) {
+        this.address = address;
+        txtInputAddress.setText(address);
     }
 }

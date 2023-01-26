@@ -10,6 +10,7 @@
         android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateProfileFragment"
         android:label="@string/title_fragment_passionate_profile"
         tools:layout="@layout/fragment_passionate_profile" >
+
         <action
             android:id="@+id/action_passionate_profile_to_animalProfile"
             app:destination="@id/animalProfile"
@@ -20,11 +21,18 @@
             app:destination="@id/passionateBookedReservations"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
+
         <action
             android:id="@+id/action_passionate_profile_to_reportsDashboardFragment"
             app:destination="@id/reportsDashboardFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_passionate_profile_to_passionateVeterinarianListFragment"
+            app:destination="@id/passionateVeterinarianListFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -131,5 +139,11 @@
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/passionateVeterinarianListFragment"
+        android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateVeterinarianListFragment"
+        android:label="PassionateVeterinarianListFragment"
+        tools:layout="@layout/fragment_passionate_veterinarian_list"/>
 
 </navigation>
