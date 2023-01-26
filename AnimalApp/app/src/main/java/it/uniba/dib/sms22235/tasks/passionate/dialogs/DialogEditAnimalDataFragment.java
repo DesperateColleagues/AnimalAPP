@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -41,7 +42,7 @@ public class DialogEditAnimalDataFragment extends DialogFragment {
     }
 
     public interface DialogEditAnimalDataFragmentListener{
-        void onDialogChoosedVeterinarian(Animal selectedAnimal, String selectedVeterinarian);
+        void onDialogChoosedVeterinarian(Animal selectedAnimal);
     }
 
     private DialogEditAnimalDataFragment.DialogEditAnimalDataFragmentListener listener;
@@ -85,9 +86,30 @@ public class DialogEditAnimalDataFragment extends DialogFragment {
 
         veterinarianListSpinner.setAdapter(dataAdapter);
 
+        EditText txtInputWeight = root.findViewById(R.id.txtInputWeight);
+        EditText txtInputHeight = root.findViewById(R.id.txtInputHeight);
+        EditText txtInputNature = root.findViewById(R.id.txtInputNature);
+
+        txtInputNature.setText(animal.getNature());
+        txtInputHeight.setText(animal.getHeight() + "");
+        txtInputWeight.setText(animal.getWeight() + "");
+
         Button btnConfirmChooseAnimal = root.findViewById(R.id.btnConfirmChooseAnimal);
         btnConfirmChooseAnimal.setOnClickListener(v -> {
-            listener.onDialogChoosedVeterinarian(animal, ((Veterinarian) veterinarianListSpinner.getSelectedItem()).getEmail());
+            String weight = txtInputWeight.getText().toString();
+            String height = txtInputHeight.getText().toString();
+            String nature = txtInputNature.getText().toString();
+
+            boolean isEmptyInput = weight.equals("") || height.equals("") || nature.equals("");
+
+            if (!isEmptyInput) {
+                animal.setNature(nature);
+                animal.setHeight(Double.parseDouble(height));
+                animal.setWeight(Double.parseDouble(weight));
+                animal.setVeterinarian(((Veterinarian) veterinarianListSpinner.getSelectedItem()).getEmail());
+            }
+
+            listener.onDialogChoosedVeterinarian(animal);
             dismiss();
         });
 

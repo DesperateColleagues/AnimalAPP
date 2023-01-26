@@ -33,6 +33,11 @@
             app:destination="@id/passionateVeterinarianListFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_passionate_profile_to_passionatePokAnimalList"
+            app:destination="@id/passionatePokAnimalList"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -145,5 +150,11 @@
         android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateVeterinarianListFragment"
         android:label="PassionateVeterinarianListFragment"
         tools:layout="@layout/fragment_passionate_veterinarian_list"/>
+
+    <fragment
+        android:id="@+id/passionatePokAnimalList"
+        android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionatePokAnimalList"
+        android:label="PassionatePokAnimalList"
+        tools:layout="@layout/fragment_passionate_pokanimal"/>
 
 </navigation>

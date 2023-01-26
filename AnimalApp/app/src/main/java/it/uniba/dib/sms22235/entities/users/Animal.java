@@ -18,6 +18,10 @@ public class Animal implements Serializable, Cloneable {
     private String birthDate;
     private String owner;
     private String veterinarian;
+    private String nature;
+
+    private double weight;
+    private double height;
 
     public Animal(){}
 
@@ -36,6 +40,18 @@ public class Animal implements Serializable, Cloneable {
         this.animalSpecies = animalSpecies;
         this.microchipCode = microchipCode;
         this.birthDate = birthDate;
+    }
+
+    public String getNature() {
+        return nature;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public double getHeight() {
+        return height;
     }
 
     public String getName() {
@@ -66,6 +82,22 @@ public class Animal implements Serializable, Cloneable {
         this.owner = owner;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setNature(String nature) {
+        this.nature = nature;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
     /**
      * This method is used to create an animal object
      * given the document stored in FirebaseFirestore
@@ -81,8 +113,25 @@ public class Animal implements Serializable, Cloneable {
                 (String) document.get(KeysNamesUtils.AnimalFields.RACE),
                 (String) document.get(KeysNamesUtils.AnimalFields.MICROCHIP_CODE),
                 (String) document.get(KeysNamesUtils.AnimalFields.BIRTH_DATE));
+
         animal.setVeterinarian((String) document.get(KeysNamesUtils.AnimalFields.VETERINARIAN));
         animal.setOwner((String) document.get(KeysNamesUtils.AnimalFields.OWNER));
+
+        Double height = document.getDouble(KeysNamesUtils.AnimalFields.HEIGHT);
+        Double weight = document.getDouble(KeysNamesUtils.AnimalFields.WEIGHT);
+        String nature = document.getString(KeysNamesUtils.AnimalFields.NATURE);
+
+        if (height != null) {
+            animal.setHeight(height);
+        }
+
+        if (weight != null) {
+            animal.setWeight(weight);
+        }
+
+        if (!nature.equals("")) {
+            animal.setNature(nature);
+        }
 
         return animal;
     }

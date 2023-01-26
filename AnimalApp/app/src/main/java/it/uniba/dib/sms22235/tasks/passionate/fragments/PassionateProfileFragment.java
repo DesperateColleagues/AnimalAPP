@@ -157,6 +157,8 @@ public class PassionateProfileFragment extends Fragment implements
                                 (Serializable) veterinarians);
 
                         controller.navigate(R.id.action_passionate_profile_to_passionateVeterinarianListFragment, bundle);
+                    } else if (messageListAdapter.getMessageAtPosition(position).getType().equals(KeysNamesUtils.CollectionsNames.POKE_LINK)) {
+                        controller.navigate(R.id.action_passionate_profile_to_passionatePokAnimalList);
                     } else if (messageListAdapter.getMessageAtPosition(position).getType().equals("notNow")){
                         notNowDialog(
                                 username + " " + getResources().getString(R.string.not_now),
@@ -228,10 +230,12 @@ public class PassionateProfileFragment extends Fragment implements
         InfoMessage showVeterinarians = new InfoMessage("Visualizza veterinari", R.drawable.fra_rrc_doctor_no_green, KeysNamesUtils.RolesNames.VETERINARIAN);
         InfoMessage showOrganizations = new InfoMessage("Visualizza organizzazioni", R.drawable.fra_rrc_organization_no_green, KeysNamesUtils.RolesNames.VETERINARIAN);
         InfoMessage recentReservations = new InfoMessage(getResources().getString(R.string.tutti_appuntamenti_recenti), 0, KeysNamesUtils.CollectionsNames.RESERVATIONS);
+        InfoMessage pokeLinks = new InfoMessage("Visualizza modalita Pokelinks", 0, KeysNamesUtils.CollectionsNames.POKE_LINK);
 
         messages.add(findings);
         messages.add(showVeterinarians);
         messages.add(showOrganizations);
+        messages.add(pokeLinks);
         messages.add(recentReservations);
 
         notNow(messages);
@@ -250,9 +254,8 @@ public class PassionateProfileFragment extends Fragment implements
     }
 
     @Override
-    public void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal, String selectedVeterinarian) {
+    public void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal) {
         animalListAdapter.remove(selectedAnimal);
-        selectedAnimal.setVeterinarian(selectedVeterinarian);
         animalListAdapter.addAnimal(selectedAnimal);
         animalListAdapter.notifyItemInserted(animalListAdapter.getItemCount());
     }

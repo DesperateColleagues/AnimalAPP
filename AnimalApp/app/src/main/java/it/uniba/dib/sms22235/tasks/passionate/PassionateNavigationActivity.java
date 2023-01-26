@@ -14,10 +14,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -29,12 +32,18 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -48,18 +57,22 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Collections;
+import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.DiagnosisAdapter;
 import it.uniba.dib.sms22235.adapters.ExamsAdapter;
+import it.uniba.dib.sms22235.adapters.PokAnimalAdapter;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.entities.operations.Exam;
+import it.uniba.dib.sms22235.entities.operations.PokeLink;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDiaryFragment;
+import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionatePokAnimalList;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateProfileFragment;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateReservationFragment;
 
@@ -85,6 +98,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         AnimalProfile.UpdateVeterinarianNameOnChoose,
         ExamsFragment.ExamsFragmentListener,
         PhotoDiaryFragment.PhotoDiaryFragmentListener,
+        PassionatePokAnimalList.PassionatePokAnimalListListener,
         NavigationActivityInterface,
         Serializable {
 
@@ -257,6 +271,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         if (isConnectionEnabled) {
             // Set the animal's owner
             animal.setOwner(passionate.getUsername());
+            animal.setVeterinarian("");
+            animal.setNature("");
 
             // Update the list of animals
             boolean isAdded = animalSet.add(animal);
@@ -776,7 +792,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         if (!task.getResult().isEmpty()) {
                             db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
                                     .document(docKeyAnimal)
-                                    .update(KeysNamesUtils.AnimalFields.VETERINARIAN,animal.getVeterinarian())
+                                    .set(animal)
                                     .addOnSuccessListener(unused -> {
                                         Toast.makeText(this,
                                                 "Animale aggiornato con successo",
@@ -814,8 +830,117 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal, String selectedVeterinarian) {
-        selectedAnimal.setVeterinarian(selectedVeterinarian);
+    public void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal) {
         onAnimalUpdated(selectedAnimal);
     }
+
+    @Override
+    public void loadOtherAnimal(Spinner spinner) {
+        db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                .whereNotEqualTo(KeysNamesUtils.AnimalFields.OWNER, getUserId())
+                .get()
+                .addOnSuccessListener(query -> {
+                    List<DocumentSnapshot> documentSnapshots = query.getDocuments();
+
+                    if (documentSnapshots.size() > 0) {
+                        LinkedHashSet<Animal> otherAnimals = new LinkedHashSet<>();
+
+                        for (DocumentSnapshot animal : documentSnapshots) {
+                            otherAnimals.add(Animal.loadAnimal(animal));
+                        }
+
+                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
+                                android.R.layout.simple_spinner_dropdown_item, buildSpinnerEntries(otherAnimals));
+                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinner.setAdapter(spinnerAdapter);
+                        spinner.setVisibility(View.VISIBLE);
+
+                    } else {
+                        Toast.makeText(this, "Non sono registrati altri animali", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void savePokeLink(String myCode, String otherCode, String type, String description, PokAnimalAdapter adapter) {
+        Task<QuerySnapshot> taskMyAnimalPic =
+                db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
+                        .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, myCode)
+                        .get();
+
+        Task<QuerySnapshot> taskOtherAnimalPic =
+                db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
+                        .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, otherCode)
+                        .get();
+
+        Tasks.whenAllComplete(taskMyAnimalPic, taskOtherAnimalPic)
+                .addOnCompleteListener(task -> {
+                    QuerySnapshot myAnimalPicSnapshot = (QuerySnapshot) task.getResult().get(0).getResult();
+                    QuerySnapshot otherAnimalPicSnapshot = (QuerySnapshot) task.getResult().get(1).getResult();
+
+                    PhotoDiaryPost myAnimalPic = null, otherAnimalPic = null;
+
+                    if (myAnimalPicSnapshot.getDocuments().size() > 0) {
+                        myAnimalPic = PhotoDiaryPost.loadPhotoDiaryPost(myAnimalPicSnapshot.getDocuments().get(0));
+                    }
+
+                    if (otherAnimalPicSnapshot.getDocuments().size() > 0) {
+                        otherAnimalPic = PhotoDiaryPost.loadPhotoDiaryPost(otherAnimalPicSnapshot.getDocuments().get(0));
+                    }
+
+                    PokeLink pokeLink = new PokeLink(
+                            UUID.randomUUID().toString(),
+                            myCode,
+                            otherCode,
+                            myAnimalPic.getPostUri(),
+                            otherAnimalPic.getPostUri(),
+                            type,
+                            description,
+                            getUserId()
+                    );
+
+                    adapter.addPokeLink(pokeLink);
+                    adapter.notifyDataSetChanged();
+
+                    db.collection(KeysNamesUtils.CollectionsNames.POKE_LINK)
+                            .document(pokeLink.getId())
+                            .set(pokeLink)
+                            .addOnSuccessListener(unused -> {
+                                Toast.makeText(this, "Link aggiunto con successo", Toast.LENGTH_SHORT).show();
+                            });
+        });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void loadPokeLinks(PokAnimalAdapter adapter) {
+        db.collection(KeysNamesUtils.CollectionsNames.POKE_LINK)
+                .whereEqualTo(KeysNamesUtils.PokeLinkFields.PASSIONATE_EMAIL, getUserId())
+                .get()
+                .addOnSuccessListener(query -> {
+                    List<DocumentSnapshot> documentSnapshots = query.getDocuments();
+                    Toast.makeText(this, "" + documentSnapshots.size(), Toast.LENGTH_SHORT).show();
+                    if (documentSnapshots.size() > 0) {
+                        for (DocumentSnapshot snapshot : documentSnapshots) {
+                            adapter.addPokeLink(PokeLink.loadPokeLink(snapshot));
+                        }
+
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+    }
+
+    @NonNull
+    private ArrayList<String> buildSpinnerEntries(@NonNull LinkedHashSet<Animal> animals) {
+        ArrayList<String> list = new ArrayList<>();
+
+        for (Animal animal : animals) {
+            list.add(animal.toString());
+        }
+
+        return list;
+    }
+
+
 }

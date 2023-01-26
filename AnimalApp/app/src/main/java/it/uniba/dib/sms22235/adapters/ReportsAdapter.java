@@ -33,10 +33,6 @@ public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.ViewHold
         this.reportsList = reportsList;
     }
 
-    public void clearAdapter () {
-        reportsList.clear();
-    }
-
     @SuppressLint("InflateParams")
     @NonNull
     @Override

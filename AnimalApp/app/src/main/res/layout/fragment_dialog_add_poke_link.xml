@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <Spinner
+            android:id="@+id/passionateAnimalsSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:spinnerMode="dropdown"
+            android:background="@drawable/bg_spinner_role"
+            android:textColor="?attr/colorOnSecondary"
+            android:popupBackground="@drawable/bg_spinner_dropdown"
+            android:minHeight="48dp" />
+
+        <Spinner
+            android:id="@+id/otherAnimalsSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:spinnerMode="dropdown"
+            android:background="@drawable/bg_spinner_role"
+            android:textColor="?attr/colorOnSecondary"
+            android:popupBackground="@drawable/bg_spinner_dropdown"
+            android:minHeight="48dp" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/typeChipGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            app:chipSpacingHorizontal="15dp"
+            app:singleSelection="true"
+            app:singleLine="true">
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipBackgroundColor="?attr/colorSecondary"
+                app:checkedIcon="@drawable/ic_baseline_check_24"
+                android:text="Carattere"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:textColor="@color/black"
+                android:id="@+id/chipNature" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipBackgroundColor="?attr/colorSecondary"
+                app:checkedIcon="@drawable/ic_baseline_check_24"
+                android:text="Altezza"
+                android:id="@+id/chipHeight"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:textColor="@color/black"/>
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipBackgroundColor="?attr/colorSecondary"
+                app:checkedIcon="@drawable/ic_baseline_check_24"
+                android:text="Peso"
+                android:id="@+id/chipWeight"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:textColor="@color/black"/>
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <EditText
+            android:id="@+id/txtInputNatureDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_baseline_edit_note_24"
+            android:drawablePadding="10dp"
+            android:inputType="textMultiLine"
+            android:scrollbars="vertical"
+            android:minHeight="48dp"
+            android:lines="3"
+            android:maxLines="5"
+            android:textSize="17sp"
+            android:hint="Inserisci il motivo dell'abbinamento"
+            android:textColorHint="?attr/colorOnSecondary"
+            tools:ignore="LabelFor,SpeakableTextPresentCheck" />
+
+        <Button
+            android:id="@+id/addPokeLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:text="Conferma abbinamento"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,7 +1,6 @@
 package it.uniba.dib.sms22235.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import java.util.List;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
-import it.uniba.dib.sms22235.entities.operations.Report;
 
 public class PostGridAdapter extends RecyclerView.Adapter<PostGridAdapter.ViewHolder> {
     private final List<PhotoDiaryPost> posts;

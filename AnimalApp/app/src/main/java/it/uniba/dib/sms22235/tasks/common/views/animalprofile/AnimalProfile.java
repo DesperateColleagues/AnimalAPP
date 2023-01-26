@@ -74,7 +74,7 @@ public class AnimalProfile extends Fragment implements
     }
 
     public interface UpdateVeterinarianNameOnChoose {
-        void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal, String selectedVeterinarian);
+        void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal);
     }
 
     private Animal mAnimal;
@@ -260,11 +260,11 @@ public class AnimalProfile extends Fragment implements
     }
 
     @Override
-    public void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal, String selectedVeterinarian) {
-        mAnimal.setVeterinarian(selectedVeterinarian);
+    public void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal) {
         if ((getActivity()) instanceof PassionateNavigationActivity) {
-            listenerPPF.onDialogChoosedVeterinarian(mAnimal, selectedVeterinarian);
+            listenerPPF.onDialogChoosedVeterinarian(mAnimal);
         }
+
         listenerAPF.onAnimalUpdated(mAnimal);
     }
 }

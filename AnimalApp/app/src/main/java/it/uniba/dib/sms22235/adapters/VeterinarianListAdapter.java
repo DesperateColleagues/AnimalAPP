@@ -37,7 +37,7 @@ public class VeterinarianListAdapter extends RecyclerView.Adapter<VeterinarianLi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(context).inflate(
-                R.layout.item_passionate_veterinarian_list_single_card, null));
+                R.layout.item_fragment_passionate_veterinarian_list_single_card, null));
     }
 
     @SuppressLint("SetTextI18n")

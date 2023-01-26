@@ -28,6 +28,7 @@ public class KeysNamesUtils {
         public static String PHOTO_DIARY_PROFILE = "photoDiaryProfile";
         public static String BACKBENCH = "backbench";
         public static String RESIDENCE = "residence";
+        public static String POKE_LINK = "pokelink";
     }
 
     public static class ActorFields {
@@ -49,6 +50,9 @@ public class KeysNamesUtils {
         public static String BIRTH_DATE = "birthDate";
         public static String OWNER = "owner";
         public static String VETERINARIAN = "veterinarian";
+        public static String NATURE = "nature";
+        public static String WEIGHT = "weight";
+        public static String HEIGHT = "height";
     }
 
 
@@ -125,6 +129,17 @@ public class KeysNamesUtils {
                 DATE + " DATE NOT NULL,\n" +
                 AMOUNT + " INTEGER NOT NULL,\n" +
                 COST + " DECIMAL NOT NULL); ";
+    }
+
+    public static class PokeLinkFields {
+        public static String ID = "id";
+        public static String PASSIONATE_ANIMAL = "passionateAnimal";
+        public static String OTHER_ANIMAL = "otherAnimal";
+        public static String PASSIONATE_ANIMAL_URI = "passionateAnimalUri";
+        public static String OTHER_ANIMAL_URI = "otherAnimalUri";
+        public static String TYPE = "type";
+        public static String DESCRIPTION = "description";
+        public static String PASSIONATE_EMAIL = "passionateEmail";
     }
 
     public static class PurchaseCategory {
