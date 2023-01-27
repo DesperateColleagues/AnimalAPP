@@ -21,8 +21,29 @@ import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAddPokeLink;
 public class PassionatePokAnimalList extends Fragment implements DialogAddPokeLink.DialogAddPokeLinkListener {
 
     public interface PassionatePokAnimalListListener {
+        /**
+         * This method is used to load into a spinner all the animals
+         * that do not belongs to the current logged passionate
+         *
+         * @param spinner the spinner where to load the animals
+         * */
         void loadOtherAnimal(Spinner spinner);
+
+        /**
+         * Callback called when a new link is added
+         *
+         * @param myCode the microchip of the passionate animal
+         * @param otherCode the microchip of the other animal
+         * @param type the type chosen
+         * @param description the description of the poke link
+         * */
         void savePokeLink(String myCode, String otherCode, String type, String description, PokAnimalAdapter adapter);
+
+        /**
+         * This method is used to load all saved poke links of a passionate
+         *
+         * @param adapter adapter used to update the view
+         * */
         void loadPokeLinks(PokAnimalAdapter adapter);
     }
 

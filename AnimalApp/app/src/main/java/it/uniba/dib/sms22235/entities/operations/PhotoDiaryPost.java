@@ -7,6 +7,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import org.jetbrains.annotations.Contract;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
@@ -51,5 +52,18 @@ public class PhotoDiaryPost implements Serializable {
         post.setFileName(document.getString(KeysNamesUtils.PhotoDiaryFields.FILE_NAME));
 
         return post;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PhotoDiaryPost post = (PhotoDiaryPost) o;
+        return Objects.equals(fileName, post.fileName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fileName);
     }
 }

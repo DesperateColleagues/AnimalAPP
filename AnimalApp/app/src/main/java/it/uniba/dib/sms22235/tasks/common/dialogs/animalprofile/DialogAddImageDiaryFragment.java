@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.passionate.dialogs;
+package it.uniba.dib.sms22235.tasks.common.dialogs.animalprofile;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

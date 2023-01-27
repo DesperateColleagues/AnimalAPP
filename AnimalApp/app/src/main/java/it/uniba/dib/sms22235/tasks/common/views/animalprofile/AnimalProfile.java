@@ -67,13 +67,34 @@ public class AnimalProfile extends Fragment implements
         /**
          * This method is used to get the list of all the veterinarians present in the database
          *
+         * @return the list of veterinarians
          * */
         List<Veterinarian> getVeterinarianList();
+
+        /**
+         * This method is used when an animal is updated
+         *
+         * @param animal the updated animal to save
+         * */
         void onAnimalUpdated(Animal animal);
+
+
+        /**
+         * This method is used to check if an animal is at home or on a
+         * temporary residence
+         *
+         * @param animal the animal to be checked
+         * @param image the imageView where to load the logo
+         * */
         void checkIfAtHome(Animal animal, ImageView image);
     }
 
     public interface UpdateVeterinarianNameOnChoose {
+        /**
+         * This method is called when a veterinarian has been setted for the animal
+         *
+         * @param selectedAnimal the selected animal
+         * */
         void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal);
     }
 

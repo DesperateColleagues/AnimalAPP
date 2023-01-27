@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -16,10 +17,23 @@ import androidx.fragment.app.DialogFragment;
 import com.bumptech.glide.Glide;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.entities.users.Passionate;
+import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 
 public class DialogShowImage extends DialogFragment {
 
     private final String uri;
+
+    public interface DialogShowImageListener {
+        void onPicDeletionSelected(String uri);
+        void onPicShared(String uri);
+    }
+
+    private DialogShowImageListener listener;
+
+    public void setListener(DialogShowImageListener listener) {
+        this.listener = listener;
+    }
 
     public DialogShowImage (String uri) {
         this.uri = uri;
@@ -37,6 +51,24 @@ public class DialogShowImage extends DialogFragment {
         Glide.with(requireActivity()).load(uri).into((ImageView) root.findViewById(R.id.imgPhotoDiaryShow));
 
         root.findViewById(R.id.btnDismiss).setOnClickListener(v -> dismiss());
+
+        ImageButton btnDeleteImg = root.findViewById(R.id.btnDeleteImg);
+        ImageButton btnShareImg = root.findViewById(R.id.btnShareImg);
+
+        if (!(requireActivity() instanceof PassionateNavigationActivity)) {
+            btnDeleteImg.setVisibility(View.GONE);
+            btnShareImg.setVisibility(View.GONE);
+        }
+
+        btnDeleteImg.setOnClickListener(v -> {
+            listener.onPicDeletionSelected(uri);
+            dismiss();
+        });
+
+        btnShareImg.setOnClickListener(v -> {
+            listener.onPicShared(uri);
+            dismiss();
+        });
 
         return builder.create();
     }

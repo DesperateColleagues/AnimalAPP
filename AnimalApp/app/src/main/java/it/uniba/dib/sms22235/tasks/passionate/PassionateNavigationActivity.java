@@ -3,13 +3,19 @@ package it.uniba.dib.sms22235.tasks.passionate;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +38,11 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.Request;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -52,6 +63,9 @@ import com.google.firebase.storage.UploadTask;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.library.BuildConfig;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -349,7 +363,14 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         // Check for every document
                         for (DocumentChange change : value.getDocumentChanges()) {
                             PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(change.getDocument());
-                            postsList.add(post);
+                            switch (change.getType()) {
+                                case ADDED:
+                                    postsList.add(post);
+                                    break;
+                                case REMOVED:
+                                    postsList.remove(post);
+                                    break;
+                            }
                         }
 
                         // Notify the changes on the adapter
@@ -497,6 +518,48 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         });
     }
 
+    @Override
+    public void onPostDeleted(String url, String microchip) {
+        StorageReference storageReference = getStorageInstance().getReferenceFromUrl(url);
+
+        storageReference.delete().addOnSuccessListener(unused -> {
+            db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
+                    .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_URI, url)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        if (queryDocumentSnapshots.size() > 0) {
+                            db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
+                                    .document(PhotoDiaryPost.loadPhotoDiaryPost(queryDocumentSnapshots.getDocuments().get(0)).getFileName())
+                                    .delete().addOnSuccessListener(unused1 -> {
+                                        Toast.makeText(this, "Eliminazione completata con successo", Toast.LENGTH_SHORT).show();
+                                    });
+                        }
+                    });
+        });
+    }
+
+    @Override
+    public void onPostShared(String url) {
+        Glide.with(this).asBitmap().load(url).into(new CustomTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                String path = MediaStore.Images.Media.insertImage(getContentResolver(),
+                        resource, System.currentTimeMillis() + "", null);
+                Uri imageUri =  Uri.parse(path);
+
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("image/*");
+                i.putExtra(Intent.EXTRA_STREAM, imageUri);
+                startActivity(i);
+            }
+
+            @Override
+            public void onLoadCleared(@Nullable Drawable placeholder) {
+                // not implemented
+            }
+        });
+    }
+
     /* This method is used to load the animal profile pic in AnimalProfile */
     @Override
     public void loadProfilePic(String microchip, ImageView imageView) {
@@ -611,6 +674,127 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         }
                     }
                 });*/
+    }
+
+    @Override
+    public void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal) {
+        onAnimalUpdated(selectedAnimal);
+    }
+
+    @Override
+    public void loadOtherAnimal(Spinner spinner) {
+        db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                .whereNotEqualTo(KeysNamesUtils.AnimalFields.OWNER, getUserId())
+                .get()
+                .addOnSuccessListener(query -> {
+                    List<DocumentSnapshot> documentSnapshots = query.getDocuments();
+
+                    if (documentSnapshots.size() > 0) {
+                        LinkedHashSet<Animal> otherAnimals = new LinkedHashSet<>();
+
+                        for (DocumentSnapshot animal : documentSnapshots) {
+                            otherAnimals.add(Animal.loadAnimal(animal));
+                        }
+
+                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
+                                android.R.layout.simple_spinner_dropdown_item, buildSpinnerEntries(otherAnimals));
+                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinner.setAdapter(spinnerAdapter);
+                        spinner.setVisibility(View.VISIBLE);
+
+                    } else {
+                        Toast.makeText(this, "Non sono registrati altri animali", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void savePokeLink(String myCode, String otherCode, String type, String description, PokAnimalAdapter adapter) {
+        // Task to take all the post of the user animal
+        Task<QuerySnapshot> taskMyAnimalPic =
+                db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
+                        .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, myCode)
+                        .get();
+
+        // Task to take all the post of the other animal
+        Task<QuerySnapshot> taskOtherAnimalPic =
+                db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
+                        .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, otherCode)
+                        .get();
+
+        // Synchronize tasks using whenAllComplete
+        Tasks.whenAllComplete(taskMyAnimalPic, taskOtherAnimalPic)
+                .addOnCompleteListener(task -> {
+                    // Take the results of the task in the correct order
+                    QuerySnapshot myAnimalPicSnapshot = (QuerySnapshot) task.getResult().get(0).getResult();
+                    QuerySnapshot otherAnimalPicSnapshot = (QuerySnapshot) task.getResult().get(1).getResult();
+
+                    PhotoDiaryPost myAnimalPic = null, otherAnimalPic = null;
+
+                    // Load the post if is is found by checking the size of the snapshot
+                    if (myAnimalPicSnapshot.getDocuments().size() > 0) {
+                        myAnimalPic = PhotoDiaryPost.loadPhotoDiaryPost(myAnimalPicSnapshot.getDocuments().get(0));
+                    }
+
+                    if (otherAnimalPicSnapshot.getDocuments().size() > 0) {
+                        otherAnimalPic = PhotoDiaryPost.loadPhotoDiaryPost(otherAnimalPicSnapshot.getDocuments().get(0));
+                    }
+
+                    // Instantiate the new poke link
+                    PokeLink pokeLink = new PokeLink(
+                            UUID.randomUUID().toString(),
+                            myCode,
+                            otherCode,
+                            myAnimalPic.getPostUri(),
+                            otherAnimalPic.getPostUri(),
+                            type,
+                            description,
+                            getUserId()
+                    );
+
+                    // Update the adapter
+                    adapter.addPokeLink(pokeLink);
+                    adapter.notifyDataSetChanged();
+
+                    // Update FireStore
+                    db.collection(KeysNamesUtils.CollectionsNames.POKE_LINK)
+                            .document(pokeLink.getId())
+                            .set(pokeLink)
+                            .addOnSuccessListener(unused -> {
+                                Toast.makeText(this, "Link aggiunto con successo", Toast.LENGTH_SHORT).show();
+                            });
+                });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void loadPokeLinks(PokAnimalAdapter adapter) {
+        db.collection(KeysNamesUtils.CollectionsNames.POKE_LINK)
+                .whereEqualTo(KeysNamesUtils.PokeLinkFields.PASSIONATE_EMAIL, getUserId())
+                .get()
+                .addOnSuccessListener(query -> {
+                    List<DocumentSnapshot> documentSnapshots = query.getDocuments();
+                    Toast.makeText(this, "" + documentSnapshots.size(), Toast.LENGTH_SHORT).show();
+                    if (documentSnapshots.size() > 0) {
+                        for (DocumentSnapshot snapshot : documentSnapshots) {
+                            adapter.addPokeLink(PokeLink.loadPokeLink(snapshot));
+                        }
+
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+    }
+
+    @NonNull
+    private ArrayList<String> buildSpinnerEntries(@NonNull LinkedHashSet<Animal> animals) {
+        ArrayList<String> list = new ArrayList<>();
+
+        for (Animal animal : animals) {
+            list.add(animal.toString());
+        }
+
+        return list;
     }
 
     // NavigationActivityInterface overrides methods
@@ -828,119 +1012,4 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             }
         }
     }
-
-    @Override
-    public void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal) {
-        onAnimalUpdated(selectedAnimal);
-    }
-
-    @Override
-    public void loadOtherAnimal(Spinner spinner) {
-        db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
-                .whereNotEqualTo(KeysNamesUtils.AnimalFields.OWNER, getUserId())
-                .get()
-                .addOnSuccessListener(query -> {
-                    List<DocumentSnapshot> documentSnapshots = query.getDocuments();
-
-                    if (documentSnapshots.size() > 0) {
-                        LinkedHashSet<Animal> otherAnimals = new LinkedHashSet<>();
-
-                        for (DocumentSnapshot animal : documentSnapshots) {
-                            otherAnimals.add(Animal.loadAnimal(animal));
-                        }
-
-                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
-                                android.R.layout.simple_spinner_dropdown_item, buildSpinnerEntries(otherAnimals));
-                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinner.setAdapter(spinnerAdapter);
-                        spinner.setVisibility(View.VISIBLE);
-
-                    } else {
-                        Toast.makeText(this, "Non sono registrati altri animali", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    @Override
-    public void savePokeLink(String myCode, String otherCode, String type, String description, PokAnimalAdapter adapter) {
-        Task<QuerySnapshot> taskMyAnimalPic =
-                db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
-                        .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, myCode)
-                        .get();
-
-        Task<QuerySnapshot> taskOtherAnimalPic =
-                db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
-                        .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, otherCode)
-                        .get();
-
-        Tasks.whenAllComplete(taskMyAnimalPic, taskOtherAnimalPic)
-                .addOnCompleteListener(task -> {
-                    QuerySnapshot myAnimalPicSnapshot = (QuerySnapshot) task.getResult().get(0).getResult();
-                    QuerySnapshot otherAnimalPicSnapshot = (QuerySnapshot) task.getResult().get(1).getResult();
-
-                    PhotoDiaryPost myAnimalPic = null, otherAnimalPic = null;
-
-                    if (myAnimalPicSnapshot.getDocuments().size() > 0) {
-                        myAnimalPic = PhotoDiaryPost.loadPhotoDiaryPost(myAnimalPicSnapshot.getDocuments().get(0));
-                    }
-
-                    if (otherAnimalPicSnapshot.getDocuments().size() > 0) {
-                        otherAnimalPic = PhotoDiaryPost.loadPhotoDiaryPost(otherAnimalPicSnapshot.getDocuments().get(0));
-                    }
-
-                    PokeLink pokeLink = new PokeLink(
-                            UUID.randomUUID().toString(),
-                            myCode,
-                            otherCode,
-                            myAnimalPic.getPostUri(),
-                            otherAnimalPic.getPostUri(),
-                            type,
-                            description,
-                            getUserId()
-                    );
-
-                    adapter.addPokeLink(pokeLink);
-                    adapter.notifyDataSetChanged();
-
-                    db.collection(KeysNamesUtils.CollectionsNames.POKE_LINK)
-                            .document(pokeLink.getId())
-                            .set(pokeLink)
-                            .addOnSuccessListener(unused -> {
-                                Toast.makeText(this, "Link aggiunto con successo", Toast.LENGTH_SHORT).show();
-                            });
-        });
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    @Override
-    public void loadPokeLinks(PokAnimalAdapter adapter) {
-        db.collection(KeysNamesUtils.CollectionsNames.POKE_LINK)
-                .whereEqualTo(KeysNamesUtils.PokeLinkFields.PASSIONATE_EMAIL, getUserId())
-                .get()
-                .addOnSuccessListener(query -> {
-                    List<DocumentSnapshot> documentSnapshots = query.getDocuments();
-                    Toast.makeText(this, "" + documentSnapshots.size(), Toast.LENGTH_SHORT).show();
-                    if (documentSnapshots.size() > 0) {
-                        for (DocumentSnapshot snapshot : documentSnapshots) {
-                            adapter.addPokeLink(PokeLink.loadPokeLink(snapshot));
-                        }
-
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-    }
-
-    @NonNull
-    private ArrayList<String> buildSpinnerEntries(@NonNull LinkedHashSet<Animal> animals) {
-        ArrayList<String> list = new ArrayList<>();
-
-        for (Animal animal : animals) {
-            list.add(animal.toString());
-        }
-
-        return list;
-    }
-
-
 }

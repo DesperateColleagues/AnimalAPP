@@ -35,7 +35,7 @@ import it.uniba.dib.sms22235.adapters.PostGridAdapter;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 
-public class PhotoDiaryFragment extends Fragment {
+public class PhotoDiaryFragment extends Fragment implements DialogShowImage.DialogShowImageListener {
 
     public interface PhotoDiaryFragmentListener {
         /**
@@ -55,6 +55,21 @@ public class PhotoDiaryFragment extends Fragment {
          * @param postsList the list of the post
          * */
         void loadPost(PostGridAdapter adapter, List<PhotoDiaryPost>postsList, String animal);
+
+        /**
+         * This callback is called when a picture of the animal has been selected
+         * to be deleted
+         *
+         * @param url uri of the picture to delete
+         * */
+        void onPostDeleted(String url, String microchip);
+
+        /**
+         * This callback is called when a picture is selected to be share
+         *
+         * @param url the url of the picture to be shared
+         * */
+        void onPostShared(String url);
     }
 
     private PhotoDiaryFragmentListener listener;
@@ -172,6 +187,7 @@ public class PhotoDiaryFragment extends Fragment {
 
         postGridAdapter.setOnItemClickListener(uri -> {
             DialogShowImage dialogShowImage = new DialogShowImage(uri);
+            dialogShowImage.setListener(this);
             dialogShowImage.show(getChildFragmentManager(), "DialogShowImage");
         });
 
@@ -179,5 +195,15 @@ public class PhotoDiaryFragment extends Fragment {
         diaryRecycler.setLayoutManager(new GridLayoutManager(context, 3));
         diaryRecycler.setAdapter(postGridAdapter);
         listener.loadPost(postGridAdapter, posts, animalMicrochip);
+    }
+
+    @Override
+    public void onPicDeletionSelected(String uri) {
+        listener.onPostDeleted(uri, animalMicrochip);
+    }
+
+    @Override
+    public void onPicShared(String uri) {
+        listener.onPostShared(uri);
     }
 }

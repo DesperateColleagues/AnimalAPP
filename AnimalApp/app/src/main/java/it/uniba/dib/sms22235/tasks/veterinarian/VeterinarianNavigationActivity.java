@@ -290,6 +290,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         return clonedReservationsList;
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void checkIfAtHome(Animal animal, ImageView image) {
         db.collection(KeysNamesUtils.CollectionsNames.RESIDENCE)
@@ -305,6 +306,11 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onPostDeleted(String uri, String microchip) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -352,6 +358,11 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     @Override
     public void setNavViewVisibility(int visibility) {
         navViewVeterinarian.setVisibility(visibility);
+    }
+
+    @Override
+    public void onPostShared(String url) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -478,6 +489,6 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
     @Override
     public void onAnimalUpdated(Animal animal) {
-        //not needed
+        throw new UnsupportedOperationException();
     }
 }

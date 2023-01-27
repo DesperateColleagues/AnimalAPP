@@ -18,7 +18,7 @@ import it.uniba.dib.sms22235.entities.users.Veterinarian;
 
 public class VeterinarianArrayAdapter extends ArrayAdapter<Veterinarian> {
 
-    private List<Veterinarian> list;
+    private final List<Veterinarian> list;
 
     public VeterinarianArrayAdapter(@NonNull Context context, int resource, @NonNull List veterinarians) {
         super(context, resource, veterinarians);
