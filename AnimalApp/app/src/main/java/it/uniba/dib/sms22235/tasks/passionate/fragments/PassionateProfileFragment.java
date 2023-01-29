@@ -45,7 +45,7 @@ import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
 public class PassionateProfileFragment extends Fragment implements
         DialogAddAnimalFragment.DialogAddAnimalFragmentListener,
         DialogEditAnimalDataFragment.DialogEditAnimalDataFragmentListener,
-        AnimalProfile.UpdateVeterinarianNameOnChoose {
+        AnimalProfile.AnimalProfileEditListener {
 
     private PassionateProfileFragment.ProfileFragmentListener listener;
     private DialogEditAnimalDataFragment dialogEditAnimalDataFragment;
@@ -291,4 +291,8 @@ public class PassionateProfileFragment extends Fragment implements
         builder.show();
     }
 
+    @Override
+    public List<Veterinarian> getVeterinarianList() {
+        throw new UnsupportedOperationException();
+    }
 }

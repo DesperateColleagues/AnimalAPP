@@ -37,42 +37,16 @@ inside that are used for that type of visualization -->
                 android:orientation="vertical"
                 android:gravity="center">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/txtAnimalInfo"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/txtAnimalName"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textColor="?attr/colorOnSecondary"
-                        android:gravity="center"
-                        android:layout_weight="1"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/txtAnimalOwner"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textColor="?attr/colorOnSecondary"
-                        android:gravity="center"
-                        android:layout_weight="1"
-                        android:textSize="16sp" />
-                     </LinearLayout>
-
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/animalDividerStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:dividerThickness="10dp" />
+                    android:layout_gravity="center"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:textSize="16sp" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

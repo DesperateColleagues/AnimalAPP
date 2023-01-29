@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/benvenuto"
-        android:layout_marginHorizontal="15dp"
+        android:layout_marginHorizontal="16dp"
         android:textSize="28sp"
         android:layout_marginBottom="10dp"
         android:textColor="?attr/colorOnSecondary"/>
@@ -20,7 +20,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp"
+        android:layout_marginHorizontal="16dp"
         >
 
         <TextView
@@ -108,7 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/animalList"
             android:layout_marginBottom="10dp"
-            android:layout_marginStart="15dp"
+            android:layout_marginHorizontal="16dp"
             android:text="Animali di proprietà"
             android:textSize="22sp"
             android:textColor="?attr/colorOnSecondary" />

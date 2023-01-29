@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -14,7 +13,6 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
@@ -38,13 +36,8 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.SizeReadyCallback;
-import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -52,9 +45,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -63,9 +54,6 @@ import com.google.firebase.storage.UploadTask;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.library.BuildConfig;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -101,6 +89,7 @@ import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.utils.DataManipulationHelper;
+import it.uniba.dib.sms22235.utils.InterfacesOperationsHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class PassionateNavigationActivity extends AppCompatActivity implements
@@ -109,7 +98,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         PassionateReservationFragment.PassionateReservationFragmentListener,
         DiagnosisFragment.DiagnosisFragmentListener,
         AnimalProfile.AnimalProfileListener,
-        AnimalProfile.UpdateVeterinarianNameOnChoose,
+        AnimalProfile.AnimalProfileEditListener,
         ExamsFragment.ExamsFragmentListener,
         PhotoDiaryFragment.PhotoDiaryFragmentListener,
         PassionatePokAnimalList.PassionatePokAnimalListListener,
@@ -128,6 +117,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
     private transient FloatingActionButton fab;
     private transient BottomNavigationView navView;
+
+    private InterfacesOperationsHelper helper;
 
     // Flag that specify whether the connection is enabled or not
     private boolean isConnectionEnabled;
@@ -215,6 +206,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
         queryPurchases = new QueryPurchasesManager(this);
 
+        helper = new InterfacesOperationsHelper(this);
+
         Bundle loginBundle = getIntent().getExtras(); // get the login bundle
 
         // Extract the bundle data sent from login activity
@@ -238,17 +231,17 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             purchasesList = new ArrayList<>();
         }
 
-        // Init the available reservations data set it is null
+        // Init the passionate reservations data set it is null
         if (passionateReservationsList == null) {
             passionateReservationsList = new ArrayList<>();
         }
 
-        // Init the passionate reservations data set it is null
+        // Init the available reservations data set it is null
         if (availableReservationsList == null) {
             availableReservationsList = new ArrayList<>();
         }
 
-        // Init the purchases data set it is null
+        // Init the veterinatians data set it is null
         if (veterinariansList == null) {
             veterinariansList = new ArrayList<>();
         }
@@ -284,7 +277,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     public void onAnimalRegistered(@NonNull Animal animal) {
         if (isConnectionEnabled) {
             // Set the animal's owner
-            animal.setOwner(passionate.getUsername());
+            animal.setOwner(passionate.getEmail());
             animal.setVeterinarian("");
             animal.setNature("");
 
@@ -382,46 +375,14 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
     @Override
     public void getAnimalDiagnosis(DiagnosisAdapter adapter, RecyclerView recyclerView, String animal, DiagnosisAdapter.OnItemClickListener onClickListener){
-        db.collection(KeysNamesUtils.CollectionsNames.DIAGNOSIS)
-                .whereEqualTo(KeysNamesUtils.DiagnosisFields.ANIMAL, animal)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        QuerySnapshot querySnapshot = task.getResult();
-                        if (!querySnapshot.isEmpty()){
-                            List<DocumentSnapshot> diagnosisDocuments = task.getResult().getDocuments();
-                            for (DocumentSnapshot snapshot : diagnosisDocuments) {
-                                adapter.addDiagnosis(Diagnosis.loadDiagnosis(snapshot));
-                                Log.wtf("Diagnosi", Diagnosis.loadDiagnosis(snapshot).toString());
-                            }
-                        }
-                        recyclerView.setAdapter(adapter);
-                        } else {
-                            Toast.makeText(this, "Nessuna diagnosi presente.", Toast.LENGTH_SHORT).show();
-                        }
-                });
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(this, db);
+        animalHelper.getAnimalDiagnosis(adapter, recyclerView, animal, getSupportFragmentManager());
     }
 
     @Override
     public void getAnimalExams(ExamsAdapter adapter, RecyclerView recyclerView, String animal){
-        db.collection(KeysNamesUtils.CollectionsNames.EXAMS)
-                .whereEqualTo(KeysNamesUtils.ExamsFields.EXAM_ANIMAL, animal)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        QuerySnapshot querySnapshot = task.getResult();
-                        if (!querySnapshot.isEmpty()){
-                            List<DocumentSnapshot> examsDocuments = task.getResult().getDocuments();
-                            for (DocumentSnapshot snapshot : examsDocuments) {
-                                adapter.addExam(Exam.loadExam(snapshot));
-                                Log.wtf("Esami", Exam.loadExam(snapshot).toString());
-                            }
-                        }
-                        recyclerView.setAdapter(adapter);
-                    } else {
-                        Toast.makeText(this, "Nessun esame presente.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(this, db);
+        animalHelper.getAnimalExams(adapter, recyclerView, animal, getSupportFragmentManager());
     }
 
     @Override
@@ -471,6 +432,9 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
     @Override
     public void onProfilePicAdded(Uri source, String microchip) {
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(this, db);
+        animalHelper.onProfilePicAdded(source, microchip, getUserId());
+        /*
         String fileName = KeysNamesUtils.FileDirsNames.animalProfilePic(microchip);
 
         // Create the storage tree structure
@@ -515,7 +479,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
                         });
             }
-        });
+        });*/
     }
 
     @Override
@@ -563,29 +527,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     /* This method is used to load the animal profile pic in AnimalProfile */
     @Override
     public void loadProfilePic(String microchip, ImageView imageView) {
-        db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
-                .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, microchip)
-                .addSnapshotListener((value, error) -> {
-
-                    // Handle the error if the listening is not working
-                    if (error != null) {
-                        Log.w("Error listen", "listen:error", error);
-                        return;
-                    }
-
-                    if (value != null) {
-
-                        if (value.getDocumentChanges().size() > 0) {
-                            // The profile image document collection can contain one document per animal
-                            DocumentChange change = value.getDocumentChanges().get(0);
-
-                            // Extract the post and load it with GLIDE
-                            PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(change.getDocument());
-                            Glide.with(this).load(post.getPostUri()).into(imageView);
-                        }
-                    }
-
-                });
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(getApplicationContext(), db);
+        animalHelper.loadProfilePic(microchip, imageView);
     }
 
     @Override

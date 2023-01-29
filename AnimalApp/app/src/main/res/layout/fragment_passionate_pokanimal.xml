@@ -4,15 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="?attr/colorOnSecondary"
-        android:text="Pokanimal"
         android:layout_marginTop="10dp"
-        android:textAlignment="center"
-        android:textSize="64sp"
-        android:fontFamily="@font/pokefont"/>
+        android:layout_marginHorizontal="10dp"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/textViewShadowId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="64sp"
+            android:text="Pokanimal"
+            android:textAlignment="center"
+            android:fontFamily="@font/pokefont"
+            android:textColor="@color/poke_blue" />
+
+        <TextView
+            android:id="@+id/textViewId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="64sp"
+            android:text="Pokanimal"
+            android:textAlignment="center"
+            android:fontFamily="@font/pokefont"
+            android:textColor="@color/poke_yellow" />
+    </FrameLayout>
 
     <Button
         android:id="@+id/btnAddPokeLink"

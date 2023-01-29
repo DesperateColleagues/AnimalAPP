@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
@@ -73,8 +74,13 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
     }
 
     private PhotoDiaryFragmentListener listener;
+
     private List<PhotoDiaryPost> posts;
+
     private String animalMicrochip;
+    private final String owner;
+
+    private FirebaseAuth mAuth;
 
     private boolean isShowOnlyMode;
 
@@ -123,15 +129,16 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
 
 
     public PhotoDiaryFragment() {
-        // not supported
+        throw new UnsupportedOperationException();
     }
 
     public void setShowOnlyMode(boolean showOnlyMode) {
         isShowOnlyMode = showOnlyMode;
     }
 
-    public PhotoDiaryFragment(String animalMicrochip) {
+    public PhotoDiaryFragment(String animalMicrochip, String owner) {
         this.animalMicrochip = animalMicrochip;
+        this.owner = owner;
     }
 
     @Override
@@ -154,7 +161,7 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         posts = new ArrayList<>();
-
+        mAuth = FirebaseAuth.getInstance();
         return inflater.inflate(R.layout.fragment_passionate_photo_diary, container, false);
     }
 
@@ -167,18 +174,17 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
 
         Button btnAddAnimalPost = view.findViewById(R.id.btnAddAnimalPost);
 
-        if ((getActivity()) instanceof PassionateNavigationActivity) {
+        if (owner.equals(mAuth.getCurrentUser().getEmail())) {
             btnAddAnimalPost.setOnClickListener(v -> {
                 Intent i = new Intent();
                 i.setType("image/*");
                 i.setAction(Intent.ACTION_GET_CONTENT);
                 photoUploadAndSaveActivity.launch(i);
             });
-        } else if ((getActivity()) instanceof VeterinarianNavigationActivity){
-            btnAddAnimalPost.setVisibility(View.GONE);
         } else {
-            Toast.makeText(getContext(), "Non dovresti essere qui.", Toast.LENGTH_SHORT).show();
-            btnAddAnimalPost.setVisibility(View.GONE);
+            if ((getActivity()) instanceof VeterinarianNavigationActivity) {
+                btnAddAnimalPost.setVisibility(View.GONE);
+            }
         }
 
         if (isShowOnlyMode) {

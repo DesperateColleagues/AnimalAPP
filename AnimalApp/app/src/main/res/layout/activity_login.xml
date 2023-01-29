@@ -36,7 +36,7 @@
             android:ems="10"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
-            android:text="marcobari@libero.it"
+            android:text="ente2@gmail.com"
             android:minHeight="48dp" />
 
     </com.google.android.material.textfield.TextInputLayout>

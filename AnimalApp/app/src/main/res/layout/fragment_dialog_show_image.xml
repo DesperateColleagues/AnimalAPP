@@ -21,13 +21,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginBottom="10dp">
 
         <ImageButton
             android:id="@+id/btnShareImg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_gravity="center"
             android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_baseline_share_24"/>
 
@@ -38,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:gravity="top|center"
+            android:gravity="center"
             android:text="Chiudi"/>
 
         <ImageButton
@@ -46,6 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_gravity="center"
             android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_baseline_delete_2"/>
 

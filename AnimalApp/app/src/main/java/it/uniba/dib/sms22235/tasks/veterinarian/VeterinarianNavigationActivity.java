@@ -55,6 +55,7 @@ import it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianReservatio
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
+import it.uniba.dib.sms22235.utils.InterfacesOperationsHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class VeterinarianNavigationActivity extends AppCompatActivity implements
@@ -71,6 +72,8 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     private Veterinarian veterinarian;
     private ArrayList<Reservation> reservationsList;
     private transient  BottomNavigationView navViewVeterinarian;
+
+    private InterfacesOperationsHelper helper;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -101,6 +104,8 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         fab = findViewById(R.id.floatingActionButton_veterinarian);
 
         db = FirebaseFirestore.getInstance();
+
+        helper = new InterfacesOperationsHelper(this);
 
         Bundle loginBundle = getIntent().getExtras();
 
@@ -184,8 +189,10 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
     @Override
     public void onProfilePicAdded(Uri source, String microchip) {
-        String fileName = KeysNamesUtils.FileDirsNames.animalProfilePic(microchip);
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(this, db);
+        animalHelper.onProfilePicAdded(source, microchip, getUserId());
 
+        /*String fileName = KeysNamesUtils.FileDirsNames.animalProfilePic(microchip);
         // Create the storage tree structure
         String fileReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(getUserId()) +
                 "/" + fileName;
@@ -228,34 +235,13 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
                         });
             }
-        });
+        });*/
     }
 
     @Override
     public void loadProfilePic(String microchip, ImageView imageView) {
-        db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
-                .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, microchip)
-                .addSnapshotListener((value, error) -> {
-
-                    // Handle the error if the listening is not working
-                    if (error != null) {
-                        Log.w("Error listen", "listen:error", error);
-                        return;
-                    }
-
-                    if (value != null) {
-
-                        if (value.getDocumentChanges().size() > 0) {
-                            // The profile image document collection can contain one document per animal
-                            DocumentChange change = value.getDocumentChanges().get(0);
-
-                            // Extract the post and load it with GLIDE
-                            PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(change.getDocument());
-                            Glide.with(this).load(post.getPostUri()).into(imageView);
-                        }
-                    }
-
-                });
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(getApplicationContext(), db);
+        animalHelper.loadProfilePic(microchip, imageView);
     }
 
     public void getAssistedAnimals(AnimalListAdapter adapter, RecyclerView recyclerView) {
@@ -461,30 +447,8 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
     @Override
     public void getAnimalDiagnosis(DiagnosisAdapter adapter, RecyclerView recyclerView, String animal, DiagnosisAdapter.OnItemClickListener onClickListener){
-        db.collection(KeysNamesUtils.CollectionsNames.DIAGNOSIS)
-                .whereEqualTo(KeysNamesUtils.DiagnosisFields.ANIMAL, animal)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        QuerySnapshot querySnapshot = task.getResult();
-                        if (!querySnapshot.isEmpty()){
-                            List<DocumentSnapshot> diagnosisDocuments = task.getResult().getDocuments();
-                            for (DocumentSnapshot snapshot : diagnosisDocuments) {
-                                adapter.addDiagnosis(Diagnosis.loadDiagnosis(snapshot));
-                                Log.wtf("Diagnosi", Diagnosis.loadDiagnosis(snapshot).toString());
-                            }
-                        }
-                        adapter.setOnItemClickListener(onClickListener);
-                        recyclerView.setAdapter(adapter);
-                    } else {
-                        Toast.makeText(this, "Nessuna diagnosi presente.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    @Override
-    public List<Veterinarian> getVeterinarianList() {
-        return null; //not needed
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(this, db);
+        animalHelper.getAnimalDiagnosis(adapter, recyclerView, animal, getSupportFragmentManager());
     }
 
     @Override

@@ -57,7 +57,7 @@ public class ReportsListFragment extends Fragment {
     private ArrayList<Report> reportsListFiltered;
 
     private int counterTouchKm;
-    private final double [] distanceKmn = {2000, 5000, 10000, 25000};
+    private final double [] distanceMeters = {2000, 5000, 10000, 25000};
 
     private Location mLocation;
     private FusedLocationProviderClient client;
@@ -111,7 +111,7 @@ public class ReportsListFragment extends Fragment {
                     counterTouchKm = 0;
                     recyclerView.setAdapter(reportsAdapter);
                 } else {
-                    textBtn = distanceKmn[counterTouchKm] + "Km";
+                    textBtn = (distanceMeters[counterTouchKm] / 1000) + getResources().getString(R.string.chilometri);
                     filterByCurrentLocation();
                     counterTouchKm++;
                 }
@@ -264,7 +264,7 @@ public class ReportsListFragment extends Fragment {
 
                 double distance = reportLocation.distanceTo(currentLocation);
 
-                if (distance < distanceKmn[counterTouchKm]) {
+                if (distance < distanceMeters[counterTouchKm]) {
                     reportsListFiltered.add(report);
                 }
             }

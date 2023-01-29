@@ -14,34 +14,39 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.DiagnosisAdapter;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
-import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.BSDialogEditDiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.DialogAddDiagnosisFragment;
-import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
-import it.uniba.dib.sms22235.utils.VeterinarianOperationsHelper;
+import it.uniba.dib.sms22235.utils.InterfacesOperationsHelper;
 
 public class DiagnosisFragment extends Fragment implements
         DialogAddDiagnosisFragment.DialogAddDiagnosisFragmentListener {
 
     private final String animal;
+    private final String owner;
+
     private RecyclerView diagnosisRecyclerView;
     private DiagnosisAdapter adapter;
-    private DiagnosisFragmentListener listener;
-    private VeterinarianOperationsHelper helper;
 
-    public DiagnosisFragment(String animal) {
+    private DiagnosisFragmentListener listener;
+
+    private FirebaseAuth mAuth;
+    private InterfacesOperationsHelper helper;
+
+    public DiagnosisFragment(String animal, String owner) {
         this.animal = animal;
+        this.owner = owner;
     }
 
     public interface DiagnosisFragmentListener {
@@ -51,7 +56,7 @@ public class DiagnosisFragment extends Fragment implements
     @Override
     public void onAttach(@NonNull Context context) {
         NavigationActivityInterface activity = (NavigationActivityInterface) getActivity();
-         helper = new VeterinarianOperationsHelper(getContext());
+        helper = new InterfacesOperationsHelper(getContext());
         try {
             // Attach the listener to the Fragment
             listener = (DiagnosisFragment.DiagnosisFragmentListener) context;
@@ -67,6 +72,7 @@ public class DiagnosisFragment extends Fragment implements
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mAuth = FirebaseAuth.getInstance();
         return inflater.inflate(R.layout.fragment_simple_vertical_list, container, false);
     }
 
@@ -78,24 +84,23 @@ public class DiagnosisFragment extends Fragment implements
         adapter = new DiagnosisAdapter();
 
         Button btnAddAnimalOperation = view.findViewById(R.id.btnAddAnimalOperation);
-        if ((getActivity()) instanceof VeterinarianNavigationActivity) {
-            btnAddAnimalOperation.setVisibility(View.VISIBLE);
-            btnAddAnimalOperation.setText(getResources().getString(R.string.aggiungi_diagnosi));
-            btnAddAnimalOperation.setOnClickListener(v -> {
-                Toast.makeText(getContext(), "Inserimento nuova diagnosi", Toast.LENGTH_SHORT).show();
 
-                DialogAddDiagnosisFragment dialogAddDiagnosisFragment = new DialogAddDiagnosisFragment();
-                dialogAddDiagnosisFragment.setListener(this);
-                dialogAddDiagnosisFragment.show(getParentFragmentManager(), "DialogAddDiagnosisFragment");
-            });
-
-            listener.getAnimalDiagnosis(adapter, diagnosisRecyclerView, animal, onClickListener);
-        } else if ((getActivity()) instanceof PassionateNavigationActivity){
+        if (owner.equals(mAuth.getCurrentUser().getEmail())) {
             btnAddAnimalOperation.setVisibility(View.GONE);
             listener.getAnimalDiagnosis(adapter, diagnosisRecyclerView, animal, null);
         } else {
-            Toast.makeText(getContext(), "Non dovresti essere qui.", Toast.LENGTH_SHORT).show();
-            btnAddAnimalOperation.setVisibility(View.GONE);
+            if ((getActivity()) instanceof VeterinarianNavigationActivity) {
+                btnAddAnimalOperation.setVisibility(View.VISIBLE);
+                btnAddAnimalOperation.setText(getResources().getString(R.string.aggiungi_diagnosi));
+                btnAddAnimalOperation.setOnClickListener(v -> {
+                    Toast.makeText(getContext(), "Inserimento nuova diagnosi", Toast.LENGTH_SHORT).show();
+
+                    DialogAddDiagnosisFragment dialogAddDiagnosisFragment = new DialogAddDiagnosisFragment();
+                    dialogAddDiagnosisFragment.setListener(this);
+                    dialogAddDiagnosisFragment.show(getParentFragmentManager(), "DialogAddDiagnosisFragment");
+                });
+                listener.getAnimalDiagnosis(adapter, diagnosisRecyclerView, animal, onClickListener);
+            }
         }
 
         diagnosisRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false));

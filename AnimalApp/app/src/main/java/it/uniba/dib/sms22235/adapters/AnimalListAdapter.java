@@ -3,6 +3,7 @@ package it.uniba.dib.sms22235.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,15 +35,13 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        TextView txtAnimalName;
+        TextView txtAnimalInfo;
         ImageView animalPicPreview;
-        TextView txtAnimalOwner;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
-            txtAnimalName = itemView.findViewById(R.id.txtAnimalName);
+            txtAnimalInfo = itemView.findViewById(R.id.txtAnimalInfo);
             animalPicPreview = itemView.findViewById(R.id.animalPic);
-            txtAnimalOwner = itemView.findViewById(R.id.txtAnimalOwner);
         }
     }
 
@@ -61,22 +60,31 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
     public void onBindViewHolder(@NonNull AnimalListAdapter.ViewHolder holder, int position) {
 
         if(orientation == RecyclerView.HORIZONTAL) {
-            holder.txtAnimalName.setText(animalList.get(position).getName());
+            holder.txtAnimalInfo.setText(animalList.get(position).getName());
             if (animalPic.get(position) != null) {
                 holder.animalPicPreview.setVisibility(View.VISIBLE);
                 holder.animalPicPreview.setImageBitmap(animalPic.get(position));
             }
         } else {
-            holder.txtAnimalName.setText(
-                    String.format("%s%s", context.getResources()
-                            .getString(R.string.nome_animale_vet_list),
-                            animalList.get(position).getName())
-            );
-            holder.txtAnimalOwner.setText(
-                    String.format("%s%s", context.getResources()
-                                    .getString(R.string.proprietario_animale_vet_list),
-                            animalList.get(position).getOwner())
-            );
+            String info = "• <b>" +
+                    "Nome" +
+                    ": </b>"+
+                    animalList.get(position).getName() +
+                    "\n<br>" +
+                    "• <b>" +
+                    "Proprietario" +
+                    ": </b>"+
+                    animalList.get(position).getOwner() +
+                    "\n<br>" +
+                    "• <b>" +
+                    "Dati" +
+                    ": </b>" +
+                    animalList.get(position).getHeight() +
+                    "m - " +
+                    animalList.get(position).getWeight() +
+                    "Kg - " +
+                    animalList.get(position).getAnimalSpecies();
+                    holder.txtAnimalInfo.setText((Html.fromHtml(info, Html.FROM_HTML_MODE_LEGACY)));
         }
 
     }

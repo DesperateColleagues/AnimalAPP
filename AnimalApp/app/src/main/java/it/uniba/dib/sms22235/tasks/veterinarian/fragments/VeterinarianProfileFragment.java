@@ -15,6 +15,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 
 public class VeterinarianProfileFragment extends Fragment {
@@ -44,6 +45,9 @@ public class VeterinarianProfileFragment extends Fragment {
             NavController navController = Navigation.findNavController(container) ;
             navController.navigate(R.id.action_passionate_profile_to_reportsDashboardFragment);
         });
+
+        ((NavigationActivityInterface) requireActivity()).setNavViewVisibility(View.VISIBLE);
+        ((NavigationActivityInterface) requireActivity()).getFab().setVisibility(View.VISIBLE);
 
         return rootView;
     }

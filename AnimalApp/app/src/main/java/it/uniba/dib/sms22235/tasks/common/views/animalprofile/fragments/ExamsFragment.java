@@ -15,20 +15,28 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.ExamsAdapter;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
+import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.DialogAddDiagnosisFragment;
 
 public class ExamsFragment extends Fragment {
 
-    private String animal;
+    private final String animal;
+    private final String owner;
+
     private RecyclerView examsRecyclerView;
     private ExamsAdapter adapter;
 
-    public ExamsFragment(String animal) {
+    private FirebaseAuth mAuth;
+
+    public ExamsFragment(String animal, String owner) {
         this.animal = animal;
+        this.owner = owner;
     }
 
     public interface ExamsFragmentListener {
@@ -57,6 +65,7 @@ public class ExamsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mAuth = FirebaseAuth.getInstance();
         return inflater.inflate(R.layout.fragment_simple_vertical_list, container, false);
     }
 
@@ -65,17 +74,16 @@ public class ExamsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Button btnAddAnimalOperation = view.findViewById(R.id.btnAddAnimalOperation);
-        if ((getActivity()) instanceof VeterinarianNavigationActivity) {
-            btnAddAnimalOperation.setVisibility(View.VISIBLE);
-            btnAddAnimalOperation.setText(getResources().getString(R.string.aggiungi_esame));
-            btnAddAnimalOperation.setOnClickListener(v -> {
-                Toast.makeText(getContext(), "Inserimento nuovo esame", Toast.LENGTH_SHORT).show();
-            });
-        } else if ((getActivity()) instanceof PassionateNavigationActivity){
+        if (owner.equals(mAuth.getCurrentUser().getEmail())) {
             btnAddAnimalOperation.setVisibility(View.GONE);
         } else {
-            Toast.makeText(getContext(), "Non dovresti essere qui.", Toast.LENGTH_SHORT).show();
-            btnAddAnimalOperation.setVisibility(View.GONE);
+            if ((getActivity()) instanceof VeterinarianNavigationActivity) {
+                btnAddAnimalOperation.setVisibility(View.VISIBLE);
+                btnAddAnimalOperation.setText(getResources().getString(R.string.aggiungi_esame));
+                btnAddAnimalOperation.setOnClickListener(v -> {
+                    Toast.makeText(getContext(), "Inserimento nuovo esame", Toast.LENGTH_SHORT).show();
+                });
+            }
         }
 
         examsRecyclerView = view.findViewById(R.id.recyclerVerticalList);

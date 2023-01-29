@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -203,7 +204,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE, cus);
 
                                                 // Execute the task to get the animals of the logged user
-                                                Task<QuerySnapshot> taskGetAnimals = getAnimalTask(cus.getUsername());
+                                                Task<QuerySnapshot> taskGetAnimals = getAnimalTask(cus.getEmail());
                                                 // Execute the task to get the purchases of the logged user
                                                 Task<QuerySnapshot> taskPurchases = getPurchasesTask(cus.getUsername());
                                                 Task<QuerySnapshot> taskAvailableReservations = getAvailableReservationsTask();
@@ -350,7 +351,23 @@ public class LoginActivity extends AppCompatActivity {
                                                 Bundle bundle = new Bundle();
                                                 Organization org = Organization.loadOrganization(document);
                                                 bundle.putSerializable(KeysNamesUtils.BundleKeys.ORGANIZATION, org);
-                                                newActivityRunning(OrganizationNavigationActivity.class, bundle);
+
+                                                ArrayList<Veterinarian> veterinarians = new ArrayList<>();
+                                                Task<QuerySnapshot> taskVeterinarians = getVeterinariansTask();
+                                                taskVeterinarians.addOnCompleteListener(task -> {
+                                                    if (task.isSuccessful()) {
+                                                        QuerySnapshot veterinariansSnapshot = (QuerySnapshot) task.getResult();
+                                                        if(!veterinariansSnapshot.isEmpty()){
+                                                            List<DocumentSnapshot> veterinariansDocuments = veterinariansSnapshot.getDocuments();
+                                                            for (DocumentSnapshot snapshot : veterinariansDocuments) {
+                                                                veterinarians.add(Veterinarian.loadVeterinarian(snapshot));
+                                                            }
+                                                        }
+                                                    }
+                                                    bundle.putSerializable(KeysNamesUtils.BundleKeys.VETERINARIANS_LIST, veterinarians);
+                                                    newActivityRunning(OrganizationNavigationActivity.class, bundle);
+                                                }
+                                                );
                                             }
                                         }
                                     });

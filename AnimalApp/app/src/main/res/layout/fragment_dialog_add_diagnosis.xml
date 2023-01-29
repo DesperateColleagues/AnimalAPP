@@ -9,6 +9,16 @@
     android:paddingBottom="15dp"
     android:orientation="vertical">
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:hint="Inserisci riassunto breve della visita"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+
     <EditText
         android:id="@+id/txtInputDiagnosisDescription"
         android:layout_width="match_parent"
@@ -21,16 +31,18 @@
         android:lines="8"
         android:maxLines="10"
         android:textSize="17sp"
-        android:hint="Inserisci riassunto breve della visita"
         android:textColorHint="?attr/colorOnSecondary"
         tools:ignore="LabelFor,SpeakableTextPresentCheck" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp" >
+        android:paddingBottom="10dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"
@@ -59,6 +71,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:textStyle="bold"
+        android:layout_marginTop="10dp"
         android:text="Completa inserimento" />
 
 

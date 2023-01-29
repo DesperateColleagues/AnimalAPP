@@ -8,7 +8,6 @@ import android.os.Bundle;
 
 import android.text.Html;
 
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,10 +25,10 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
@@ -65,13 +64,6 @@ public class AnimalProfile extends Fragment implements
         void loadProfilePic(String microchip, ImageView imageView);
 
         /**
-         * This method is used to get the list of all the veterinarians present in the database
-         *
-         * @return the list of veterinarians
-         * */
-        List<Veterinarian> getVeterinarianList();
-
-        /**
          * This method is used when an animal is updated
          *
          * @param animal the updated animal to save
@@ -87,11 +79,20 @@ public class AnimalProfile extends Fragment implements
          * @param image the imageView where to load the logo
          * */
         void checkIfAtHome(Animal animal, ImageView image);
+
+
     }
 
-    public interface UpdateVeterinarianNameOnChoose {
+    public interface AnimalProfileEditListener {
         /**
-         * This method is called when a veterinarian has been setted for the animal
+         * This method is used to get the list of all the veterinarians present in the database
+         *
+         * @return the list of veterinarians
+         * */
+        List<Veterinarian> getVeterinarianList();
+
+        /**
+         * This method is called when the owner set a veterinarian for his pet
          *
          * @param selectedAnimal the selected animal
          * */
@@ -99,9 +100,13 @@ public class AnimalProfile extends Fragment implements
     }
 
     private Animal mAnimal;
-    private AnimalProfileListener listenerAPF;
-    private UpdateVeterinarianNameOnChoose listenerPPF;
+
+    private AnimalProfileListener generalListener;
+    private AnimalProfileEditListener passionateListener;
+
     private DialogEditAnimalDataFragment dialogEditAnimalDataFragment;
+
+    private FirebaseAuth mAuth;
 
     private boolean isShowOnlyMode = false;
 
@@ -112,7 +117,7 @@ public class AnimalProfile extends Fragment implements
                     Intent data = result.getData();
 
                     if (data != null) {
-                        listenerAPF.onProfilePicAdded(data.getData(), mAnimal.getMicrochipCode());
+                        generalListener.onProfilePicAdded(data.getData(), mAnimal.getMicrochipCode());
                     }
                 }
             });
@@ -121,11 +126,20 @@ public class AnimalProfile extends Fragment implements
     public void onAttach(@NonNull Context context) {
         NavigationActivityInterface activity = (NavigationActivityInterface) getActivity();
 
+        Bundle arguments = getArguments();
+        mAuth = FirebaseAuth.getInstance();
+
+        // Get the arguments obtained from the navigation
+        if (arguments != null) {
+            mAnimal = (Animal) arguments.get(KeysNamesUtils.BundleKeys.ANIMAL);
+            isShowOnlyMode = arguments.getBoolean(KeysNamesUtils.BundleKeys.ANIMAL_SHOW_ONLY);
+        }
+
         try {
             // Attach the listener to the Fragment
-            listenerAPF = (AnimalProfileListener) context;
-            if ((getActivity()) instanceof PassionateNavigationActivity) {
-                listenerPPF = (UpdateVeterinarianNameOnChoose) context;
+            generalListener = (AnimalProfileListener) context;
+            if (mAnimal.getOwner().equals(mAuth.getCurrentUser().getEmail())) {
+                passionateListener = (AnimalProfileEditListener) context;
             }
         } catch (ClassCastException e) {
             throw new ClassCastException(
@@ -141,13 +155,6 @@ public class AnimalProfile extends Fragment implements
         ((NavigationActivityInterface) requireActivity()).setNavViewVisibility(View.GONE);
         ((NavigationActivityInterface) requireActivity()).getFab().setVisibility(View.GONE);
 
-        Bundle arguments = getArguments();
-
-        // Get the arguments obtained from the navigation
-        if (arguments != null) {
-            mAnimal = (Animal) arguments.get(KeysNamesUtils.BundleKeys.ANIMAL);
-            isShowOnlyMode = arguments.getBoolean(KeysNamesUtils.BundleKeys.ANIMAL_SHOW_ONLY);
-        }
 
         return inflater.inflate(R.layout.fragment_animal_profile, container, false);
     }
@@ -188,13 +195,12 @@ public class AnimalProfile extends Fragment implements
         tabLayout.setupWithViewPager(viewPager);
 
         ImageView animalPicPreview = view.findViewById(R.id.animalPicPreview);
-        listenerAPF.loadProfilePic(mAnimal.getMicrochipCode(), animalPicPreview);
+        generalListener.loadProfilePic(mAnimal.getMicrochipCode(), animalPicPreview);
 
         Button updateProfile = view.findViewById(R.id.btnUpdateProfile);
         Button shareProfile = view.findViewById(R.id.btnShareProfile);
 
-        if ((getActivity()) instanceof PassionateNavigationActivity && !isShowOnlyMode) {
-
+        if (mAnimal.getOwner().equals(mAuth.getCurrentUser().getEmail())) {
             animalPicPreview.setOnClickListener(v -> {
                 Intent i = new Intent();
                 i.setType("image/*");
@@ -204,13 +210,13 @@ public class AnimalProfile extends Fragment implements
 
             shareProfile.setOnClickListener(v -> {
                 DialogAnimalCardFragment animalCardFragment = new DialogAnimalCardFragment(mAnimal);
-                animalCardFragment.setAnimalProfileListener(listenerAPF);
+                animalCardFragment.setAnimalProfileListener(generalListener);
                 animalCardFragment.show(getChildFragmentManager(), "DialogAnimalCardFragment");
             });
 
             updateProfile.setOnClickListener(v -> {
                 dialogEditAnimalDataFragment.setAnimal(mAnimal);
-                dialogEditAnimalDataFragment.setVeterinarianList(listenerAPF.getVeterinarianList());
+                dialogEditAnimalDataFragment.setVeterinarianList(passionateListener.getVeterinarianList());
                 dialogEditAnimalDataFragment.show(requireActivity().getSupportFragmentManager(),
                         "DialogEditAnimalDataFragment");
             });
@@ -221,7 +227,7 @@ public class AnimalProfile extends Fragment implements
 
         ImageView animalPosition = view.findViewById(R.id.animalPosition);
 
-        listenerAPF.checkIfAtHome(mAnimal, animalPosition);
+        generalListener.checkIfAtHome(mAnimal, animalPosition);
 
         // Set the text view with the mAnimal data
         if (mAnimal != null) {
@@ -239,13 +245,12 @@ public class AnimalProfile extends Fragment implements
         Adapter adapter = new Adapter(getChildFragmentManager());
         String animal = mAnimal.getMicrochipCode();
 
-        if ((getActivity()) instanceof PassionateNavigationActivity) {
-            PhotoDiaryFragment photoDiaryFragment = new PhotoDiaryFragment(animal);
-            photoDiaryFragment.setShowOnlyMode(isShowOnlyMode);
+        if (mAnimal.getOwner().equals(mAuth.getCurrentUser().getEmail())) {
+            PhotoDiaryFragment photoDiaryFragment = new PhotoDiaryFragment(animal, mAnimal.getOwner());
             adapter.addFragment(photoDiaryFragment, "Photo diary");
         }
-        adapter.addFragment(new DiagnosisFragment(animal), "Diagnosi");
-        adapter.addFragment(new ExamsFragment(animal),"Esami"); //TODO:Stringhe
+        adapter.addFragment(new DiagnosisFragment(animal, mAnimal.getOwner()), "Diagnosi");
+        adapter.addFragment(new ExamsFragment(animal, mAnimal.getOwner()),"Esami"); //TODO:Stringhe
         viewPager.setAdapter(adapter);
     }
 
@@ -283,10 +288,10 @@ public class AnimalProfile extends Fragment implements
     @Override
     public void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal) {
         if ((getActivity()) instanceof PassionateNavigationActivity) {
-            listenerPPF.onDialogChoosedVeterinarian(mAnimal);
+            passionateListener.onDialogChoosedVeterinarian(mAnimal);
         }
 
-        listenerAPF.onAnimalUpdated(mAnimal);
+        generalListener.onAnimalUpdated(mAnimal);
     }
 }
 

@@ -27,7 +27,7 @@
         android:id="@+id/veterinarian_animal_list"
         android:name="it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianAnimalListFragment"
         android:label="@string/title_fragment_veterinarian_animal_list"
-        tools:layout="@layout/fragment_veterinarian_animal_list">
+        tools:layout="@layout/fragment_animal_list">
         <action
             android:id="@+id/action_veterinarian_animal_list_to_animalProfile"
             app:destination="@id/animalProfile"

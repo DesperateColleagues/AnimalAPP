@@ -21,4 +21,7 @@
     <color name="dark_onMain">#ffffff</color>
     <color name="dark_textColor">#ffffff</color>
     <color name="dark_bg">#212121</color>
+
+    <color name="poke_yellow">#ffcc01</color>
+    <color name="poke_blue">#385ca9</color>
 </resources>

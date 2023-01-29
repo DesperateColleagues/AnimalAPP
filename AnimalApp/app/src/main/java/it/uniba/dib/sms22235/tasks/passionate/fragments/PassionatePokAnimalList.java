@@ -1,11 +1,13 @@
 package it.uniba.dib.sms22235.tasks.passionate.fragments;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -79,6 +81,11 @@ public class PassionatePokAnimalList extends Fragment implements DialogAddPokeLi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //set blue border
+        TextView textViewShadow = view.findViewById(R.id.textViewShadowId);
+        textViewShadow.getPaint().setStrokeWidth(20);
+        textViewShadow.getPaint().setStyle(Paint.Style.STROKE);
 
         adapter = new PokAnimalAdapter();
         adapter.setContext(requireContext());

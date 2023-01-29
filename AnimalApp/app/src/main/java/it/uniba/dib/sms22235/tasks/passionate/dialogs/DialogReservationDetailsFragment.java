@@ -29,8 +29,8 @@ public class DialogReservationDetailsFragment extends DialogFragment {
 
     public Dialog onCreateDialog(@Nullable Bundle SavedInstanceBundle){
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                getContext()/*,
-                R.style.AnimalCardRoundedDialog*/);
+                getContext(),
+                R.style.AnimalCardRoundedDialog);
 
         // Create the inflater and inflate the layout
         LayoutInflater inflater = requireActivity().getLayoutInflater();

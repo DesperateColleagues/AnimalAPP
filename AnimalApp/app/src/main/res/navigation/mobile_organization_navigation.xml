@@ -6,10 +6,28 @@
     app:startDestination="@+id/organization_profile">
 
     <fragment
+        android:id="@+id/animalProfile"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile"
+        android:label="AnimalProfile"
+        tools:layout="@layout/fragment_animal_profile"/>
+
+    <fragment
         android:id="@+id/organization_profile"
         android:name="it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationProfileFragment"
         android:label="Profilo organizzazione"
         tools:layout="@layout/fragment_organization_profile" />
+
+    <fragment
+        android:id="@+id/organization_animal_list"
+        android:name="it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationAnimalListFragment"
+        android:label="Lista animali"
+        tools:layout="@layout/fragment_animal_list">
+        <action
+            android:id="@+id/action_organization_animal_list_to_animalProfile"
+            app:destination="@id/animalProfile"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/organization_import_data"
