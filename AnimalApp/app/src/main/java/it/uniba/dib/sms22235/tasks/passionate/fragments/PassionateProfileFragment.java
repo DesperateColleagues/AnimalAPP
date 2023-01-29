@@ -226,11 +226,11 @@ public class PassionateProfileFragment extends Fragment implements
     @NonNull
     @Contract("_ -> param1")
     private ArrayList<InfoMessage> buildStandardMessages(@NonNull ArrayList<InfoMessage> messages) {
-        InfoMessage findings = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_text), R.drawable.warningsign, KeysNamesUtils.CollectionsNames.REPORTS);
-        InfoMessage showVeterinarians = new InfoMessage("Visualizza veterinari", R.drawable.fra_rrc_doctor_no_green, KeysNamesUtils.RolesNames.VETERINARIAN);
-        InfoMessage showOrganizations = new InfoMessage("Visualizza organizzazioni", R.drawable.fra_rrc_organization_no_green, KeysNamesUtils.RolesNames.VETERINARIAN);
+        InfoMessage findings = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_reports_text), R.drawable.warningsign, KeysNamesUtils.CollectionsNames.REPORTS);
+        InfoMessage showVeterinarians = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_vet_list_text), R.drawable.fra_rrc_doctor_no_green, KeysNamesUtils.RolesNames.VETERINARIAN);
+        InfoMessage showOrganizations = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_org_list_text), R.drawable.fra_rrc_organization_no_green, KeysNamesUtils.RolesNames.VETERINARIAN);
         InfoMessage recentReservations = new InfoMessage(getResources().getString(R.string.tutti_appuntamenti_recenti), 0, KeysNamesUtils.CollectionsNames.RESERVATIONS);
-        InfoMessage pokeLinks = new InfoMessage("Visualizza modalita Pokelinks", 0, KeysNamesUtils.CollectionsNames.POKE_LINK);
+        InfoMessage pokeLinks = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_pokelinks_text), R.drawable.pokanimal_logo, KeysNamesUtils.CollectionsNames.POKE_LINK);
 
         messages.add(findings);
         messages.add(showVeterinarians);
