@@ -80,15 +80,15 @@ public class Purchase implements Serializable, Cloneable {
     @NonNull
     public static Purchase loadPurchase(@NonNull DocumentSnapshot document) {
         Purchase purchase = new Purchase(
-                (String) document.get(KeysNamesUtils.PurchaseFields.ANIMAL),
-                (String) document.get(KeysNamesUtils.PurchaseFields.ITEM_NAME),
-                (String) document.get(KeysNamesUtils.PurchaseFields.DATE),
-                (String) document.get(KeysNamesUtils.PurchaseFields.CATEGORY),
-                Objects.requireNonNull(document.getDouble(KeysNamesUtils.PurchaseFields.COST)).floatValue(),
-                Objects.requireNonNull(document.getLong(KeysNamesUtils.PurchaseFields.AMOUNT)).intValue()
+                (String) document.get(KeysNamesUtils.PurchaseContract.COLUMN_NAME_ANIMAL),
+                (String) document.get(KeysNamesUtils.PurchaseContract.COLUMN_NAME_ITEM_NAME),
+                (String) document.get(KeysNamesUtils.PurchaseContract.COLUMN_NAME_DATE),
+                (String) document.get(KeysNamesUtils.PurchaseContract.COLUMN_NAME_CATEGORY),
+                Objects.requireNonNull(document.getDouble(KeysNamesUtils.PurchaseContract.COLUMN_NAME_COST)).floatValue(),
+                Objects.requireNonNull(document.getLong(KeysNamesUtils.PurchaseContract.COLUMN_NAME_AMOUNT)).intValue()
         );
 
-        purchase.setOwner((String) document.get(KeysNamesUtils.PurchaseFields.OWNER));
+        purchase.setOwner((String) document.get(KeysNamesUtils.PurchaseContract.COLUMN_NAME_OWNER));
         return purchase;
     }
 

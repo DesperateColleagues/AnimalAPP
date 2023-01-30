@@ -1,6 +1,7 @@
 package it.uniba.dib.sms22235.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ public class ListViewPurchasesAdapter extends ArrayAdapter<Purchase> {
 
     public void addPurchase(Purchase purchase){
         purchasesList.add(purchase);
+        Log.d("PURCHASE", "" + purchasesList.size());
     }
 
     public void setPurchasesList(ArrayList<Purchase> purchasesList) {
@@ -92,6 +94,7 @@ public class ListViewPurchasesAdapter extends ArrayAdapter<Purchase> {
             txtCost.setText(cost);
             txtItemName.setText(purchase.getItemName());
         }
+
         return listView;
     }
 }

@@ -1,5 +1,8 @@
 package it.uniba.dib.sms22235.utils;
 
+import android.annotation.SuppressLint;
+import android.provider.BaseColumns;
+
 import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.Contract;
@@ -7,6 +10,10 @@ import org.jetbrains.annotations.Contract;
 import it.uniba.dib.sms22235.R;
 
 public class KeysNamesUtils {
+
+    // The class cannot be instantiated
+    private KeysNamesUtils() {}
+
     public static class RolesNames {
         public static String VETERINARIAN = "vet";
         public static String COMMON_USER = "cus";
@@ -107,28 +114,26 @@ public class KeysNamesUtils {
         public static String EXAM_OUTCOME = "outcome";
     }
         
-    public static class PurchaseFields {
-        public static String ID = "id";
-        public static String ANIMAL = "animal";
-        public static String ITEM_NAME = "itemName";
-        public static String DATE = "date";
-        public static String CATEGORY = "category";
-        public static String COST = "cost";
-        public static String AMOUNT = "amount";
-        public static String OWNER = "owner";
+    public static class PurchaseContract implements BaseColumns {
+        public static String TABLE_NAME = "purchases";
+        public static String COLUMN_NAME_ID = "id";
+        public static String COLUMN_NAME_ANIMAL = "animal";
+        public static String COLUMN_NAME_ITEM_NAME = "itemName";
+        public static String COLUMN_NAME_DATE = "date";
+        public static String COLUMN_NAME_CATEGORY = "category";
+        public static String COLUMN_NAME_COST = "cost";
+        public static String COLUMN_NAME_AMOUNT = "amount";
+        public static String COLUMN_NAME_OWNER = "owner";
 
-        public static String MIN_COST = "minCost";
-        public static String MAX_COST = "maxCost";
-
-        public static String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS purchases " + " (\n" +
-                 ID + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"+
-                ANIMAL + " VARCHAR(255) NOT NULL,\n" +
-                ITEM_NAME + " VARCHAR(255) NOT NULL,\n" +
-                OWNER + " VARCHAR(255) DEFAULT NULL, \n" +
-                CATEGORY + " VARCHAR(255) NOT NULL,\n" +
-                DATE + " DATE NOT NULL,\n" +
-                AMOUNT + " INTEGER NOT NULL,\n" +
-                COST + " DECIMAL NOT NULL); ";
+        public static String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (\n" +
+                COLUMN_NAME_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"+
+                COLUMN_NAME_ANIMAL + " VARCHAR(255) NOT NULL,\n" +
+                COLUMN_NAME_ITEM_NAME + " VARCHAR(255) NOT NULL,\n" +
+                COLUMN_NAME_OWNER + " VARCHAR(255) DEFAULT NULL, \n" +
+                COLUMN_NAME_CATEGORY + " VARCHAR(255) NOT NULL,\n" +
+                COLUMN_NAME_DATE + " DATE NOT NULL,\n" +
+                COLUMN_NAME_AMOUNT + " INTEGER NOT NULL,\n" +
+                COLUMN_NAME_COST + " DECIMAL NOT NULL); ";
     }
 
     public static class PokeLinkFields {
@@ -183,6 +188,7 @@ public class KeysNamesUtils {
     }
 
     public static class FileDirsNames {
+        @SuppressLint("SdCardPath")
         public static String BASE_PATH = "/data/user/0/it.uniba.dib.sms22235/";
         public static String ROOT_PREFIX = "app_";
         public static String PROFILE_IMAGES = "AnimalAPP_images";

@@ -19,7 +19,7 @@ class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(@NonNull SQLiteDatabase db) {
-        db.execSQL(KeysNamesUtils.PurchaseFields.CREATE_TABLE);
+        db.execSQL(KeysNamesUtils.PurchaseContract.CREATE_TABLE);
     }
 
     @Override

@@ -204,26 +204,26 @@ public class PassionatePurchaseFragment extends Fragment implements
                             // Retrieve the purchase using Cursor
                             Purchase purchase = new Purchase(
                                     cursor.getString(cursor.getColumnIndexOrThrow(
-                                            KeysNamesUtils.PurchaseFields.ANIMAL)),
+                                            KeysNamesUtils.PurchaseContract.COLUMN_NAME_ANIMAL)),
 
                                     cursor.getString(cursor.getColumnIndexOrThrow(
-                                            KeysNamesUtils.PurchaseFields.ITEM_NAME)),
+                                            KeysNamesUtils.PurchaseContract.COLUMN_NAME_ITEM_NAME)),
 
                                     cursor.getString(cursor.getColumnIndexOrThrow(
-                                            KeysNamesUtils.PurchaseFields.DATE)),
+                                            KeysNamesUtils.PurchaseContract.COLUMN_NAME_DATE)),
 
                                     cursor.getString(cursor.getColumnIndexOrThrow(
-                                            KeysNamesUtils.PurchaseFields.CATEGORY)),
+                                            KeysNamesUtils.PurchaseContract.COLUMN_NAME_CATEGORY)),
 
                                     cursor.getFloat(cursor.getColumnIndexOrThrow(
-                                            KeysNamesUtils.PurchaseFields.COST)),
+                                            KeysNamesUtils.PurchaseContract.COLUMN_NAME_COST)),
 
                                     cursor.getInt(cursor.getColumnIndexOrThrow(
-                                            KeysNamesUtils.PurchaseFields.AMOUNT))
+                                            KeysNamesUtils.PurchaseContract.COLUMN_NAME_AMOUNT))
                             );
 
                             purchase.setOwner(cursor.getString(cursor.getColumnIndexOrThrow(
-                                    KeysNamesUtils.PurchaseFields.OWNER)));
+                                    KeysNamesUtils.PurchaseContract.COLUMN_NAME_OWNER)));
 
                             adapterSearchedPurchases.addPurchase(purchase);
                             purchaseListView.setAdapter(adapterSearchedPurchases);
@@ -239,7 +239,6 @@ public class PassionatePurchaseFragment extends Fragment implements
     public void onDialogAddPurchaseFragmentDismissed(@NonNull Purchase purchase) {
         purchaseAdapter.addPurchase(purchase);
         purchaseAdapter.notifyDataSetChanged();
-
         listener.onPurchaseRegistered(purchase);
     }
 
@@ -256,26 +255,26 @@ public class PassionatePurchaseFragment extends Fragment implements
                     // Retrieve the purchase using Cursor
                     Purchase purchase = new Purchase(
                             cursor.getString(cursor.getColumnIndexOrThrow(
-                                    KeysNamesUtils.PurchaseFields.ANIMAL)),
+                                    KeysNamesUtils.PurchaseContract.COLUMN_NAME_ANIMAL)),
 
                             cursor.getString(cursor.getColumnIndexOrThrow(
-                                    KeysNamesUtils.PurchaseFields.ITEM_NAME)),
+                                    KeysNamesUtils.PurchaseContract.COLUMN_NAME_ITEM_NAME)),
 
                             cursor.getString(cursor.getColumnIndexOrThrow(
-                                    KeysNamesUtils.PurchaseFields.DATE)),
+                                    KeysNamesUtils.PurchaseContract.COLUMN_NAME_DATE)),
 
                             cursor.getString(cursor.getColumnIndexOrThrow(
-                                    KeysNamesUtils.PurchaseFields.CATEGORY)),
+                                    KeysNamesUtils.PurchaseContract.COLUMN_NAME_CATEGORY)),
 
                             cursor.getFloat(cursor.getColumnIndexOrThrow(
-                                    KeysNamesUtils.PurchaseFields.COST)),
+                                    KeysNamesUtils.PurchaseContract.COLUMN_NAME_COST)),
 
                             cursor.getInt(cursor.getColumnIndexOrThrow(
-                                    KeysNamesUtils.PurchaseFields.AMOUNT))
+                                    KeysNamesUtils.PurchaseContract.COLUMN_NAME_AMOUNT))
                     );
 
                     purchase.setOwner(cursor.getString(cursor.getColumnIndexOrThrow(
-                            KeysNamesUtils.PurchaseFields.OWNER)));
+                            KeysNamesUtils.PurchaseContract.COLUMN_NAME_OWNER)));
 
                     purchasesSubList.add(purchase);
                 }

@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -407,26 +406,26 @@ public class LoginActivity extends AppCompatActivity {
                                 // Retrieve the purchase using Cursor
                                 Purchase purchase = new Purchase(
                                         cursor.getString(cursor.getColumnIndexOrThrow(
-                                                KeysNamesUtils.PurchaseFields.ANIMAL)),
+                                                KeysNamesUtils.PurchaseContract.COLUMN_NAME_ANIMAL)),
 
                                         cursor.getString(cursor.getColumnIndexOrThrow(
-                                                KeysNamesUtils.PurchaseFields.ITEM_NAME)),
+                                                KeysNamesUtils.PurchaseContract.COLUMN_NAME_ITEM_NAME)),
 
                                         cursor.getString(cursor.getColumnIndexOrThrow(
-                                                KeysNamesUtils.PurchaseFields.DATE)),
+                                                KeysNamesUtils.PurchaseContract.COLUMN_NAME_DATE)),
 
                                         cursor.getString(cursor.getColumnIndexOrThrow(
-                                                KeysNamesUtils.PurchaseFields.CATEGORY)),
+                                                KeysNamesUtils.PurchaseContract.COLUMN_NAME_CATEGORY)),
 
                                         cursor.getFloat(cursor.getColumnIndexOrThrow(
-                                                KeysNamesUtils.PurchaseFields.COST)),
+                                                KeysNamesUtils.PurchaseContract.COLUMN_NAME_COST)),
 
                                         cursor.getInt(cursor.getColumnIndexOrThrow(
-                                                KeysNamesUtils.PurchaseFields.AMOUNT))
+                                                KeysNamesUtils.PurchaseContract.COLUMN_NAME_AMOUNT))
                                 );
 
                                 purchase.setOwner(cursor.getString(cursor.getColumnIndexOrThrow(
-                                        KeysNamesUtils.PurchaseFields.OWNER)));
+                                        KeysNamesUtils.PurchaseContract.COLUMN_NAME_OWNER)));
 
                                 purchasesLocalList.add(purchase);
                             }
@@ -514,7 +513,7 @@ public class LoginActivity extends AppCompatActivity {
     @NonNull
     private Task<QuerySnapshot> getPurchasesTask(String passionateUsername) {
         return db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
-                .whereEqualTo(KeysNamesUtils.PurchaseFields.OWNER, passionateUsername)
+                .whereEqualTo(KeysNamesUtils.PurchaseContract.COLUMN_NAME_OWNER, passionateUsername)
                 .get();
     }
 }
