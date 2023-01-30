@@ -62,11 +62,9 @@ import java.util.Collections;
 import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.adapters.DiagnosisAdapter;
-import it.uniba.dib.sms22235.adapters.ExamsAdapter;
-import it.uniba.dib.sms22235.adapters.PokAnimalAdapter;
-import it.uniba.dib.sms22235.entities.operations.Diagnosis;
-import it.uniba.dib.sms22235.entities.operations.Exam;
+import it.uniba.dib.sms22235.adapters.animals.AnimalDiagnosisAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
+import it.uniba.dib.sms22235.adapters.animals.PokAnimalAdapter;
 import it.uniba.dib.sms22235.entities.operations.PokeLink;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
@@ -80,7 +78,7 @@ import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateReservationFra
 
 import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionatePurchaseFragment;
 
-import it.uniba.dib.sms22235.adapters.PostGridAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalPostAdapter;
 import it.uniba.dib.sms22235.database.QueryPurchasesManager;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
@@ -341,7 +339,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void loadPost(PostGridAdapter adapter, List<PhotoDiaryPost> postsList, String animal) {
+    public void loadPost(AnimalPostAdapter adapter, List<PhotoDiaryPost> postsList, String animal) {
         db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
                 .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, animal)
                 .addSnapshotListener((value, error) -> {
@@ -374,14 +372,14 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void getAnimalDiagnosis(DiagnosisAdapter adapter, RecyclerView recyclerView, String animal, DiagnosisAdapter.OnItemClickListener onClickListener){
-        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(this, db);
+    public void getAnimalDiagnosis(AnimalDiagnosisAdapter adapter, RecyclerView recyclerView, String animal, AnimalDiagnosisAdapter.OnItemClickListener onClickListener){
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
         animalHelper.getAnimalDiagnosis(adapter, recyclerView, animal, getSupportFragmentManager());
     }
 
     @Override
-    public void getAnimalExams(ExamsAdapter adapter, RecyclerView recyclerView, String animal){
-        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(this, db);
+    public void getAnimalExams(AnimalExamsAdapter adapter, RecyclerView recyclerView, String animal){
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
         animalHelper.getAnimalExams(adapter, recyclerView, animal, getSupportFragmentManager());
     }
 
@@ -432,7 +430,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
     @Override
     public void onProfilePicAdded(Uri source, String microchip) {
-        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(this, db);
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
         animalHelper.onProfilePicAdded(source, microchip, getUserId());
         /*
         String fileName = KeysNamesUtils.FileDirsNames.animalProfilePic(microchip);
@@ -527,7 +525,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     /* This method is used to load the animal profile pic in AnimalProfile */
     @Override
     public void loadProfilePic(String microchip, ImageView imageView) {
-        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(getApplicationContext(), db);
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(getApplicationContext(), db);
         animalHelper.loadProfilePic(microchip, imageView);
     }
 

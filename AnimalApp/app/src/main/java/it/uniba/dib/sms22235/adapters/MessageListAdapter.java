@@ -17,7 +17,7 @@ import it.uniba.dib.sms22235.entities.operations.InfoMessage;
 
 public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.ViewHolder>{
 
-    private ArrayList<InfoMessage> infoMessages;
+    private final ArrayList<InfoMessage> infoMessages;
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
@@ -28,7 +28,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         this.infoMessages = infoMessages;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView txtMessageLeftText;
         ImageView imgMessageRight;
 
@@ -57,10 +57,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 onItemClickListener.onItemClick(message);
             }
         });
-    }
-
-    public void addMessage(InfoMessage message) {
-        infoMessages.add(message);
     }
 
     @Override

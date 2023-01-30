@@ -18,7 +18,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,18 +29,16 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.checkerframework.checker.units.qual.A;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
-import it.uniba.dib.sms22235.adapters.DiagnosisAdapter;
-import it.uniba.dib.sms22235.adapters.ExamsAdapter;
-import it.uniba.dib.sms22235.adapters.PostGridAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalListAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalDiagnosisAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalPostAdapter;
 import it.uniba.dib.sms22235.entities.operations.Exam;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.entities.users.Animal;
@@ -52,7 +49,6 @@ import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFra
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDiaryFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianAnimalListFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianReservationFragment;
-import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.utils.InterfacesOperationsHelper;
@@ -189,7 +185,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
     @Override
     public void onProfilePicAdded(Uri source, String microchip) {
-        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(this, db);
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
         animalHelper.onProfilePicAdded(source, microchip, getUserId());
 
         /*String fileName = KeysNamesUtils.FileDirsNames.animalProfilePic(microchip);
@@ -240,7 +236,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
     @Override
     public void loadProfilePic(String microchip, ImageView imageView) {
-        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(getApplicationContext(), db);
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(getApplicationContext(), db);
         animalHelper.loadProfilePic(microchip, imageView);
     }
 
@@ -352,7 +348,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void getAnimalExams(ExamsAdapter adapter, RecyclerView recyclerView, String animal){
+    public void getAnimalExams(AnimalExamsAdapter adapter, RecyclerView recyclerView, String animal){
         db.collection(KeysNamesUtils.CollectionsNames.EXAMS)
                 .whereEqualTo(KeysNamesUtils.ExamsFields.EXAM_ANIMAL, animal)
                 .get()
@@ -420,7 +416,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void loadPost(PostGridAdapter adapter, List<PhotoDiaryPost> postsList, String animal) {
+    public void loadPost(AnimalPostAdapter adapter, List<PhotoDiaryPost> postsList, String animal) {
         db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
                 .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, animal)
                 .addSnapshotListener((value, error) -> {
@@ -446,8 +442,8 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void getAnimalDiagnosis(DiagnosisAdapter adapter, RecyclerView recyclerView, String animal, DiagnosisAdapter.OnItemClickListener onClickListener){
-        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(this, db);
+    public void getAnimalDiagnosis(AnimalDiagnosisAdapter adapter, RecyclerView recyclerView, String animal, AnimalDiagnosisAdapter.OnItemClickListener onClickListener){
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
         animalHelper.getAnimalDiagnosis(adapter, recyclerView, animal, getSupportFragmentManager());
     }
 

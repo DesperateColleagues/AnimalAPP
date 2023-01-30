@@ -30,7 +30,7 @@ import it.uniba.dib.sms22235.R;
 
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAddPurchaseFragment;
-import it.uniba.dib.sms22235.adapters.ListViewPurchasesAdapter;
+import it.uniba.dib.sms22235.adapters.purchases.ListViewPurchasesAdapter;
 import it.uniba.dib.sms22235.database.QueryPurchasesManager;
 import it.uniba.dib.sms22235.entities.operations.Interval;
 import it.uniba.dib.sms22235.entities.operations.Purchase;

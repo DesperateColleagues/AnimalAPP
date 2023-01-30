@@ -29,6 +29,7 @@
             android:id="@+id/txtInputProductName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLength="20"
             android:autofillHints=""
             android:drawableStart="@drawable/ic_baseline_tag_24"
             android:drawablePadding="10dp"

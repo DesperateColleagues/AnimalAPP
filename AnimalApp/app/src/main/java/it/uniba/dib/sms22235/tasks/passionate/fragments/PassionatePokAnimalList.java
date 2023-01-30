@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.adapters.PokAnimalAdapter;
+import it.uniba.dib.sms22235.adapters.animals.PokAnimalAdapter;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAddPokeLink;
 

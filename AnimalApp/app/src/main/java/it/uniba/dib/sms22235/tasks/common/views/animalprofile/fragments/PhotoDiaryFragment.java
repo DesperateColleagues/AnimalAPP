@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -31,8 +30,7 @@ import java.util.UUID;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.animalprofile.DialogShowImage;
-import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
-import it.uniba.dib.sms22235.adapters.PostGridAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalPostAdapter;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 
@@ -55,7 +53,7 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
          * @param adapter the adapter of the view to be updated
          * @param postsList the list of the post
          * */
-        void loadPost(PostGridAdapter adapter, List<PhotoDiaryPost>postsList, String animal);
+        void loadPost(AnimalPostAdapter adapter, List<PhotoDiaryPost>postsList, String animal);
 
         /**
          * This callback is called when a picture of the animal has been selected
@@ -170,7 +168,7 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
         super.onViewCreated(view, savedInstanceState);
 
         Context context = requireContext();
-        PostGridAdapter postGridAdapter = new PostGridAdapter(context, posts);
+        AnimalPostAdapter postGridAdapter = new AnimalPostAdapter(context, posts);
 
         Button btnAddAnimalPost = view.findViewById(R.id.btnAddAnimalPost);
 

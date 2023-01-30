@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.adapters;
+package it.uniba.dib.sms22235.adapters.info;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 
-public class VeterinarianListAdapter extends RecyclerView.Adapter<VeterinarianListAdapter.ViewHolder> {
+public class VeterinarianInfoAdapter extends RecyclerView.Adapter<VeterinarianInfoAdapter.ViewHolder> {
 
     private Context context;
     private ArrayList<Veterinarian> veterinarianList;
@@ -48,7 +48,7 @@ public class VeterinarianListAdapter extends RecyclerView.Adapter<VeterinarianLi
                 " - " + veterinarianList.get(position).getClinicName());
 
         holder.btnContactEmailVeterinarian.setOnClickListener(v ->
-                composeEmail(new String [] {veterinarianList.get(position).getEmail()}, "Contatto veterinario"));
+                composeEmail(new String [] {veterinarianList.get(position).getEmail()}));
 
         holder.btnCall.setOnClickListener(v -> {
             String phone = veterinarianList.get(position).getPhoneNumber();
@@ -58,11 +58,11 @@ public class VeterinarianListAdapter extends RecyclerView.Adapter<VeterinarianLi
     }
 
     @SuppressLint("QueryPermissionsNeeded")
-    private void composeEmail(String[] addresses, String subject) {
+    private void composeEmail(String[] addresses) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, addresses);
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Contatto veterinario");
 
         context.startActivity(intent);
     }

@@ -6,15 +6,6 @@
     android:layout_gravity="center"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Inserisci informazioni di localizzazione"
-        android:textSize="18sp"
-        android:layout_marginStart="10dp"
-        android:textColor="?attr/colorOnSecondary"/>
-
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,8 +21,63 @@
             android:autofillHints=""
             android:drawablePadding="10dp"
             android:ems="10"
-            android:hint="Via: (Via Beneddetto Croce)"
+            android:hint="Via:"
             android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:textColorHint="#2E7D32"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="30dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <EditText
+                android:id="@+id/txtInputTown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:drawablePadding="10dp"
+                android:ems="10"
+                android:hint="Città"
+                android:inputType="text"
+                android:minHeight="48dp"
+                android:textColorHint="#2E7D32"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="30dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <EditText
+            android:id="@+id/txtInputProv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="Sigla provincia"
+            android:maxLength="2"
+            android:inputType="text"
             android:minHeight="48dp"
             android:textColorHint="#2E7D32"
             tools:ignore="SpeakableTextPresentCheck" />
@@ -87,62 +133,6 @@
                 android:ems="10"
                 android:hint="CAP"
                 android:inputType="number"
-                android:minHeight="48dp"
-                android:textColorHint="#2E7D32"
-                tools:ignore="SpeakableTextPresentCheck" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="30dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <EditText
-                android:id="@+id/txtInputTown"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:drawablePadding="10dp"
-                android:ems="10"
-                android:hint="Città"
-                android:inputType="text"
-                android:minHeight="48dp"
-                android:textColorHint="#2E7D32"
-                tools:ignore="SpeakableTextPresentCheck" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="30dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <EditText
-                android:id="@+id/txtInputProv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:drawablePadding="10dp"
-                android:ems="10"
-                android:hint="Provincia"
-                android:maxLength="2"
-                android:inputType="text"
                 android:minHeight="48dp"
                 android:textColorHint="#2E7D32"
                 tools:ignore="SpeakableTextPresentCheck" />

@@ -26,7 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalListAdapter;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.organization.OrganizationNavigationActivity;
 

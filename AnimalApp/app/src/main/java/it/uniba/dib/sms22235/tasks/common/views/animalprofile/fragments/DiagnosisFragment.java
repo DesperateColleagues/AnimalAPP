@@ -21,10 +21,9 @@ import java.util.Date;
 import java.util.Locale;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.adapters.DiagnosisAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalDiagnosisAdapter;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
-import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.BSDialogEditDiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.DialogAddDiagnosisFragment;
@@ -37,7 +36,7 @@ public class DiagnosisFragment extends Fragment implements
     private final String owner;
 
     private RecyclerView diagnosisRecyclerView;
-    private DiagnosisAdapter adapter;
+    private AnimalDiagnosisAdapter adapter;
 
     private DiagnosisFragmentListener listener;
 
@@ -50,7 +49,7 @@ public class DiagnosisFragment extends Fragment implements
     }
 
     public interface DiagnosisFragmentListener {
-        void getAnimalDiagnosis(DiagnosisAdapter adapter, RecyclerView recyclerView, String animal, DiagnosisAdapter.OnItemClickListener onClickListener);
+        void getAnimalDiagnosis(AnimalDiagnosisAdapter adapter, RecyclerView recyclerView, String animal, AnimalDiagnosisAdapter.OnItemClickListener onClickListener);
     }
 
     @Override
@@ -81,7 +80,7 @@ public class DiagnosisFragment extends Fragment implements
         super.onViewCreated(view, savedInstanceState);
 
         diagnosisRecyclerView = view.findViewById(R.id.recyclerVerticalList);
-        adapter = new DiagnosisAdapter();
+        adapter = new AnimalDiagnosisAdapter();
 
         Button btnAddAnimalOperation = view.findViewById(R.id.btnAddAnimalOperation);
 
@@ -125,7 +124,7 @@ public class DiagnosisFragment extends Fragment implements
         helper.registerDiagnosis(diagnosis);
     }
 
-    private DiagnosisAdapter.OnItemClickListener onClickListener = diagnosis -> {
+    private AnimalDiagnosisAdapter.OnItemClickListener onClickListener = diagnosis -> {
         new BSDialogEditDiagnosisFragment()
                 .setOnUpgradeListener(() -> {
                     DialogAddDiagnosisFragment dialogAddDiagnosisFragment = new DialogAddDiagnosisFragment(diagnosis);

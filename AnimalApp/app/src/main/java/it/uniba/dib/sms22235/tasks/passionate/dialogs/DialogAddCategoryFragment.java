@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.adapters.GridViewCategoryAdapter;
+import it.uniba.dib.sms22235.adapters.purchases.GridViewCategoryAdapter;
 
 public class DialogAddCategoryFragment extends DialogFragment {
 

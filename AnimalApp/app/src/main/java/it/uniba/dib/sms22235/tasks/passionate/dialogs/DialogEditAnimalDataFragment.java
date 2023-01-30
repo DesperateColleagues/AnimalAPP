@@ -19,7 +19,7 @@ import androidx.fragment.app.DialogFragment;
 import java.util.List;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.adapters.VeterinarianArrayAdapter;
+import it.uniba.dib.sms22235.adapters.veterinarian.VeterinarianArrayAdapter;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 

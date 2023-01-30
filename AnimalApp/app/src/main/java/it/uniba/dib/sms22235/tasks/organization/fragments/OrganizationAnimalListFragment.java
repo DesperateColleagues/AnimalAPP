@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalListAdapter;
 import it.uniba.dib.sms22235.tasks.organization.OrganizationNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.utils.RecyclerTouchListener;

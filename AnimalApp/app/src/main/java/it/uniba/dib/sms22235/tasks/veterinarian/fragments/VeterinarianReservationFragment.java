@@ -23,7 +23,7 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.DialogAddDiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.DialogAddReservationFragment;
-import it.uniba.dib.sms22235.adapters.ReservationsAdapter;
+import it.uniba.dib.sms22235.adapters.veterinarian.ReservationsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 

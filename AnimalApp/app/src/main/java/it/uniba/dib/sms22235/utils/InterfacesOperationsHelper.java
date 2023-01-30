@@ -25,9 +25,9 @@ import java.util.Collections;
 import java.util.List;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.adapters.DiagnosisAdapter;
-import it.uniba.dib.sms22235.adapters.ExamsAdapter;
-import it.uniba.dib.sms22235.adapters.PostGridAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalDiagnosisAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalPostAdapter;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.entities.operations.Exam;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
@@ -64,10 +64,10 @@ public class InterfacesOperationsHelper {
                 );
     }
 
-    public class AnimalCommonOperations {
+    public static class AnimalCommonOperations {
 
-        private FirebaseFirestore db;
-        private Context context;
+        private final FirebaseFirestore db;
+        private final Context context;
 
         public AnimalCommonOperations(Context context, FirebaseFirestore db){
             this.db = db;
@@ -165,7 +165,7 @@ public class InterfacesOperationsHelper {
             });
         }
 
-        public void getAnimalDiagnosis(DiagnosisAdapter adapter, RecyclerView recyclerView, String animal, FragmentManager fm){
+        public void getAnimalDiagnosis(AnimalDiagnosisAdapter adapter, RecyclerView recyclerView, String animal, FragmentManager fm){
             db.collection(KeysNamesUtils.CollectionsNames.DIAGNOSIS)
                     .whereEqualTo(KeysNamesUtils.DiagnosisFields.ANIMAL, animal)
                     .get()
@@ -205,7 +205,7 @@ public class InterfacesOperationsHelper {
                     });
         }
 
-        public void getAnimalExams(ExamsAdapter adapter, RecyclerView recyclerView, String animal, FragmentManager fm){
+        public void getAnimalExams(AnimalExamsAdapter adapter, RecyclerView recyclerView, String animal, FragmentManager fm){
             db.collection(KeysNamesUtils.CollectionsNames.EXAMS)
                     .whereEqualTo(KeysNamesUtils.ExamsFields.EXAM_ANIMAL, animal)
                     .get()
@@ -251,7 +251,7 @@ public class InterfacesOperationsHelper {
         }
 
         @SuppressLint("NotifyDataSetChanged")
-        public void loadPost(PostGridAdapter adapter, List<PhotoDiaryPost> postsList, String animal) {
+        public void loadPost(AnimalPostAdapter adapter, List<PhotoDiaryPost> postsList, String animal) {
             db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
                     .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, animal)
                     .addSnapshotListener((value, error) -> {
@@ -285,10 +285,10 @@ public class InterfacesOperationsHelper {
 
     }
 
-    public class AnimalOwnerOperations {
+    public static class AnimalOwnerOperations {
 
-        private FirebaseFirestore db;
-        private Context context;
+        private final FirebaseFirestore db;
+        private final Context context;
 
         public AnimalOwnerOperations(Context context, FirebaseFirestore db) {
             this.db = db;
@@ -323,7 +323,7 @@ public class InterfacesOperationsHelper {
                     });
         }
 
-        public List<Veterinarian> getVeterinariansList(List<Veterinarian> veterinariansList) {
+        public List<Veterinarian> getVeterinariansList(@NonNull List<Veterinarian> veterinariansList) {
             List<Veterinarian> clonedVeterinarianList = new ArrayList<>();
 
             for (Veterinarian veterinarian : veterinariansList) {

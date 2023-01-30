@@ -29,19 +29,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.checkerframework.checker.units.qual.A;
-import org.osmdroid.util.GeoPoint;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.adapters.ReportsAdapter;
+import it.uniba.dib.sms22235.adapters.commonoperations.ReportsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Report;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.CustomBsdDialog;
-import it.uniba.dib.sms22235.tasks.common.dialogs.reports.DialogMap;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class ReportsListFragment extends Fragment {

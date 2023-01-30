@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.adapters;
+package it.uniba.dib.sms22235.adapters.purchases;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

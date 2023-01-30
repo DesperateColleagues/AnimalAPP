@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.adapters;
+package it.uniba.dib.sms22235.adapters.animals;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,13 +19,13 @@ import java.util.ArrayList;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Exam;
 
-public class ExamsAdapter extends RecyclerView.Adapter<ExamsAdapter.ViewHolder> {
+public class AnimalExamsAdapter extends RecyclerView.Adapter<AnimalExamsAdapter.ViewHolder> {
     private ArrayList<Exam> examsList;
     private Context context;
 
     private OnItemClickListener onItemClickListener;
 
-    public ExamsAdapter (){
+    public AnimalExamsAdapter(){
         examsList = new ArrayList<>();
     }
 
@@ -54,12 +54,12 @@ public class ExamsAdapter extends RecyclerView.Adapter<ExamsAdapter.ViewHolder> 
     @SuppressLint("InflateParams")
     @NonNull
     @Override
-    public ExamsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AnimalExamsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fragment_exam_single_ribbon_card, null));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ExamsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AnimalExamsAdapter.ViewHolder holder, int position) {
         Exam exam = examsList.get(position);
 
         holder.txtExamInfo.setText(

@@ -1,7 +1,6 @@
 package it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.adapters.ExamsAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
-import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
-import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.DialogAddDiagnosisFragment;
 
 public class ExamsFragment extends Fragment {
 
@@ -30,7 +27,7 @@ public class ExamsFragment extends Fragment {
     private final String owner;
 
     private RecyclerView examsRecyclerView;
-    private ExamsAdapter adapter;
+    private AnimalExamsAdapter adapter;
 
     private FirebaseAuth mAuth;
 
@@ -40,7 +37,7 @@ public class ExamsFragment extends Fragment {
     }
 
     public interface ExamsFragmentListener {
-        void getAnimalExams(ExamsAdapter adapter, RecyclerView recyclerView, String animal);
+        void getAnimalExams(AnimalExamsAdapter adapter, RecyclerView recyclerView, String animal);
     }
 
 
@@ -87,7 +84,7 @@ public class ExamsFragment extends Fragment {
         }
 
         examsRecyclerView = view.findViewById(R.id.recyclerVerticalList);
-        adapter = new ExamsAdapter();
+        adapter = new AnimalExamsAdapter();
         adapter.setContext(getContext());
         listener.getAnimalExams(adapter, examsRecyclerView, animal);
 

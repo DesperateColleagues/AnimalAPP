@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.adapters.VeterinarianListAdapter;
+import it.uniba.dib.sms22235.adapters.info.VeterinarianInfoAdapter;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
@@ -46,7 +46,7 @@ public class PassionateVeterinarianListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        VeterinarianListAdapter adapter = new VeterinarianListAdapter();
+        VeterinarianInfoAdapter adapter = new VeterinarianInfoAdapter();
         adapter.setContext(requireContext());
         adapter.setVeterinarianList(veterinarianList);
 

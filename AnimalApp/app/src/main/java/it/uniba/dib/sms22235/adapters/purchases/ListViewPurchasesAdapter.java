@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.adapters;
+package it.uniba.dib.sms22235.adapters.purchases;
 
 import android.content.Context;
 import android.util.Log;

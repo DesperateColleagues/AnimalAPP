@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.adapters;
+package it.uniba.dib.sms22235.adapters.animals;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -15,12 +15,12 @@ import java.util.ArrayList;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 
-public class DiagnosisAdapter extends RecyclerView.Adapter<DiagnosisAdapter.ViewHolder> {
+public class AnimalDiagnosisAdapter extends RecyclerView.Adapter<AnimalDiagnosisAdapter.ViewHolder> {
     private ArrayList<Diagnosis> diagnosisList;
 
     private OnItemClickListener onItemClickListener;
 
-    public DiagnosisAdapter (){
+    public AnimalDiagnosisAdapter(){
         diagnosisList = new ArrayList<>();
     }
 
@@ -43,12 +43,12 @@ public class DiagnosisAdapter extends RecyclerView.Adapter<DiagnosisAdapter.View
     @SuppressLint("InflateParams")
     @NonNull
     @Override
-    public DiagnosisAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AnimalDiagnosisAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fragment_diagnosis_single_ribbon_card, null));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DiagnosisAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AnimalDiagnosisAdapter.ViewHolder holder, int position) {
         Diagnosis diagnosis = diagnosisList.get(position);
 
         String info = new StringBuilder()

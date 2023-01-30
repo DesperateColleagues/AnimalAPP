@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.adapters;
+package it.uniba.dib.sms22235.adapters.animals;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -17,12 +17,12 @@ import java.util.List;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 
-public class PostGridAdapter extends RecyclerView.Adapter<PostGridAdapter.ViewHolder> {
+public class AnimalPostAdapter extends RecyclerView.Adapter<AnimalPostAdapter.ViewHolder> {
     private final List<PhotoDiaryPost> posts;
     private final Context context;
     private ViewHolder.OnItemClickListener onItemClickListener;
 
-    public PostGridAdapter(Context context, List<PhotoDiaryPost>posts) {
+    public AnimalPostAdapter(Context context, List<PhotoDiaryPost>posts) {
         this.context = context;
         this.posts = posts;
     }

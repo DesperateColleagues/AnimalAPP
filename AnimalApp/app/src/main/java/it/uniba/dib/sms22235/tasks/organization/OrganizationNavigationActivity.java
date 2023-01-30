@@ -43,10 +43,10 @@ import java.util.List;
 import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.adapters.AnimalListAdapter;
-import it.uniba.dib.sms22235.adapters.DiagnosisAdapter;
-import it.uniba.dib.sms22235.adapters.ExamsAdapter;
-import it.uniba.dib.sms22235.adapters.PostGridAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalListAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalDiagnosisAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
+import it.uniba.dib.sms22235.adapters.animals.AnimalPostAdapter;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Organization;
@@ -276,38 +276,38 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
 
     @Override
     public void onProfilePicAdded(Uri source, String microchip) {
-        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(this, db);
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
         animalHelper.onProfilePicAdded(source, microchip, getUserId());
     }
 
     @Override
     public void loadProfilePic(String microchip, ImageView imageView) {
-        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(getApplicationContext(), db);
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(getApplicationContext(), db);
         animalHelper.loadProfilePic(microchip, imageView);
     }
 
     @Override
     public void onAnimalUpdated(Animal animal) {
-        InterfacesOperationsHelper.AnimalOwnerOperations animalHelper = helper.new AnimalOwnerOperations(this, db);
+        InterfacesOperationsHelper.AnimalOwnerOperations animalHelper = new InterfacesOperationsHelper.AnimalOwnerOperations(this, db);
         animalHelper.updateAnimal(animal);
     }
 
     @Override
     public void checkIfAtHome(Animal animal, ImageView image) {
-        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(this, db);
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
         animalHelper.checkIfAtHome(animal, image);
     }
 
     @Override
     public List<Veterinarian> getVeterinarianList() {
-        InterfacesOperationsHelper.AnimalOwnerOperations animalHelper = helper.new AnimalOwnerOperations(this, db);
+        InterfacesOperationsHelper.AnimalOwnerOperations animalHelper = new InterfacesOperationsHelper.AnimalOwnerOperations(this, db);
         return animalHelper.getVeterinariansList(veterinariansList);
     }
 
     @Override
     public void onDialogChoosedVeterinarian(@NonNull Animal selectedAnimal) {
         if (isConnectionEnabled) {
-            InterfacesOperationsHelper.AnimalOwnerOperations animalHelper = helper.new AnimalOwnerOperations(this, db);
+            InterfacesOperationsHelper.AnimalOwnerOperations animalHelper = new InterfacesOperationsHelper.AnimalOwnerOperations(this, db);
             animalHelper.onAnimalUpdated(selectedAnimal);
         } else {
             Toast.makeText(this, "Impossibile modificare l'animale: rete assente",
@@ -316,26 +316,26 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void getAnimalDiagnosis(DiagnosisAdapter adapter, RecyclerView recyclerView, String animal, DiagnosisAdapter.OnItemClickListener onClickListener) {
-        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(this, db);
+    public void getAnimalDiagnosis(AnimalDiagnosisAdapter adapter, RecyclerView recyclerView, String animal, AnimalDiagnosisAdapter.OnItemClickListener onClickListener) {
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
         animalHelper.getAnimalDiagnosis(adapter, recyclerView, animal, getSupportFragmentManager());
     }
 
     @Override
-    public void getAnimalExams(ExamsAdapter adapter, RecyclerView recyclerView, String animal) {
-        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(this, db);
+    public void getAnimalExams(AnimalExamsAdapter adapter, RecyclerView recyclerView, String animal) {
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
         animalHelper.getAnimalExams(adapter, recyclerView, animal, getSupportFragmentManager());
     }
 
     @Override
     public void onPostAdded(PhotoDiaryPost post) {
-        InterfacesOperationsHelper.AnimalOwnerOperations animalHelper = helper.new AnimalOwnerOperations(this, db);
+        InterfacesOperationsHelper.AnimalOwnerOperations animalHelper = new InterfacesOperationsHelper.AnimalOwnerOperations(this, db);
         animalHelper.onPostAdded(post, getUserId());
     }
 
     @Override
-    public void loadPost(PostGridAdapter adapter, List<PhotoDiaryPost> postsList, String animal) {
-        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = helper.new AnimalCommonOperations(this, db);
+    public void loadPost(AnimalPostAdapter adapter, List<PhotoDiaryPost> postsList, String animal) {
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
         animalHelper.loadPost(adapter, postsList, animal);
     }
 

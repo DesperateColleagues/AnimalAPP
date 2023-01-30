@@ -35,7 +35,7 @@ import it.uniba.dib.sms22235.tasks.common.dialogs.requests.DialogAddRequest;
 import it.uniba.dib.sms22235.tasks.common.dialogs.requests.DialogRequestBackbench;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
-import it.uniba.dib.sms22235.adapters.RequestAdapter;
+import it.uniba.dib.sms22235.adapters.commonoperations.RequestAdapter;
 import it.uniba.dib.sms22235.tasks.common.dialogs.requests.BsdDialogQr;
 import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.Request;
