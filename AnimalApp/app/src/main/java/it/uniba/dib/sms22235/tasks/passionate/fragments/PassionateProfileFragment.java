@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Random;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
@@ -48,7 +49,6 @@ public class PassionateProfileFragment extends Fragment implements
         AnimalProfile.AnimalProfileEditListener {
 
     private PassionateProfileFragment.ProfileFragmentListener listener;
-    private DialogEditAnimalDataFragment dialogEditAnimalDataFragment;
     private String username;
     private transient NavController controller;
 
@@ -140,16 +140,18 @@ public class PassionateProfileFragment extends Fragment implements
             messageRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), messageRecyclerView, new RecyclerTouchListener.ClickListener() {
                 @Override
                 public void onClick(View view, int position) {
-                    if (messageListAdapter.getMessageAtPosition(position).getType().equals(KeysNamesUtils.CollectionsNames.RESERVATIONS)) {
+                    String selection = messageListAdapter.getMessageAtPosition(position).getType();
+
+                    if (selection.equals(KeysNamesUtils.CollectionsNames.RESERVATIONS)) {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(
                                 KeysNamesUtils.BundleKeys.PASSIONATE_RESERVATIONS,
                                 ((PassionateNavigationActivity) requireActivity())
                                         .getPassionateReservationsList());
                         controller.navigate(R.id.action_passionate_profile_to_BookedReservationsFragment, bundle);
-                    } else if (messageListAdapter.getMessageAtPosition(position).getType().equals(KeysNamesUtils.CollectionsNames.REPORTS)) {
+                    } else if (selection.equals(KeysNamesUtils.CollectionsNames.REPORTS)) {
                         controller.navigate(R.id.action_passionate_profile_to_reportsDashboardFragment);
-                    } else if (messageListAdapter.getMessageAtPosition(position).getType().equals(KeysNamesUtils.RolesNames.VETERINARIAN)) {
+                    } else if (selection.equals(KeysNamesUtils.RolesNames.VETERINARIAN)) {
                         Bundle bundle = new Bundle();
 
                         List<Veterinarian> veterinarians = ((PassionateNavigationActivity) requireActivity()).getVeterinarianList();
@@ -157,15 +159,22 @@ public class PassionateProfileFragment extends Fragment implements
                                 (Serializable) veterinarians);
 
                         controller.navigate(R.id.action_passionate_profile_to_passionateVeterinarianListFragment, bundle);
-                    } else if (messageListAdapter.getMessageAtPosition(position).getType().equals(KeysNamesUtils.CollectionsNames.POKE_LINK)) {
+                    } else if (selection.equals(KeysNamesUtils.RolesNames.PRIVATE_ORGANIZATION)) {
+                        Bundle bundle = new Bundle();
+
+                        List<Organization> organizations = ((PassionateNavigationActivity) requireActivity()).getOrganizationList();
+                        bundle.putSerializable(KeysNamesUtils.BundleKeys.ORGANIZATIONS_LIST, (Serializable) organizations);
+
+                        controller.navigate(R.id.action_passionate_profile_to_passionateOrganizationListFragment, bundle);
+                    } else if (selection.equals(KeysNamesUtils.CollectionsNames.POKE_LINK)) {
                         controller.navigate(R.id.action_passionate_profile_to_passionatePokAnimalList);
-                    } else if (messageListAdapter.getMessageAtPosition(position).getType().equals("notNow")){
+                    } else if (selection.equals("notNow")){
                         notNowDialog(
                                 username + " " + getResources().getString(R.string.not_now),
                                 getResources().getString(R.string.not_now_message),
                                 getResources().getString(R.string.not_now_button)
                                 );
-                    } else if (messageListAdapter.getMessageAtPosition(position).getType().equals("ascanio")){
+                    } else if (selection.equals("ascanio")){
                         notNowDialog(
                                 username + " " + getResources().getString(R.string.ascanio),
                                 getResources().getString(R.string.ascanio_message),
@@ -184,7 +193,7 @@ public class PassionateProfileFragment extends Fragment implements
             animalRecycleView.setLayoutManager(new LinearLayoutManager(
                     getContext(), RecyclerView.HORIZONTAL, false));
 
-            dialogEditAnimalDataFragment = new DialogEditAnimalDataFragment();
+            DialogEditAnimalDataFragment dialogEditAnimalDataFragment = new DialogEditAnimalDataFragment();
             dialogEditAnimalDataFragment.setListener(this);
 
             animalRecycleView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), animalRecycleView, new RecyclerTouchListener.ClickListener() {
@@ -228,7 +237,7 @@ public class PassionateProfileFragment extends Fragment implements
     private ArrayList<InfoMessage> buildStandardMessages(@NonNull ArrayList<InfoMessage> messages) {
         InfoMessage findings = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_reports_text), R.drawable.warningsign, KeysNamesUtils.CollectionsNames.REPORTS);
         InfoMessage showVeterinarians = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_vet_list_text), R.drawable.fra_rrc_doctor_no_green, KeysNamesUtils.RolesNames.VETERINARIAN);
-        InfoMessage showOrganizations = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_org_list_text), R.drawable.fra_rrc_organization_no_green, KeysNamesUtils.RolesNames.VETERINARIAN);
+        InfoMessage showOrganizations = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_org_list_text), R.drawable.fra_rrc_organization_no_green, KeysNamesUtils.RolesNames.PRIVATE_ORGANIZATION);
         InfoMessage recentReservations = new InfoMessage(getResources().getString(R.string.tutti_appuntamenti_recenti), 0, KeysNamesUtils.CollectionsNames.RESERVATIONS);
         InfoMessage pokeLinks = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_pokelinks_text), R.drawable.pokanimal_logo, KeysNamesUtils.CollectionsNames.POKE_LINK);
 

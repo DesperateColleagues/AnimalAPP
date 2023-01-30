@@ -10,9 +10,12 @@ import java.io.Serializable;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class Veterinarian extends AbstractPersonUser implements  Serializable, Cloneable {
-    private String clinicName, phoneNumber, clinicAddress;
+public class Veterinarian extends AbstractPersonUser implements  Serializable, Cloneable, InfoEntity{
+    private final String clinicName;
+    private final String phoneNumber;
+    private final String clinicAddress;
 
+    @NonNull
     @Override
     public String toString() {
         return fullName + " - " + clinicName  + "\n" + email + " - " + phoneNumber;
@@ -71,10 +74,9 @@ public class Veterinarian extends AbstractPersonUser implements  Serializable, C
                 (String) document.get(KeysNamesUtils.ActorFields.PHONE_NUMBER),
                 (String) document.get(KeysNamesUtils.ActorFields.PASSWORD),
                 (String) document.get(KeysNamesUtils.ActorFields.PURPOSE),
-                (String) document.get("clinicAddress")
+                (String) document.get(KeysNamesUtils.ActorFields.CLINIC_ADDRESS)
         );
     }
-
 
     @NonNull
     @Override

@@ -13,7 +13,7 @@
         tools:ignore="UselessParent">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/itemVeterinarianCardView"
+            android:id="@+id/itemCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -32,7 +32,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/txtVeterinarianName"
+                    android:id="@+id/txtName"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_width="match_parent"
@@ -43,7 +43,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/txtVeterinarianLocation"
+                    android:id="@+id/txtLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="?attr/colorOnSecondary"
@@ -69,7 +69,7 @@
                         android:src="@drawable/ic_baseline_phone__layerized"/>
 
                     <ImageButton
-                        android:id="@+id/btnContactEmailVeterinarian"
+                        android:id="@+id/btnContactEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

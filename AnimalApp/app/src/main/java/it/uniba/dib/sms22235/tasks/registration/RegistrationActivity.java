@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.tasks.organization.OrganizationNavigationActivity;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.registration.fragments.RegistrationOrganizationFragment;
 import it.uniba.dib.sms22235.tasks.registration.fragments.RegistrationPersonFragment;
@@ -152,8 +153,11 @@ public class RegistrationActivity extends AppCompatActivity
                         db.collection(KeysNamesUtils.CollectionsNames.ACTORS)
                                 .document(docKey)
                                 .set(org)
-                                // TODO: switch the activity to LoginActivity or DashboardActivity
-                                .addOnSuccessListener(unused -> Log.d("REG", "Registrazione avvenuta con successo"))
+                                .addOnSuccessListener(unused -> {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable(KeysNamesUtils.BundleKeys.ORGANIZATION, org);
+                                    newActivityRunning(OrganizationNavigationActivity.class, bundle);
+                                })
                                 .addOnFailureListener(e -> Log.d("CrashOrg", e.getMessage()));
 
                     } else {

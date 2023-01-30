@@ -33,6 +33,7 @@ import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -209,6 +210,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 Task<QuerySnapshot> taskAvailableReservations = getAvailableReservationsTask();
                                                 Task<QuerySnapshot> taskPassionateReservations = getPassionateReservationsTask(cus.getUsername());
                                                 Task<QuerySnapshot> taskVeterinarians = getVeterinariansTask();
+                                                Task<QuerySnapshot> taskOrganizations = getOrganizationsTask();
 
                                                 // Wait until every task is finished to fill the lists to pass
                                                 // as bundle to the PassionateNavigationActivity
@@ -217,7 +219,8 @@ public class LoginActivity extends AppCompatActivity {
                                                         taskPurchases,
                                                         taskAvailableReservations,
                                                         taskPassionateReservations,
-                                                        taskVeterinarians
+                                                        taskVeterinarians,
+                                                        taskOrganizations
                                                 ).addOnCompleteListener(task -> {
 
                                                     if (task.isSuccessful()) {
@@ -232,12 +235,14 @@ public class LoginActivity extends AppCompatActivity {
                                                         QuerySnapshot availableReservationsSnapshot = (QuerySnapshot) task.getResult().get(2).getResult();
                                                         QuerySnapshot passionateReservationsSnapshot = (QuerySnapshot) task.getResult().get(3).getResult();
                                                         QuerySnapshot veterinariansSnapshot = (QuerySnapshot) task.getResult().get(4).getResult();
+                                                        QuerySnapshot organizationsSnapshot = (QuerySnapshot) task.getResult().get(5).getResult();
 
                                                         LinkedHashSet<Animal> animals = new LinkedHashSet<>();
                                                         ArrayList<Purchase> purchases = new ArrayList<>();
                                                         ArrayList<Reservation> availableReservations = new ArrayList<>();
                                                         ArrayList<Reservation> passionateReservations = new ArrayList<>();
                                                         ArrayList<Veterinarian> veterinarians = new ArrayList<>();
+                                                        ArrayList<Organization> organizations = new ArrayList<>();
 
                                                         // Check if the passionate has animals
                                                         if (!animalsSnapshot.isEmpty()) {
@@ -301,6 +306,16 @@ public class LoginActivity extends AppCompatActivity {
                                                                 veterinarians.add(Veterinarian.loadVeterinarian(snapshot));
                                                             }
                                                         }
+
+                                                        if (!organizationsSnapshot.isEmpty()) {
+                                                            List<DocumentSnapshot> organizationsDocuments = organizationsSnapshot.getDocuments();
+
+                                                            for (DocumentSnapshot snapshot : organizationsDocuments) {
+                                                                organizations.add(Organization.loadOrganization(snapshot));
+                                                            }
+                                                        } else {
+                                                            Toast.makeText(this, "Non carico", Toast.LENGTH_SHORT).show();
+                                                        }
                                                         // Fill the bundle. If one of the snapshot (or both) are empty
                                                         // the bundle will be filled with an empty array list, in order
                                                         // to prevent nullable errors
@@ -309,6 +324,7 @@ public class LoginActivity extends AppCompatActivity {
                                                         bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_RESERVATIONS, passionateReservations);
                                                         bundle.putSerializable(KeysNamesUtils.BundleKeys.AVAILABLE_RESERVATIONS, availableReservations);
                                                         bundle.putSerializable(KeysNamesUtils.BundleKeys.VETERINARIANS_LIST, veterinarians);
+                                                        bundle.putSerializable(KeysNamesUtils.BundleKeys.ORGANIZATIONS_LIST, organizations);
 
                                                         // Start the new activity only once the bundle is filled
                                                         newActivityRunning(PassionateNavigationActivity.class, bundle);
@@ -514,6 +530,16 @@ public class LoginActivity extends AppCompatActivity {
     private Task<QuerySnapshot> getPurchasesTask(String passionateUsername) {
         return db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
                 .whereEqualTo(KeysNamesUtils.PurchaseContract.COLUMN_NAME_OWNER, passionateUsername)
+                .get();
+    }
+
+    @NonNull
+    private Task<QuerySnapshot> getOrganizationsTask() {
+        return db.collection(KeysNamesUtils.CollectionsNames.ACTORS)
+                .whereIn(KeysNamesUtils.ActorFields.PURPOSE, Arrays.asList(
+                        KeysNamesUtils.RolesNames.PRIVATE_ORGANIZATION,
+                        KeysNamesUtils.RolesNames.PUBLIC_ORGANIZATION
+                ))
                 .get();
     }
 }

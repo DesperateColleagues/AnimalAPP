@@ -1,6 +1,7 @@
 package it.uniba.dib.sms22235.tasks.registration.fragments;
 
 import it.uniba.dib.sms22235.tasks.registration.RegistrationActivity;
+import it.uniba.dib.sms22235.tasks.registration.dialogs.DialogAddAddress;
 import it.uniba.dib.sms22235.utils.InputFieldCheck;
 
 import android.content.Context;
@@ -19,6 +20,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.security.NoSuchAlgorithmException;
 
 import it.uniba.dib.sms22235.R;
@@ -30,7 +33,7 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
  *
  * @author Giacomo Detomaso
  * */
-public class RegistrationOrganizationFragment extends Fragment {
+public class RegistrationOrganizationFragment extends Fragment implements DialogAddAddress.DialogAddAddressListener {
 
     public interface RegistrationOrganizationFragmentListener {
         /**
@@ -42,6 +45,9 @@ public class RegistrationOrganizationFragment extends Fragment {
     }
 
     private RegistrationOrganizationFragmentListener listener;
+
+    private String address;
+    private EditText txtInputAddress;
 
     public RegistrationOrganizationFragment() {
         // Required empty public constructor
@@ -64,8 +70,9 @@ public class RegistrationOrganizationFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_registration_organization, container, false);
     }
@@ -73,6 +80,12 @@ public class RegistrationOrganizationFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        txtInputAddress = view.findViewById(R.id.txtInputAddress);
+        txtInputAddress.setOnClickListener(v -> {
+            DialogAddAddress dialogAddAddress = new DialogAddAddress();
+            dialogAddAddress.setListener(this);
+            dialogAddAddress.show(getChildFragmentManager(), "DialogAddAddress");
+        });
 
         Button btnRegistration = view.findViewById(R.id.btnConfirmOrgRegistration);
 
@@ -94,7 +107,8 @@ public class RegistrationOrganizationFragment extends Fragment {
 
             // Check if the input is empty or not
             boolean isEmptyInput = organizationName.equals("") || email.equals("") ||
-                    phoneNumber.equals("") || purpose.equals("") || password.equals("");
+                    phoneNumber.equals("") || purpose.equals("") ||
+                    address.equals("") || password.equals("");
 
             boolean isInputCorrect = InputFieldCheck.isEmailValid(email) &&
                     InputFieldCheck.isNumberValid(phoneNumber) &&
@@ -111,7 +125,6 @@ public class RegistrationOrganizationFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                //todo: try to embed into the spinner a value, unlinked from the text inside it
                 if (purpose.equals("Ente pubblico")) {
                     purpose = KeysNamesUtils.RolesNames.PUBLIC_ORGANIZATION;
                 } else {
@@ -119,7 +132,8 @@ public class RegistrationOrganizationFragment extends Fragment {
                 }
 
                 listener.onOrganizationRegistered(
-                        new Organization(organizationName, email, phoneNumber, password, purpose)
+                        new Organization(organizationName, email, phoneNumber,
+                                password, purpose, address)
                 );
             }
 
@@ -140,5 +154,11 @@ public class RegistrationOrganizationFragment extends Fragment {
             }
 
         });
+    }
+
+    @Override
+    public void onAddressConfirmed(String address) {
+        this.address = address;
+        txtInputAddress.setText(address);
     }
 }

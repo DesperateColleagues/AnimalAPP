@@ -89,24 +89,32 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!--<com.google.android.material.textfield.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutTxtInputAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
-        android:hint="@string/descrizione_ente"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+           style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
-            android:id="@+id/txtInputPurpose"
+            android:id="@+id/txtInputAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lines="3"
-            android:maxLines="5"
-            android:minLines="2" />
+            android:autofillHints=""
+            android:drawableStart="@drawable/ic_baseline_signpost_24"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:hint="Indirizzo"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:textColorHint="#2E7D32"/>
 
-    </com.google.android.material.textfield.TextInputLayout>!-->
+    </com.google.android.material.textfield.TextInputLayout>
+
 
 
     <com.google.android.material.textfield.TextInputLayout

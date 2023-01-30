@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.appcompat.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,19 +16,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.adapters.info.VeterinarianInfoAdapter;
-import it.uniba.dib.sms22235.entities.users.Veterinarian;
+import it.uniba.dib.sms22235.adapters.info.EntityInfoAdapter;
+import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class PassionateVeterinarianListFragment extends Fragment {
+public class PassionateOrganizationListFragment extends Fragment {
 
-    private ArrayList<Veterinarian> veterinarianList;
-    private ArrayList<Veterinarian> filteredVeterinarianList;
+    private ArrayList<Organization> organizationsList;
+    private ArrayList<Organization> filteredOrganizationList;
 
     @Nullable
-    @SuppressWarnings("unchecked")
     @Override
+    @SuppressWarnings("unchecked")
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ((PassionateNavigationActivity) requireActivity()).getFab().setVisibility(View.GONE);
         ((PassionateNavigationActivity) requireActivity()).setNavViewVisibility(View.GONE);
@@ -36,25 +36,25 @@ public class PassionateVeterinarianListFragment extends Fragment {
         Bundle arguments = getArguments();
 
         if (arguments != null) {
-            veterinarianList = (ArrayList<Veterinarian>) arguments.getSerializable(KeysNamesUtils.BundleKeys.VETERINARIANS_LIST);
+            organizationsList = (ArrayList<Organization>) arguments.getSerializable(KeysNamesUtils.BundleKeys.ORGANIZATIONS_LIST);
         }
 
-        return inflater.inflate(R.layout.fragment_passionate_veterinarian_list, container, false);
+        return inflater.inflate(R.layout.fragment_passionate_organization_info_list, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        VeterinarianInfoAdapter adapter = new VeterinarianInfoAdapter();
+        EntityInfoAdapter adapter = new EntityInfoAdapter(EntityInfoAdapter.AdapterMode.ORG);
         adapter.setContext(requireContext());
-        adapter.setVeterinarianList(veterinarianList);
+        adapter.setOrganizationList(organizationsList);
 
-        RecyclerView recyclerView = view.findViewById(R.id.veterinarianListRecycler);
+        RecyclerView recyclerView = view.findViewById(R.id.organizationListRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
 
-        SearchView searchView = view.findViewById(R.id.searchViewVet);
+        SearchView searchView = view.findViewById(R.id.searchViewOrg);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -65,19 +65,18 @@ public class PassionateVeterinarianListFragment extends Fragment {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public boolean onQueryTextChange(String newText) {
-
-                filteredVeterinarianList = new ArrayList<>();
+                filteredOrganizationList = new ArrayList<>();
 
                 if (newText.equals("")) {
-                    adapter.setVeterinarianList(veterinarianList);
+                    adapter.setOrganizationList(organizationsList);
                 } else {
 
-                    for (Veterinarian veterinarian : veterinarianList) {
-                        if (veterinarian.getClinicAddress().contains(" " + newText + " ")) {
-                            filteredVeterinarianList.add(veterinarian);
+                    for (Organization organization : organizationsList) {
+                        if (organization.getOrgAddress().contains(" " + newText + " ")) {
+                            filteredOrganizationList.add(organization);
                         }
                     }
-                    adapter.setVeterinarianList(filteredVeterinarianList);
+                    adapter.setOrganizationList(filteredOrganizationList);
                 }
 
                 adapter.notifyDataSetChanged();
@@ -85,5 +84,6 @@ public class PassionateVeterinarianListFragment extends Fragment {
                 return true;
             }
         });
+
     }
 }

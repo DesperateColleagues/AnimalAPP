@@ -51,7 +51,6 @@ public class RegistrationPersonFragment extends Fragment implements DialogAddAdd
          * Triggered when the veterinary completes its sign up process
          *
          * @param veterinarian the veterinary to register
-         * // @param pwd the password of the veterinary
          * */
         void onVeterinaryRegistered(Veterinarian veterinarian);
     }
@@ -145,9 +144,10 @@ public class RegistrationPersonFragment extends Fragment implements DialogAddAdd
 
             // Evaluate this expression to check if the three common fields are empty or not
             // The flag isEmptyInput will be true if the three strings are empty, false otherwise
-            boolean isEmptyInput = name.equals("") || email.equals("") || password.equals("") || address.equals("");
+            boolean isEmptyInput = name.equals("") || email.equals("") || password.equals("");
 
-            boolean isInputCorrect = InputFieldCheck.isEmailValid(email) && InputFieldCheck.isPasswordValid(password);
+            boolean isInputCorrect = InputFieldCheck.isEmailValid(email)
+                    && InputFieldCheck.isPasswordValid(password);
 
 
             // If the input is not empty complete registration process
@@ -180,7 +180,7 @@ public class RegistrationPersonFragment extends Fragment implements DialogAddAdd
                     phoneNumber = ((EditText) view.findViewById(R.id.txtInputPhoneNumber))
                             .getText().toString();
 
-                    isEmptyInput = clinicName.equals("") || phoneNumber.equals("");
+                    isEmptyInput = clinicName.equals("") || phoneNumber.equals("") || address.equals("");
 
                     isInputCorrect = InputFieldCheck.isNumberValid(phoneNumber);
 

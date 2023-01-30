@@ -33,7 +33,6 @@ import it.uniba.dib.sms22235.entities.users.Animal;
 public class DialogAnimalCardFragment extends DialogFragment {
 
     private final Animal animal;
-    private Button shareButton;
     private AnimalProfile.AnimalProfileListener animalProfileListener;
 
     public DialogAnimalCardFragment(Animal animal) {
@@ -83,7 +82,7 @@ public class DialogAnimalCardFragment extends DialogFragment {
         ImageView imgAnimalCardPhoto = root.findViewById(R.id.animalCardProfileSend);
         animalProfileListener.loadProfilePic(animal.getMicrochipCode(), imgAnimalCardPhoto);
 
-        shareButton = root.findViewById(R.id.shareButton);
+        Button shareButton = root.findViewById(R.id.shareButton);
         shareButton.setOnClickListener(v -> {
 
             Bitmap bitmap = generateSharePic(root.findViewById(R.id.drawableView));

@@ -66,6 +66,7 @@ import it.uniba.dib.sms22235.adapters.animals.AnimalDiagnosisAdapter;
 import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
 import it.uniba.dib.sms22235.adapters.animals.PokAnimalAdapter;
 import it.uniba.dib.sms22235.entities.operations.PokeLink;
+import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
@@ -112,6 +113,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     private transient ArrayList<Reservation> passionateReservationsList;
     private transient ArrayList<Reservation> availableReservationsList;
     private transient ArrayList<Veterinarian> veterinariansList;
+    private transient  ArrayList<Organization> organizationList;
 
     private transient FloatingActionButton fab;
     private transient BottomNavigationView navView;
@@ -217,6 +219,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             passionateReservationsList = (ArrayList<Reservation>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_RESERVATIONS);
             availableReservationsList = (ArrayList<Reservation>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.AVAILABLE_RESERVATIONS);
             veterinariansList = (ArrayList<Veterinarian>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.VETERINARIANS_LIST);
+            organizationList = (ArrayList<Organization>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.ORGANIZATIONS_LIST);
         }
 
         // Init the animal data set if it is null
@@ -242,6 +245,13 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         // Init the veterinatians data set it is null
         if (veterinariansList == null) {
             veterinariansList = new ArrayList<>();
+        }
+
+        // Initi the organizations data set if it is null
+        if (organizationList == null) {
+            organizationList = new ArrayList<>();
+        } else {
+            Toast.makeText(this, "" + organizationList.size(), Toast.LENGTH_SHORT).show();
         }
 
         // Build the network request
@@ -492,9 +502,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         if (queryDocumentSnapshots.size() > 0) {
                             db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
                                     .document(PhotoDiaryPost.loadPhotoDiaryPost(queryDocumentSnapshots.getDocuments().get(0)).getFileName())
-                                    .delete().addOnSuccessListener(unused1 -> {
-                                        Toast.makeText(this, "Eliminazione completata con successo", Toast.LENGTH_SHORT).show();
-                                    });
+                                    .delete().addOnSuccessListener(unused1 -> Toast.makeText(this, "Eliminazione completata con successo", Toast.LENGTH_SHORT).show());
                         }
                     });
         });
@@ -586,6 +594,16 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         }
 
         return clonedVeterinarianList;
+    }
+
+    public List<Organization> getOrganizationList() {
+        List<Organization> clonedOrganizationList = new ArrayList<>();
+
+        for (Organization organization : organizationList) {
+            clonedOrganizationList.add((Organization) organization.clone());
+        }
+
+        return clonedOrganizationList;
     }
 
     @Override

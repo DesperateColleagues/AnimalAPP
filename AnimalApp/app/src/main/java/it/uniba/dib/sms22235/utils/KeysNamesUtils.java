@@ -47,6 +47,8 @@ public class KeysNamesUtils {
         public static String PHONE_NUMBER = "phoneNumber";
         public static String PURPOSE = "purpose";
         public static String PASSWORD = "password";
+        public static String CLINIC_ADDRESS = "clinicAddress";
+        public static String ORG_ADDRESS = "orgAddress";
     }
 
     public static class AnimalFields {
@@ -164,6 +166,7 @@ public class KeysNamesUtils {
         public static String PASSIONATE_PURCHASES = "purchases";
         public static String PASSIONATE_ANIMALS = "animals";
         public static String VETERINARIANS_LIST = "veterinarians_list";
+        public static String ORGANIZATIONS_LIST = "organizations_list";
         public static String FILTER_ADAPTER = "filter";
         public static String INTERFACE = "INT";
         public static String MIN_COST = "minCost";
