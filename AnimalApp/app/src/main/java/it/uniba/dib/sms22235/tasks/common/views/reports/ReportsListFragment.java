@@ -1,8 +1,11 @@
 package it.uniba.dib.sms22235.tasks.common.views.reports;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -12,9 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -62,9 +70,23 @@ public class ReportsListFragment extends Fragment {
     private ReportsAdapter reportsAdapterFiltered;
     private RecyclerView recyclerView;
 
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+        if (isGranted) {
+            this.isGranted = true;
+        } else {
+            Toast.makeText(getContext(), "Impossibile effettuare ricerche: permesso posizione " +
+                            "mancante.",
+                    Toast.LENGTH_SHORT).show();
+            this.isGranted = false;
+        }
+    });
+
+    private boolean isGranted;
+
     ReportsListFragment(boolean isMine, NavController navController) {
         this.isMine = isMine;
         this.navController = navController;
+
         reportsList = new ArrayList<>();
     }
 
@@ -99,34 +121,68 @@ public class ReportsListFragment extends Fragment {
             Button btnDistance = view.findViewById(R.id.btnDistance);
             LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
 
-            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                    locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            String permissionAccessFineLocation = Manifest.permission.ACCESS_FINE_LOCATION;
+            String permissionAccessCoarseLocation = Manifest.permission.ACCESS_COARSE_LOCATION;
 
-                btnDistance.setOnClickListener(v -> {
-                    reportsAdapterFiltered = new ReportsAdapter();
-                    reportsListFiltered = new ArrayList<>();
+            btnDistance.setOnClickListener(v -> {
+                if (ActivityCompat.checkSelfPermission(getContext(), permissionAccessFineLocation) == PackageManager.PERMISSION_GRANTED ||
+                        ActivityCompat.checkSelfPermission(getContext(), permissionAccessCoarseLocation) == PackageManager.PERMISSION_GRANTED || isGranted) {
+                            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                                    locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                                reportsAdapterFiltered = new ReportsAdapter();
+                                reportsListFiltered = new ArrayList<>();
 
-                    String textBtn = "Tutte";
+                                String textBtn = "Tutte";
 
-                    if (counterTouchKm == 4) {
-                        counterTouchKm = 0;
-                        recyclerView.setAdapter(reportsAdapter);
-                    } else {
-                        textBtn = (distanceMeters[counterTouchKm] / 1000) + getResources().getString(R.string.chilometri);
-                        filterByCurrentLocation();
-                        counterTouchKm++;
-                    }
+                                if (counterTouchKm == 4) {
+                                    counterTouchKm = 0;
+                                    recyclerView.setAdapter(reportsAdapter);
+                                } else {
+                                    textBtn = (distanceMeters[counterTouchKm] / 1000) + getResources().getString(R.string.chilometri);
+                                    filterByCurrentLocation();
+                                    counterTouchKm++;
+                                }
 
-                    btnDistance.setText(textBtn);
-                });
-            } else {
-                // When location service is not enabled open location setting
-                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            }
+                                btnDistance.setText(textBtn);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AnimalCardRoundedDialog);
+                                View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+                                TextView titleText = titleView.findViewById(R.id.dialog_title);
+                                titleText.setText("Abilita posizione");
+                                builder.setCustomTitle(titleView);
+                                builder.setMessage("Per accedere a questa funzione, è necessario abilitare la posizione");
 
+                                builder.setPositiveButton("Conferma", (dialog, which) -> {
+                                    // When location service is not enabled open location setting
+                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                    dialog.dismiss();
+                                }).setNegativeButton("Annulla", ((dialog, which) -> {
+                                    dialog.dismiss();
+                                }));
+                            }
 
-        } else {
+                } else if (shouldShowRequestPermissionRationale(permissionAccessFineLocation)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AnimalCardRoundedDialog);
+                    View titleView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_dialogs_title, null);
+                    TextView titleText = titleView.findViewById(R.id.dialog_title);
+                    titleText.setText("Perchè accettare il permesso");
+                    builder.setCustomTitle(titleView);
+                    builder.setMessage("Il permesso POSIZIONE è essenziale per poter gestire tutte" +
+                            " le informazioni relative alle segnalazione. Senza di esso non ti sarà possibile " +
+                            "\n- Inserire una nuova segnalazione" +
+                            "\n- Filtrare le segnalazioni esistenti");
+                    builder.setNegativeButton("Chiudi", (dialog, which) -> dialog.dismiss());
+                    builder.setPositiveButton("Chiedi permesso", ((dialog, which) -> {
+                        requestPermissionLauncher.launch(permissionAccessFineLocation);
+                        dialog.dismiss();
+                    }));
+                    builder.create().show();
+                } else {
+                    requestPermissionLauncher.launch(permissionAccessFineLocation);
+                }
+            });
+       } else {
             view.findViewById(R.id.linearLocationFilter).setVisibility(View.GONE);
         }
 
@@ -183,7 +239,8 @@ public class ReportsListFragment extends Fragment {
             // Manage community's reports
             db.collection(KeysNamesUtils.CollectionsNames.REPORTS)
                     .whereNotEqualTo(KeysNamesUtils.ReportsFields.REPORTER, Objects.requireNonNull(auth.getCurrentUser()).getEmail())
-                    .get().addOnSuccessListener(queryDocumentSnapshots -> {
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
                         List<DocumentSnapshot> reportsSnapshot = queryDocumentSnapshots.getDocuments();
                         reportsList = new ArrayList<>();
 
@@ -210,9 +267,7 @@ public class ReportsListFragment extends Fragment {
 
     @SuppressLint({"MissingPermission", "NotifyDataSetChanged"})
     private void filterByCurrentLocation() {
-        // Initialize Location manager
-
-            // When location service is enabled get last location
+        // When location service is enabled get last location
         client.getLastLocation().addOnCompleteListener(task -> {
             // Initialize location
             mLocation = task.getResult();

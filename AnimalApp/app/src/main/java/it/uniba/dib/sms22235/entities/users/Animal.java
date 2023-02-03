@@ -129,7 +129,7 @@ public class Animal implements Serializable, Cloneable {
             animal.setWeight(weight);
         }
 
-        if (!nature.equals("")) {
+        if (nature != null) {
             animal.setNature(nature);
         }
 

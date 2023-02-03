@@ -1,10 +1,13 @@
 package it.uniba.dib.sms22235.tasks.common.views.reports;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -28,6 +31,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -86,6 +90,8 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
 
     private NavController controller;
 
+    private boolean isGranted;
+
     private final ActivityResultLauncher<Intent> cropResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), resCrop -> {
                 if (resCrop.getResultCode() == Activity.RESULT_OK) {
@@ -128,6 +134,17 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
                     }
                 }
             });
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+        if (isGranted) {
+            this.isGranted = true;
+        } else {
+            Toast.makeText(getContext(), "Impossibile effettuare ricerche: abilitare " +
+                            "il permesso alla posizione",
+                    Toast.LENGTH_SHORT).show();
+            this.isGranted = false;
+        }
+    });
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -212,7 +229,30 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
         });
 
         // Call a dialog to add the map position of the report
-        btnPosition.setOnClickListener(v -> getCurrentLocation());
+        btnPosition.setOnClickListener(v -> {
+            String permissionAccessFineLocation = Manifest.permission.ACCESS_FINE_LOCATION;
+            String permissionAccessCoarseLocation = Manifest.permission.ACCESS_COARSE_LOCATION;
+
+            if (ActivityCompat.checkSelfPermission(getContext(), permissionAccessFineLocation) == PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(getContext(), permissionAccessCoarseLocation) == PackageManager.PERMISSION_GRANTED || isGranted) {
+                getCurrentLocation();
+            } else  if (shouldShowRequestPermissionRationale(permissionAccessFineLocation)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AnimalCardRoundedDialog);
+                View titleView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_dialogs_title, null);
+                TextView titleText = titleView.findViewById(R.id.dialog_title);
+                titleText.setText("Perchè accettare il permesso");
+                builder.setCustomTitle(titleView);
+                builder.setMessage("Il permesso POSIZIONE è essenziale per poter gestire tutte" +
+                        " le informazioni relative alle segnalazione. Senza di esso non ti sarà possibile " +
+                        "\n- Inserire una nuova segnalazione" +
+                        "\n- Filtrare le segnalazioni esistenti");
+                builder.setNeutralButton("Chiudi", (dialog, which) -> dialog.dismiss());
+                builder.create().show();
+            }
+            else {
+                requestPermissionLauncher.launch(permissionAccessFineLocation);
+            }
+        });
 
         btnAddReportImage.setOnClickListener(v -> {
             Intent i = new Intent();

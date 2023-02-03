@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +89,6 @@ public class RequestDetailFragment extends Fragment {
                                     .addOnSuccessListener(unused -> {
                                         try {
                                             transferAnimalPostsAndProfilePic(storage, db, microchip, oldOwner);
-                                            //manageChangeOwnerPosts(storage, db, microchip, oldOwner);
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
@@ -236,6 +236,7 @@ public class RequestDetailFragment extends Fragment {
                 }
 
                 if (posts.size() > 0) {
+                    Log.wtf("POST", "" + posts.size());
                     for (int i = 0; i < posts.size(); i++) {
                         PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(posts.get(i));
                         Task<byte[]> taskBytes;
@@ -256,6 +257,9 @@ public class RequestDetailFragment extends Fragment {
                             taskBytes = getPostBytesTask(post, storage, currentFolderReferenceProfilePic);
                             newFolderReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(newOwner) +
                                     "/" ;
+                            Log.wtf("POST", "Hi " + newFolderReference);
+
+                            Toast.makeText(getContext(), "Hi", Toast.LENGTH_SHORT).show();
                         }
 
                         // Get the bytes of the file from the reference of the storage and
@@ -268,6 +272,8 @@ public class RequestDetailFragment extends Fragment {
                         taskBytes.addOnSuccessListener(bytes -> {
                             String newFileReference = finalNewFolderReference + post.getFileName();
                             StorageReference newReference = storage.getReference(newFileReference);
+
+                            Log.d("POST", isPostMode + " " + newReference);
 
                             // Put the retrieved bytes into the storage and update
                             // the FireStore reference of the post
