@@ -80,7 +80,9 @@
         <activity
             android:name=".tasks.login.LoginActivity"
             android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:noHistory="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -155,7 +156,7 @@ public class BackBenchFragment extends Fragment {
 
             // todo: refactor dialog
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.AnimalCardRoundedDialog)
                     .setView(inputEditTextField)
                     .setPositiveButton("Conferma", (dialogInterface, i) -> {
                         String description = inputEditTextField.getText().toString();
@@ -251,6 +252,7 @@ public class BackBenchFragment extends Fragment {
                                 btnAddBackBenchDescription.setText("Modifica");
                             }
                             Glide.with(requireContext()).load(backbench.getDownloadableImage()).into(imgBackbench); //todo check edit
+                            //Fragment BackBenchFragment not attached to a context.
                             btnAddBackBenchImage.setText("Modifica immagine stallo");
                         }
                     }

@@ -1,5 +1,6 @@
 package it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.animals.AnimalDiagnosisAdapter;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
+import it.uniba.dib.sms22235.tasks.common.dialogs.DialogEntityDetailsFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.BSDialogEditDiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.DialogAddDiagnosisFragment;
@@ -84,28 +86,25 @@ public class DiagnosisFragment extends Fragment implements
 
         Button btnAddAnimalOperation = view.findViewById(R.id.btnAddAnimalOperation);
 
-        if (owner.equals(mAuth.getCurrentUser().getEmail())) {
-            btnAddAnimalOperation.setVisibility(View.GONE);
-            listener.getAnimalDiagnosis(adapter, diagnosisRecyclerView, animal, null);
+        if ((getActivity()) instanceof VeterinarianNavigationActivity) {
+            btnAddAnimalOperation.setVisibility(View.VISIBLE);
+            btnAddAnimalOperation.setText(getResources().getString(R.string.aggiungi_diagnosi));
+            btnAddAnimalOperation.setOnClickListener(v -> {
+                DialogAddDiagnosisFragment dialogAddDiagnosisFragment = new DialogAddDiagnosisFragment();
+                dialogAddDiagnosisFragment.setListener(this);
+                dialogAddDiagnosisFragment.show(getParentFragmentManager(), "DialogAddDiagnosisFragment");
+            });
+            listener.getAnimalDiagnosis(adapter, diagnosisRecyclerView, animal, onClickEditListener);
         } else {
-            if ((getActivity()) instanceof VeterinarianNavigationActivity) {
-                btnAddAnimalOperation.setVisibility(View.VISIBLE);
-                btnAddAnimalOperation.setText(getResources().getString(R.string.aggiungi_diagnosi));
-                btnAddAnimalOperation.setOnClickListener(v -> {
-                    Toast.makeText(getContext(), "Inserimento nuova diagnosi", Toast.LENGTH_SHORT).show();
-
-                    DialogAddDiagnosisFragment dialogAddDiagnosisFragment = new DialogAddDiagnosisFragment();
-                    dialogAddDiagnosisFragment.setListener(this);
-                    dialogAddDiagnosisFragment.show(getParentFragmentManager(), "DialogAddDiagnosisFragment");
-                });
-                listener.getAnimalDiagnosis(adapter, diagnosisRecyclerView, animal, onClickListener);
-            }
+            btnAddAnimalOperation.setVisibility(View.GONE);
+            listener.getAnimalDiagnosis(adapter, diagnosisRecyclerView, animal, onClickViewListener);
         }
 
         diagnosisRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false));
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onDialogAddDiagnosisDismissed(@NonNull Diagnosis diagnosis) {
         SimpleDateFormat dateSDF = new SimpleDateFormat("dd/MM/yy", Locale.ITALY);
@@ -124,7 +123,7 @@ public class DiagnosisFragment extends Fragment implements
         helper.registerDiagnosis(diagnosis);
     }
 
-    private AnimalDiagnosisAdapter.OnItemClickListener onClickListener = diagnosis -> {
+    private final AnimalDiagnosisAdapter.OnItemClickListener onClickEditListener = diagnosis -> {
         new BSDialogEditDiagnosisFragment()
                 .setOnUpgradeListener(() -> {
                     DialogAddDiagnosisFragment dialogAddDiagnosisFragment = new DialogAddDiagnosisFragment(diagnosis);
@@ -137,6 +136,27 @@ public class DiagnosisFragment extends Fragment implements
                 .setOnShowListener(() -> {
                     Toast.makeText(getContext(), "Visualizzazione diagnosi", Toast.LENGTH_SHORT).show();
                 })
-                .show(getParentFragmentManager(), "Modifica diagnosi");;
+                .show(getParentFragmentManager(), "Modifica diagnosi");
     };
+
+    private final AnimalDiagnosisAdapter.OnItemClickListener onClickViewListener = diagnosis -> {
+            String info = "• <b>" +
+                    "Animale" +
+                    ": </b>"+
+                    diagnosis.getAnimal() +
+                    "\n<br>" +
+                    "• <b>" +
+                    "Descrizione" +
+                    ": </b>"+
+                    diagnosis.getDescription() +
+                    "\n<br>" +
+                    "• <b>" +
+                    "Data aggiunta al sistema" +
+                    ": </b>" +
+                    diagnosis.getDateAdded();
+            DialogEntityDetailsFragment entityDetailsFragment = new DialogEntityDetailsFragment(info);
+            entityDetailsFragment.show(getParentFragmentManager(), "DialogEntityDetailsFragment");
+    };
+
+
 }

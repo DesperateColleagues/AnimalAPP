@@ -70,9 +70,9 @@ public class VeterinarianAnimalListFragment extends Fragment {
         assistedAnimalRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), assistedAnimalRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, adapter.getAnimalAtPosition(position));
+                bundle.putInt("ViewMode", 1);
                 controller.navigate(R.id.action_veterinarian_animal_list_to_animalProfile, bundle);
             }
 

@@ -120,6 +120,7 @@
     <string name="richieste_altri">Visualizzazione: altri utenti</string>
     <string name="conferma_richiesta_titolo">Sei sicuro?</string>
     <string name="conferma_richiesta_messaggio">Vuoi contrassegnare come "completata" questo elemento?</string>
+    <string name="ricarica_sessione">Spostamento completato, riesegui il login</string>
 
     <string name="animal_profile_infos">
         ·<b>Specie:</b>* \n·<b>Razza:</b>*\n<br/>·<b>Data di nascita:</b>*\n<br/>·<b>Codice microchip:*</b>

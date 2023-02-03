@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -165,7 +166,7 @@ public class InterfacesOperationsHelper {
             });
         }
 
-        public void getAnimalDiagnosis(AnimalDiagnosisAdapter adapter, RecyclerView recyclerView, String animal, FragmentManager fm){
+        public void getAnimalDiagnosis(AnimalDiagnosisAdapter adapter, RecyclerView recyclerView, String animal, AnimalDiagnosisAdapter.OnItemClickListener listener){
             db.collection(KeysNamesUtils.CollectionsNames.DIAGNOSIS)
                     .whereEqualTo(KeysNamesUtils.DiagnosisFields.ANIMAL, animal)
                     .get()
@@ -179,26 +180,9 @@ public class InterfacesOperationsHelper {
                                     Log.wtf("Diagnosi", Diagnosis.loadDiagnosis(snapshot).toString());
                                 }
                             }
+                            adapter.setOnItemClickListener(listener);
                             recyclerView.setAdapter(adapter);
 
-                            adapter.setOnItemClickListener(diagnosis -> {
-                                String info = "• <b>" +
-                                        "Animale" +
-                                        ": </b>"+
-                                        diagnosis.getAnimal() +
-                                        "\n<br>" +
-                                        "• <b>" +
-                                        "Descrizione" +
-                                        ": </b>"+
-                                        diagnosis.getDescription() +
-                                        "\n<br>" +
-                                        "• <b>" +
-                                        "Data aggiunta al sistema" +
-                                        ": </b>" +
-                                        diagnosis.getDateAdded();
-                                DialogEntityDetailsFragment entityDetailsFragment = new DialogEntityDetailsFragment(info);
-                                entityDetailsFragment.show(fm, "DialogEntityDetailsFragment");
-                            });
                         } else {
                             Toast.makeText(context, "Nessuna diagnosi presente.", Toast.LENGTH_SHORT).show(); // TODO image
                         }

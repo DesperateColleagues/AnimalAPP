@@ -49,7 +49,6 @@ public class DialogAddAnimalFragment extends DialogFragment implements android.a
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AnimalCardRoundedDialog);
-                  //key point 2
 
         // Create the inflater and inflate the layout
         LayoutInflater inflater = requireActivity().getLayoutInflater();

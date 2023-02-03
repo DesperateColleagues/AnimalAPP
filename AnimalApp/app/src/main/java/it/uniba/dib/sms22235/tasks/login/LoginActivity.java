@@ -204,7 +204,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE, cus);
 
                                                 // Execute the task to get the animals of the logged user
-                                                Task<QuerySnapshot> taskGetAnimals = getAnimalTask(cus.getEmail());
+                                                Task<QuerySnapshot> taskGetAnimals = getAnimalTask(cus.getUsername());
                                                 // Execute the task to get the purchases of the logged user
                                                 Task<QuerySnapshot> taskPurchases = getPurchasesTask(cus.getUsername());
                                                 Task<QuerySnapshot> taskAvailableReservations = getAvailableReservationsTask();

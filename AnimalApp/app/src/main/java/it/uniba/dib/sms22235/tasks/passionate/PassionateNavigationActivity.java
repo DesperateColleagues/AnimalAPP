@@ -285,7 +285,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     public void onAnimalRegistered(@NonNull Animal animal) {
         if (isConnectionEnabled) {
             // Set the animal's owner
-            animal.setOwner(passionate.getEmail());
+            animal.setOwner(passionate.getUsername());
             animal.setVeterinarian("");
             animal.setNature("");
 
@@ -384,7 +384,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     @Override
     public void getAnimalDiagnosis(AnimalDiagnosisAdapter adapter, RecyclerView recyclerView, String animal, AnimalDiagnosisAdapter.OnItemClickListener onClickListener){
         InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
-        animalHelper.getAnimalDiagnosis(adapter, recyclerView, animal, getSupportFragmentManager());
+        animalHelper.getAnimalDiagnosis(adapter, recyclerView, animal, onClickListener);
     }
 
     @Override

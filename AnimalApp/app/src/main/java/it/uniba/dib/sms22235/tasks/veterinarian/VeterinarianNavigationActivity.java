@@ -444,7 +444,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     @Override
     public void getAnimalDiagnosis(AnimalDiagnosisAdapter adapter, RecyclerView recyclerView, String animal, AnimalDiagnosisAdapter.OnItemClickListener onClickListener){
         InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
-        animalHelper.getAnimalDiagnosis(adapter, recyclerView, animal, getSupportFragmentManager());
+        animalHelper.getAnimalDiagnosis(adapter, recyclerView, animal, onClickListener);
     }
 
     @Override

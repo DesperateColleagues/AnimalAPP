@@ -18,10 +18,14 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
+import it.uniba.dib.sms22235.entities.operations.Exam;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
+import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.DialogAddDiagnosisFragment;
+import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.DialogAddExamFragment;
 
-public class ExamsFragment extends Fragment {
+public class ExamsFragment extends Fragment implements
+DialogAddExamFragment.DialogAddExamFragmentListener {
 
     private final String animal;
     private final String owner;
@@ -71,16 +75,19 @@ public class ExamsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Button btnAddAnimalOperation = view.findViewById(R.id.btnAddAnimalOperation);
-        if (owner.equals(mAuth.getCurrentUser().getEmail())) {
-            btnAddAnimalOperation.setVisibility(View.GONE);
+
+        if ((getActivity()) instanceof VeterinarianNavigationActivity) {
+            btnAddAnimalOperation.setVisibility(View.VISIBLE);
+            btnAddAnimalOperation.setText(getResources().getString(R.string.aggiungi_esame));
+            btnAddAnimalOperation.setOnClickListener(v -> {
+                Toast.makeText(getContext(), "Inserimento nuovo esame", Toast.LENGTH_SHORT).show();
+
+                DialogAddExamFragment dialogAddExamFragment = new DialogAddExamFragment();
+                dialogAddExamFragment.setListener(this);
+                dialogAddExamFragment.show(getParentFragmentManager(), "DialogAddExamFragment");
+            });
         } else {
-            if ((getActivity()) instanceof VeterinarianNavigationActivity) {
-                btnAddAnimalOperation.setVisibility(View.VISIBLE);
-                btnAddAnimalOperation.setText(getResources().getString(R.string.aggiungi_esame));
-                btnAddAnimalOperation.setOnClickListener(v -> {
-                    Toast.makeText(getContext(), "Inserimento nuovo esame", Toast.LENGTH_SHORT).show();
-                });
-            }
+            btnAddAnimalOperation.setVisibility(View.GONE);
         }
 
         examsRecyclerView = view.findViewById(R.id.recyclerVerticalList);
@@ -89,6 +96,11 @@ public class ExamsFragment extends Fragment {
         listener.getAnimalExams(adapter, examsRecyclerView, animal);
 
         examsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false));
+    }
+
+
+    @Override
+    public void onDialogAddExamDismissed(Exam exam) {
 
     }
 

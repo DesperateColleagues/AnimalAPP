@@ -109,7 +109,7 @@ public class AnimalProfile extends Fragment implements
 
     private DialogEditAnimalDataFragment dialogEditAnimalDataFragment;
 
-    private FirebaseAuth mAuth;
+    private int viewMode;
 
     // Used to launch the callback to retrieve intent's results
     private final ActivityResultLauncher<Intent> photoUploadAndSaveActivity = registerForActivityResult(
@@ -128,17 +128,17 @@ public class AnimalProfile extends Fragment implements
         NavigationActivityInterface activity = (NavigationActivityInterface) getActivity();
 
         Bundle arguments = getArguments();
-        mAuth = FirebaseAuth.getInstance();
 
         // Get the arguments obtained from the navigation
         if (arguments != null) {
             mAnimal = (Animal) arguments.get(KeysNamesUtils.BundleKeys.ANIMAL);
+            viewMode = arguments.getInt("ViewMode");
         }
 
         try {
             // Attach the listener to the Fragment
             generalListener = (AnimalProfileListener) context;
-            if (mAnimal.getOwner().equals(mAuth.getCurrentUser().getEmail())) {
+            if (viewMode == 0) {
                 passionateListener = (AnimalProfileEditListener) context;
             }
         } catch (ClassCastException e) {
@@ -202,7 +202,7 @@ public class AnimalProfile extends Fragment implements
         ImageButton shareProfile = view.findViewById(R.id.btnShareProfile);
         ImageButton btnQrCodeGenerator = view.findViewById(R.id.btnQrCodeGenerator);
 
-        if (mAnimal.getOwner().equals(mAuth.getCurrentUser().getEmail())) {
+        if (viewMode == 0) {
             animalPicPreview.setOnClickListener(v -> {
                 Intent i = new Intent();
                 i.setType("image/*");
@@ -252,10 +252,7 @@ public class AnimalProfile extends Fragment implements
         Adapter adapter = new Adapter(getChildFragmentManager());
         String animal = mAnimal.getMicrochipCode();
 
-        if (requireActivity() instanceof PassionateNavigationActivity) {
-            PhotoDiaryFragment photoDiaryFragment = new PhotoDiaryFragment(animal, mAnimal.getOwner());
-            adapter.addFragment(photoDiaryFragment, "Photo diary");
-        }
+        adapter.addFragment(new PhotoDiaryFragment(animal, mAnimal.getOwner(), viewMode), "Photo diary");
 
         adapter.addFragment(new DiagnosisFragment(animal, mAnimal.getOwner()), "Diagnosi");
         adapter.addFragment(new ExamsFragment(animal, mAnimal.getOwner()),"Esami"); //TODO:Stringhe

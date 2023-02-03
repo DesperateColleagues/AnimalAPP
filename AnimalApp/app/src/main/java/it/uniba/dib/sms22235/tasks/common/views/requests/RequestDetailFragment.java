@@ -2,9 +2,11 @@ package it.uniba.dib.sms22235.tasks.common.views.requests;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
@@ -44,6 +47,7 @@ import it.uniba.dib.sms22235.tasks.common.views.backbenches.BackBenchFragment;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.entities.operations.Request;
 import it.uniba.dib.sms22235.entities.users.Animal;
+import it.uniba.dib.sms22235.tasks.login.LoginActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class RequestDetailFragment extends Fragment {
@@ -153,7 +157,7 @@ public class RequestDetailFragment extends Fragment {
 
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.add(R.id.frameBackbench, new BackBenchFragment(request.getUserEmail()));
-            transaction.commit();
+            transaction.commit(); // todo check for context in this situation
         }
 
         // Manage animal request
@@ -170,6 +174,7 @@ public class RequestDetailFragment extends Fragment {
                             bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, animal);
                             bundle.putBoolean(KeysNamesUtils.BundleKeys.ANIMAL_SHOW_ONLY, true);
                             navController.navigate(R.id.action_request_detail_to_animalProfile, bundle);
+                            // todo check here
                         });
             });
 
@@ -212,9 +217,13 @@ public class RequestDetailFragment extends Fragment {
                 "/" +
                 KeysNamesUtils.FileDirsNames.passionatePostRefDirAnimal(microchip) + "/";
 
+        //Log.wtf("currentFolderReferencePosts: ",currentFolderReferencePosts);//
+
         // Create the storage tree structure of the profile pic file
         String currentFolderReferenceProfilePic = KeysNamesUtils.FileDirsNames.passionatePostDirName(oldOwner) +
                 "/";
+
+        //Log.wtf("currentFolderReferenceProfilePic: ",currentFolderReferenceProfilePic);
 
         // Retrieve the new owner of the animal via the ActivityInterface
         // todo: newOwner has to be the email address
@@ -380,6 +389,8 @@ public class RequestDetailFragment extends Fragment {
                 "/" +
                 KeysNamesUtils.FileDirsNames.passionatePostRefDirAnimal(microchip) + "/";
 
+        Log.wtf("Scambio animali", "currentFolderReference: " + currentFolderReference);
+
         // Obtain the posts' list of that specific animal
         db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
                 .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, microchip)
@@ -397,6 +408,8 @@ public class RequestDetailFragment extends Fragment {
                                 String fileName = post.getFileName();
                                 String fileReference = currentFolderReference + fileName;
 
+                                Log.wtf("Scambio animali", "fileReference: " + fileReference);
+
                                 // Obtain a reference of the storage
                                 StorageReference currentReference = storage.getReference(fileReference);
 
@@ -409,6 +422,8 @@ public class RequestDetailFragment extends Fragment {
                                     // todo: newOwner has to be the email address
                                     String newOwner = ((NavigationActivityInterface) requireActivity()).getUserId();
 
+                                    Log.wtf("Scambio animali", "newOwner: " + newOwner);
+
                                     // Create the new reference to the folder in the storage,
                                     // the reference of the new file. Then it is possible to obtain
                                     // a new storage reference
@@ -417,6 +432,8 @@ public class RequestDetailFragment extends Fragment {
                                             KeysNamesUtils.FileDirsNames.passionatePostRefDirAnimal(microchip) + "/";
                                     String newFileReference = newFolderReference + fileName;
                                     StorageReference newReference = storage.getReference(newFileReference);
+
+                                    Log.wtf("Scambio animali", "newFileReference: " + newFileReference);
 
                                     // Put the retrieved bytes into the storage and update
                                     // the FireStore reference of the post
@@ -438,7 +455,6 @@ public class RequestDetailFragment extends Fragment {
 
                                                             currentReference.delete();
                                                             progressDialog.dismiss();
-
 
                                                             // Change profile image as well
                                                             try {
@@ -475,6 +491,8 @@ public class RequestDetailFragment extends Fragment {
         String currentFolderReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(oldOwner) +
                 "/";
 
+        Log.wtf("Scambio animali", "currentFolderReference: " + currentFolderReference);
+
         // Obtain the posts' list of that specific animal
         db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
                 .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, microchip)
@@ -492,17 +510,22 @@ public class RequestDetailFragment extends Fragment {
                             String fileName = post.getFileName();
                             String fileReference = currentFolderReference + fileName;
 
+                            Log.wtf("Scambio animali", "fileReference: " + fileReference);
+
                             // Obtain a reference of the storage
                             StorageReference currentReference = storage.getReference(fileReference);
 
                             // Set a limit of bytes
                             final long ONE_MEGABYTE = 1024 * 1024;
 
+                            Log.wtf("Scambio animali", "LAST BEFORE");
                             // Get the bytes of the file from the reference of the storage
                             currentReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                                 // Retrieve the new owner of the animal via the ActivityInterface
                                 // todo: newOwner has to be the email address
                                 String newOwner = ((NavigationActivityInterface) requireActivity()).getUserId();
+
+                                Log.wtf("Scambio animali", "newOwner: " + newOwner);
 
                                 // Create the new reference to the folder in the storage,
                                 // the reference of the new file. Then it is possible to obtain
@@ -511,6 +534,8 @@ public class RequestDetailFragment extends Fragment {
                                         "/" ;
                                 String newFileReference = newFolderReference + fileName;
                                 StorageReference newReference = storage.getReference(newFileReference);
+
+                                Log.wtf("Scambio animali", "newFileReference: " + newFileReference);
 
                                 // Put the retrieved bytes into the storage and update
                                 // the FireStore reference of the post
@@ -542,14 +567,17 @@ public class RequestDetailFragment extends Fragment {
                                                                                     "Aggiornamento completato con successo", Toast.LENGTH_SHORT).show();
 
 
-                                                                            /*AlertDialog.Builder reloadDialogBuilder = new AlertDialog.Builder(getContext());
+                                                                            AlertDialog.Builder reloadDialogBuilder = new AlertDialog.Builder(getContext());
                                                                             final AlertDialog reloadDialog = reloadDialogBuilder.create();
                                                                             reloadDialog.setCancelable(false);
-                                                                            reloadDialog.setMessage("Devi rieffettuare l'accesso per confermare");
-                                                                            reloadDialog.setPositiveButton("OK", (dialog, which) -> SWITCH ACTIVITY);
-                                                                            reloadDialog.show();*/
-
-                                                                            // todo: switch Activity
+                                                                            reloadDialog.setMessage(getResources().getString(R.string.ricarica_sessione));
+                                                                            reloadDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialogInterface, i) -> {
+                                                                                Intent intent = new Intent(getContext(), LoginActivity.class);
+                                                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                                startActivity(intent);
+                                                                                requireActivity().finish();
+                                                                            });
+                                                                            reloadDialog.show();
                                                                             // todo: refactor with Tasks.whenAllComplete()
                                                                         });
                                                             });
@@ -564,12 +592,16 @@ public class RequestDetailFragment extends Fragment {
 
     @SuppressLint("QueryPermissionsNeeded")
     private void composeEmail(String[] addresses, String subject) {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        try {
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+            intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+            intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 
-        startActivity(intent);
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Impossibile procedere, non è installata un'app di gestione mail", Toast.LENGTH_LONG).show();
+        }
     }
 
 

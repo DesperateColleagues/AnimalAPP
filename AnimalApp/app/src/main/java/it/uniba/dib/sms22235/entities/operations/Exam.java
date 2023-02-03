@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
@@ -16,7 +17,10 @@ public class Exam implements Serializable {
     private String description;
     private String outcome; //result
 
+    public Exam(){}
+
     public Exam(String animal, String type, String description) {
+        this.id = UUID.randomUUID().toString();
         this.animal = animal;
         this.type = type;
         this.description = description;

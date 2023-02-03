@@ -250,19 +250,9 @@ public class PassionateProfileFragment extends Fragment implements
             animalRecycleView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), animalRecycleView, new RecyclerTouchListener.ClickListener() {
                 @Override
                 public void onClick(View view, int position) {
-                    /*// This method is used to request storage permission to the user
-                    // with that we can save animal images not only on firebase,
-                    // but also locally, to retrieve them more easily
-                    ((PassionateNavigationActivity) requireActivity()).requestPermission();
-
-                    // This code obtains the selected Animal info and it shows them in a specific built Dialog
-                    DialogAnimalCardFragment dialogAnimalCardFragment = new DialogAnimalCardFragment(
-                            animalListAdapter.getAnimalAtPosition(position));
-                    dialogAnimalCardFragment.show(requireActivity().getSupportFragmentManager(),
-                            "DialogAnimalCardFragment");*/
-
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, animalListAdapter.getAnimalAtPosition(position));
+                    bundle.putInt("ViewMode", 0);
                     controller.navigate(R.id.action_passionate_profile_to_animalProfile, bundle);
                 }
 

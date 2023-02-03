@@ -80,7 +80,7 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
 
     private FirebaseAuth mAuth;
 
-    private boolean isShowOnlyMode;
+    private int viewMode;
 
     private final ActivityResultLauncher<Intent> cropResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), resCrop -> {
@@ -130,13 +130,15 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
         throw new UnsupportedOperationException();
     }
 
-    public void setShowOnlyMode(boolean showOnlyMode) {
-        isShowOnlyMode = showOnlyMode;
-    }
-
     public PhotoDiaryFragment(String animalMicrochip, String owner) {
         this.animalMicrochip = animalMicrochip;
         this.owner = owner;
+    }
+
+    public PhotoDiaryFragment(String animalMicrochip, String owner, int viewMode) {
+        this.animalMicrochip = animalMicrochip;
+        this.owner = owner;
+        this.viewMode = viewMode;
     }
 
     @Override
@@ -172,7 +174,7 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
 
         Button btnAddAnimalPost = view.findViewById(R.id.btnAddAnimalPost);
 
-        if (owner.equals(mAuth.getCurrentUser().getEmail())) {
+        if (viewMode == 0) {
             btnAddAnimalPost.setOnClickListener(v -> {
                 Intent i = new Intent();
                 i.setType("image/*");
@@ -185,7 +187,7 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
             }
         }
 
-        if (isShowOnlyMode) {
+        if (viewMode == 1) {
             btnAddAnimalPost.setVisibility(View.GONE);
         }
 
