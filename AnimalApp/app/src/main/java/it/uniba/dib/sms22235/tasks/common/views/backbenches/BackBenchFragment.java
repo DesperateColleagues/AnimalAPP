@@ -251,9 +251,11 @@ public class BackBenchFragment extends Fragment {
                             if(!backbench.getDescription().equals("")) {
                                 btnAddBackBenchDescription.setText("Modifica");
                             }
-                            Glide.with(requireContext()).load(backbench.getDownloadableImage()).into(imgBackbench); //todo check edit
-                            //Fragment BackBenchFragment not attached to a context.
-                            btnAddBackBenchImage.setText("Modifica immagine stallo");
+                            if (isAdded()) {
+                                Glide.with(getActivity()).load(backbench.getDownloadableImage()).into(imgBackbench); //todo check edit
+                                //Fragment BackBenchFragment not attached to a context.
+                                btnAddBackBenchImage.setText("Modifica immagine stallo");
+                            }
                         }
                     }
                 });

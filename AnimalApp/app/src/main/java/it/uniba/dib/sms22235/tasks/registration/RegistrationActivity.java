@@ -96,12 +96,14 @@ public class RegistrationActivity extends AppCompatActivity
                                     } else {
                                         Toast.makeText(RegistrationActivity.this, "Email già usata.",
                                                 Toast.LENGTH_SHORT).show();
+                                        progressDialog.dismiss();
                                     }
                                 });
 
                     } else {
                         Toast.makeText(RegistrationActivity.this, "Username già usato.",
                                 Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                     }
                 });
     }
@@ -132,9 +134,10 @@ public class RegistrationActivity extends AppCompatActivity
                                     progressDialog.dismiss();
                                     newActivityRunning(VeterinarianNavigationActivity.class, bundle);
                                 })
-                                .addOnFailureListener(e -> Log.d("DEB", e.getMessage()));
+                                .addOnFailureListener(e -> progressDialog.dismiss());
                     } else {
                         Toast.makeText(RegistrationActivity.this, "Email già usata.", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                     }
                 });
     }
@@ -143,6 +146,10 @@ public class RegistrationActivity extends AppCompatActivity
     public void onOrganizationRegistered(@NonNull Organization org) {
         // First register the organization with Firebase auth system
         // in order to authenticate it during login
+        ProgressDialog progressDialog = new ProgressDialog(this,R.style.Widget_App_ProgressDialog);
+        progressDialog.setMessage("Registrando il veterinario...");
+        progressDialog.show();
+
         mAuth.createUserWithEmailAndPassword(org.getEmail(), org.getPassword())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
@@ -156,12 +163,14 @@ public class RegistrationActivity extends AppCompatActivity
                                 .addOnSuccessListener(unused -> {
                                     Bundle bundle = new Bundle();
                                     bundle.putSerializable(KeysNamesUtils.BundleKeys.ORGANIZATION, org);
+                                    progressDialog.dismiss();
                                     newActivityRunning(OrganizationNavigationActivity.class, bundle);
                                 })
-                                .addOnFailureListener(e -> Log.d("CrashOrg", e.getMessage()));
+                                .addOnFailureListener(e -> progressDialog.dismiss());
 
                     } else {
                         Toast.makeText(RegistrationActivity.this, "Email già usata.", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                     }
                 });
     }

@@ -73,6 +73,7 @@
                 android:drawableTop="@drawable/ic_baseline_email_24"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:textStyle="bold"
                 android:text="@string/sendMail"/>
 
@@ -112,6 +113,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_baseline_pets_grenn_24"
                 android:textStyle="bold"
                 android:visibility="gone"
                 android:text="Visualizza profilo animale"/>
@@ -123,6 +125,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_baseline_qr_code_scanner_24_real"
                 android:textStyle="bold"
                 android:visibility="gone"
                 android:text="Scannerizza codice Qr"/>

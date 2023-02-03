@@ -2,11 +2,9 @@ package it.uniba.dib.sms22235.tasks.common.views.requests;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +22,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -37,7 +33,6 @@ import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -92,8 +87,8 @@ public class RequestDetailFragment extends Fragment {
                                     .set(animal)
                                     .addOnSuccessListener(unused -> {
                                         try {
-                                            //transferAnimalPostsAndProfilePic(storage, db, microchip, oldOwner);
-                                            manageChangeOwnerPosts(storage, db, microchip, oldOwner);
+                                            transferAnimalPostsAndProfilePic(storage, db, microchip, oldOwner);
+                                            //manageChangeOwnerPosts(storage, db, microchip, oldOwner);
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
@@ -157,7 +152,7 @@ public class RequestDetailFragment extends Fragment {
 
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.add(R.id.frameBackbench, new BackBenchFragment(request.getUserEmail()));
-            transaction.commit(); // todo check for context in this situation
+            transaction.commit();
         }
 
         // Manage animal request
@@ -174,7 +169,6 @@ public class RequestDetailFragment extends Fragment {
                             bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, animal);
                             bundle.putBoolean(KeysNamesUtils.BundleKeys.ANIMAL_SHOW_ONLY, true);
                             navController.navigate(R.id.action_request_detail_to_animalProfile, bundle);
-                            // todo check here
                         });
             });
 
@@ -205,8 +199,6 @@ public class RequestDetailFragment extends Fragment {
      * @param oldOwner the old owner of the animal
      * */
     private void transferAnimalPostsAndProfilePic(FirebaseStorage storage, @NonNull FirebaseFirestore db, String microchip, String oldOwner) throws IOException {
-        // todo test
-
         // Give to the user a feedback to wait
         ProgressDialog progressDialog = new ProgressDialog(requireContext(),R.style.Widget_App_ProgressDialog);
         progressDialog.setMessage("Spostando i post...");
@@ -217,16 +209,11 @@ public class RequestDetailFragment extends Fragment {
                 "/" +
                 KeysNamesUtils.FileDirsNames.passionatePostRefDirAnimal(microchip) + "/";
 
-        //Log.wtf("currentFolderReferencePosts: ",currentFolderReferencePosts);//
-
         // Create the storage tree structure of the profile pic file
         String currentFolderReferenceProfilePic = KeysNamesUtils.FileDirsNames.passionatePostDirName(oldOwner) +
                 "/";
 
-        //Log.wtf("currentFolderReferenceProfilePic: ",currentFolderReferenceProfilePic);
-
         // Retrieve the new owner of the animal via the ActivityInterface
-        // todo: newOwner has to be the email address
         String newOwner = ((NavigationActivityInterface) requireActivity()).getUserId();
 
         Task<QuerySnapshot> postQuery = getPostsTask(KeysNamesUtils.CollectionsNames.PHOTO_DIARY, db, microchip);
@@ -237,7 +224,7 @@ public class RequestDetailFragment extends Fragment {
                 QuerySnapshot snapshotPost = (QuerySnapshot) taskAll.getResult().get(0).getResult();
                 QuerySnapshot snapshotProfilePic = (QuerySnapshot) taskAll.getResult().get(1).getResult();
 
-                List<DocumentSnapshot> posts = new ArrayList<>();
+                List<DocumentSnapshot> posts = snapshotPost.getDocuments();
                 DocumentSnapshot profilePic;
 
                 boolean isProfilePicEnabled = false;
@@ -248,7 +235,7 @@ public class RequestDetailFragment extends Fragment {
                     isProfilePicEnabled = true;
                 }
 
-                if (!snapshotPost.isEmpty()) {
+                if (posts.size() > 0) {
                     for (int i = 0; i < posts.size(); i++) {
                         PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(posts.get(i));
                         Task<byte[]> taskBytes;
@@ -284,30 +271,28 @@ public class RequestDetailFragment extends Fragment {
 
                             // Put the retrieved bytes into the storage and update
                             // the FireStore reference of the post
-                            newReference.putBytes(bytes).addOnCompleteListener(taskChangeFileLocation -> {
-                                taskChangeFileLocation.getResult().getStorage()
-                                        .getDownloadUrl().addOnCompleteListener(taskUri -> {
-                                            post.setPostUri(taskUri.getResult().toString());
+                            newReference.putBytes(bytes).addOnCompleteListener(taskChangeFileLocation ->
+                                    taskChangeFileLocation.getResult().getStorage().getDownloadUrl().addOnCompleteListener(taskUri -> {
+                                        post.setPostUri(taskUri.getResult().toString());
 
-                                            if (isPostMode) {
-                                                updatePostUriTask(KeysNamesUtils.CollectionsNames.PHOTO_DIARY, db, post)
-                                                        .addOnSuccessListener(unused -> {
-                                                            deleteCurrentReference(post, storage, currentFolderReferencePosts);
+                                        if (isPostMode) {
+                                            updatePostUriTask(KeysNamesUtils.CollectionsNames.PHOTO_DIARY, db, post)
+                                                    .addOnSuccessListener(unused -> {
+                                                        deleteCurrentReference(post, storage, currentFolderReferencePosts);
 
-                                                            if (finalI == posts.size() - 1) {
-                                                                progressDialog.dismiss();
-                                                                completeRequest(db);
-                                                            }
+                                                        if (finalI == posts.size() - 1) {
+                                                            progressDialog.dismiss();
+                                                            completeRequest(db);
+                                                        }
 
-                                                        });
-                                            } else {
-                                                updatePostUriTask(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE, db, post);
-                                                deleteCurrentReference(post, storage, currentFolderReferenceProfilePic);
-                                                progressDialog.dismiss();
-                                                completeRequest(db);
-                                            }
-                                        });
-                            });
+                                                    });
+                                        } else {
+                                            updatePostUriTask(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE, db, post);
+                                            deleteCurrentReference(post, storage, currentFolderReferenceProfilePic);
+                                            progressDialog.dismiss();
+                                            completeRequest(db);
+                                        }
+                                    }));
                         });
                     }
                 }
@@ -364,229 +349,22 @@ public class RequestDetailFragment extends Fragment {
                 .document(request.getId())
                 .set(request)
                 .addOnSuccessListener(unused -> {
+
+                    AlertDialog.Builder reloadDialogBuilder = new AlertDialog.Builder(getContext());
+                    final AlertDialog reloadDialog = reloadDialogBuilder.create();
+                    reloadDialog.setCancelable(false);
+                    reloadDialog.setMessage(getResources().getString(R.string.ricarica_sessione));
+                    reloadDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialogInterface, i) -> {
+                        Intent intent = new Intent(getContext(), LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        requireActivity().finish();
+                    });
+                    reloadDialog.show();
+
                     Toast.makeText(getContext(),
                             "Aggiornamento completato con successo", Toast.LENGTH_SHORT).show();
 
-                });
-    }
-
-    /**
-     * This method is used to upload all the references to animal's posts
-     *
-     * @param storage the firebase storage reference
-     * @param db the firestore reference
-     * @param microchip the microchip code of the animal
-     * @param oldOwner the old owner of the animal
-     * */
-    private void manageChangeOwnerPosts(FirebaseStorage storage, @NonNull FirebaseFirestore db, String microchip, String oldOwner) throws IOException {
-        // Give to the user a feedback to wait
-        ProgressDialog progressDialog = new ProgressDialog(requireContext(),R.style.Widget_App_ProgressDialog);
-        progressDialog.setMessage("Spostando i post...");
-        progressDialog.show();
-
-        // Create the storage tree structure
-        String currentFolderReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(oldOwner) +
-                "/" +
-                KeysNamesUtils.FileDirsNames.passionatePostRefDirAnimal(microchip) + "/";
-
-        Log.wtf("Scambio animali", "currentFolderReference: " + currentFolderReference);
-
-        // Obtain the posts' list of that specific animal
-        db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
-                .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, microchip)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<DocumentSnapshot> posts = task.getResult().getDocuments();
-
-                        if (posts.size() > 0) {
-                            // Scan every post retrieved
-                            for (DocumentSnapshot snapshot : posts) {
-                                PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(snapshot);
-
-                                // Build the file name of the current post
-                                String fileName = post.getFileName();
-                                String fileReference = currentFolderReference + fileName;
-
-                                Log.wtf("Scambio animali", "fileReference: " + fileReference);
-
-                                // Obtain a reference of the storage
-                                StorageReference currentReference = storage.getReference(fileReference);
-
-                                // Set a limit of bytes
-                                final long ONE_MEGABYTE = 1024 * 1024;
-
-                                // Get the bytes of the file from the reference of the storage
-                                currentReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                                    // Retrieve the new owner of the animal via the ActivityInterface
-                                    // todo: newOwner has to be the email address
-                                    String newOwner = ((NavigationActivityInterface) requireActivity()).getUserId();
-
-                                    Log.wtf("Scambio animali", "newOwner: " + newOwner);
-
-                                    // Create the new reference to the folder in the storage,
-                                    // the reference of the new file. Then it is possible to obtain
-                                    // a new storage reference
-                                    String newFolderReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(newOwner) +
-                                            "/" +
-                                            KeysNamesUtils.FileDirsNames.passionatePostRefDirAnimal(microchip) + "/";
-                                    String newFileReference = newFolderReference + fileName;
-                                    StorageReference newReference = storage.getReference(newFileReference);
-
-                                    Log.wtf("Scambio animali", "newFileReference: " + newFileReference);
-
-                                    // Put the retrieved bytes into the storage and update
-                                    // the FireStore reference of the post
-                                    newReference.putBytes(bytes).addOnCompleteListener(taskChangeFileLocation -> {
-                                        if (taskChangeFileLocation.isSuccessful()) {
-                                            taskChangeFileLocation.getResult().getStorage()
-                                                    .getDownloadUrl().addOnCompleteListener(taskUri -> {
-
-                                                // Set the download post URI
-                                                post.setPostUri(taskUri.getResult().toString());
-
-                                                // Save the post into the FireStore deleting the old reference
-                                                db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
-                                                        .document(fileName)
-                                                        .set(post)
-                                                        .addOnSuccessListener(documentReference -> {
-                                                            Toast.makeText(getContext(),
-                                                                    "Caricamento completato con successo", Toast.LENGTH_LONG).show();
-
-                                                            currentReference.delete();
-                                                            progressDialog.dismiss();
-
-                                                            // Change profile image as well
-                                                            try {
-                                                                manageChangeOwnerProfilePic(storage, db, microchip, oldOwner);
-                                                            } catch (IOException e) {
-                                                                e.printStackTrace();
-                                                            }
-                                                        });
-                                            });
-                                        }
-                                    });
-                                });
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**
-     * This method is used to upload all the references to animal's posts
-     *
-     * @param storage the firebase storage reference
-     * @param db the firestore reference
-     * @param microchip the microchip code of the animal
-     * @param oldOwner the old owner of the animal
-     * */
-    private void manageChangeOwnerProfilePic(FirebaseStorage storage, @NonNull FirebaseFirestore db, String microchip, String oldOwner) throws IOException {
-        // Give to the user a feedback to wait
-        ProgressDialog progressDialog = new ProgressDialog(requireContext(),R.style.Widget_App_ProgressDialog);
-        progressDialog.setMessage("Spostando l'immagine profilo...");
-        progressDialog.show();
-
-        // Create the storage tree structure
-        String currentFolderReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(oldOwner) +
-                "/";
-
-        Log.wtf("Scambio animali", "currentFolderReference: " + currentFolderReference);
-
-        // Obtain the posts' list of that specific animal
-        db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
-                .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, microchip)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<DocumentSnapshot> posts = task.getResult().getDocuments();
-
-                        if (posts.size() > 0) {
-                            // Scan every post retrieved
-                            DocumentSnapshot snapshot = posts.get(0);
-                            PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(snapshot);
-
-                            // Build the file name of the current post
-                            String fileName = post.getFileName();
-                            String fileReference = currentFolderReference + fileName;
-
-                            Log.wtf("Scambio animali", "fileReference: " + fileReference);
-
-                            // Obtain a reference of the storage
-                            StorageReference currentReference = storage.getReference(fileReference);
-
-                            // Set a limit of bytes
-                            final long ONE_MEGABYTE = 1024 * 1024;
-
-                            Log.wtf("Scambio animali", "LAST BEFORE");
-                            // Get the bytes of the file from the reference of the storage
-                            currentReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                                // Retrieve the new owner of the animal via the ActivityInterface
-                                // todo: newOwner has to be the email address
-                                String newOwner = ((NavigationActivityInterface) requireActivity()).getUserId();
-
-                                Log.wtf("Scambio animali", "newOwner: " + newOwner);
-
-                                // Create the new reference to the folder in the storage,
-                                // the reference of the new file. Then it is possible to obtain
-                                // a new storage reference
-                                String newFolderReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(newOwner) +
-                                        "/" ;
-                                String newFileReference = newFolderReference + fileName;
-                                StorageReference newReference = storage.getReference(newFileReference);
-
-                                Log.wtf("Scambio animali", "newFileReference: " + newFileReference);
-
-                                // Put the retrieved bytes into the storage and update
-                                // the FireStore reference of the post
-                                newReference.putBytes(bytes).addOnCompleteListener(taskChangeFileLocation -> {
-                                    if (taskChangeFileLocation.isSuccessful()) {
-                                        taskChangeFileLocation.getResult().getStorage()
-                                                .getDownloadUrl().addOnCompleteListener(taskUri -> {
-
-                                                    // Set the download post URI
-                                                    post.setPostUri(taskUri.getResult().toString());
-
-                                                    // Save the post into the FireStore deleting the old reference
-                                                    db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
-                                                            .document(fileName)
-                                                            .set(post)
-                                                            .addOnSuccessListener(documentReference -> {
-                                                                Toast.makeText(getContext(),
-                                                                        "Caricamento completato con successo", Toast.LENGTH_LONG).show();
-
-                                                                currentReference.delete();
-                                                                progressDialog.dismiss();
-
-                                                                request.setIsCompleted(true);
-                                                                db.collection(KeysNamesUtils.CollectionsNames.REQUESTS)
-                                                                        .document(request.getId())
-                                                                        .set(request)
-                                                                        .addOnSuccessListener(unused -> {
-                                                                            Toast.makeText(getContext(),
-                                                                                    "Aggiornamento completato con successo", Toast.LENGTH_SHORT).show();
-
-
-                                                                            AlertDialog.Builder reloadDialogBuilder = new AlertDialog.Builder(getContext());
-                                                                            final AlertDialog reloadDialog = reloadDialogBuilder.create();
-                                                                            reloadDialog.setCancelable(false);
-                                                                            reloadDialog.setMessage(getResources().getString(R.string.ricarica_sessione));
-                                                                            reloadDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialogInterface, i) -> {
-                                                                                Intent intent = new Intent(getContext(), LoginActivity.class);
-                                                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                                                startActivity(intent);
-                                                                                requireActivity().finish();
-                                                                            });
-                                                                            reloadDialog.show();
-                                                                            // todo: refactor with Tasks.whenAllComplete()
-                                                                        });
-                                                            });
-                                                });
-                                    }
-                                });
-                            });
-                        }
-                    }
                 });
     }
 
