@@ -97,23 +97,34 @@ public class ReportsListFragment extends Fragment {
             btnAddReport.setVisibility(View.GONE);
 
             Button btnDistance = view.findViewById(R.id.btnDistance);
-            btnDistance.setOnClickListener(v -> {
-                reportsAdapterFiltered = new ReportsAdapter();
-                reportsListFiltered = new ArrayList<>();
+            LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
 
-                String textBtn = "Tutte";
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                    locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
-                if (counterTouchKm == 4) {
-                    counterTouchKm = 0;
-                    recyclerView.setAdapter(reportsAdapter);
-                } else {
-                    textBtn = (distanceMeters[counterTouchKm] / 1000) + getResources().getString(R.string.chilometri);
-                    filterByCurrentLocation();
-                    counterTouchKm++;
-                }
+                btnDistance.setOnClickListener(v -> {
+                    reportsAdapterFiltered = new ReportsAdapter();
+                    reportsListFiltered = new ArrayList<>();
 
-                btnDistance.setText(textBtn);
-            });
+                    String textBtn = "Tutte";
+
+                    if (counterTouchKm == 4) {
+                        counterTouchKm = 0;
+                        recyclerView.setAdapter(reportsAdapter);
+                    } else {
+                        textBtn = (distanceMeters[counterTouchKm] / 1000) + getResources().getString(R.string.chilometri);
+                        filterByCurrentLocation();
+                        counterTouchKm++;
+                    }
+
+                    btnDistance.setText(textBtn);
+                });
+            } else {
+                // When location service is not enabled open location setting
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            }
+
 
         } else {
             view.findViewById(R.id.linearLocationFilter).setVisibility(View.GONE);
@@ -193,7 +204,6 @@ public class ReportsListFragment extends Fragment {
                                 navController.navigate(R.id.action_reportsDashboardFragment_to_reportDetailFragment, bundle);
                             });
                         }
-
                     });
         }
     }
@@ -201,38 +211,32 @@ public class ReportsListFragment extends Fragment {
     @SuppressLint({"MissingPermission", "NotifyDataSetChanged"})
     private void filterByCurrentLocation() {
         // Initialize Location manager
-        LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
-        // Check condition
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+
             // When location service is enabled get last location
+        client.getLastLocation().addOnCompleteListener(task -> {
+            // Initialize location
+            mLocation = task.getResult();
+            // If the location is retrieved by the callback displays the DialogMap
+            if (mLocation == null) {
+                // Send a request to find the current location
+                LocationRequest locationRequest = new LocationRequest()
+                        .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                        .setInterval(10000)
+                        .setFastestInterval(1000)
+                        .setNumUpdates(1);
+                // Use a location callback to access the fetch results
+                LocationCallback locationCallback = new LocationCallback() {
+                    @Override
+                    public void onLocationResult(@NonNull LocationResult locationResult) {
+                        mLocation = locationResult.getLastLocation();
+                    }
+                };
 
-            client.getLastLocation().addOnCompleteListener(task -> {
-                // Initialize location
-                mLocation = task.getResult();
-
-                // If the location is retrieved by the callback displays the DialogMap
-                if (mLocation == null) {
-                    // Send a request to find the current location
-                    LocationRequest locationRequest = new LocationRequest()
-                            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                            .setInterval(10000)
-                            .setFastestInterval(1000)
-                            .setNumUpdates(1);
-
-                    // Use a location callback to access the fetch results
-                    LocationCallback locationCallback = new LocationCallback() {
-                        @Override
-                        public void onLocationResult(@NonNull LocationResult locationResult) {
-                            mLocation = locationResult.getLastLocation();
-                        }
-                    };
-
-                    // Request location updates
-                    client.requestLocationUpdates(
-                            locationRequest,
-                            locationCallback,
-                            Looper.myLooper());
+                // Request location updates
+                client.requestLocationUpdates(
+                        locationRequest,
+                        locationCallback,
+                        Looper.myLooper());
                 }
 
                 // Fill the report filtered ArrayList
@@ -243,11 +247,6 @@ public class ReportsListFragment extends Fragment {
                     recyclerView.setAdapter(reportsAdapterFiltered);
                 }
             });
-        } else {
-            // When location service is not enabled open location setting
-            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-        }
     }
 
     private void filter(Location currentLocation) {

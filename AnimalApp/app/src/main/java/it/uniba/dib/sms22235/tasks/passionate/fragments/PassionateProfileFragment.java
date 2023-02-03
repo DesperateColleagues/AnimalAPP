@@ -1,5 +1,6 @@
 package it.uniba.dib.sms22235.tasks.passionate.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -7,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -17,6 +20,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 import org.jetbrains.annotations.Contract;
 
@@ -31,6 +38,7 @@ import java.util.Random;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
+import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAddAnimalFragment;
@@ -51,6 +59,39 @@ public class PassionateProfileFragment extends Fragment implements
     private PassionateProfileFragment.ProfileFragmentListener listener;
     private String username;
     private transient NavController controller;
+
+    // Manage Qr scanning
+    private final ActivityResultLauncher<ScanOptions> qrDecodeLauncher = registerForActivityResult(new ScanContract(), result -> {
+        if (result.getContents() == null) {
+            Toast.makeText(getContext(), "Operazione non andata a buon fine. Controllare i permessi.", Toast.LENGTH_SHORT).show();
+        } else {
+            FirebaseFirestore db = ((NavigationActivityInterface) requireActivity()).getFireStoreInstance();
+
+            // Take the result of QR intent
+            String [] split = result.getContents().split(" - ");
+
+            String microchip = split[0];
+            String animalName = split[1];
+            String oldOwner = split[2];
+
+            // Start the change owner operations by updating the DB entry that corresponds
+            // to the decoded QR fields
+            db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                    .whereEqualTo(KeysNamesUtils.AnimalFields.MICROCHIP_CODE, microchip)
+                    .whereEqualTo(KeysNamesUtils.AnimalFields.NAME, animalName)
+                    .whereEqualTo(KeysNamesUtils.AnimalFields.OWNER, oldOwner)
+                    .get()
+                    .addOnSuccessListener(query -> {
+                        if (query.size() > 0) {
+                            Animal animal = Animal.loadAnimal(query.getDocuments().get(0));
+
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, animal);
+                            controller.navigate(R.id.action_passionate_profile_to_animalProfile, bundle);
+                        }
+                    });
+        }
+    });
 
 
     public interface ProfileFragmentListener {
@@ -168,7 +209,17 @@ public class PassionateProfileFragment extends Fragment implements
                         controller.navigate(R.id.action_passionate_profile_to_passionateOrganizationListFragment, bundle);
                     } else if (selection.equals(KeysNamesUtils.CollectionsNames.POKE_LINK)) {
                         controller.navigate(R.id.action_passionate_profile_to_passionatePokAnimalList);
-                    } else if (selection.equals("notNow")){
+                    } else if (selection.equals(KeysNamesUtils.RolesNames.ANIMAL)) {
+                        ScanOptions options = new ScanOptions();
+                        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
+                        options.setPrompt("Scannerizza il QR code"); // todo translate
+                        options.setBeepEnabled(false);
+                        options.setBarcodeImageEnabled(true);
+                        options.setOrientationLocked(false);
+
+                        qrDecodeLauncher.launch(options);
+                    }
+                    else if (selection.equals("notNow")){
                         notNowDialog(
                                 username + " " + getResources().getString(R.string.not_now),
                                 getResources().getString(R.string.not_now_message),
@@ -236,6 +287,7 @@ public class PassionateProfileFragment extends Fragment implements
     @Contract("_ -> param1")
     private ArrayList<InfoMessage> buildStandardMessages(@NonNull ArrayList<InfoMessage> messages) {
         InfoMessage findings = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_reports_text), R.drawable.warningsign, KeysNamesUtils.CollectionsNames.REPORTS);
+        InfoMessage qrScan = new InfoMessage("Scannerizza QR", R.drawable.ic_baseline_qr_code_scanner_24, KeysNamesUtils.RolesNames.ANIMAL);
         InfoMessage showVeterinarians = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_vet_list_text), R.drawable.fra_rrc_doctor_no_green, KeysNamesUtils.RolesNames.VETERINARIAN);
         InfoMessage showOrganizations = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_org_list_text), R.drawable.fra_rrc_organization_no_green, KeysNamesUtils.RolesNames.PRIVATE_ORGANIZATION);
         InfoMessage recentReservations = new InfoMessage(getResources().getString(R.string.tutti_appuntamenti_recenti), 0, KeysNamesUtils.CollectionsNames.RESERVATIONS);
@@ -244,6 +296,7 @@ public class PassionateProfileFragment extends Fragment implements
         messages.add(findings);
         messages.add(showVeterinarians);
         messages.add(showOrganizations);
+        messages.add(qrScan);
         messages.add(pokeLinks);
         messages.add(recentReservations);
 
@@ -292,6 +345,7 @@ public class PassionateProfileFragment extends Fragment implements
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setMessage(message);
         // Set dialog title
+        @SuppressLint("InflateParams")
         View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
         TextView titleText = titleView.findViewById(R.id.dialog_title);
         titleText.setText(title);

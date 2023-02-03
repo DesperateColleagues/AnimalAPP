@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,7 +32,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
+import it.uniba.dib.sms22235.tasks.common.dialogs.requests.BsdDialogQr;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAnimalCardFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
@@ -108,8 +111,6 @@ public class AnimalProfile extends Fragment implements
 
     private FirebaseAuth mAuth;
 
-    private boolean isShowOnlyMode = false;
-
     // Used to launch the callback to retrieve intent's results
     private final ActivityResultLauncher<Intent> photoUploadAndSaveActivity = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -132,7 +133,6 @@ public class AnimalProfile extends Fragment implements
         // Get the arguments obtained from the navigation
         if (arguments != null) {
             mAnimal = (Animal) arguments.get(KeysNamesUtils.BundleKeys.ANIMAL);
-            isShowOnlyMode = arguments.getBoolean(KeysNamesUtils.BundleKeys.ANIMAL_SHOW_ONLY);
         }
 
         try {
@@ -198,7 +198,9 @@ public class AnimalProfile extends Fragment implements
         generalListener.loadProfilePic(mAnimal.getMicrochipCode(), animalPicPreview);
 
         Button updateProfile = view.findViewById(R.id.btnUpdateProfile);
-        Button shareProfile = view.findViewById(R.id.btnShareProfile);
+
+        ImageButton shareProfile = view.findViewById(R.id.btnShareProfile);
+        ImageButton btnQrCodeGenerator = view.findViewById(R.id.btnQrCodeGenerator);
 
         if (mAnimal.getOwner().equals(mAuth.getCurrentUser().getEmail())) {
             animalPicPreview.setOnClickListener(v -> {
@@ -214,6 +216,11 @@ public class AnimalProfile extends Fragment implements
                 animalCardFragment.show(getChildFragmentManager(), "DialogAnimalCardFragment");
             });
 
+            btnQrCodeGenerator.setOnClickListener(v -> {
+                BsdDialogQr bsdDialogQr = new BsdDialogQr(mAnimal.getMicrochipCode(), mAnimal.getName(), mAnimal.getOwner());
+                bsdDialogQr.show(getChildFragmentManager(), "BsdDialogQr");
+            });
+
             updateProfile.setOnClickListener(v -> {
                 dialogEditAnimalDataFragment.setAnimal(mAnimal);
                 dialogEditAnimalDataFragment.setVeterinarianList(passionateListener.getVeterinarianList());
@@ -223,6 +230,7 @@ public class AnimalProfile extends Fragment implements
         } else {
             updateProfile.setVisibility(View.GONE);
             shareProfile.setVisibility(View.GONE);
+            btnQrCodeGenerator.setVisibility(View.GONE);
         }
 
         ImageView animalPosition = view.findViewById(R.id.animalPosition);
@@ -235,7 +243,6 @@ public class AnimalProfile extends Fragment implements
             TextView txtInfoAnimal = view.findViewById(R.id.txtInfoAnimal);
 
             txtAnimalNameProfile.setText(mAnimal.getName());
-
             txtInfoAnimal.setText(Html.fromHtml(info, Html.FROM_HTML_MODE_LEGACY));
         }
 
@@ -245,12 +252,14 @@ public class AnimalProfile extends Fragment implements
         Adapter adapter = new Adapter(getChildFragmentManager());
         String animal = mAnimal.getMicrochipCode();
 
-        if (mAnimal.getOwner().equals(mAuth.getCurrentUser().getEmail())) {
+        if (requireActivity() instanceof PassionateNavigationActivity) {
             PhotoDiaryFragment photoDiaryFragment = new PhotoDiaryFragment(animal, mAnimal.getOwner());
             adapter.addFragment(photoDiaryFragment, "Photo diary");
         }
+
         adapter.addFragment(new DiagnosisFragment(animal, mAnimal.getOwner()), "Diagnosi");
         adapter.addFragment(new ExamsFragment(animal, mAnimal.getOwner()),"Esami"); //TODO:Stringhe
+
         viewPager.setAdapter(adapter);
     }
 
