@@ -164,6 +164,7 @@ public class ReportsListFragment extends Fragment {
 
                 } else if (shouldShowRequestPermissionRationale(permissionAccessFineLocation)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AnimalCardRoundedDialog);
+                    @SuppressLint("InflateParams")
                     View titleView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_dialogs_title, null);
                     TextView titleText = titleView.findViewById(R.id.dialog_title);
                     titleText.setText("Perchè accettare il permesso");

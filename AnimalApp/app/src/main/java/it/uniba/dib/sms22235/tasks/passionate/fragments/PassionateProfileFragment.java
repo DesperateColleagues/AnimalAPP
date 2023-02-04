@@ -87,6 +87,8 @@ public class PassionateProfileFragment extends Fragment implements
 
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, animal);
+                            bundle.putInt("ViewMode", 1);
+
                             controller.navigate(R.id.action_passionate_profile_to_animalProfile, bundle);
                         }
                     });

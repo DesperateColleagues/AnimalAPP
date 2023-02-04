@@ -61,10 +61,10 @@ public class AnimalProfile extends Fragment implements
          * This method is used to load from firebase the profile pic and to put it into an
          * imageview
          *
-         * @param microchip the microchip of the animal
+         * @param fileName the name of the file of the profile pic
          * @param imageView the image view where the image will be loaded
          * */
-        void loadProfilePic(String microchip, ImageView imageView);
+        void loadProfilePic(String fileName, ImageView imageView);
 
         /**
          * This method is used when an animal is updated
@@ -195,7 +195,9 @@ public class AnimalProfile extends Fragment implements
         tabLayout.setupWithViewPager(viewPager);
 
         ImageView animalPicPreview = view.findViewById(R.id.animalPicPreview);
-        generalListener.loadProfilePic(mAnimal.getMicrochipCode(), animalPicPreview);
+        generalListener.loadProfilePic(
+                KeysNamesUtils.FileDirsNames.animalProfilePic(mAnimal.getMicrochipCode()),
+                animalPicPreview);
 
         Button updateProfile = view.findViewById(R.id.btnUpdateProfile);
 

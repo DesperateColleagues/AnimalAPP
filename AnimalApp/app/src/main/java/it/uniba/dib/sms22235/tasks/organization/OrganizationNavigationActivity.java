@@ -281,9 +281,9 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void loadProfilePic(String microchip, ImageView imageView) {
+    public void loadProfilePic(String fileName, ImageView imageView) {
         InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(getApplicationContext(), db);
-        animalHelper.loadProfilePic(microchip, imageView);
+        animalHelper.loadProfilePic(fileName, imageView);
     }
 
     @Override
@@ -335,7 +335,9 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
 
     @Override
     public void loadPost(AnimalPostAdapter adapter, List<PhotoDiaryPost> postsList, String animal) {
-        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper =
+                new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
+
         animalHelper.loadPost(adapter, postsList, animal);
     }
 

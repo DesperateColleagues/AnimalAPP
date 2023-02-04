@@ -350,35 +350,10 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void loadPost(AnimalPostAdapter adapter, List<PhotoDiaryPost> postsList, String animal) {
-        db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
-                .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, animal)
-                .addSnapshotListener((value, error) -> {
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper =
+                new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
 
-                    // Handle the error if the listening is not working
-                    if (error != null) {
-                        Log.w("Error listen", "listen:error", error);
-                        return;
-                    }
-
-                    if (value != null && value.getDocumentChanges().size() > 0) {
-                        // Check for every document
-                        for (DocumentChange change : value.getDocumentChanges()) {
-                            PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(change.getDocument());
-                            switch (change.getType()) {
-                                case ADDED:
-                                    postsList.add(post);
-                                    break;
-                                case REMOVED:
-                                    postsList.remove(post);
-                                    break;
-                            }
-                        }
-
-                        // Notify the changes on the adapter
-                        Collections.reverse(postsList);
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+        animalHelper.loadPost(adapter, postsList, animal);
     }
 
     @Override
@@ -440,54 +415,10 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
     @Override
     public void onProfilePicAdded(Uri source, String microchip) {
-        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper =
+                new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
+
         animalHelper.onProfilePicAdded(source, microchip, getUserId());
-        /*
-        String fileName = KeysNamesUtils.FileDirsNames.animalProfilePic(microchip);
-
-        // Create the storage tree structure
-        String fileReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(getUserId()) +
-                "/" + fileName;
-
-        // Get a reference of the storage by passing the tree structure
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference
-                (fileReference);
-
-        // Give to the user a feedback to wait
-        ProgressDialog progressDialog = new ProgressDialog(this,R.style.Widget_App_ProgressDialog);
-        progressDialog.setMessage("Salvando l'immagine...");
-        progressDialog.show();
-
-        // Start the upload task
-        UploadTask uploadTask = storageReference.putFile(source);
-        uploadTask.addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                task.getResult()
-                        .getStorage()
-                        .getDownloadUrl().addOnCompleteListener(taskUri -> {
-                            PhotoDiaryPost postProfileImage = new PhotoDiaryPost(taskUri.getResult().toString(), microchip);
-                            postProfileImage.setFileName(fileName);
-
-                            db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
-                                    .document(KeysNamesUtils.FileDirsNames.animalProfilePic(microchip))
-                                    .delete().addOnCompleteListener(taskDelete -> {
-                                        // Useless to check if the task is successful. The following
-                                        // query has to be executed in both cases
-
-                                        // Save the post into the FireStore
-                                        db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
-                                                .document(KeysNamesUtils.FileDirsNames.animalProfilePic(microchip))
-                                                .set(postProfileImage)
-                                                .addOnSuccessListener(documentReference -> {
-                                                    Toast.makeText(PassionateNavigationActivity.this,
-                                                            "Immagine profilo caricata con successo", Toast.LENGTH_LONG).show();
-                                                    progressDialog.dismiss();
-                                                });
-                                    });
-
-                        });
-            }
-        });*/
     }
 
     @Override
@@ -532,9 +463,9 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
     /* This method is used to load the animal profile pic in AnimalProfile */
     @Override
-    public void loadProfilePic(String microchip, ImageView imageView) {
+    public void loadProfilePic(String fileName, ImageView imageView) {
         InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(getApplicationContext(), db);
-        animalHelper.loadProfilePic(microchip, imageView);
+        animalHelper.loadProfilePic(fileName, imageView);
     }
 
     @Override
@@ -949,26 +880,5 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         }
                     }
                 });
-    }
-
-    //method to ask permissions
-    // todo: improve permissions requests
-    public void requestPermission() {
-        String permissionRead = Manifest.permission.READ_EXTERNAL_STORAGE;
-        String permissionWrite = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-
-        int grantRead = ContextCompat.checkSelfPermission(this,permissionRead);
-        int grantWrite = ContextCompat.checkSelfPermission(this, permissionWrite);
-
-        String [] permissions = {permissionRead,permissionWrite};
-
-        if(grantRead != PackageManager.PERMISSION_GRANTED || grantWrite != PackageManager.PERMISSION_GRANTED) {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissionRead) && ActivityCompat.shouldShowRequestPermissionRationale(this, permissionWrite)) {
-                //TODO Dialog
-            } else {
-                int STORAGE_REQUEST_CODE = 1;
-                ActivityCompat.requestPermissions(this,permissions, STORAGE_REQUEST_CODE);
-            }
-        }
     }
 }

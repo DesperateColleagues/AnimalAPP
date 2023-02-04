@@ -47,7 +47,7 @@ public class InterfacesOperationsHelper {
         this.context = context;
     }
 
-    public void registerDiagnosis(Diagnosis diagnosis) {
+    public void registerDiagnosis(@NonNull Diagnosis diagnosis) {
         Log.wtf("WTF",diagnosis.getId());
         Log.wtf("WTF",diagnosis.getDescription());
         db.collection(KeysNamesUtils.CollectionsNames.DIAGNOSIS)
@@ -92,9 +92,9 @@ public class InterfacesOperationsHelper {
                 });*/
         }
 
-        public void loadProfilePic(String microchip, ImageView imageView) {
-            db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
-                    .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, microchip)
+        public void loadProfilePic(String fileName, ImageView imageView) {
+            db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
+                    .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.FILE_NAME, fileName)
                     .addSnapshotListener((value, error) -> {
 
                         // Handle the error if the listening is not working
@@ -144,14 +144,14 @@ public class InterfacesOperationsHelper {
                                 PhotoDiaryPost postProfileImage = new PhotoDiaryPost(taskUri.getResult().toString(), microchip);
                                 postProfileImage.setFileName(fileName);
 
-                                db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
+                                db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
                                         .document(KeysNamesUtils.FileDirsNames.animalProfilePic(microchip))
                                         .delete().addOnCompleteListener(taskDelete -> {
                                             // Useless to check if the task is successful. The following
                                             // query has to be executed in both cases
 
                                             // Save the post into the FireStore
-                                            db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
+                                            db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
                                                     .document(KeysNamesUtils.FileDirsNames.animalProfilePic(microchip))
                                                     .set(postProfileImage)
                                                     .addOnSuccessListener(documentReference -> {
@@ -236,8 +236,10 @@ public class InterfacesOperationsHelper {
 
         @SuppressLint("NotifyDataSetChanged")
         public void loadPost(AnimalPostAdapter adapter, List<PhotoDiaryPost> postsList, String animal) {
+            Log.d("ANIMAL", animal);
             db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
                     .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, animal)
+                    .whereNotEqualTo(KeysNamesUtils.PhotoDiaryFields.FILE_NAME, KeysNamesUtils.FileDirsNames.animalProfilePic(animal))
                     .addSnapshotListener((value, error) -> {
 
                         // Handle the error if the listening is not working

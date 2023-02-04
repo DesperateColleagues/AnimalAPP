@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -65,8 +66,6 @@ public class RequestDetailFragment extends Fragment {
             String microchip = split[0];
             String animalName = split[1];
             String oldOwner = split[2];
-
-            Toast.makeText(requireContext(), oldOwner, Toast.LENGTH_SHORT).show();
 
             // Start the change owner operations by updating the DB entry that corresponds
             // to the decoded QR fields
@@ -167,7 +166,7 @@ public class RequestDetailFragment extends Fragment {
                             Animal animal = Animal.loadAnimal(query.getDocuments().get(0));
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, animal);
-                            bundle.putBoolean(KeysNamesUtils.BundleKeys.ANIMAL_SHOW_ONLY, true);
+                            bundle.putInt("ViewMode", 1);
                             navController.navigate(R.id.action_request_detail_to_animalProfile, bundle);
                         });
             });
@@ -202,6 +201,7 @@ public class RequestDetailFragment extends Fragment {
         // Give to the user a feedback to wait
         ProgressDialog progressDialog = new ProgressDialog(requireContext(),R.style.Widget_App_ProgressDialog);
         progressDialog.setMessage("Spostando i post...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         // Create the storage tree structure of the posts directory
@@ -217,34 +217,21 @@ public class RequestDetailFragment extends Fragment {
         String newOwner = ((NavigationActivityInterface) requireActivity()).getUserId();
 
         Task<QuerySnapshot> postQuery = getPostsTask(KeysNamesUtils.CollectionsNames.PHOTO_DIARY, db, microchip);
-        Task<QuerySnapshot> profilePicQuery = getPostsTask(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE, db, microchip);
 
-        Tasks.whenAllComplete(postQuery, profilePicQuery).addOnCompleteListener(taskAll -> {
+        postQuery.addOnCompleteListener(taskAll -> {
             if (taskAll.isSuccessful()) {
-                QuerySnapshot snapshotPost = (QuerySnapshot) taskAll.getResult().get(0).getResult();
-                QuerySnapshot snapshotProfilePic = (QuerySnapshot) taskAll.getResult().get(1).getResult();
+                QuerySnapshot snapshotPost = (QuerySnapshot) taskAll.getResult();
 
                 List<DocumentSnapshot> posts = snapshotPost.getDocuments();
-                DocumentSnapshot profilePic;
-
-                boolean isProfilePicEnabled = false;
-
-                if (!snapshotPost.isEmpty()) {
-                    profilePic = snapshotProfilePic.getDocuments().get(0);
-                    posts.add(profilePic); // add the profile pic as last element
-                    isProfilePicEnabled = true;
-                }
 
                 if (posts.size() > 0) {
-                    Log.wtf("POST", "" + posts.size());
                     for (int i = 0; i < posts.size(); i++) {
                         PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(posts.get(i));
                         Task<byte[]> taskBytes;
 
-                        String newFolderReference = "";
+                        String newFolderReference;
 
-                        // Define if the current element is a post or not
-                        boolean isPostMode = i < posts.size() - 1 || !isProfilePicEnabled;
+                        boolean isPostMode = !post.getFileName().equals(KeysNamesUtils.FileDirsNames.animalProfilePic(microchip));
 
                         // Get the task with bytes of the current post and create the
                         // new reference to the folder in the storage
@@ -257,9 +244,7 @@ public class RequestDetailFragment extends Fragment {
                             taskBytes = getPostBytesTask(post, storage, currentFolderReferenceProfilePic);
                             newFolderReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(newOwner) +
                                     "/" ;
-                            Log.wtf("POST", "Hi " + newFolderReference);
 
-                            Toast.makeText(getContext(), "Hi", Toast.LENGTH_SHORT).show();
                         }
 
                         // Get the bytes of the file from the reference of the storage and
@@ -273,31 +258,24 @@ public class RequestDetailFragment extends Fragment {
                             String newFileReference = finalNewFolderReference + post.getFileName();
                             StorageReference newReference = storage.getReference(newFileReference);
 
-                            Log.d("POST", isPostMode + " " + newReference);
-
                             // Put the retrieved bytes into the storage and update
                             // the FireStore reference of the post
                             newReference.putBytes(bytes).addOnCompleteListener(taskChangeFileLocation ->
                                     taskChangeFileLocation.getResult().getStorage().getDownloadUrl().addOnCompleteListener(taskUri -> {
                                         post.setPostUri(taskUri.getResult().toString());
 
-                                        if (isPostMode) {
-                                            updatePostUriTask(KeysNamesUtils.CollectionsNames.PHOTO_DIARY, db, post)
-                                                    .addOnSuccessListener(unused -> {
+                                        updatePostUriTask(KeysNamesUtils.CollectionsNames.PHOTO_DIARY, db, post)
+                                                .addOnSuccessListener(unused -> {
+                                                    if (isPostMode) {
                                                         deleteCurrentReference(post, storage, currentFolderReferencePosts);
+                                                    } else {
+                                                        deleteCurrentReference(post, storage, currentFolderReferenceProfilePic);
+                                                    }
 
-                                                        if (finalI == posts.size() - 1) {
-                                                            progressDialog.dismiss();
-                                                            completeRequest(db);
-                                                        }
-
-                                                    });
-                                        } else {
-                                            updatePostUriTask(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE, db, post);
-                                            deleteCurrentReference(post, storage, currentFolderReferenceProfilePic);
-                                            progressDialog.dismiss();
-                                            completeRequest(db);
-                                        }
+                                                    if (finalI == posts.size() - 1) {
+                                                        completeRequest(db, progressDialog);
+                                                    }
+                                                });
                                     }));
                         });
                     }
@@ -333,10 +311,10 @@ public class RequestDetailFragment extends Fragment {
         StorageReference currentReference = storage.getReference(fileReference);
 
         // Set a limit of bytes
-        final long ONE_MEGABYTE = 1024 * 1024;
+        final long FIVE_MEGABYTE = 1024 * 1024 * 5;
 
         // Get the bytes of the file from the reference of the storage
-        return currentReference.getBytes(ONE_MEGABYTE);
+        return currentReference.getBytes(FIVE_MEGABYTE);
     }
 
     private void deleteCurrentReference(@NonNull PhotoDiaryPost post, @NonNull FirebaseStorage storage, String currentFolderReference) {
@@ -349,13 +327,13 @@ public class RequestDetailFragment extends Fragment {
         currentReference.delete();
     }
 
-    private void completeRequest(@NonNull FirebaseFirestore db) {
+    private void completeRequest(@NonNull FirebaseFirestore db, ProgressDialog progressDialog) {
         request.setIsCompleted(true);
         db.collection(KeysNamesUtils.CollectionsNames.REQUESTS)
                 .document(request.getId())
                 .set(request)
                 .addOnSuccessListener(unused -> {
-
+                    progressDialog.dismiss();
                     AlertDialog.Builder reloadDialogBuilder = new AlertDialog.Builder(getContext());
                     final AlertDialog reloadDialog = reloadDialogBuilder.create();
                     reloadDialog.setCancelable(false);

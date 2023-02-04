@@ -1,5 +1,7 @@
 package it.uniba.dib.sms22235.tasks;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -58,4 +60,5 @@ public interface NavigationActivityInterface {
      * This method is used to restore the normal visibility to the nav bar
      * */
     void restoreBottomAppBarVisibility();
+
 }
