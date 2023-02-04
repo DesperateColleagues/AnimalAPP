@@ -46,6 +46,7 @@ import it.uniba.dib.sms22235.adapters.commonoperations.ReportsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Report;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.CustomBsdDialog;
+import it.uniba.dib.sms22235.tasks.common.dialogs.DialogEntityDetailsFragment;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class ReportsListFragment extends Fragment {
@@ -146,6 +147,7 @@ public class ReportsListFragment extends Fragment {
                                 btnDistance.setText(textBtn);
                             } else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AnimalCardRoundedDialog);
+                                @SuppressLint("InflateParams")
                                 View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
                                 TextView titleText = titleView.findViewById(R.id.dialog_title);
                                 titleText.setText("Abilita posizione");
@@ -163,22 +165,27 @@ public class ReportsListFragment extends Fragment {
                             }
 
                 } else if (shouldShowRequestPermissionRationale(permissionAccessFineLocation)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AnimalCardRoundedDialog);
+                    String info = "Il permesso <b>POSIZIONE</b> è essenziale per poter gestire tutte" +
+                            " le informazioni relative alle segnalazione. Senza di esso non ti sarà possibile:<br> " +
+                            "<br>• Inserire una nuova segnalazione" +
+                            "<br>• Filtrare le segnalazioni esistenti";
+
                     @SuppressLint("InflateParams")
                     View titleView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_dialogs_title, null);
                     TextView titleText = titleView.findViewById(R.id.dialog_title);
                     titleText.setText("Perchè accettare il permesso");
-                    builder.setCustomTitle(titleView);
-                    builder.setMessage("Il permesso POSIZIONE è essenziale per poter gestire tutte" +
-                            " le informazioni relative alle segnalazione. Senza di esso non ti sarà possibile " +
-                            "\n- Inserire una nuova segnalazione" +
-                            "\n- Filtrare le segnalazioni esistenti");
-                    builder.setNegativeButton("Chiudi", (dialog, which) -> dialog.dismiss());
-                    builder.setPositiveButton("Chiedi permesso", ((dialog, which) -> {
+
+                    DialogEntityDetailsFragment dialogEntityDetailsFragment = new DialogEntityDetailsFragment(info);
+
+                    dialogEntityDetailsFragment.setTitleView(titleView);
+                    dialogEntityDetailsFragment.setPositiveButton("Chiudi", (dialog, which) -> dialog.dismiss());
+                    dialogEntityDetailsFragment.setNegativeButton("Chiedi permesso", ((dialog, which) -> {
                         requestPermissionLauncher.launch(permissionAccessFineLocation);
                         dialog.dismiss();
                     }));
-                    builder.create().show();
+
+                    dialogEntityDetailsFragment.show(getChildFragmentManager(), "DialogEntityDetailsFragment");
+
                 } else {
                     requestPermissionLauncher.launch(permissionAccessFineLocation);
                 }
