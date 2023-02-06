@@ -140,6 +140,8 @@
 
     <!-- Stringhe sottostanti riferite all'ente e alle sue funzioni -->
     <string name="empty_list">Non c\'è niente qui, per ora</string>
+    <string name="bill_pc">Il PC di Bill</string>
+    <string name="seleziona_amico">Seleziona amico</string>
 
     <string-array name="rangeSliderValues">
         <item>0</item>

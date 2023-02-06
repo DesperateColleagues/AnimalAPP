@@ -19,7 +19,6 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.users.Animal;
@@ -63,9 +62,10 @@ public class DialogAddPokeLink extends DialogFragment {
         builder.setView(root);
 
         // Set dialog title
+        @SuppressLint("InflateParams")
         View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
         TextView titleText = titleView.findViewById(R.id.dialog_title);
-        titleText.setText("Il PC di Bill");
+        titleText.setText(R.string.bill_pc);
         builder.setCustomTitle(titleView);
 
         Spinner passionateAnimalsSpinner = root.findViewById(R.id.passionateAnimalsSpinner);

@@ -1,10 +1,8 @@
 package it.uniba.dib.sms22235.tasks.passionate;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -26,8 +24,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 
 import androidx.navigation.fragment.NavHostFragment;
@@ -43,7 +39,6 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -58,7 +53,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Collections;
 import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
@@ -73,6 +67,8 @@ import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDiaryFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsAnimalTransferOperationsListener;
+import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsStandardOperationListener;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionatePokAnimalList;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateProfileFragment;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateReservationFragment;
@@ -102,6 +98,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         PhotoDiaryFragment.PhotoDiaryFragmentListener,
         PassionatePokAnimalList.PassionatePokAnimalListListener,
         NavigationActivityInterface,
+        RequestsStandardOperationListener,
+        RequestsAnimalTransferOperationsListener,
         Serializable {
 
     private transient FirebaseFirestore db;
@@ -242,12 +240,12 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             availableReservationsList = new ArrayList<>();
         }
 
-        // Init the veterinatians data set it is null
+        // Init the veterinarians data set it is null
         if (veterinariansList == null) {
             veterinariansList = new ArrayList<>();
         }
 
-        // Initi the organizations data set if it is null
+        // Init the organizations data set if it is null
         if (organizationList == null) {
             organizationList = new ArrayList<>();
         } else {
