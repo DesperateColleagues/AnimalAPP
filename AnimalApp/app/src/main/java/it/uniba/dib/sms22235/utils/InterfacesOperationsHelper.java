@@ -132,6 +132,7 @@ public class InterfacesOperationsHelper {
             // Give to the user a feedback to wait
             ProgressDialog progressDialog = new ProgressDialog(context, R.style.Widget_App_ProgressDialog);
             progressDialog.setMessage("Salvando l'immagine...");
+            progressDialog.setCancelable(false);
             progressDialog.show();
 
             // Start the upload task

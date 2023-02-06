@@ -21,6 +21,11 @@
             app:destination="@id/reportsDashboardFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_veterinarian_profile_to_userProfileInfoFragment"
+            app:destination="@id/userProfileInfoFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -92,5 +97,11 @@
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/userProfileInfoFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragment"
+        android:label="UserProfileInfoFragment"
+        tools:layout="@layout/fragment_user_profile_info"/>
 
 </navigation>

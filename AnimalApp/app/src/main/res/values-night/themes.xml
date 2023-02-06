@@ -24,5 +24,7 @@
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
         <item name="android:windowBackground">@color/dark_bg</item>
 
+        <item name="android:itemTextAppearance">@style/myCustomMenuTextAppearance</item>
+
     </style>
 </resources>

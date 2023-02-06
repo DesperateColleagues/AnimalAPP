@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -39,6 +41,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,11 +55,13 @@ import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
+import it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragmentListener;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDiaryFragment;
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsStandardOperationListener;
+import it.uniba.dib.sms22235.tasks.login.LoginActivity;
 import it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationAnimalListFragment;
 import it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationImportDataFragment;
 import it.uniba.dib.sms22235.utils.InterfacesOperationsHelper;
@@ -70,6 +75,7 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
         PhotoDiaryFragment.PhotoDiaryFragmentListener,
         OrganizationImportDataFragment.OrganizationImportDataFragmentListener,
         RequestsStandardOperationListener,
+        UserProfileInfoFragmentListener,
         OrganizationAnimalListFragment.OrganizationAnimalsFragmentListener {
 
     private transient Organization organization;
@@ -81,6 +87,7 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
     private transient BottomNavigationView navView;
 
     private transient ArrayList<Veterinarian> veterinariansList;
+    private transient NavController navController;
 
     // Flag that specify whether the connection is enabled or not
     private boolean isConnectionEnabled;
@@ -132,7 +139,7 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
 
         assert navHostFragment != null;
 
-        NavController navController = navHostFragment.getNavController();
+        navController = navHostFragment.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
@@ -168,6 +175,38 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
             veterinariansList = new ArrayList<>();
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.overflow_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // standard behavior
+        if (item.getItemId() == R.id.profile_info) {
+            LinkedHashMap<String, String> map = new LinkedHashMap<>();
+            map.put("Indirizzo ente", organization.getOrgAddress());
+            map.put("Numero di telefono", organization.getPhoneNumber());
+            map.put("Tipo di ente", organization.getPurpose());
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(KeysNamesUtils.BundleKeys.USER_PROFILE, organization);
+            bundle.putSerializable(KeysNamesUtils.BundleKeys.USER_PROFILE_INFO, map);
+
+            navController.navigate(R.id.action_organization_profile_to_userProfileInfoFragment, bundle);
+        } else if (item.getItemId() == R.id.logout) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent, null);
+            finish();
+        } else {
+            navController.popBackStack();
+            restoreBottomAppBarVisibility();
+        }
+
+        return true;
     }
 
     @Override

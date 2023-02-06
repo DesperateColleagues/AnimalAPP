@@ -19,6 +19,10 @@ import java.nio.charset.StandardCharsets;
 
 public class DataManipulationHelper {
 
+    private DataManipulationHelper() {
+        // not instantiable
+    }
+
     /**
      * This method is used to save a Bitmap object to the internal storage
      *

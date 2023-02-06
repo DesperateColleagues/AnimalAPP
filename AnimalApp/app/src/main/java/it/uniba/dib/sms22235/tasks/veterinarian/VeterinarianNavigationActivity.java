@@ -2,9 +2,12 @@ package it.uniba.dib.sms22235.tasks.veterinarian;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -29,6 +32,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,11 +45,13 @@ import it.uniba.dib.sms22235.entities.operations.Exam;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
+import it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragmentListener;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDiaryFragment;
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsStandardOperationListener;
+import it.uniba.dib.sms22235.tasks.login.LoginActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianAnimalListFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianReservationFragment;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
@@ -61,6 +67,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         PhotoDiaryFragment.PhotoDiaryFragmentListener,
         DiagnosisFragment.DiagnosisFragmentListener,
         RequestsStandardOperationListener,
+        UserProfileInfoFragmentListener,
         NavigationActivityInterface {
 
     private FloatingActionButton fab;
@@ -68,6 +75,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     private Veterinarian veterinarian;
     private ArrayList<Reservation> reservationsList;
     private transient  BottomNavigationView navViewVeterinarian;
+    private transient NavController navController;
 
     private InterfacesOperationsHelper helper;
 
@@ -93,7 +101,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
         assert navHostFragment != null;
 
-        NavController navController = navHostFragment.getNavController();
+        navController = navHostFragment.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navViewVeterinarian, navController);
 
@@ -116,6 +124,39 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
         Toast.makeText(getApplicationContext(), "" + veterinarian.getClinicAddress(), Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.overflow_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // standard behavior
+        if (item.getItemId() == R.id.profile_info) {
+            LinkedHashMap<String, String> map = new LinkedHashMap<>();
+            map.put("Nome clinica", veterinarian.getClinicName());
+            map.put("Indirizzo clinica", veterinarian.getClinicAddress());
+            map.put("Numero di telefono", veterinarian.getPhoneNumber());
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(KeysNamesUtils.BundleKeys.USER_PROFILE, veterinarian);
+            bundle.putSerializable(KeysNamesUtils.BundleKeys.USER_PROFILE_INFO, map);
+
+            navController.navigate(R.id.action_veterinarian_profile_to_userProfileInfoFragment, bundle);
+        } else if (item.getItemId() == R.id.logout) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent, null);
+            finish();
+        } else {
+            navController.popBackStack();
+            restoreBottomAppBarVisibility();
+        }
+
+        return true;
+    }
+
 
     @Override
     public void onReservationRegistered(@NonNull Reservation reservation) {

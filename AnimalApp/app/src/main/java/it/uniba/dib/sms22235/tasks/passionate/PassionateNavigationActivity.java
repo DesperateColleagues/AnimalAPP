@@ -13,9 +13,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.view.ViewConfiguration;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -50,7 +52,9 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.library.BuildConfig;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
@@ -62,6 +66,7 @@ import it.uniba.dib.sms22235.adapters.animals.PokAnimalAdapter;
 import it.uniba.dib.sms22235.entities.operations.PokeLink;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
+import it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragmentListener;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 
@@ -69,6 +74,7 @@ import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFra
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDiaryFragment;
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsAnimalTransferOperationsListener;
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsStandardOperationListener;
+import it.uniba.dib.sms22235.tasks.login.LoginActivity;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionatePokAnimalList;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateProfileFragment;
 import it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateReservationFragment;
@@ -100,6 +106,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         NavigationActivityInterface,
         RequestsStandardOperationListener,
         RequestsAnimalTransferOperationsListener,
+        UserProfileInfoFragmentListener,
         Serializable {
 
     private transient FirebaseFirestore db;
@@ -115,6 +122,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
     private transient FloatingActionButton fab;
     private transient BottomNavigationView navView;
+    private transient NavController navController;
 
     private InterfacesOperationsHelper helper;
 
@@ -194,7 +202,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         assert navHostFragment != null;
 
         // Set up the navigation system
-        NavController navController = navHostFragment.getNavController();
+        navController = navHostFragment.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
@@ -265,10 +273,36 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         connectivityManager.requestNetwork(networkRequest, networkCallback);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.overflow_menu, menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        // standard behavior
+        if (item.getItemId() == R.id.profile_info) {
+            LinkedHashMap<String, String> map = new LinkedHashMap<>();
+            map.put("Username", passionate.getUsername());
+            map.put("Numero di animali", "" + animalSet.size());
+            map.put("Numero di spese effettuate", "" + purchasesList.size());
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(KeysNamesUtils.BundleKeys.USER_PROFILE, passionate);
+            bundle.putSerializable(KeysNamesUtils.BundleKeys.USER_PROFILE_INFO, map);
+
+            navController.navigate(R.id.action_passionate_profile_to_userProfileInfoFragment, bundle);
+        } else if (item.getItemId() == R.id.logout) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent, null);
+            finish();
+        } else {
+            navController.popBackStack();
+            restoreBottomAppBarVisibility();
+        }
+
+        return true;
     }
 
     @Override

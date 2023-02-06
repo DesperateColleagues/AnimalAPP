@@ -14,40 +14,41 @@
         <action
             android:id="@+id/action_passionate_profile_to_animalProfile"
             app:destination="@id/animalProfile"
-            app:popUpTo="@id/animalProfile"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
+
         <action
             android:id="@+id/action_passionate_profile_to_BookedReservationsFragment"
             app:destination="@id/passionateBookedReservations"
-            app:popUpTo="@id/animalProfile"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
 
         <action
             android:id="@+id/action_passionate_profile_to_reportsDashboardFragment"
             app:destination="@id/reportsDashboardFragment"
-            app:popUpTo="@id/animalProfile"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
 
         <action
             android:id="@+id/action_passionate_profile_to_passionateVeterinarianListFragment"
             app:destination="@id/passionateVeterinarianListFragment"
-            app:popUpTo="@id/animalProfile"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
         <action
             android:id="@+id/action_passionate_profile_to_passionatePokAnimalList"
             app:destination="@id/passionatePokAnimalList"
-            app:popUpTo="@id/animalProfile"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
 
         <action
             android:id="@+id/action_passionate_profile_to_passionateOrganizationListFragment"
             app:destination="@id/passionateOrganizationListFragment"
-            app:popUpTo="@id/animalProfile"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/action_passionate_profile_to_userProfileInfoFragment"
+            app:destination="@id/userProfileInfoFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
@@ -177,5 +178,11 @@
         android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateOrganizationListFragment"
         android:label="PassionateOrganizationListFragment"
         tools:layout="@layout/fragment_passionate_organization_info_list"/>
+
+    <fragment
+        android:id="@+id/userProfileInfoFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragment"
+        android:label="UserProfileInfoFragment"
+        tools:layout="@layout/fragment_user_profile_info"/>
 
 </navigation>

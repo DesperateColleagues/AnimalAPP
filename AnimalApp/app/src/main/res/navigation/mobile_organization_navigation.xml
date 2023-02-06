@@ -15,7 +15,15 @@
         android:id="@+id/organization_profile"
         android:name="it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationProfileFragment"
         android:label="Profilo organizzazione"
-        tools:layout="@layout/fragment_organization_profile" />
+        tools:layout="@layout/fragment_organization_profile" >
+
+        <action
+            android:id="@+id/action_organization_profile_to_userProfileInfoFragment"
+            app:destination="@id/userProfileInfoFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
+
+    </fragment>
 
     <fragment
         android:id="@+id/organization_animal_list"
@@ -34,6 +42,13 @@
         android:name="it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationImportDataFragment"
         android:label="Importa dati animali"
         tools:layout="@layout/fragment_organization_import_data" />
+
+
+    <fragment
+        android:id="@+id/userProfileInfoFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragment"
+        android:label="UserProfileInfoFragment"
+        tools:layout="@layout/fragment_user_profile_info"/>
 
 
 </navigation>

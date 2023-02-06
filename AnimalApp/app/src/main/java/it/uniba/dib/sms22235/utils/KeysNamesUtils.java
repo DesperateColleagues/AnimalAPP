@@ -160,6 +160,8 @@ public class KeysNamesUtils {
         public static String PASSIONATE = "passionate";
         public static String VETERINARIAN = "veterinarian";
         public static String ORGANIZATION = "organization";
+        public static String USER_PROFILE = "userProfile";
+        public static String USER_PROFILE_INFO = "userProfileInfo";
         public static String VETERINARIAN_RESERVATIONS = "veterinarian_reservations";
         public static String PASSIONATE_RESERVATIONS = "passionate_reservations";
         public static String AVAILABLE_RESERVATIONS = "available_reservations";
