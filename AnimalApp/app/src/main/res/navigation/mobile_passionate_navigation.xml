@@ -175,7 +175,7 @@
 
     <fragment
         android:id="@+id/passionateOrganizationListFragment"
-        android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateOrganizationListFragment"
+        android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateOrganizationInfoListFragment"
         android:label="PassionateOrganizationListFragment"
         tools:layout="@layout/fragment_passionate_organization_info_list"/>
 

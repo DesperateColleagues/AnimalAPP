@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,8 +33,9 @@ public class DialogAddPokeLink extends DialogFragment {
          * that do not belongs to the current logged passionate
          *
          * @param spinner the spinner where to load the animals
+         * @param username to username of the animal's owner
          * */
-        void loadOtherAnimals(Spinner spinner);
+        void loadOtherAnimals(Spinner spinner, String username, DialogFragment dialog);
 
         /**
          * Callback called when a new link is added
@@ -47,6 +49,11 @@ public class DialogAddPokeLink extends DialogFragment {
     }
 
     private DialogAddPokeLinkListener listener;
+    private String friendId;
+
+    public void setFriendId(String friendId) {
+        this.friendId = friendId;
+    }
 
     public void setListener(DialogAddPokeLinkListener listener) {
         this.listener = listener;
@@ -80,11 +87,9 @@ public class DialogAddPokeLink extends DialogFragment {
         passionateAnimalsSpinner.setVisibility(View.VISIBLE);
 
         Spinner otherAnimalsSpinner = root.findViewById(R.id.otherAnimalsSpinner);
-        listener.loadOtherAnimals(otherAnimalsSpinner);
+        listener.loadOtherAnimals(otherAnimalsSpinner, friendId, this);
 
         ChipGroup typeChipGroup = root.findViewById(R.id.typeChipGroup);
-
-
 
         root.findViewById(R.id.addPokeLink).setOnClickListener(v -> {
             String description = txtInputNatureDescription.getText().toString();
@@ -104,7 +109,7 @@ public class DialogAddPokeLink extends DialogFragment {
                         ((String) otherAnimalsSpinner.getSelectedItem()).split(" - ")[1],
                         type,
                         description
-                        );
+                );
             }
         });
 

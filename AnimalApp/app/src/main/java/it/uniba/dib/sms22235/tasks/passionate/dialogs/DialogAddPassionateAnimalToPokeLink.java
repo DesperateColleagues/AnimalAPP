@@ -5,17 +5,26 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
+import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 
 public class DialogAddPassionateAnimalToPokeLink extends DialogFragment {
 
     public interface DialogAddPassionateAnimalToPokeLinkListener {
+        /**
+         * This method is called when the friend username has been added
+         *
+         * @param username the added username
+         * */
         void onFriendAdded(String username);
     }
 
@@ -39,6 +48,19 @@ public class DialogAddPassionateAnimalToPokeLink extends DialogFragment {
         titleText.setText(R.string.seleziona_amico);
         builder.setCustomTitle(titleView);
 
-        return super.onCreateDialog(savedInstanceState);
+        root.findViewById(R.id.btnConfirmPassionateLink).setOnClickListener(v -> {
+            String friendId = ((EditText) root.findViewById(R.id.txtInputPassionateLink)).getText().toString();
+
+            if (friendId.equals("")) {
+                Toast.makeText(getContext(), "Campo vuoto! Impossibile procedere", Toast.LENGTH_SHORT).show();
+            } else if (friendId.equals(((PassionateNavigationActivity) requireActivity()).getUserId())) {
+                Toast.makeText(getContext(), "Lo username inserito è il tuo!", Toast.LENGTH_SHORT).show();
+            } else {
+                listener.onFriendAdded(friendId);
+                dismiss();
+            }
+        });
+
+        return builder.create();
     }
 }

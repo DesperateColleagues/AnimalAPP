@@ -77,6 +77,13 @@
 
         </com.google.android.material.chip.ChipGroup>
 
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
         <EditText
             android:id="@+id/txtInputNatureDescription"
             android:layout_width="match_parent"
@@ -85,13 +92,12 @@
             android:drawablePadding="10dp"
             android:inputType="textMultiLine"
             android:scrollbars="vertical"
-            android:minHeight="48dp"
-            android:lines="3"
-            android:maxLines="5"
-            android:textSize="17sp"
-            android:hint="Inserisci il motivo dell'abbinamento"
+            android:maxLength="20"
+            android:hint="Titolo abbinamento"
             android:textColorHint="?attr/colorOnSecondary"
             tools:ignore="LabelFor,SpeakableTextPresentCheck" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/addPokeLink"

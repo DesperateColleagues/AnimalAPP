@@ -70,6 +70,7 @@ public class PassionateVeterinarianInfoListFragment extends Fragment {
 
                 if (newText.equals("")) {
                     adapter.setVeterinarianList(veterinarianList);
+                    filteredVeterinarianList.clear();
                 } else {
 
                     for (Veterinarian veterinarian : veterinarianList) {

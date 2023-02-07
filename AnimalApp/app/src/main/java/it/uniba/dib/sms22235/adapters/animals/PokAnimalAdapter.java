@@ -29,6 +29,10 @@ public class PokAnimalAdapter extends RecyclerView.Adapter<PokAnimalAdapter.View
         pokeLinksList.add(pokeLink);
     }
 
+    public boolean removeElementById(String id) {
+        return pokeLinksList.removeIf(pokeLink -> pokeLink.getId().equals(id));
+    }
+
     public PokAnimalAdapter () {
         pokeLinksList = new ArrayList<>();
     }
@@ -48,9 +52,14 @@ public class PokAnimalAdapter extends RecyclerView.Adapter<PokAnimalAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PokeLink pokeLink = pokeLinksList.get(position);
 
-            Glide.with(context).load(pokeLink.getOtherAnimalUri()).into(holder.otherAnimal);
-            Glide.with(context).load(pokeLink.getPassionateAnimalUri()).into(holder.passionateAnimal);
-            holder.txtPokeLinkDescription.setText(pokeLink.getDescription());
+        Glide.with(context).load(pokeLink.getOtherAnimalUri()).into(holder.otherAnimal);
+        Glide.with(context).load(pokeLink.getPassionateAnimalUri()).into(holder.passionateAnimal);
+        holder.txtPokeLinkDescription.setText(pokeLink.getDescription());
+
+
+        holder.itemView.setOnClickListener(v -> {
+            listener.onItemClick(pokeLink);
+        });
 
     }
 
@@ -77,7 +86,7 @@ public class PokAnimalAdapter extends RecyclerView.Adapter<PokAnimalAdapter.View
         }
 
         public interface OnItemClickListener {
-            void onItemClick();
+            void onItemClick(PokeLink pokeLink);
         }
     }
 

@@ -16,7 +16,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
-            android:id="@+id/txtPassionateLink"
+            android:id="@+id/txtInputPassionateLink"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLength="20"

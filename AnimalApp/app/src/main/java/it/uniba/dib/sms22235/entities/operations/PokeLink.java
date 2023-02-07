@@ -7,6 +7,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import org.jetbrains.annotations.Contract;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
@@ -61,6 +62,19 @@ public class PokeLink implements Serializable {
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PokeLink pokeLink = (PokeLink) o;
+        return id.equals(pokeLink.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @NonNull

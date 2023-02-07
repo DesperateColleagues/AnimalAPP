@@ -23,6 +23,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
     private ArrayList<Request> requestsList;
     private OnItemClickListener onItemClickListener;
     private Context context;
+    private ViewHolder currentHolder;
 
     public void setContext(Context context) {
         this.context = context;
@@ -56,6 +57,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
             context.getTheme().resolveAttribute(android.R.attr.colorPrimary, value, true);
             holder.requestDividerStatus.setBackgroundColor(value.data);
         }
+
+        currentHolder = holder;
 
         holder.itemRequestCardView.setOnClickListener(v -> {
             if (onItemClickListener != null) {

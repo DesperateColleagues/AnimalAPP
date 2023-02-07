@@ -61,6 +61,7 @@ import java.util.UUID;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Report;
 import it.uniba.dib.sms22235.entities.users.Animal;
+import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.DialogEntityDetailsFragment;
 import it.uniba.dib.sms22235.tasks.common.dialogs.reports.DialogMap;
@@ -188,14 +189,22 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
         // Get the field to insert the report
 
         Spinner spinner = view.findViewById(R.id.spinnerReportAnimal);
-        LinkedHashSet<Animal> animalSet = ((PassionateNavigationActivity) requireActivity()).getAnimalSet();
-
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_dropdown_item, buildSpinnerEntries(animalSet));
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(spinnerAdapter);
-
         CheckBox checkBox = view.findViewById(R.id.checkBoxRep);
+
+        if (requireActivity() instanceof PassionateNavigationActivity) {
+            LinkedHashSet<Animal> animalSet = ((PassionateNavigationActivity) requireActivity()).getAnimalSet();
+
+            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
+                    android.R.layout.simple_spinner_dropdown_item, buildSpinnerEntries(animalSet));
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(spinnerAdapter);
+        } else {
+            spinner.setVisibility(View.GONE);
+            view.findViewById(R.id.txtReportDetailTitleAnimalSection).setVisibility(View.GONE);
+            checkBox.setVisibility(View.GONE);
+            view.findViewById(R.id.divider).setVisibility(View.GONE);
+        }
+
         checkBox.setOnClickListener(v -> {
             if (spinner.getVisibility() == View.VISIBLE) {
                 spinner.setVisibility(View.GONE);

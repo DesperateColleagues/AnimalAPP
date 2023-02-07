@@ -1,6 +1,9 @@
 package it.uniba.dib.sms22235.tasks.passionate.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,16 +14,22 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.animals.PokAnimalAdapter;
+import it.uniba.dib.sms22235.entities.operations.PokeLink;
+import it.uniba.dib.sms22235.tasks.common.dialogs.DialogEntityDetailsFragment;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAddPassionateAnimalToPokeLink;
 import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAddPokeLink;
 
-public class PassionatePokAnimalList extends Fragment implements DialogAddPokeLink.DialogAddPokeLinkListener {
+public class PassionatePokAnimalList extends Fragment implements
+        DialogAddPokeLink.DialogAddPokeLinkListener,
+        DialogAddPassionateAnimalToPokeLink.DialogAddPassionateAnimalToPokeLinkListener {
 
     public interface PassionatePokAnimalListListener {
         /**
@@ -28,8 +37,9 @@ public class PassionatePokAnimalList extends Fragment implements DialogAddPokeLi
          * that do not belongs to the current logged passionate
          *
          * @param spinner the spinner where to load the animals
+         * @param username to username of the animal's owner
          * */
-        void loadOtherAnimal(Spinner spinner);
+        void loadOtherAnimal(Spinner spinner, String username, DialogFragment dialogFragment);
 
         /**
          * Callback called when a new link is added
@@ -40,6 +50,8 @@ public class PassionatePokAnimalList extends Fragment implements DialogAddPokeLi
          * @param description the description of the poke link
          * */
         void savePokeLink(String myCode, String otherCode, String type, String description, PokAnimalAdapter adapter);
+
+        void deletePokeLink(String id, PokAnimalAdapter adapter);
 
         /**
          * This method is used to load all saved poke links of a passionate
@@ -93,23 +105,51 @@ public class PassionatePokAnimalList extends Fragment implements DialogAddPokeLi
         listener.loadPokeLinks(adapter);
 
         view.findViewById(R.id.btnAddPokeLink).setOnClickListener(v -> {
-            DialogAddPokeLink dialogAddPokeLink = new DialogAddPokeLink();
-            dialogAddPokeLink.setListener(this);
-            dialogAddPokeLink.show(getChildFragmentManager(), "DialogAddPokeLink");
+            DialogAddPassionateAnimalToPokeLink dialogAddPassionateAnimalToPokeLink = new DialogAddPassionateAnimalToPokeLink();
+            dialogAddPassionateAnimalToPokeLink.setListener(this);
+            dialogAddPassionateAnimalToPokeLink.show(getChildFragmentManager(), "DialogAddPassionateAnimalToPokeLink");
         });
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerPokemon);
         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(),2));
         recyclerView.setAdapter(adapter);
+
+        adapter.setListener((pokeLink) -> {
+            String info = "Sicuro di voler eliminare questo PokeLink?";
+            DialogEntityDetailsFragment dialogEntityDetailsFragment = new DialogEntityDetailsFragment(info);
+
+            // Set dialog title
+            @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+            TextView titleText = titleView.findViewById(R.id.dialog_title);
+            titleText.setText("Eliminazione PokeLink");
+            dialogEntityDetailsFragment.setTitleView(titleView);
+            dialogEntityDetailsFragment.show(getChildFragmentManager(), "DialogEntityDetailsFragment");
+
+            dialogEntityDetailsFragment.setPositiveButton("Elimina", (dialog, which) -> {
+                listener.deletePokeLink(pokeLink.getId(), adapter);
+                dialog.dismiss();
+            });
+
+            dialogEntityDetailsFragment.setNegativeButton("Chiudi", ((dialog, which) -> dialog.dismiss()));
+
+        });
     }
 
     @Override
-    public void loadOtherAnimals(Spinner spinner) {
-        listener.loadOtherAnimal(spinner);
+    public void loadOtherAnimals(Spinner spinner, String username, DialogFragment dialog) {
+        listener.loadOtherAnimal(spinner, username, dialog);
     }
 
     @Override
     public void onLinkAdded(String myCode, String otherCode, String type, String description) {
         listener.savePokeLink(myCode, otherCode, type, description, adapter);
+    }
+
+    @Override
+    public void onFriendAdded(String username) {
+        DialogAddPokeLink dialogAddPokeLink = new DialogAddPokeLink();
+        dialogAddPokeLink.setListener(this);
+        dialogAddPokeLink.setFriendId(username);
+        dialogAddPokeLink.show(getChildFragmentManager(), "DialogAddPokeLink");
     }
 }

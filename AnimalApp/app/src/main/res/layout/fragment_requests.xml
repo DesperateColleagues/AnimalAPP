@@ -33,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:chipSpacingHorizontal="15dp"
+            android:layout_gravity="center"
             app:singleSelection="true"
             app:singleLine="true">
 

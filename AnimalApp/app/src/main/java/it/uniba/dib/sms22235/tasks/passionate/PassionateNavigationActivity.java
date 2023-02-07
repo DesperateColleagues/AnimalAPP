@@ -2,6 +2,7 @@ package it.uniba.dib.sms22235.tasks.passionate;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -26,6 +27,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 
 import androidx.navigation.fragment.NavHostFragment;
@@ -36,6 +39,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -44,6 +48,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -66,6 +71,8 @@ import it.uniba.dib.sms22235.adapters.animals.PokAnimalAdapter;
 import it.uniba.dib.sms22235.entities.operations.PokeLink;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
+import it.uniba.dib.sms22235.tasks.common.dialogs.DialogEntityDetailsFragment;
+import it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragment;
 import it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragmentListener;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
@@ -276,6 +283,13 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.overflow_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
+        boolean isProfile = navController.getCurrentDestination().getId() == R.id.passionate_profile;
+        menu.findItem(R.id.profile_info).setVisible(isProfile);
         return true;
     }
 
@@ -604,9 +618,9 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void loadOtherAnimal(Spinner spinner) {
+    public void loadOtherAnimal(Spinner spinner, String username, DialogFragment dialogFragment) {
         db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
-                .whereNotEqualTo(KeysNamesUtils.AnimalFields.OWNER, getUserId())
+                .whereEqualTo(KeysNamesUtils.AnimalFields.OWNER, username)
                 .get()
                 .addOnSuccessListener(query -> {
                     List<DocumentSnapshot> documentSnapshots = query.getDocuments();
@@ -623,9 +637,15 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner.setAdapter(spinnerAdapter);
                         spinner.setVisibility(View.VISIBLE);
-
                     } else {
-                        Toast.makeText(this, "Non sono registrati altri animali", Toast.LENGTH_SHORT).show();
+                        String info = "Impossibile trovare animali di proprietà " + "di " + username;
+
+                        DialogEntityDetailsFragment dialogEntityDetailsFragment = new DialogEntityDetailsFragment(info);
+                        dialogEntityDetailsFragment.setPositiveButton("Chiudi", (dialog, which) -> {
+                            dialog.dismiss();
+                            dialogFragment.dismiss();
+                        });
+                        dialogEntityDetailsFragment.show(getSupportFragmentManager(), "DialogEntityDetailsFragment");
                     }
                 });
     }
@@ -635,14 +655,16 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     public void savePokeLink(String myCode, String otherCode, String type, String description, PokAnimalAdapter adapter) {
         // Task to take all the post of the user animal
         Task<QuerySnapshot> taskMyAnimalPic =
-                db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
-                        .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, myCode)
+                db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
+                        .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.FILE_NAME,
+                                KeysNamesUtils.FileDirsNames.animalProfilePic(myCode))
                         .get();
 
         // Task to take all the post of the other animal
         Task<QuerySnapshot> taskOtherAnimalPic =
-                db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY_PROFILE)
-                        .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, otherCode)
+                db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
+                        .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.FILE_NAME,
+                                KeysNamesUtils.FileDirsNames.animalProfilePic(otherCode))
                         .get();
 
         // Synchronize tasks using whenAllComplete
@@ -663,13 +685,23 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         otherAnimalPic = PhotoDiaryPost.loadPhotoDiaryPost(otherAnimalPicSnapshot.getDocuments().get(0));
                     }
 
+                    String myAnimalUri = "", otherAnimalUri = "";
+
+                    if (otherAnimalPic != null) {
+                        otherAnimalUri = otherAnimalPic.getPostUri();
+                    }
+
+                    if (myAnimalPic != null) {
+                        myAnimalUri = myAnimalPic.getPostUri();
+                    }
+
                     // Instantiate the new poke link
                     PokeLink pokeLink = new PokeLink(
                             UUID.randomUUID().toString(),
                             myCode,
                             otherCode,
-                            myAnimalPic.getPostUri(),
-                            otherAnimalPic.getPostUri(),
+                            myAnimalUri,
+                            otherAnimalUri,
                             type,
                             description,
                             getUserId()
@@ -686,6 +718,20 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                             .addOnSuccessListener(unused -> {
                                 Toast.makeText(this, "Link aggiunto con successo", Toast.LENGTH_SHORT).show();
                             });
+                });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void deletePokeLink(String id, PokAnimalAdapter adapter) {
+        db.collection(KeysNamesUtils.CollectionsNames.POKE_LINK)
+                .document(id)
+                .delete()
+                .addOnSuccessListener(unused -> {
+                    if (adapter.removeElementById(id)) {
+                        adapter.notifyDataSetChanged();
+                    }
+                    Toast.makeText(this, "Link eliminato con successo", Toast.LENGTH_SHORT).show();
                 });
     }
 

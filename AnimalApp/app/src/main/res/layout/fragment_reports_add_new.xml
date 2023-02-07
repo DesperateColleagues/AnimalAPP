@@ -198,6 +198,7 @@
                 android:text="Segnalazione senza animale personale" />
 
             <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:dividerThickness="1dp" />

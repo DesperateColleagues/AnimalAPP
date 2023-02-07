@@ -8,21 +8,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
@@ -42,12 +49,18 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
 
     private ArrayList<Request> requestsList;
     private ArrayList<Request> subRequestsList;
+    private ArrayList<Request> subRequestsListFiltered;
+
     private RecyclerView requestsRecyclerView;
     private RequestAdapter adapter;
+
     private transient NavController controller;
+
     private FirebaseAuth auth;
     private FirebaseFirestore db;
+
     private boolean isMine = false;
+    private int selectedChip = 0;
 
     private RequestsStandardOperationListener listener;
 
@@ -111,6 +124,8 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
         return inflater.inflate(R.layout.fragment_requests, container, false);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    @SuppressWarnings("unchecked")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -123,9 +138,35 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
             dialogAddRequest.show(getChildFragmentManager(), "DialogAddRequest");
         });
 
-        //ChipGroup requestsParamsChipGroup = view.findViewById(R.id.requestsParamsChipGroup);
+        ChipGroup requestsParamsChipGroup = view.findViewById(R.id.requestsParamsChipGroup);
         requestsRecyclerView = view.findViewById(R.id.requestsRecyclerList);
         adapter.setContext(requireContext());
+
+        requestsParamsChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
+
+            if (checkedIds.size() > 0) {
+                selectedChip = checkedIds.get(0);
+
+                subRequestsListFiltered = new ArrayList<>();
+
+                Chip chip = view.findViewById(selectedChip);
+
+                for (Request request : subRequestsList) {
+                    if (request.getRequestType().equals(chip.getText().toString())) {
+                        subRequestsListFiltered.add(request);
+                    }
+                }
+
+                adapter.setRequestsList(subRequestsListFiltered);
+                adapter.notifyDataSetChanged();
+
+            } else {
+                Toast.makeText(getContext(), "Ciao", Toast.LENGTH_SHORT).show();
+                adapter.setRequestsList(subRequestsList);
+                adapter.notifyDataSetChanged();
+                subRequestsListFiltered.clear();
+            }
+        });
 
         // Initially load requests
         listener.loadRequest(requestsList, subRequestsList, db, auth,
@@ -135,7 +176,9 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
 
         Button btnChangeViewRequest = view.findViewById(R.id.btnChangeViewRequest);
         btnChangeViewRequest.setOnClickListener(view1 -> {
-            // Check if the visualised data set the one with users' requests
+            // If is mine is false it means that communities' requests are being showed
+            // so the data set will change to the request of the current logged user.
+            // Otherwise communities will be shows (is mine = true)
             if (!isMine) {
                 btnChangeViewRequest.setText(getResources().getString(R.string.richieste_mie));
                 // Load the logged user request
@@ -145,12 +188,14 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
                 // Set the correct adapter
                 // Manage the click on logged user's requests
                 adapter.setOnItemClickListener(mineRequestsClickListener);
-
+                requestsParamsChipGroup.setVisibility(View.GONE);
             } else {
                 btnChangeViewRequest.setText(getResources().getString(R.string.richieste_altri));
                 // Load all users' request
                 loadOtherRequests();
                 isMine = false;
+
+                requestsParamsChipGroup.setVisibility(View.VISIBLE);
 
                 // Set the correct adapter
                 // Manage the click on other's users requests

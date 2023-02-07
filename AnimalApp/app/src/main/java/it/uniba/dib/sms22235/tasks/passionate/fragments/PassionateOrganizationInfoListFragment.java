@@ -21,7 +21,7 @@ import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class PassionateOrganizationListFragment extends Fragment {
+public class PassionateOrganizationInfoListFragment extends Fragment {
 
     private ArrayList<Organization> organizationsList;
     private ArrayList<Organization> filteredOrganizationList;
@@ -69,6 +69,7 @@ public class PassionateOrganizationListFragment extends Fragment {
 
                 if (newText.equals("")) {
                     adapter.setOrganizationList(organizationsList);
+                    filteredOrganizationList.clear();
                 } else {
 
                     for (Organization organization : organizationsList) {
