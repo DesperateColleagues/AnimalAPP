@@ -17,4 +17,27 @@
         android:textSize="28sp"
         android:textColor="?attr/colorOnSecondary"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/animalList"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="15dp"
+            android:text="@string/animali_assistenza"
+            android:textSize="22sp"
+            android:textColor="?attr/colorOnSecondary" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/assistedAnimalList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
+        </LinearLayout>
+
 </LinearLayout>

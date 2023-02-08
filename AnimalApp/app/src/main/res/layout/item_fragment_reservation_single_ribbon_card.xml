@@ -40,14 +40,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:textColor="?attr/colorOnSecondary"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
                     />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/reservationDividerStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:dividerThickness="10dp" />
 
             </LinearLayout>
 

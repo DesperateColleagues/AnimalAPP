@@ -3,7 +3,6 @@ package it.uniba.dib.sms22235.tasks.common.views.reports;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;

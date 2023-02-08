@@ -109,11 +109,15 @@ public class KeysNamesUtils {
     }
 
     public static class ExamsFields {
-        public static String EXAM_ID = "examID";
+        public static String EXAM_ID = "id";
         public static String EXAM_ANIMAL = "animal";
-        public static String EXAM_TYPE = "examType";
+        public static String EXAM_TYPE = "type";
         public static String EXAM_DESCRIPTION = "description";
         public static String EXAM_OUTCOME = "outcome";
+        public static String EXAM_PASS = "passed";
+        public static String EXAM_FAIL = "failed";
+        public static String DATE_ADDED = "dateAdded";
+        public static String TIME_ADDED = "timeAdded";
     }
         
     public static class PurchaseContract implements BaseColumns {
@@ -154,6 +158,14 @@ public class KeysNamesUtils {
         public static int MEDIC = R.drawable.ic_baseline_medical_services_24;
         public static int FOOD = R.drawable.ic_baseline_pets_24;
         public static int ENJOYMENT = R.drawable.ic_baseline_celebration_24;
+    }
+
+    public static class ResidenceFields {
+        public static String ANIMAL = "animal";
+        public static String RESIDENCE_OWNER = "residenceOwner";
+        public static String START_DATE = "startDate";
+        public static String END_DATE = "endDate";
+        public static String IS_TEMP = "temp";
     }
 
     public static class BundleKeys {
@@ -210,6 +222,10 @@ public class KeysNamesUtils {
         @Contract(pure = true)
         public static String passionatePostDirName(String username) {
             return username + "_post";
+        }
+
+        public static String organizationPostDirName() {
+            return "trovatelli_post";
         }
 
         /**

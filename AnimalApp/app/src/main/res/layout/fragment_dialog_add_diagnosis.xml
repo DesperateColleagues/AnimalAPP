@@ -15,7 +15,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
-        android:hint="Inserisci riassunto breve della visita"
+        android:hint="@string/inserisci_diagnosi"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
 
@@ -50,7 +50,7 @@
             android:textColor="#757575"
             android:layout_weight="1"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:text="Oppure aggiungi un file .doc con una diagnosi approfondita"
+            android:text="@string/inserisci_doc_diagnosi"
             />
 
         <Button
@@ -72,7 +72,7 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
-        android:text="Completa inserimento" />
+        android:text="@string/completa_inserimento" />
 
 
 </LinearLayout>

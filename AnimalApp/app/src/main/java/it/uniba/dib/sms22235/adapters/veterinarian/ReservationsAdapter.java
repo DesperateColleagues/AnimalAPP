@@ -1,7 +1,6 @@
 package it.uniba.dib.sms22235.adapters.veterinarian;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,19 +54,18 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
     @Override
     public void onBindViewHolder(@NonNull ReservationsAdapter.ViewHolder holder, int position) {
         Reservation reservation = reservationsList.get(position);
-        String res = "";
+        String res = reservation.getTime();
         if (listType == KeysNamesUtils.ReservationListType.VETERINARIAN.getValue()) {
-            Log.wtf("WTF", reservation.getOwner() + reservation.getAnimal());
             if (reservation.getOwner() != null && reservation.getAnimal() != null){
-                res = reservation.getDate() + "@" + reservation.getTime() + " - " + reservation.getOwner();
+                res = res + " - " + reservation.getAnimal() + " - " + reservation.getOwner();
             }
             else if (reservation.getOwner() == null && reservation.getAnimal() == null){
-                res = reservation.getDate() + "@" + reservation.getTime() + " - Non prenotato";
+                res = res + " - Non prenotato";
             } else {
-                res = reservation.getDate() + "@" + reservation.getTime() + " - Sei nel limbo bro";
+                res = res + " - Stato appuntamento non definibile";
             }
         } else if (listType == KeysNamesUtils.ReservationListType.PASSIONATE.getValue()) {
-            res = reservation.getAnimal() + " - " + reservation.getDate() + " - " + reservation.getVeterinarian();
+            res = res + " - " + reservation.getVeterinarian();
         } else {
             res = reservation.toString();
         }

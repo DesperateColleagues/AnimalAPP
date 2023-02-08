@@ -24,4 +24,5 @@
 
     <color name="poke_yellow">#ffcc01</color>
     <color name="poke_blue">#385ca9</color>
+    <color name="error_red">#f44336</color>
 </resources>

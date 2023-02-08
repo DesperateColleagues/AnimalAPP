@@ -68,7 +68,6 @@ public class OrganizationAnimalListFragment extends Fragment {
             public void onClick(View view, int position) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, adapter.getAnimalAtPosition(position));
-                controller.navigate(R.id.action_organization_animal_list_to_animalProfile, bundle);
             }
 
             @Override

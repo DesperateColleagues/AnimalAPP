@@ -158,14 +158,12 @@ public class Animal implements Serializable, Cloneable {
     @NonNull
     @Override
     public Object clone() {
-        Object o = null;
-
+        Object o;
         try {
             o = super.clone();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
-
         return o;
     }
 

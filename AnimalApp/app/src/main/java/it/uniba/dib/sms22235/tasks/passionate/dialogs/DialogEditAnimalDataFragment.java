@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.util.List;
 
 import it.uniba.dib.sms22235.R;
@@ -86,6 +88,12 @@ public class DialogEditAnimalDataFragment extends DialogFragment {
 
         veterinarianListSpinner.setAdapter(dataAdapter);
 
+        TextInputLayout textInputEditWeight = root.findViewById(R.id.textinput_weight);
+        TextInputLayout textInputEditHeight = root.findViewById(R.id.textinput_height);
+        TextInputLayout textInputEditNature = root.findViewById(R.id.textinput_nature);
+        textInputEditWeight.setVisibility(View.VISIBLE);
+        textInputEditHeight.setVisibility(View.VISIBLE);
+        textInputEditNature.setVisibility(View.VISIBLE);
         EditText txtInputWeight = root.findViewById(R.id.txtInputWeight);
         EditText txtInputHeight = root.findViewById(R.id.txtInputHeight);
         EditText txtInputNature = root.findViewById(R.id.txtInputNature);

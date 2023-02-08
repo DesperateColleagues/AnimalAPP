@@ -2,13 +2,15 @@ package it.uniba.dib.sms22235.tasks.passionate.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -21,11 +23,13 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 import org.jetbrains.annotations.Contract;
+import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -63,7 +67,22 @@ public class PassionateProfileFragment extends Fragment implements
     // Manage Qr scanning
     private final ActivityResultLauncher<ScanOptions> qrDecodeLauncher = registerForActivityResult(new ScanContract(), result -> {
         if (result.getContents() == null) {
-            Toast.makeText(getContext(), "Operazione non andata a buon fine. Controllare i permessi.", Toast.LENGTH_SHORT).show();
+            Snackbar snackbar = Snackbar.make(getView(),getResources().getString(R.string.camera_permission),Snackbar.LENGTH_LONG);
+            View snackbarView = snackbar.getView();
+            TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+            TypedValue value = new TypedValue();
+            getContext().getTheme().resolveAttribute(android.R.attr.windowBackground, value, true);
+            snackbarView.setBackgroundColor(value.data);
+            switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+                case Configuration.UI_MODE_NIGHT_YES:
+                    textView.setTextColor(Color.WHITE);
+                    break;
+                case Configuration.UI_MODE_NIGHT_NO:
+                    textView.setTextColor(Color.BLACK);
+                    break;
+            }
+            textView.setTextSize(15);
+            snackbar.show();
         } else {
             FirebaseFirestore db = ((NavigationActivityInterface) requireActivity()).getFireStoreInstance();
 
@@ -177,7 +196,6 @@ public class PassionateProfileFragment extends Fragment implements
             helper.attachToRecyclerView(messageRecyclerView);
 
             messageListAdapter.setOnItemClickListener(message -> {
-
             });
 
             messageRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), messageRecyclerView, new RecyclerTouchListener.ClickListener() {
@@ -260,7 +278,23 @@ public class PassionateProfileFragment extends Fragment implements
 
                 @Override
                 public void onLongClick(View view, int position) {
-                    //not needed
+                    // small help for the user.
+                    Snackbar snackbar = Snackbar.make(getView(),getResources().getString(R.string.animal_profile_help),Snackbar.LENGTH_LONG);
+                    View snackbarView = snackbar.getView();
+                    TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+                    TypedValue value = new TypedValue();
+                    getContext().getTheme().resolveAttribute(android.R.attr.windowBackground, value, true);
+                    snackbarView.setBackgroundColor(value.data);
+                    switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+                        case Configuration.UI_MODE_NIGHT_YES:
+                            textView.setTextColor(Color.WHITE);
+                            break;
+                        case Configuration.UI_MODE_NIGHT_NO:
+                            textView.setTextColor(Color.BLACK);
+                            break;
+                    }
+                    textView.setTextSize(15);
+                    snackbar.show();
                 }
             }));
 
@@ -270,6 +304,9 @@ public class PassionateProfileFragment extends Fragment implements
                 dialogAddAnimalFragment.setListener(this);
                 dialogAddAnimalFragment.show(getParentFragmentManager(), "DialogAddAnimalFragment");
             });
+        } else {
+            TextView animalListPassionateLabel = rootView.findViewById(R.id.animalListPassionateLabel);
+            animalListPassionateLabel.setText(getResources().getString(R.string.no_animal));
         }
 
         return rootView;
@@ -279,10 +316,10 @@ public class PassionateProfileFragment extends Fragment implements
     @Contract("_ -> param1")
     private ArrayList<InfoMessage> buildStandardMessages(@NonNull ArrayList<InfoMessage> messages) {
         InfoMessage findings = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_reports_text), R.drawable.warningsign, KeysNamesUtils.CollectionsNames.REPORTS);
-        InfoMessage qrScan = new InfoMessage("Scannerizza QR", R.drawable.ic_baseline_qr_code_scanner_24, KeysNamesUtils.RolesNames.ANIMAL);
+        InfoMessage qrScan = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_QR_Scan), R.drawable.ic_baseline_qr_code_scanner_24, KeysNamesUtils.RolesNames.ANIMAL);
         InfoMessage showVeterinarians = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_vet_list_text), R.drawable.fra_rrc_doctor_no_green, KeysNamesUtils.RolesNames.VETERINARIAN);
         InfoMessage showOrganizations = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_org_list_text), R.drawable.fra_rrc_organization_no_green, KeysNamesUtils.RolesNames.PRIVATE_ORGANIZATION);
-        InfoMessage recentReservations = new InfoMessage(getResources().getString(R.string.tutti_appuntamenti_recenti), 0, KeysNamesUtils.CollectionsNames.RESERVATIONS);
+        InfoMessage recentReservations = new InfoMessage(getResources().getString(R.string.tutti_appuntamenti_recenti), R.drawable.recent_reservations, KeysNamesUtils.CollectionsNames.RESERVATIONS);
         InfoMessage pokeLinks = new InfoMessage(getResources().getString(R.string.passionate_profile_cardlayout_pokelinks_text), R.drawable.pokanimal_logo, KeysNamesUtils.CollectionsNames.POKE_LINK);
 
         messages.add(findings);
@@ -316,15 +353,15 @@ public class PassionateProfileFragment extends Fragment implements
 
     private void notNow(ArrayList<InfoMessage> messages) {
         Random random = new Random(Duration.between(Instant.EPOCH,Instant.now()).toMillis());
-        int number = random.nextInt(100);
-        if(number == 69) {
+        int number = random.nextInt(50);
+        if(number >= 34 && number <= 36) {
             InfoMessage notNow = new InfoMessage(
                     username + " " + getResources().getString(R.string.not_now),
                     R.drawable.waterstone,
                     "notNow");
             messages.add(notNow);
         }
-        if(number == 81) {
+        if(number >= 40 && number <= 42) {
             InfoMessage ascanio = new InfoMessage(
                     username + " " + getResources().getString(R.string.ascanio),
                     R.drawable.ascanio,

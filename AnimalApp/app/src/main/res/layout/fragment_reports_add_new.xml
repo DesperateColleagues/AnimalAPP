@@ -187,6 +187,7 @@
                 android:layout_marginRight="30dp"
                 android:background="@drawable/bg_spinner_role"
                 android:minHeight="48dp"
+                android:popupBackground="@drawable/bg_spinner_dropdown"
                 android:visibility="visible" />
 
             <CheckBox

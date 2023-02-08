@@ -28,11 +28,13 @@ import org.json.JSONObject;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.animals.AnimalListAdapter;
 import it.uniba.dib.sms22235.entities.users.Animal;
+import it.uniba.dib.sms22235.entities.users.ImportedAnimal;
 import it.uniba.dib.sms22235.tasks.organization.OrganizationNavigationActivity;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class OrganizationImportDataFragment extends Fragment {
 
-    private ArrayList<Animal> importedAnimalsList;
+    private ArrayList<ImportedAnimal> importedAnimalsList;
     private JSONArray importedAnimalsJSONArray;
     private RecyclerView organizationImportRecyclerView;
     private TextView nothingHereTextView;
@@ -50,6 +52,7 @@ public class OrganizationImportDataFragment extends Fragment {
          * @param animal the animal to register
          * */
         void onAnimalRegistered(Animal animal);
+        void transferPhotos(Animal animal);
     }
 
     @Override
@@ -96,7 +99,7 @@ public class OrganizationImportDataFragment extends Fragment {
                 nothingHereTextView.setVisibility(View.VISIBLE);
                 organizationImportRecyclerView.setVisibility(View.GONE);
             } else {
-                Toast.makeText(requireContext(), "Stato inconsistente", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getResources().getString(R.string.importazione_fallita), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -119,7 +122,9 @@ public class OrganizationImportDataFragment extends Fragment {
         if (importedAnimalsList.size() > 0) {
             organizationImportRecyclerView.setVisibility(View.VISIBLE);
             nothingHereTextView.setVisibility(View.GONE);
-            adapter.addAllAnimals(importedAnimalsList);
+            for (Animal animal : importedAnimalsList) {
+                adapter.addAnimal(animal);
+            }
         } else {
             organizationImportRecyclerView.setVisibility(View.GONE);
             nothingHereTextView.setVisibility(View.VISIBLE);
@@ -128,15 +133,15 @@ public class OrganizationImportDataFragment extends Fragment {
         organizationImportRecyclerView.setAdapter(adapter);
 
         organizationImportRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-
-        isFetched++;
     }
 
     private void importAnimals() {
-        for (Animal animal : importedAnimalsList) {
+        for (ImportedAnimal animal : importedAnimalsList) {
             listener.onAnimalRegistered(animal);
+            listener.transferPhotos(animal);
         }
-        Toast.makeText(getContext(), "Inserimento completato con successo!", Toast.LENGTH_LONG).show();
+
+        Toast.makeText(getContext(), getResources().getString(R.string.importazione_avvenuta), Toast.LENGTH_LONG).show();
     }
 
     private void parseJsonFromUrl(String uri) {
@@ -144,7 +149,7 @@ public class OrganizationImportDataFragment extends Fragment {
             Scanner sn = new Scanner(new URL(uri).openStream(), "UTF-8");
             importedAnimalsJSONArray = new JSONArray(sn.useDelimiter("\\A").next());
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Errore nell'ottenimento del file da importare", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.importazione_fallita), Toast.LENGTH_LONG).show();
             Log.wtf("Animal Import", e.getMessage());
         }
     }
@@ -153,18 +158,22 @@ public class OrganizationImportDataFragment extends Fragment {
             try {
                 for (int i = 0; i < importedAnimalsJSONArray.length(); i++) {
                     JSONObject object = importedAnimalsJSONArray.getJSONObject(i);
-                    Animal animal = new Animal(
-                            object.getString("name"),
-                            object.getString("animalSpecies"),
-                            object.getString("race"),
-                            object.getString("microchipCode"),
-                            object.getString("birthDate")
+
+                    ImportedAnimal animal = new ImportedAnimal(
+                            object.getString(KeysNamesUtils.AnimalFields.NAME),
+                            object.getString(KeysNamesUtils.AnimalFields.ANIMAL_SPECIES),
+                            object.getString(KeysNamesUtils.AnimalFields.RACE),
+                            object.getString(KeysNamesUtils.AnimalFields.MICROCHIP_CODE),
+                            object.getString(KeysNamesUtils.AnimalFields.BIRTH_DATE),
+                            object.getString("profilePhoto"),
+                            object.getString("photos")
                     );
-                    animal.setOwner(object.getString("owner"));
+                    animal.setOwner(object.getString(KeysNamesUtils.AnimalFields.OWNER));
                     importedAnimalsList.add(animal);
                 }
+                isFetched++;
             } catch (Exception e) {
-                Toast.makeText(getContext(), "Errore nella interpretazione del file importato", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.importazione_fallita), Toast.LENGTH_LONG).show();
                 Log.wtf("Animal Loading", e.getMessage());
         }
     }

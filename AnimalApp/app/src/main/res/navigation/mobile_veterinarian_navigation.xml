@@ -49,7 +49,7 @@
         android:id="@+id/veterinarian_backbench"
         tools:layout="@layout/fragment_backbench"
         android:name="it.uniba.dib.sms22235.tasks.common.views.backbenches.BackBenchFragment"
-        android:label="BackBenchFragment" />
+        android:label="@string/title_fragment_veterinarian_backbench" />
 
     <fragment
         android:id="@+id/veterinarian_requests"
@@ -101,7 +101,7 @@
     <fragment
         android:id="@+id/userProfileInfoFragment"
         android:name="it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragment"
-        android:label="UserProfileInfoFragment"
+        android:label="@string/dettagli_profilo"
         tools:layout="@layout/fragment_user_profile_info"/>
 
 </navigation>

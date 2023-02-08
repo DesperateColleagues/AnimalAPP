@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import android.view.ViewConfiguration;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -57,7 +56,6 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.library.BuildConfig;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -131,7 +129,12 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     private transient BottomNavigationView navView;
     private transient NavController navController;
 
-    private InterfacesOperationsHelper helper;
+    @Override
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
+        boolean isProfile = navController.getCurrentDestination().getId() == R.id.passionate_profile;
+        menu.findItem(R.id.profile_info).setVisible(isProfile);
+        return true;
+    }
 
     // Flag that specify whether the connection is enabled or not
     private boolean isConnectionEnabled;
@@ -219,8 +222,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
         queryPurchases = new QueryPurchasesManager(this);
 
-        helper = new InterfacesOperationsHelper(this);
-
         Bundle loginBundle = getIntent().getExtras(); // get the login bundle
 
         // Extract the bundle data sent from login activity
@@ -283,13 +284,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.overflow_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
-        boolean isProfile = navController.getCurrentDestination().getId() == R.id.passionate_profile;
-        menu.findItem(R.id.profile_info).setVisible(isProfile);
         return true;
     }
 
@@ -409,9 +403,9 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void getAnimalExams(AnimalExamsAdapter adapter, RecyclerView recyclerView, String animal){
+    public void getAnimalExams(AnimalExamsAdapter adapter, RecyclerView recyclerView, String animal, AnimalExamsAdapter.OnItemClickListener onClickListener) {
         InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
-        animalHelper.getAnimalExams(adapter, recyclerView, animal, getSupportFragmentManager());
+        animalHelper.getAnimalExams(adapter, recyclerView, animal, onClickListener);
     }
 
     @Override
@@ -595,21 +589,9 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void checkIfAtHome(Animal animal, ImageView image) {/*
-        db.collection(KeysNamesUtils.CollectionsNames.RESIDENCE)
-                .whereEqualTo("animal", animal.getMicrochipCode())
-                .whereEqualTo("date", "currentdate")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        QuerySnapshot querySnapshot = task.getResult();
-                        if (!querySnapshot.isEmpty()){
-                            image.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_house_siding_24));
-                        } else {
-                            image.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_home_24));
-                        }
-                    }
-                });*/
+    public void checkIfAtHome(Animal animal, ImageView image) {
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
+        animalHelper.checkIfAtHome(animal, image);
     }
 
     @Override

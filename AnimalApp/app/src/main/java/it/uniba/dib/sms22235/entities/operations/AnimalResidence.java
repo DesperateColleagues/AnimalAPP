@@ -1,13 +1,19 @@
 package it.uniba.dib.sms22235.entities.operations;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
+
 public class AnimalResidence {
     private String animal;
     private String startDate;
     private String endDate;
     private String residenceOwner;
-    boolean isTemp;
+    private String isTemp;
 
-    public AnimalResidence(String startDate, String endDate, String residenceOwner, boolean isTemp) {
+    public AnimalResidence(String startDate, String endDate, String residenceOwner, String isTemp) {
         this.startDate = startDate;
         this.residenceOwner = residenceOwner;
         this.endDate = endDate;
@@ -42,11 +48,22 @@ public class AnimalResidence {
         this.endDate = endDate;
     }
 
-    public boolean isTemp() {
+    public String isTemp() {
         return isTemp;
     }
 
-    public void setTemp(boolean temp) {
+    public void setTemp(String temp) {
         isTemp = temp;
+    }
+
+    public static AnimalResidence loadResidence(@NonNull DocumentSnapshot document) {
+        AnimalResidence a = new AnimalResidence(
+                (String) document.get(KeysNamesUtils.ResidenceFields.START_DATE),
+                (String) document.get(KeysNamesUtils.ResidenceFields.END_DATE),
+                (String) document.get(KeysNamesUtils.ResidenceFields.RESIDENCE_OWNER),
+                (String) document.get(KeysNamesUtils.ResidenceFields.IS_TEMP)
+        );
+        a.setAnimal((String) document.get(KeysNamesUtils.ResidenceFields.ANIMAL));
+        return a;
     }
 }

@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">AnimalApp</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="generic_error">An error has occured</string>
+    <string name="hello_blank_fragment">Fragment vuoto</string>
+    <string name="generic_error">Errore generico, contattare gli sviluppatori</string>
     <string name="chilometri">" Chilometri"</string>
+    <string name="camera_permission">Operazione non completata.
+        In caso di schermata nera, verificare i permessi dell\'applicazione.</string>
+    <string name="location_permission">Impossibile effettuare ricerche: permesso posizione mancante.</string>
+    <string name="dettagli_profilo">Dettagli profilo utente</string>
 
 
     <!-- Stringhe sottostanti riferite alla registrazione -->
@@ -14,7 +18,7 @@
     <string name="login">Login</string>
     <string name="registrati">Registrati</string>
     <string name="benvenuto">Benvenuto!</string>
-    <string name="role_message">Prima di tutto, che tipo di utente sarai in app</string>
+    <string name="role_message">Prima di tutto, a che categoria appartieni?</string>
     <string name="padrone">Padrone</string>
     <string name="appassionato">Appassionato</string>
     <string name="veterinario">Veterinario</string>
@@ -37,16 +41,20 @@
     <string name="title_fragment_passionate_reservation">Prenotazioni</string>
     <string name="title_fragment_passionate_purchases">Spese</string>
     <string name="registra_animale">Registra animale</string>
+    <string name="animali_proprieta">Animali di proprietà</string>
+    <string name="no_animal">Non hai associato alcun animale</string>
 
     <!-- Stringhe sottostanti riferite alle funzioni del passionate -->
     <string name="passionate_profile_cardlayout_reports_text">Visualizza le segnalazioni</string>
     <string name="passionate_profile_cardlayout_pokelinks_text">Visualizza modalità Pokelinks</string>
     <string name="passionate_profile_cardlayout_org_list_text">Visualizza organizzazioni</string>
     <string name="passionate_profile_cardlayout_vet_list_text">Visualizza veterinari</string>
+    <string name="passionate_profile_cardlayout_QR_Scan">Scannerizza QR</string>
     <string name="aggiungi_animale">Aggiungi animale</string>
     <string name="nome_animale">Nome animale</string>
     <string name="specie_animale">Specie animale</string>
     <string name="razza">Razza</string>
+    <string name="animal_profile_help">Clicca sul nome dell\'animale per andare al suo AnimalProfile</string>
     <string name="codice_microchip">Codice microchip</string>
     <string name="data_di_nascita">Data di nascita</string>
     <string name="impostazione_foto_animal_card">"Attendi, impostazione della foto in corso…"</string>
@@ -66,6 +74,8 @@
     <string name="dettagli_animale">Animale:</string>
     <string name="dettagli_veterinario">Veterinario:</string>
     <string name="dettagli_data">Data e ora:</string>
+    <string name="impossibile_prenotare">Impossibile prenotare un appuntamento per una data già superata</string>
+    <string name="prenotazione_avvenuta">Prenotazione inserita con successo!</string>
 
     <!-- Stringhe sottostanti riferite al veterinario -->
     <string name="title_activity_veterinarian_navigation">VeterinarianNavigationActivity</string>
@@ -73,17 +83,32 @@
     <string name="title_fragment_veterinarian_animal_list">Lista animali</string>
     <string name="title_fragment_veterinarian_patients">Pazienti</string>
     <string name="title_fragment_veterinarian_reservations">Prenotazioni</string>
+    <string name="title_fragment_veterinarian_backbench">Informazioni del tuo stallo</string>
 
 
     <!-- Stringhe sottostanti riferite alle funzioni del veterinario -->
     <string name="data_appuntamento">data</string>
     <string name="ora_appuntamento">ora</string>
     <string name="aggiungi_prenotazione">Aggiungi prenotazione</string>
-    <string name="aggiungi_diagnosi">Aggiungi diagnosi</string>
-    <string name="mostra_diagnosi">Mostra diagnosi</string>
-    <string name="modifica_diagnosi">Modifica diagnosi</string>
-    <string name="elimina_diagnosi">Elimina diagnosi</string>
-    <string name="aggiungi_esame">Aggiungi esame</string>
+
+        <!-- Stringhe sottostanti riferite alle diagnosi -->
+        <string name="aggiungi_diagnosi">Aggiungi diagnosi</string>
+        <string name="mostra_diagnosi">Mostra diagnosi</string>
+        <string name="modifica_diagnosi">Modifica diagnosi</string>
+        <string name="elimina_diagnosi">Elimina diagnosi</string>
+        <string name="inserisci_diagnosi">Inserisci riassunto breve della visita</string>
+        <string name="inserisci_doc_diagnosi">Oppure aggiungi un file .doc con una diagnosi approfondita</string>
+
+        <!-- Stringhe sottostanti riferite agli esami -->
+        <string name="aggiungi_esame">Aggiungi esame</string>
+        <string name="esito_esame">Esito esame</string>
+        <string name="mostra_esame">Mostra esame</string>
+        <string name="modifica_esame">Modifica esame</string>
+        <string name="elimina_esame">Elimina esame</string>
+        <string name="esito_positivo">Esito positivo</string>
+        <string name="esito_negativo">Esito negativo</string>
+        <string name="tipo_esame">Tipologia di esame</string>
+
     <string name="proprietario_animale_vet_list">Proprietario:</string>
     <string name="nome_animale_vet_list">Nome:</string>
 
@@ -119,12 +144,19 @@
     <string name="richieste_mie">Visualizzazione: personali</string>
     <string name="richieste_altri">Visualizzazione: altri utenti</string>
     <string name="conferma_richiesta_titolo">Sei sicuro?</string>
-    <string name="conferma_richiesta_messaggio">Vuoi contrassegnare come "completata" questo elemento?</string>
+    <string name="conferma_richiesta_messaggio">Vuoi contrassegnare come "completato" questo elemento?</string>
     <string name="ricarica_sessione">Spostamento completato, riesegui il login</string>
+    <string name="completa_richiesta">Completamento richiesta</string>
+    <string name="aggiungi_nuovo_backbench">Aggiungi animale allo stallo temporaneo</string>
 
     <string name="animal_profile_infos">
         ·<b>Specie:</b>* \n·<b>Razza:</b>*\n<br/>·<b>Data di nascita:</b>*\n<br/>·<b>Codice microchip:*</b>
     </string>
+
+    <!-- Stringhe sottostanti riferite alle organizzazioni -->
+    <string name="importazione_avvenuta">Inserimento completato con successo!</string>
+    <string name="importazione_fallita">Errore nell\'ottenimento del file da importare</string>"
+    <string name="animali_assistenza">Animali assistiti</string>
 
     <!-- Perchè non lasciare qualche easter egg? -->
 
@@ -142,6 +174,8 @@
     <string name="empty_list">Non c\'è niente qui, per ora</string>
     <string name="bill_pc">Il PC di Bill</string>
     <string name="seleziona_amico">Seleziona amico</string>
+
+    <string name="completa_inserimento">Completa inserimento</string>
 
     <string-array name="rangeSliderValues">
         <item>0</item>

@@ -20,8 +20,6 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
-import org.w3c.dom.Text;
-
 import java.security.NoSuchAlgorithmException;
 
 import it.uniba.dib.sms22235.R;

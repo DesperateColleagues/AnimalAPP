@@ -1,9 +1,9 @@
 package it.uniba.dib.sms22235.tasks.common.views.requests;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -143,14 +143,16 @@ public interface RequestsAnimalTransferOperationsListener {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
+        String currentFolderReferencePosts;
+        String currentFolderReferenceProfilePic;
         // Create the storage tree structure of the posts directory
-        String currentFolderReferencePosts = KeysNamesUtils.FileDirsNames.passionatePostDirName(oldOwner) +
+        currentFolderReferencePosts = KeysNamesUtils.FileDirsNames.organizationPostDirName() +
                 "/" +
                 KeysNamesUtils.FileDirsNames.passionatePostRefDirAnimal(microchip) + "/";
-
         // Create the storage tree structure of the profile pic file
-        String currentFolderReferenceProfilePic = KeysNamesUtils.FileDirsNames.passionatePostDirName(oldOwner) +
+        currentFolderReferenceProfilePic = KeysNamesUtils.FileDirsNames.organizationPostDirName() +
                 "/";
+
 
         // The task to get the post
         Task<QuerySnapshot> postQuery = db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)

@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -21,21 +20,24 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.animals.AnimalDiagnosisAdapter;
 import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
 import it.uniba.dib.sms22235.adapters.animals.AnimalPostAdapter;
+import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 import it.uniba.dib.sms22235.entities.operations.Exam;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
-import it.uniba.dib.sms22235.tasks.common.dialogs.DialogEntityDetailsFragment;
-import androidx.fragment.app.FragmentManager;
 
 public class InterfacesOperationsHelper {
 
@@ -47,22 +49,47 @@ public class InterfacesOperationsHelper {
         this.context = context;
     }
 
-    public void registerDiagnosis(@NonNull Diagnosis diagnosis) {
-        Log.wtf("WTF",diagnosis.getId());
-        Log.wtf("WTF",diagnosis.getDescription());
-        db.collection(KeysNamesUtils.CollectionsNames.DIAGNOSIS)
-                .document(diagnosis.getId())
-                .set(diagnosis)
-                .addOnSuccessListener(unused -> {
-                    Toast.makeText(context,
-                            "Diagnosi inserita con successo",
-                            Toast.LENGTH_LONG).show();
-                })
-                .addOnFailureListener(e ->
+    public static class AnimalHealthOperations {
+
+        private final FirebaseFirestore db;
+        private final Context context;
+
+        public AnimalHealthOperations(Context context, FirebaseFirestore db){
+            this.db = db;
+            this.context = context;
+        }
+
+        public void registerDiagnosis(@NonNull Diagnosis diagnosis) {
+            db.collection(KeysNamesUtils.CollectionsNames.DIAGNOSIS)
+                    .document(diagnosis.getId())
+                    .set(diagnosis)
+                    .addOnSuccessListener(unused -> {
                         Toast.makeText(context,
-                                "Errore interno, dati non aggiornati",
-                                Toast.LENGTH_SHORT).show()
-                );
+                                "Diagnosi inserita con successo",
+                                Toast.LENGTH_LONG).show();
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(context,
+                                    "Errore interno, dati non aggiornati",
+                                    Toast.LENGTH_SHORT).show()
+                    );
+        }
+
+        public void registerExam(@NonNull Exam exam) {
+            db.collection(KeysNamesUtils.CollectionsNames.EXAMS)
+                    .document(exam.getId())
+                    .set(exam)
+                    .addOnSuccessListener(unused -> {
+                        Toast.makeText(context,
+                                "Esame inserito con successo",
+                                Toast.LENGTH_LONG).show();
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(context,
+                                    "Errore interno, dati non aggiornati",
+                                    Toast.LENGTH_SHORT).show()
+                    );
+        }
     }
 
     public static class AnimalCommonOperations {
@@ -75,21 +102,53 @@ public class InterfacesOperationsHelper {
             this.context = context;
         }
 
-        public void checkIfAtHome(Animal animal, ImageView image) {/*
-        db.collection(KeysNamesUtils.CollectionsNames.RESIDENCE)
-                .whereEqualTo("animal", animal.getMicrochipCode())
-                .whereEqualTo("date", "currentdate")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        QuerySnapshot querySnapshot = task.getResult();
-                        if (!querySnapshot.isEmpty()){
-                            image.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_house_siding_24));
-                        } else {
-                            image.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_home_24));
+        public boolean checkDate(String startDate, String endDate) {
+            SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd", Locale.ITALY);
+            String currentDate = dateSDF.format(new Date());
+            long distanceA = -1 , distanceB = -1;
+            try {
+                Date d1 = dateSDF.parse(startDate);
+                Date d2 = dateSDF.parse(endDate);
+                Date d3 = dateSDF.parse(currentDate);
+                distanceA = d1.getTime() - d3.getTime();
+                distanceB = d3.getTime() - d2.getTime();
+            } catch (ParseException e) {
+                return false;
+            }
+            return (distanceA < 0 && distanceB < 0);
+        }
+
+        public void checkIfAtHome(Animal animal, ImageView image) {
+            SimpleDateFormat dateSDF = new SimpleDateFormat("dd/MM/yy", Locale.ITALY);
+            String currentDate = dateSDF.format(new Date());
+
+            db.collection(KeysNamesUtils.CollectionsNames.RESIDENCE)
+                    .whereEqualTo("animal", animal.getMicrochipCode())
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()){
+                            QuerySnapshot querySnapshot = task.getResult();
+                            if (!querySnapshot.isEmpty()) {
+                                List<DocumentSnapshot> residenceDocuments = querySnapshot.getDocuments();
+                                for (DocumentSnapshot snapshot : residenceDocuments) {
+                                    AnimalResidence residence = AnimalResidence.loadResidence(snapshot);
+                                    long distanceA = -1 , distanceB = -1;
+                                    try {
+                                        Date d1 = dateSDF.parse(residence.getStartDate());
+                                        Date d2 = dateSDF.parse(residence.getEndDate());
+                                        Date d3 = dateSDF.parse(currentDate);
+                                        distanceA = d1.getTime() - d3.getTime();
+                                        distanceB = d3.getTime() - d2.getTime();
+                                    } catch (ParseException ignored) {}
+                                    if (distanceA < 0 && distanceB < 0) {
+                                        image.setColorFilter(context.getResources().getColor(R.color.error_red));
+                                        //image.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_house_siding_24));
+                                        break;
+                                    }
+                                }
+                            }
                         }
-                    }
-                });*/
+                    });
         }
 
         public void loadProfilePic(String fileName, ImageView imageView) {
@@ -190,7 +249,7 @@ public class InterfacesOperationsHelper {
                     });
         }
 
-        public void getAnimalExams(AnimalExamsAdapter adapter, RecyclerView recyclerView, String animal, FragmentManager fm){
+        public void getAnimalExams(AnimalExamsAdapter adapter, RecyclerView recyclerView, String animal, AnimalExamsAdapter.OnItemClickListener listener){
             db.collection(KeysNamesUtils.CollectionsNames.EXAMS)
                     .whereEqualTo(KeysNamesUtils.ExamsFields.EXAM_ANIMAL, animal)
                     .get()
@@ -204,31 +263,8 @@ public class InterfacesOperationsHelper {
                                     Log.wtf("Esami", Exam.loadExam(snapshot).toString());
                                 }
                             }
+                            adapter.setOnItemClickListener(listener);
                             recyclerView.setAdapter(adapter);
-
-                            adapter.setOnItemClickListener(exam -> {
-                                String info = "• <b>" +
-                                        "Animale" +
-                                        ": </b>"+
-                                        exam.getAnimal() +
-                                        "\n<br>" +
-                                        "• <b>" +
-                                        "Esito" +
-                                        ": </b>"+
-                                        exam.getOutcome() +
-                                        "\n<br>" +
-                                        "• <b>" +
-                                        "Tipo" +
-                                        ": </b>" +
-                                        exam.getType()+
-                                        "\n<br>" +
-                                        "• <b>" +
-                                        "Descrizione" +
-                                        ": </b>" +
-                                        exam.getDescription();
-                                DialogEntityDetailsFragment entityDetailsFragment = new DialogEntityDetailsFragment(info);
-                                entityDetailsFragment.show(fm, "DialogEntityDetailsFragment");
-                            });
                         } else {
                             Toast.makeText(context, "Nessun esame presente.", Toast.LENGTH_SHORT).show();
                         }

@@ -22,19 +22,12 @@
             app:destination="@id/userProfileInfoFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/organization_animal_list"
-        android:name="it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationAnimalListFragment"
-        android:label="Lista animali"
-        tools:layout="@layout/fragment_animal_list">
         <action
-            android:id="@+id/action_organization_animal_list_to_animalProfile"
+            android:id="@+id/action_organization_profile_to_animalProfile"
             app:destination="@id/animalProfile"
             app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right" />
+            app:exitAnim="@android:anim/slide_out_right"/>
+
     </fragment>
 
     <fragment
@@ -47,7 +40,7 @@
     <fragment
         android:id="@+id/userProfileInfoFragment"
         android:name="it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragment"
-        android:label="UserProfileInfoFragment"
+        android:label="@string/dettagli_profilo"
         tools:layout="@layout/fragment_user_profile_info"/>
 
 

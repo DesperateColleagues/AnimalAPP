@@ -55,7 +55,7 @@ public class DialogRequestBackbench extends DialogFragment {
         // Set dialog title
         @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
         TextView titleText = titleView.findViewById(R.id.dialog_title);
-        titleText.setText("Completamento richiesta");
+        titleText.setText(getResources().getString(R.string.completa_richiesta));
         builder.setCustomTitle(titleView);
         builder.setView(root);
 
@@ -78,7 +78,7 @@ public class DialogRequestBackbench extends DialogFragment {
             });
         });
 
-        builder.setPositiveButton("Conferma", (dialog, which) -> {
+        builder.setPositiveButton(getResources().getString(R.string.conferma), (dialog, which) -> {
             String value = ((EditText) root.findViewById(R.id.txtAddInfoToRequest)).getText().toString();
             String dateInterval = txtInputDateIntervalReq.getText().toString();
 
@@ -86,7 +86,7 @@ public class DialogRequestBackbench extends DialogFragment {
                 String startDate = dateInterval.split(" a ")[0];
                 String endDate = dateInterval.split(" a ")[1];
 
-                AnimalResidence residence = new AnimalResidence(startDate, endDate, request.getUserEmail(), true);
+                AnimalResidence residence = new AnimalResidence(startDate, endDate, request.getUserEmail(), "true");
                 residence.setAnimal(value);
                 listener.onValueAdded(residence, request);
                 dismiss();

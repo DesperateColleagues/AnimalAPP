@@ -6,15 +6,11 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import org.checkerframework.checker.units.qual.A;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import it.uniba.dib.sms22235.entities.operations.Interval;

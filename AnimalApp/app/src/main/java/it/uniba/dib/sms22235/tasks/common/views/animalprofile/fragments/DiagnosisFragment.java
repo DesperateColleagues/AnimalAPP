@@ -43,7 +43,6 @@ public class DiagnosisFragment extends Fragment implements
     private DiagnosisFragmentListener listener;
 
     private FirebaseAuth mAuth;
-    private InterfacesOperationsHelper helper;
 
     public DiagnosisFragment(String animal, String owner) {
         this.animal = animal;
@@ -57,7 +56,6 @@ public class DiagnosisFragment extends Fragment implements
     @Override
     public void onAttach(@NonNull Context context) {
         NavigationActivityInterface activity = (NavigationActivityInterface) getActivity();
-        helper = new InterfacesOperationsHelper(getContext());
         try {
             // Attach the listener to the Fragment
             listener = (DiagnosisFragment.DiagnosisFragmentListener) context;
@@ -120,6 +118,10 @@ public class DiagnosisFragment extends Fragment implements
         adapter.addDiagnosis(diagnosis);
         adapter.notifyDataSetChanged();
 
+        InterfacesOperationsHelper.AnimalHealthOperations helper = new InterfacesOperationsHelper.AnimalHealthOperations(
+                getContext(),
+                ((NavigationActivityInterface) requireActivity()).getFireStoreInstance());
+
         helper.registerDiagnosis(diagnosis);
     }
 
@@ -131,32 +133,34 @@ public class DiagnosisFragment extends Fragment implements
                     dialogAddDiagnosisFragment.show(getParentFragmentManager(), "DialogAddDiagnosisFragment");
                 })
                 .setOnDeleteListener(() -> {
-                    Toast.makeText(getContext(), "Eliminazione diagnosi", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getResources().getString(R.string.elimina_diagnosi), Toast.LENGTH_SHORT).show();
                 })
                 .setOnShowListener(() -> {
-                    Toast.makeText(getContext(), "Visualizzazione diagnosi", Toast.LENGTH_SHORT).show();
+                    showInfo(diagnosis);
                 })
-                .show(getParentFragmentManager(), "Modifica diagnosi");
+                .show(getParentFragmentManager(), getResources().getString(R.string.modifica_diagnosi));
     };
 
-    private final AnimalDiagnosisAdapter.OnItemClickListener onClickViewListener = diagnosis -> {
-            String info = "• <b>" +
-                    "Animale" +
-                    ": </b>"+
-                    diagnosis.getAnimal() +
-                    "\n<br>" +
-                    "• <b>" +
-                    "Descrizione" +
-                    ": </b>"+
-                    diagnosis.getDescription() +
-                    "\n<br>" +
-                    "• <b>" +
-                    "Data aggiunta al sistema" +
-                    ": </b>" +
-                    diagnosis.getDateAdded();
-            DialogEntityDetailsFragment entityDetailsFragment = new DialogEntityDetailsFragment(info);
-            entityDetailsFragment.show(getParentFragmentManager(), "DialogEntityDetailsFragment");
-    };
+    private final AnimalDiagnosisAdapter.OnItemClickListener onClickViewListener = this::showInfo;
+
+    private void showInfo(Diagnosis diagnosis) {
+        String info = "• <b>" +
+                "Animale" +
+                ": </b>"+
+                diagnosis.getAnimal() +
+                "\n<br>" +
+                "• <b>" +
+                "Descrizione" +
+                ": </b>"+
+                diagnosis.getDescription() +
+                "\n<br>" +
+                "• <b>" +
+                "Data aggiunta al sistema" +
+                ": </b>" +
+                diagnosis.getDateAdded();
+        DialogEntityDetailsFragment entityDetailsFragment = new DialogEntityDetailsFragment(info);
+        entityDetailsFragment.show(getParentFragmentManager(), "DialogEntityDetailsFragment");
+    }
 
 
 }

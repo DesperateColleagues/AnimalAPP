@@ -62,7 +62,8 @@ public class DialogChooseAnimalFragment extends DialogFragment {
             list.add(animal.getMicrochipCode());
         }
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner_dropdown_layout, R.id.spinnerDropdownTextView, list);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         animalListSpinner.setAdapter(dataAdapter);
 
         Button btnConfirmChooseAnimal = root.findViewById(R.id.btnConfirmChooseAnimal);

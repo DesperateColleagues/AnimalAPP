@@ -21,12 +21,14 @@
         android:minHeight="48dp" />
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textinput_weight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="20dp"
         android:hint="Peso (kg)"
+        android:visibility="gone"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
@@ -44,12 +46,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textinput_height"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="20dp"
         android:hint="Altezza (m)"
+        android:visibility="gone"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
@@ -67,12 +71,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textinput_nature"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="20dp"
         android:hint="Descrizione carattere"
+        android:visibility="gone"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText

@@ -6,17 +6,19 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -33,6 +35,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -75,9 +78,22 @@ public class ReportsListFragment extends Fragment {
         if (isGranted) {
             this.isGranted = true;
         } else {
-            Toast.makeText(getContext(), "Impossibile effettuare ricerche: permesso posizione " +
-                            "mancante.",
-                    Toast.LENGTH_SHORT).show();
+            Snackbar snackbar = Snackbar.make(getView(),getResources().getString(R.string.location_permission),Snackbar.LENGTH_LONG);
+            View snackbarView = snackbar.getView();
+            TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+            TypedValue value = new TypedValue();
+            getContext().getTheme().resolveAttribute(android.R.attr.windowBackground, value, true);
+            snackbarView.setBackgroundColor(value.data);
+            switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+                case Configuration.UI_MODE_NIGHT_YES:
+                    textView.setTextColor(Color.WHITE);
+                    break;
+                case Configuration.UI_MODE_NIGHT_NO:
+                    textView.setTextColor(Color.BLACK);
+                    break;
+            }
+            textView.setTextSize(15);
+            snackbar.show();
             this.isGranted = false;
         }
     });

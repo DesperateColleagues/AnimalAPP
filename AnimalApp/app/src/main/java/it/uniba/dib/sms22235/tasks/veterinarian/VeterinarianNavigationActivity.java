@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +20,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,7 +42,7 @@ import it.uniba.dib.sms22235.adapters.animals.AnimalListAdapter;
 import it.uniba.dib.sms22235.adapters.animals.AnimalDiagnosisAdapter;
 import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
 import it.uniba.dib.sms22235.adapters.animals.AnimalPostAdapter;
-import it.uniba.dib.sms22235.entities.operations.Exam;
+import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
@@ -50,6 +51,7 @@ import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDiaryFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsAnimalTransferOperationsListener;
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsStandardOperationListener;
 import it.uniba.dib.sms22235.tasks.login.LoginActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianAnimalListFragment;
@@ -68,6 +70,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         DiagnosisFragment.DiagnosisFragmentListener,
         RequestsStandardOperationListener,
         UserProfileInfoFragmentListener,
+        RequestsAnimalTransferOperationsListener,
         NavigationActivityInterface {
 
     private FloatingActionButton fab;
@@ -77,7 +80,12 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     private transient  BottomNavigationView navViewVeterinarian;
     private transient NavController navController;
 
-    private InterfacesOperationsHelper helper;
+    @Override
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
+        boolean isProfile = navController.getCurrentDestination().getId() == R.id.veterinarian_profile;
+        menu.findItem(R.id.profile_info).setVisible(isProfile);
+        return true;
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -108,8 +116,6 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         fab = findViewById(R.id.floatingActionButton_veterinarian);
 
         db = FirebaseFirestore.getInstance();
-
-        helper = new InterfacesOperationsHelper(this);
 
         Bundle loginBundle = getIntent().getExtras();
 
@@ -181,10 +187,8 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
                                  .document(docKeyReservation)
                                  .set(reservation)
                                  .addOnSuccessListener(unused -> {
-                                     Toast.makeText(this, "Prenotazione inserita con successo!", Toast.LENGTH_SHORT).show();
-                                 }).addOnFailureListener(e -> {
-                                     Log.d("DEB", e.getMessage());
-                                 });
+                                     Toast.makeText(this, getResources().getString(R.string.prenotazione_avvenuta), Toast.LENGTH_SHORT).show();
+                                 }).addOnFailureListener(e -> {});
                      } else {
                          Toast.makeText(this, "Appuntamento già presente.", Toast.LENGTH_SHORT).show();
                      }
@@ -238,21 +242,63 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
     public void getAssistedAnimals(AnimalListAdapter adapter, RecyclerView recyclerView) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
 
-        db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+        Task<QuerySnapshot> passionateAnimals = db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
                 .whereEqualTo(KeysNamesUtils.AnimalFields.VETERINARIAN,
-                        Objects.requireNonNull(auth.getCurrentUser()).getEmail())
-                .get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if (!task.getResult().isEmpty()) {
-                            List<DocumentSnapshot> assistedAnimalsDocuments = task.getResult().getDocuments();
-                            for (DocumentSnapshot snapshot : assistedAnimalsDocuments) {
-                                adapter.addAnimal(Animal.loadAnimal(snapshot));
-                                Log.wtf("LISTA", Animal.loadAnimal(snapshot).toString());
+                        Objects.requireNonNull(auth.getCurrentUser()).getEmail()).get();
+
+        Task<QuerySnapshot> backbenchAnimals = db.collection(KeysNamesUtils.CollectionsNames.RESIDENCE)
+                .whereEqualTo(KeysNamesUtils.ResidenceFields.RESIDENCE_OWNER,
+                        Objects.requireNonNull(auth.getCurrentUser()).getEmail()).get();
+
+        Tasks.whenAllComplete(passionateAnimals,backbenchAnimals)
+            .addOnCompleteListener(task -> {
+                ArrayList<Animal> animals = new ArrayList<>();
+                if (task.isSuccessful()) {
+                    QuerySnapshot passionateSnapshot = (QuerySnapshot) task.getResult().get(0).getResult();
+                    QuerySnapshot backbenchSnapshot = (QuerySnapshot) task.getResult().get(1).getResult();
+
+                    if (!passionateSnapshot.isEmpty()) {
+                        List<DocumentSnapshot> passionateSnapshotDocuments = passionateSnapshot.getDocuments();
+                        for (DocumentSnapshot snapshot : passionateSnapshotDocuments) {
+                            animals.add(Animal.loadAnimal(snapshot));
+                        }
+                    }
+                    if (!backbenchSnapshot.isEmpty()) {
+                        List<DocumentSnapshot> assistedAnimalsMicrochipDocuments = backbenchSnapshot.getDocuments();
+                        ArrayList<String> assistedAnimalsMicrochip = new ArrayList<>();
+                        for (DocumentSnapshot snapshot : assistedAnimalsMicrochipDocuments) {
+                            AnimalResidence ar = AnimalResidence.loadResidence(snapshot);
+                            if (animalHelper.checkDate(ar.getStartDate(), ar.getEndDate())) {
+                                assistedAnimalsMicrochip.add(ar.getAnimal());
                             }
                         }
+                        if (!assistedAnimalsMicrochip.isEmpty()) {
+                            db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                                    .whereIn(KeysNamesUtils.AnimalFields.MICROCHIP_CODE,
+                                            assistedAnimalsMicrochip)
+                                    .get()
+                                    .addOnCompleteListener(task1 -> {
+                                        if (task1.isSuccessful()) {
+                                            QuerySnapshot assistedAnimalsSnapshot = (QuerySnapshot) task1.getResult();
+                                            List<DocumentSnapshot> assistedAnimalsDocuments = assistedAnimalsSnapshot.getDocuments();
+                                            for (DocumentSnapshot snapshot : assistedAnimalsDocuments) {
+                                                Animal a = Animal.loadAnimal(snapshot);
+                                                if (!animals.contains(a)) {
+                                                    animals.add(a);
+                                                }
+                                            }
+                                        }
+                                        adapter.addAllAnimals(animals);
+                                        recyclerView.setAdapter(adapter);
+                                    });
+                        }
+                    } else {
+                        adapter.addAllAnimals(animals);
                         recyclerView.setAdapter(adapter);
                     }
+                }
                 });
     }
 
@@ -268,22 +314,10 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         return clonedReservationsList;
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void checkIfAtHome(Animal animal, ImageView image) {
-        db.collection(KeysNamesUtils.CollectionsNames.RESIDENCE)
-                .whereEqualTo("animal", animal.getMicrochipCode())
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        QuerySnapshot querySnapshot = task.getResult();
-                        if (!querySnapshot.isEmpty()){
-                            image.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_house_siding_24));
-                        } else {
-                            image.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_home_24));
-                        }
-                    }
-                });
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
+        animalHelper.checkIfAtHome(animal, image);
     }
 
     @Override
@@ -344,25 +378,9 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void getAnimalExams(AnimalExamsAdapter adapter, RecyclerView recyclerView, String animal){
-        db.collection(KeysNamesUtils.CollectionsNames.EXAMS)
-                .whereEqualTo(KeysNamesUtils.ExamsFields.EXAM_ANIMAL, animal)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        QuerySnapshot querySnapshot = task.getResult();
-                        if (!querySnapshot.isEmpty()){
-                            List<DocumentSnapshot> examsDocuments = task.getResult().getDocuments();
-                            for (DocumentSnapshot snapshot : examsDocuments) {
-                                adapter.addExam(Exam.loadExam(snapshot));
-                                Log.wtf("Esami", Exam.loadExam(snapshot).toString());
-                            }
-                        }
-                        recyclerView.setAdapter(adapter);
-                    } else {
-                        Toast.makeText(this, "Nessun esame presente.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+    public void getAnimalExams(AnimalExamsAdapter adapter, RecyclerView recyclerView, String animal, AnimalExamsAdapter.OnItemClickListener onClickListener) {
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
+        animalHelper.getAnimalExams(adapter, recyclerView, animal, onClickListener);
     }
 
     @Override

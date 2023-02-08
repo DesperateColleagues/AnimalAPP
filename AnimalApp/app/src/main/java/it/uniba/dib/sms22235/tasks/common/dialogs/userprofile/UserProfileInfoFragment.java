@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.firestore.auth.User;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -33,7 +33,6 @@ import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
-import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class UserProfileInfoFragment extends Fragment {
@@ -139,8 +138,8 @@ public class UserProfileInfoFragment extends Fragment {
         TextView txtInfo = view.findViewById(R.id.txtInfo);
 
         for (String currentKey : additionalInfo.keySet()) {
-            String line = "• " + currentKey + ":\t\t" + additionalInfo.get(currentKey) + "\n\n";
-            txtInfo.append(line);
+            String line = "<b>• " + currentKey + ": </b>" + additionalInfo.get(currentKey) + "<br>";
+            txtInfo.append((Html.fromHtml(line, Html.FROM_HTML_MODE_LEGACY)));
         }
 
         NavigationActivityInterface activity = (NavigationActivityInterface) requireActivity();

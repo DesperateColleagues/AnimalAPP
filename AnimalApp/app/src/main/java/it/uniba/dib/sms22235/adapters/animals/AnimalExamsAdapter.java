@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Exam;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class AnimalExamsAdapter extends RecyclerView.Adapter<AnimalExamsAdapter.ViewHolder> {
     private ArrayList<Exam> examsList;
@@ -62,24 +63,14 @@ public class AnimalExamsAdapter extends RecyclerView.Adapter<AnimalExamsAdapter.
     public void onBindViewHolder(@NonNull AnimalExamsAdapter.ViewHolder holder, int position) {
         Exam exam = examsList.get(position);
 
-        holder.txtExamInfo.setText(
-                new StringBuilder()
-                        .append(exam.getAnimal())
-                        .append(" - ")
-                        .append(exam.getType())
-                        .append(" - ")
-                        .append(exam.getOutcome())
-                        .toString()
-        );
+        holder.txtExamInfo.setText(String.format("%s - %s", exam.getType(), exam.getDateAdded()));
 
-        if (exam.getOutcome().equals("PASS")) {
+        if (exam.getOutcome().equals(KeysNamesUtils.ExamsFields.EXAM_PASS)) {
             TypedValue value = new TypedValue();
             context.getTheme().resolveAttribute(android.R.attr.colorPrimary, value, true);
             holder.divider.setBackgroundColor(value.data);
-        } else if (exam.getOutcome().equals("FAIL")) {
-            TypedValue value = new TypedValue();
-            context.getTheme().resolveAttribute(android.R.color.holo_red_dark, value, true);
-            holder.divider.setBackgroundColor(value.data);
+        } else if (exam.getOutcome().equals(KeysNamesUtils.ExamsFields.EXAM_FAIL)) {
+            holder.divider.setBackgroundColor(context.getResources().getColor(R.color.error_red));
         }
 
         holder.itemExamCardView.setOnClickListener(v -> {

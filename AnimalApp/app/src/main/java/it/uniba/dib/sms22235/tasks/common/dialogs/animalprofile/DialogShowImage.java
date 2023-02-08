@@ -3,7 +3,6 @@ package it.uniba.dib.sms22235.tasks.common.dialogs.animalprofile;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import androidx.fragment.app.DialogFragment;
 import com.bumptech.glide.Glide;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 
 public class DialogShowImage extends DialogFragment {

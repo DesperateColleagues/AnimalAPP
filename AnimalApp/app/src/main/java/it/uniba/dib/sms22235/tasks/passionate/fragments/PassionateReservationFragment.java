@@ -1,11 +1,16 @@
 package it.uniba.dib.sms22235.tasks.passionate.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +18,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,7 +42,7 @@ public class PassionateReservationFragment extends Fragment implements DialogCho
     private CalendarView calendarView;
     private RecyclerView reservationRecyclerView;
     private DialogChooseAnimalFragment dialogChooseAnimalFragment;
-    private ArrayList<Reservation> dayReservationsList;
+    private ArrayList<Reservation> dailyReservationsList;
     private ReservationsAdapter adapter;
     private String currentDate;
     private String currentTime;
@@ -75,38 +83,59 @@ public class PassionateReservationFragment extends Fragment implements DialogCho
         calendarView = view.findViewById(R.id.calendarViewPassionate);
         reservationRecyclerView = view.findViewById(R.id.reservationListPassionate);
 
-        adapter = new ReservationsAdapter();
-        adapter.setListType(KeysNamesUtils.ReservationListType.PASSIONATE.getValue());
-        adapter.setOnItemClickListener(reservation -> {
-
-            this.selectedReservation = reservation;
-
-            dialogChooseAnimalFragment = new DialogChooseAnimalFragment(listener.getAnimalsByVeterinarian(reservation.getVeterinarian()));
-            dialogChooseAnimalFragment.setListener(this);
-            dialogChooseAnimalFragment.show(getParentFragmentManager(), "DialogChooseAnimalFragment");
-
-        });
-
         SimpleDateFormat dateSDF = new SimpleDateFormat("dd/MM/yy", Locale.ITALY);
         currentDate = dateSDF.format(new Date());
         SimpleDateFormat timeSDF = new SimpleDateFormat("HH:mm", Locale.ITALY);
         currentTime = timeSDF.format(new Date());
 
-        dayReservationsList = ((PassionateNavigationActivity) requireActivity()).getAvailableReservationsList(currentDate);
+        adapter = new ReservationsAdapter();
+        adapter.setListType(KeysNamesUtils.ReservationListType.PASSIONATE.getValue());
+        adapter.setOnItemClickListener(reservation -> {
+            this.selectedReservation = reservation;
+            long distance = -1;
+            try {
+                Date d1 = dateSDF.parse(reservation.getDate());
+                Date d2 = dateSDF.parse(currentDate);
+                distance = d1.getTime() - d2.getTime();
+            } catch (ParseException ignored) {}
+            if (distance >= 0) {
+                dialogChooseAnimalFragment = new DialogChooseAnimalFragment(listener.getAnimalsByVeterinarian(reservation.getVeterinarian()));
+                dialogChooseAnimalFragment.setListener(this);
+                dialogChooseAnimalFragment.show(getParentFragmentManager(), "DialogChooseAnimalFragment");
+            } else {
+                Snackbar snackbar = Snackbar.make(getView(),getResources().getString(R.string.impossibile_prenotare),Snackbar.LENGTH_LONG);
+                View snackbarView = snackbar.getView();
+                TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+                TypedValue value = new TypedValue();
+                getContext().getTheme().resolveAttribute(android.R.attr.windowBackground, value, true);
+                snackbarView.setBackgroundColor(value.data);
+                switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+                    case Configuration.UI_MODE_NIGHT_YES:
+                        textView.setTextColor(Color.WHITE);
+                        break;
+                    case Configuration.UI_MODE_NIGHT_NO:
+                        textView.setTextColor(Color.BLACK);
+                        break;
+                }
+                textView.setTextSize(15);
+                snackbar.show();
+            }
 
-        adapter.addAllReservations(dayReservationsList);
+        });
 
+        dailyReservationsList = ((PassionateNavigationActivity) requireActivity()).getAvailableReservationsList(currentDate);
+        adapter.addAllReservations(dailyReservationsList);
         reservationRecyclerView.setAdapter(adapter);
         reservationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
 
         calendarView.setOnDateChangeListener((calendarView, i, i1, i2) -> {
 
             // Retrieving only a specific day reservations
-            dayReservationsList = ((PassionateNavigationActivity) requireActivity()).getAvailableReservationsList(buildDate(i, i1, i2));
+            dailyReservationsList = ((PassionateNavigationActivity) requireActivity()).getAvailableReservationsList(buildDate(i, i1, i2));
 
             // Removing from the adapter the old reservations, adding the new ones to the adapter and attaching the adapter to the RecyclerView again
             adapter.clearAll();
-            adapter.addAllReservations(dayReservationsList);
+            adapter.addAllReservations(dailyReservationsList);
             reservationRecyclerView.setAdapter(adapter);
             reservationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
         });
@@ -133,6 +162,7 @@ public class PassionateReservationFragment extends Fragment implements DialogCho
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onDialogChoosedAnimal(String selectedAnimal) {
         this.selectedReservation.setAnimal(selectedAnimal);

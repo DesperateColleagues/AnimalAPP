@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -26,13 +27,11 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.tasks.common.dialogs.requests.BsdDialogQr;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
@@ -236,6 +235,10 @@ public class AnimalProfile extends Fragment implements
         }
 
         ImageView animalPosition = view.findViewById(R.id.animalPosition);
+
+        animalPosition.setOnClickListener(view1 -> {
+            Toast.makeText(getContext(), "Rosso: in stallo\nVerde: a casa", Toast.LENGTH_SHORT).show();
+        });
 
         generalListener.checkIfAtHome(mAnimal, animalPosition);
 

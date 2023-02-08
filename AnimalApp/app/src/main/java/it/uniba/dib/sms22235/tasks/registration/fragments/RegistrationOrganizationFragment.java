@@ -20,8 +20,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputLayout;
-
 import java.security.NoSuchAlgorithmException;
 
 import it.uniba.dib.sms22235.R;

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,19 +53,15 @@ public class VeterinarianAnimalListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         controller = Navigation.findNavController(container);
-
         View rootView = inflater.inflate(R.layout.fragment_animal_list, container, false);
 
         assistedAnimalRecyclerView = rootView.findViewById(R.id.assistedAnimalList);
-
         adapter = new AnimalListAdapter(RecyclerView.VERTICAL);
-
         adapter.setContext(getContext());
 
         listener.getAssistedAnimals(adapter, assistedAnimalRecyclerView);
 
         assistedAnimalRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-
         assistedAnimalRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), assistedAnimalRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -84,9 +79,6 @@ public class VeterinarianAnimalListFragment extends Fragment {
 
         ((NavigationActivityInterface) requireActivity()).setNavViewVisibility(View.VISIBLE);
         ((NavigationActivityInterface) requireActivity()).getFab().setVisibility(View.GONE);
-        ((NavigationActivityInterface) requireActivity()).getFab().setOnClickListener(v -> {
-            Toast.makeText(getContext(),"Still nothing, but with animals",Toast.LENGTH_SHORT).show();
-        });
 
         return rootView;
     }

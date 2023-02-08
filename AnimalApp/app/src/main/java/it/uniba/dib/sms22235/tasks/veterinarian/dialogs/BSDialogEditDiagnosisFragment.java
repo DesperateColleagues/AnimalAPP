@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.entities.operations.Reservation;
 
 
 public class BSDialogEditDiagnosisFragment extends BottomSheetDialogFragment {

@@ -88,7 +88,7 @@ public class Reservation implements Serializable, Cloneable {
     @NonNull
     @Override
     public Object clone() {
-        Object o = null;
+        Object o;
         try {
             o = super.clone();
         } catch (CloneNotSupportedException e) {

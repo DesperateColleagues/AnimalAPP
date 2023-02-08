@@ -20,7 +20,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="15dp"
         >
 
         <TextView
@@ -104,12 +105,14 @@
         >
 
         <TextView
+            android:id="@+id/animalListPassionateLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/animalList"
             android:layout_marginBottom="10dp"
-            android:layout_marginHorizontal="16dp"
-            android:text="Animali di proprietà"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="15dp"
+            android:text="@string/animali_proprieta"
             android:textSize="22sp"
             android:textColor="?attr/colorOnSecondary" />
 

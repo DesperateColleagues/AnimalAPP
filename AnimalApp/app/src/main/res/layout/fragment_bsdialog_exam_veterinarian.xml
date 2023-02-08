@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/btnConfirmRequestD"
+        android:id="@+id/btnOnShowExam"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
@@ -16,16 +16,16 @@
             android:layout_width="24dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_baseline_check_24"
+            android:src="@drawable/ic_baseline_edit_note_24"
             android:adjustViewBounds="true"
-            app:tint="?attr/colorOnSecondary" />
+            app:tint="?attr/colorOnSecondary"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:textSize="16sp"
-            android:text="@string/conferma"
+            android:text="@string/mostra_esame"
             android:textColor="?attr/colorOnSecondary"
             />
     </LinearLayout>
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"/>
 
     <LinearLayout
-        android:id="@+id/btnUpdateInfoRequest"
+        android:id="@+id/btnOnUpgradeExam"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
@@ -54,10 +54,37 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:textSize="16sp"
-            android:text="@string/aggiungi_nuovo_backbench"
+            android:text="@string/modifica_esame"
             android:textColor="?attr/colorOnSecondary"
             />
     </LinearLayout>
 
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
+    <LinearLayout
+        android:id="@+id/btnOnDeleteExam"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_baseline_delete_24"
+            android:adjustViewBounds="true"
+            app:tint="?attr/colorOnSecondary"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textSize="16sp"
+            android:text="@string/elimina_esame"
+            android:textColor="?attr/colorOnSecondary"
+            />
+    </LinearLayout>
 </LinearLayout>

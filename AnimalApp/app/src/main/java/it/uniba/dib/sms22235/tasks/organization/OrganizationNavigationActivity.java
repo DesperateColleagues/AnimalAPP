@@ -1,5 +1,7 @@
 package it.uniba.dib.sms22235.tasks.organization;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -40,6 +43,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -50,7 +54,9 @@ import it.uniba.dib.sms22235.adapters.animals.AnimalListAdapter;
 import it.uniba.dib.sms22235.adapters.animals.AnimalDiagnosisAdapter;
 import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
 import it.uniba.dib.sms22235.adapters.animals.AnimalPostAdapter;
+import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
+import it.uniba.dib.sms22235.entities.operations.Request;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
@@ -60,10 +66,12 @@ import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDiaryFragment;
+import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsAnimalTransferOperationsListener;
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsStandardOperationListener;
 import it.uniba.dib.sms22235.tasks.login.LoginActivity;
 import it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationAnimalListFragment;
 import it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationImportDataFragment;
+import it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationProfileFragment;
 import it.uniba.dib.sms22235.utils.InterfacesOperationsHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
@@ -76,12 +84,12 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
         OrganizationImportDataFragment.OrganizationImportDataFragmentListener,
         RequestsStandardOperationListener,
         UserProfileInfoFragmentListener,
-        OrganizationAnimalListFragment.OrganizationAnimalsFragmentListener {
+        OrganizationAnimalListFragment.OrganizationAnimalsFragmentListener,
+        OrganizationProfileFragment.OrganizationProfileFragmentListener {
 
     private transient Organization organization;
 
     private transient FirebaseFirestore db;
-    private InterfacesOperationsHelper helper;
 
     private FloatingActionButton fab;
     private transient BottomNavigationView navView;
@@ -91,6 +99,13 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
 
     // Flag that specify whether the connection is enabled or not
     private boolean isConnectionEnabled;
+
+    @Override
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
+        boolean isProfile = navController.getCurrentDestination().getId() == R.id.organization_profile;
+        menu.findItem(R.id.profile_info).setVisible(isProfile);
+        return true;
+    }
 
     // Callback that verifies the connectivity to a network at run time
     private final ConnectivityManager.NetworkCallback networkCallback =
@@ -125,28 +140,19 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_organization_navigation);
-
         navView = findViewById(R.id.nav_view_org);
-
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.organization_profile,
-                R.id.organization_animal_list,
                 R.id.organization_import_data
         ).build();
-
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_activity_organization_navigation);
-
         assert navHostFragment != null;
-
         navController = navHostFragment.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        helper = new InterfacesOperationsHelper(this);
-
         Bundle loginBundle = getIntent().getExtras(); // get the login bundle
-
         // Extract the bundle data sent from login activity
         if (loginBundle != null) {
             organization = (Organization) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.ORGANIZATION);
@@ -238,10 +244,85 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
     @Override
     public void onAnimalRegistered(@NonNull Animal animal) {
         if (isConnectionEnabled) {
-            // Set the animal's owner
-            animal.setOwner(organization.getEmail());
             registerAnimalFirebase(animal);
         }
+    }
+
+    @Override
+    public void transferPhotos(Animal animal){/*
+        // Give to the user a feedback to wait
+        ProgressDialog progressDialog = new ProgressDialog(getApplicationContext(), R.style.Widget_App_ProgressDialog);
+        progressDialog.setMessage("Spostando i post...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        String currentFolderReferencePosts;
+        String currentFolderReferenceProfilePic;
+        // Create the storage tree structure of the posts directory
+        currentFolderReferencePosts = KeysNamesUtils.FileDirsNames.organizationPostDirName() +
+                "/" +
+                KeysNamesUtils.FileDirsNames.passionatePostRefDirAnimal(animal.getMicrochipCode()) + "/";
+        // Create the storage tree structure of the profile pic file
+        currentFolderReferenceProfilePic = KeysNamesUtils.FileDirsNames.organizationPostDirName() +
+                "/";
+        Log.wtf("Prova","currentFolderReferencePosts" + currentFolderReferencePosts);
+        Log.wtf("Prova","currentFolderReferenceProfilePic " + currentFolderReferenceProfilePic);
+        Log.wtf("Prova","reference " + getStorageInstance().getReference(currentFolderReferencePosts).);
+
+        PhotoDiaryPost post = new PhotoDiaryPost(animal.getMicrochipCode());
+                        Task<byte[]> taskBytes;
+
+                        String newFolderReference;
+
+                        boolean isPostMode = !post.getFileName().equals(KeysNamesUtils.FileDirsNames.animalProfilePic(microchip));
+
+                        // Get the task with bytes of the current post and create the
+                        // new reference to the folder in the storage
+                        if (isPostMode) {
+                            taskBytes = getPostBytesTask(post, storage, currentFolderReferencePosts);
+                            newFolderReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(newOwner) +
+                                    "/" +
+                                    KeysNamesUtils.FileDirsNames.passionatePostRefDirAnimal(microchip) + "/";
+                        } else {
+                            taskBytes = getPostBytesTask(post, storage, currentFolderReferenceProfilePic);
+                            newFolderReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(newOwner) +
+                                    "/" ;
+
+                        }
+
+                        // Get the bytes of the file from the reference of the storage and
+                        // copy it into a new final variable in order to use it in the lambda
+                        final String finalNewFolderReference = newFolderReference;
+
+                        // Final variable used to check the loops to stop the progress dialog
+                        int finalI = i;
+
+                        taskBytes.addOnSuccessListener(bytes -> {
+                            String newFileReference = finalNewFolderReference + post.getFileName();
+                            StorageReference newReference = storage.getReference(newFileReference);
+
+                            // Put the retrieved bytes into the storage and update
+                            // the FireStore reference of the post
+                            newReference.putBytes(bytes).addOnCompleteListener(taskChangeFileLocation ->
+                                    taskChangeFileLocation.getResult().getStorage().getDownloadUrl().addOnCompleteListener(taskUri -> {
+                                        post.setPostUri(taskUri.getResult().toString());
+
+                                        updatePostUriTask(KeysNamesUtils.CollectionsNames.PHOTO_DIARY, db, post)
+                                                .addOnSuccessListener(unused -> {
+                                                    if (isPostMode) {
+                                                        deleteCurrentReference(post, storage, currentFolderReferencePosts);
+                                                    } else {
+                                                        deleteCurrentReference(post, storage, currentFolderReferenceProfilePic);
+                                                    }
+
+                                                    if (finalI == posts.size() - 1) {
+                                                        completeRequest(db, reloadMessage, context,
+                                                                progressDialog, request, activity);
+                                                    }
+                                                });
+                                    }));
+                        });
+                    }*/
     }
 
     /**
@@ -262,12 +343,7 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
                         if (task.getResult().isEmpty()) {
                             db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
                                     .document(docKeyAnimal)
-                                    .set(animal)
-                                    .addOnSuccessListener(unused -> {
-                                        // Update the local animal's files
-                                        /*DataManipulationHelper.saveDataInternally(this, animalSet,
-                                                KeysNamesUtils.FileDirsNames.localAnimalsSet(passionate.getEmail()));*/
-                                    });
+                                    .set(animal);
                         }
                     }
                 });
@@ -288,30 +364,63 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
     @Override
     public void getAssistedAnimals(AnimalListAdapter adapter, RecyclerView recyclerView) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
+        InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
 
-        Task<QuerySnapshot> taskOrgAnimals =
-                db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
-                        .whereEqualTo(KeysNamesUtils.AnimalFields.OWNER,
-                                Objects.requireNonNull(auth.getCurrentUser()).getEmail())
-                        .get();
+        Task<QuerySnapshot> passionateAnimals = db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                .whereEqualTo(KeysNamesUtils.AnimalFields.VETERINARIAN,
+                        Objects.requireNonNull(auth.getCurrentUser()).getEmail()).get();
 
-        /*Task<QuerySnapshot> taskBackbenchAnimals =
-                db.collection(KeysNamesUtils.CollectionsNames.RESIDENCE)
-                        .whereEqualTo(KeysNamesUtils.AnimalFields.VETERINARIAN,
-                                Objects.requireNonNull(auth.getCurrentUser()).getEmail())
-                        .get();*/
+        Task<QuerySnapshot> backbenchAnimals = db.collection(KeysNamesUtils.CollectionsNames.RESIDENCE)
+                .whereEqualTo(KeysNamesUtils.ResidenceFields.RESIDENCE_OWNER,
+                        Objects.requireNonNull(auth.getCurrentUser()).getEmail()).get();
 
-        Tasks.whenAllComplete(taskOrgAnimals/*, taskBackbenchAnimals*/)
+        Tasks.whenAllComplete(passionateAnimals,backbenchAnimals)
                 .addOnCompleteListener(task -> {
-                    QuerySnapshot organizationAnimalsSnapshot = (QuerySnapshot) task.getResult().get(0).getResult();
-                    if (!organizationAnimalsSnapshot.isEmpty()) {
-                        List<DocumentSnapshot> assistedAnimalsDocuments = organizationAnimalsSnapshot.getDocuments();
-                        for (DocumentSnapshot snapshot : assistedAnimalsDocuments) {
-                            adapter.addAnimal(Animal.loadAnimal(snapshot));
-                            Log.wtf("LISTA", Animal.loadAnimal(snapshot).toString());
+                    ArrayList<Animal> animals = new ArrayList<>();
+                    if (task.isSuccessful()) {
+                        QuerySnapshot passionateSnapshot = (QuerySnapshot) task.getResult().get(0).getResult();
+                        QuerySnapshot backbenchSnapshot = (QuerySnapshot) task.getResult().get(1).getResult();
+
+                        if (!passionateSnapshot.isEmpty()) {
+                            List<DocumentSnapshot> passionateSnapshotDocuments = passionateSnapshot.getDocuments();
+                            for (DocumentSnapshot snapshot : passionateSnapshotDocuments) {
+                                animals.add(Animal.loadAnimal(snapshot));
+                            }
+                        }
+                        if (!backbenchSnapshot.isEmpty()) {
+                            List<DocumentSnapshot> assistedAnimalsMicrochipDocuments = backbenchSnapshot.getDocuments();
+                            ArrayList<String> assistedAnimalsMicrochip = new ArrayList<>();
+                            for (DocumentSnapshot snapshot : assistedAnimalsMicrochipDocuments) {
+                                AnimalResidence ar = AnimalResidence.loadResidence(snapshot);
+                                if (animalHelper.checkDate(ar.getStartDate(), ar.getEndDate())) {
+                                    assistedAnimalsMicrochip.add(ar.getAnimal());
+                                }
+                            }
+                            if (!assistedAnimalsMicrochip.isEmpty()) {
+                                db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                                        .whereIn(KeysNamesUtils.AnimalFields.MICROCHIP_CODE,
+                                                assistedAnimalsMicrochip)
+                                        .get()
+                                        .addOnCompleteListener(task1 -> {
+                                            if (task1.isSuccessful()) {
+                                                QuerySnapshot assistedAnimalsSnapshot = (QuerySnapshot) task1.getResult();
+                                                List<DocumentSnapshot> assistedAnimalsDocuments = assistedAnimalsSnapshot.getDocuments();
+                                                for (DocumentSnapshot snapshot : assistedAnimalsDocuments) {
+                                                    Animal a = Animal.loadAnimal(snapshot);
+                                                    if (!animals.contains(a)) {
+                                                        animals.add(a);
+                                                    }
+                                                }
+                                            }
+                                            adapter.addAllAnimals(animals);
+                                            recyclerView.setAdapter(adapter);
+                                        });
+                            }
+                        } else {
+                            adapter.addAllAnimals(animals);
+                            recyclerView.setAdapter(adapter);
                         }
                     }
-                    recyclerView.setAdapter(adapter);
                 });
     }
 
@@ -363,9 +472,9 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void getAnimalExams(AnimalExamsAdapter adapter, RecyclerView recyclerView, String animal) {
+    public void getAnimalExams(AnimalExamsAdapter adapter, RecyclerView recyclerView, String animal, AnimalExamsAdapter.OnItemClickListener onClickListener) {
         InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
-        animalHelper.getAnimalExams(adapter, recyclerView, animal, getSupportFragmentManager());
+        animalHelper.getAnimalExams(adapter, recyclerView, animal, onClickListener);
     }
 
     @Override

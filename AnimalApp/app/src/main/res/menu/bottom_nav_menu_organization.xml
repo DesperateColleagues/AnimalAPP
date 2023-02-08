@@ -7,11 +7,6 @@
         android:title="Profilo" />
 
     <item
-        android:id="@+id/organization_animal_list"
-        android:icon="@drawable/pets2"
-        android:title="@string/title_fragment_veterinarian_animal_list"/>
-
-    <item
         android:id="@+id/organization_import_data"
         android:icon="@drawable/ic_baseline_import_export_24"
         android:title="Importazione dati" />
