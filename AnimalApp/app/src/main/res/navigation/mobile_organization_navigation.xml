@@ -31,6 +31,32 @@
     </fragment>
 
     <fragment
+        android:id="@+id/organization_requests"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.requests.RequestsFragment"
+        android:label="@string/title_fragment_requests"
+        tools:layout="@layout/fragment_requests">
+        <action
+            android:id="@+id/action_organization_requests_to_organization_request_detail"
+            app:destination="@id/request_detail"
+            app:popUpTo="@id/passionate_requests"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/request_detail"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.requests.RequestDetailFragment"
+        android:label="@string/title_fragment_requests"
+        tools:layout="@layout/fragment_request_details">
+        <action
+            android:id="@+id/action_request_detail_to_animalProfile"
+            app:destination="@id/animalProfile"
+            app:popUpTo="@id/request_detail"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
         android:id="@+id/organization_import_data"
         android:name="it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationImportDataFragment"
         android:label="Importa dati animali"

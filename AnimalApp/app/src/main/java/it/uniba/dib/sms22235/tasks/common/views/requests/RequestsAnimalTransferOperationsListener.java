@@ -146,11 +146,11 @@ public interface RequestsAnimalTransferOperationsListener {
         String currentFolderReferencePosts;
         String currentFolderReferenceProfilePic;
         // Create the storage tree structure of the posts directory
-        currentFolderReferencePosts = KeysNamesUtils.FileDirsNames.organizationPostDirName() +
+        currentFolderReferencePosts = KeysNamesUtils.FileDirsNames.passionatePostDirName(oldOwner) +
                 "/" +
                 KeysNamesUtils.FileDirsNames.passionatePostRefDirAnimal(microchip) + "/";
         // Create the storage tree structure of the profile pic file
-        currentFolderReferenceProfilePic = KeysNamesUtils.FileDirsNames.organizationPostDirName() +
+        currentFolderReferenceProfilePic = KeysNamesUtils.FileDirsNames.passionatePostDirName(oldOwner) +
                 "/";
 
 

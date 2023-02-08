@@ -52,7 +52,7 @@ public class OrganizationImportDataFragment extends Fragment {
          * @param animal the animal to register
          * */
         void onAnimalRegistered(Animal animal);
-        void transferPhotos(Animal animal);
+        void uploadPhotos(ImportedAnimal animal);
     }
 
     @Override
@@ -137,8 +137,8 @@ public class OrganizationImportDataFragment extends Fragment {
 
     private void importAnimals() {
         for (ImportedAnimal animal : importedAnimalsList) {
-            listener.onAnimalRegistered(animal);
-            listener.transferPhotos(animal);
+            listener.onAnimalRegistered(animal.getBaseAnimal());
+            listener.uploadPhotos(animal);
         }
 
         Toast.makeText(getContext(), getResources().getString(R.string.importazione_avvenuta), Toast.LENGTH_LONG).show();
@@ -169,6 +169,9 @@ public class OrganizationImportDataFragment extends Fragment {
                             object.getString("photos")
                     );
                     animal.setOwner(object.getString(KeysNamesUtils.AnimalFields.OWNER));
+                    animal.setHeight(object.getDouble(KeysNamesUtils.AnimalFields.HEIGHT));
+                    animal.setWeight(object.getDouble(KeysNamesUtils.AnimalFields.WEIGHT));
+                    animal.setNature(object.getString(KeysNamesUtils.AnimalFields.NATURE));
                     importedAnimalsList.add(animal);
                 }
                 isFetched++;

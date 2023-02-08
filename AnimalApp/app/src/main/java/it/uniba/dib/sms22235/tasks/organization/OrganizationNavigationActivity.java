@@ -32,6 +32,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -42,11 +44,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
@@ -58,6 +64,7 @@ import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.entities.operations.Request;
 import it.uniba.dib.sms22235.entities.users.Animal;
+import it.uniba.dib.sms22235.entities.users.ImportedAnimal;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
@@ -143,7 +150,8 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
         navView = findViewById(R.id.nav_view_org);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.organization_profile,
-                R.id.organization_import_data
+                R.id.organization_import_data,
+                R.id.organization_requests
         ).build();
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_activity_organization_navigation);
@@ -181,6 +189,12 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
             veterinariansList = new ArrayList<>();
         }
 
+        /*getStorageInstance().getReference("trovatelli_post/profile_A10001.jpg").getBytes(1024 * 1024 * 5).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                getStorageInstance().getReference("org1@gmail.com_post/profile_A10001.jpg").putBytes(bytes);
+            }
+        });*/
     }
 
     @Override
@@ -249,80 +263,43 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void transferPhotos(Animal animal){/*
-        // Give to the user a feedback to wait
-        ProgressDialog progressDialog = new ProgressDialog(getApplicationContext(), R.style.Widget_App_ProgressDialog);
-        progressDialog.setMessage("Spostando i post...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+    public void uploadPhotos(@NonNull ImportedAnimal animal){
+        getStorageInstance().getReference(animal.getProfilePicPath()).getBytes(1024 * 1024 * 5).addOnSuccessListener(bytes -> {
+            String profilePicName = animal.getProfilePicPath().split("/")[1].split(".jpg")[0];
+            getStorageInstance()
+                    .getReference(getUserId() + "_post/" + profilePicName)
+                    .putBytes(bytes)
+                    .addOnCompleteListener(task -> {
+                        task.getResult().getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
+                            PhotoDiaryPost post = new PhotoDiaryPost(uri.toString(), animal.getMicrochipCode());
+                            post.setFileName(profilePicName);
 
-        String currentFolderReferencePosts;
-        String currentFolderReferenceProfilePic;
-        // Create the storage tree structure of the posts directory
-        currentFolderReferencePosts = KeysNamesUtils.FileDirsNames.organizationPostDirName() +
-                "/" +
-                KeysNamesUtils.FileDirsNames.passionatePostRefDirAnimal(animal.getMicrochipCode()) + "/";
-        // Create the storage tree structure of the profile pic file
-        currentFolderReferenceProfilePic = KeysNamesUtils.FileDirsNames.organizationPostDirName() +
-                "/";
-        Log.wtf("Prova","currentFolderReferencePosts" + currentFolderReferencePosts);
-        Log.wtf("Prova","currentFolderReferenceProfilePic " + currentFolderReferenceProfilePic);
-        Log.wtf("Prova","reference " + getStorageInstance().getReference(currentFolderReferencePosts).);
+                            // Create the photo diary profile picture
+                            db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
+                                    .document(profilePicName)
+                                    .set(post);
 
-        PhotoDiaryPost post = new PhotoDiaryPost(animal.getMicrochipCode());
-                        Task<byte[]> taskBytes;
 
-                        String newFolderReference;
+                            String title = String.format("Offro: %s - %s", animal.getAnimalSpecies(), animal.getRace());
+                            String body = String.format("Offro questo %s di nome %s attualmente accudito dalla nostra associazione", animal.getAnimalSpecies(), animal.getName());
 
-                        boolean isPostMode = !post.getFileName().equals(KeysNamesUtils.FileDirsNames.animalProfilePic(microchip));
+                            Request request = new Request(title, body, "Offerta animale");
+                            request.setUserEmail(organization.getEmail());
+                            request.setAnimal(animal.getName() + " - " + animal.getMicrochipCode());
 
-                        // Get the task with bytes of the current post and create the
-                        // new reference to the folder in the storage
-                        if (isPostMode) {
-                            taskBytes = getPostBytesTask(post, storage, currentFolderReferencePosts);
-                            newFolderReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(newOwner) +
-                                    "/" +
-                                    KeysNamesUtils.FileDirsNames.passionatePostRefDirAnimal(microchip) + "/";
-                        } else {
-                            taskBytes = getPostBytesTask(post, storage, currentFolderReferenceProfilePic);
-                            newFolderReference = KeysNamesUtils.FileDirsNames.passionatePostDirName(newOwner) +
-                                    "/" ;
-
-                        }
-
-                        // Get the bytes of the file from the reference of the storage and
-                        // copy it into a new final variable in order to use it in the lambda
-                        final String finalNewFolderReference = newFolderReference;
-
-                        // Final variable used to check the loops to stop the progress dialog
-                        int finalI = i;
-
-                        taskBytes.addOnSuccessListener(bytes -> {
-                            String newFileReference = finalNewFolderReference + post.getFileName();
-                            StorageReference newReference = storage.getReference(newFileReference);
-
-                            // Put the retrieved bytes into the storage and update
-                            // the FireStore reference of the post
-                            newReference.putBytes(bytes).addOnCompleteListener(taskChangeFileLocation ->
-                                    taskChangeFileLocation.getResult().getStorage().getDownloadUrl().addOnCompleteListener(taskUri -> {
-                                        post.setPostUri(taskUri.getResult().toString());
-
-                                        updatePostUriTask(KeysNamesUtils.CollectionsNames.PHOTO_DIARY, db, post)
-                                                .addOnSuccessListener(unused -> {
-                                                    if (isPostMode) {
-                                                        deleteCurrentReference(post, storage, currentFolderReferencePosts);
-                                                    } else {
-                                                        deleteCurrentReference(post, storage, currentFolderReferenceProfilePic);
-                                                    }
-
-                                                    if (finalI == posts.size() - 1) {
-                                                        completeRequest(db, reloadMessage, context,
-                                                                progressDialog, request, activity);
-                                                    }
-                                                });
-                                    }));
+                            SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd", Locale.ITALY);
+                            String currentDate = dateSDF.format(new Date());
+                            AnimalResidence animalResidence = new AnimalResidence(currentDate, "9999-12-31",organization.getEmail(),"true");
+                            animalResidence.setAnimal(animal.getMicrochipCode());
+                            db.collection(KeysNamesUtils.CollectionsNames.REQUESTS)
+                                    .document(request.getId())
+                                    .set(request);
+                            db.collection(KeysNamesUtils.CollectionsNames.RESIDENCE)
+                                    .document(animal.getMicrochipCode() + "_" + organization.getEmail())
+                                    .set(animalResidence);
                         });
-                    }*/
+                    });
+        });
     }
 
     /**
@@ -350,7 +327,7 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
     }
     @Override
     public String getUserId() {
-        return organization.getOrgName();
+        return organization.getEmail();
     }
 
     @Override

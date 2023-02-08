@@ -1,18 +1,24 @@
 package it.uniba.dib.sms22235.tasks.login;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -414,7 +420,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (animalLocalLinkedHashSet != null) {
                     Cursor cursor = manager.runFilterQuery(passionate.getUsername(), null,
-                            null,  null, "", "");
+                            null, null, "", "");
 
                     if (cursor != null) {
                         if (cursor.getCount() > 0) {
@@ -456,7 +462,31 @@ public class LoginActivity extends AppCompatActivity {
                 bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_ANIMALS, animalLocalLinkedHashSet);
                 bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE_PURCHASES, purchasesLocalList);
 
-                newActivityRunning(PassionateNavigationActivity.class, bundle);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                boolean showDialog = preferences.getBoolean("show_offline_dialog", true);
+
+                if (showDialog) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                    builder.setMessage(getString(R.string.offline_dialog))
+                            .setPositiveButton("OK", (dialog, id) -> {
+                                newActivityRunning(PassionateNavigationActivity.class, bundle);
+                            });
+
+                    final CheckBox checkBox = new CheckBox(getApplicationContext());
+                    checkBox.setText(getString(R.string.no_more_offline_dialog));
+                    checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        SharedPreferences preferences1 = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        SharedPreferences.Editor editor = preferences1.edit();
+                        editor.putBoolean("show_offline_dialog", !isChecked);
+                        editor.apply();
+                    });
+
+                    builder.setView(checkBox);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            } else {
+                Toast.makeText(this, "Impossibile effettuare il login offline. File non trovato! Accedere con una connessione ad internet", Toast.LENGTH_SHORT).show();
             }
         }
     }

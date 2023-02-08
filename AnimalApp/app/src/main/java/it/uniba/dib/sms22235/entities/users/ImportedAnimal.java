@@ -9,4 +9,29 @@ public class ImportedAnimal extends Animal {
         this.profilePicPath = profilePicPath;
         this.picsFolder = picsFolder;
     }
+
+    public String getProfilePicPath() {
+        return profilePicPath;
+    }
+
+    public void setProfilePicPath(String profilePicPath) {
+        this.profilePicPath = profilePicPath;
+    }
+
+    public String getPicsFolder() {
+        return picsFolder;
+    }
+
+    public void setPicsFolder(String picsFolder) {
+        this.picsFolder = picsFolder;
+    }
+
+    public Animal getBaseAnimal() {
+        Animal a = new Animal(super.getName(), super.getAnimalSpecies(), super.getRace(), super.getMicrochipCode(), super.getBirthDate());
+        a.setOwner(super.getOwner());
+        a.setHeight(super.getHeight());
+        a.setWeight(super.getWeight());
+        a.setNature(super.getNature());
+        return a;
+    }
 }

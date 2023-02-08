@@ -224,6 +224,8 @@ public class KeysNamesUtils {
             return username + "_post";
         }
 
+        @NonNull
+        @Contract(pure = true)
         public static String organizationPostDirName() {
             return "trovatelli_post";
         }

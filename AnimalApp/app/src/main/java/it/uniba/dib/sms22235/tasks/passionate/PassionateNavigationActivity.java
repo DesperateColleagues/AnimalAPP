@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -14,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +31,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 
 import androidx.navigation.fragment.NavHostFragment;
@@ -43,6 +48,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -55,6 +61,7 @@ import com.google.firebase.storage.UploadTask;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.library.BuildConfig;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -123,7 +130,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     private transient ArrayList<Reservation> passionateReservationsList;
     private transient ArrayList<Reservation> availableReservationsList;
     private transient ArrayList<Veterinarian> veterinariansList;
-    private transient  ArrayList<Organization> organizationList;
+    private transient ArrayList<Organization> organizationList;
 
     private transient FloatingActionButton fab;
     private transient BottomNavigationView navView;
@@ -138,6 +145,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
     // Flag that specify whether the connection is enabled or not
     private boolean isConnectionEnabled;
+    private MutableLiveData<Boolean> isConnectionEnabledMutable;
 
     // Callback that verifies the connectivity to a network at run time
     private final ConnectivityManager.NetworkCallback networkCallback =
@@ -149,6 +157,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             super.onAvailable(network);
 
             isConnectionEnabled = true;
+            isConnectionEnabledMutable.postValue(isConnectionEnabled);
 
             ArrayList<Purchase> purchasesOfflineList = (ArrayList<Purchase>)
                     DataManipulationHelper.readDataInternally(PassionateNavigationActivity.this,
@@ -174,6 +183,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             super.onLost(network);
 
             isConnectionEnabled = false;
+            isConnectionEnabledMutable.postValue(isConnectionEnabled);
 
             Toast.makeText(PassionateNavigationActivity.this,
                     "Connessione persa: avvio modalità offline.\nAlcune funzionalità possono non essere più disponibili",
@@ -208,6 +218,18 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_activity_passionate_navigation);
+
+        isConnectionEnabledMutable = new MutableLiveData<>();
+        isConnectionEnabledMutable.setValue(isConnectionEnabled);
+        isConnectionEnabledMutable.observe(this, aBoolean -> {
+            if (aBoolean) {
+                navView.findViewById(R.id.passionate_pet_care).setVisibility(View.VISIBLE);
+                navView.findViewById(R.id.passionate_requests).setVisibility(View.VISIBLE);
+            } else {
+                navView.findViewById(R.id.passionate_pet_care).setVisibility(View.GONE);
+                navView.findViewById(R.id.passionate_requests).setVisibility(View.GONE);
+            }
+        });
 
         assert navHostFragment != null;
 
@@ -266,6 +288,23 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             organizationList = new ArrayList<>();
         } else {
             Toast.makeText(this, "" + organizationList.size(), Toast.LENGTH_SHORT).show();
+        }
+
+        // Manage offline files
+        String passionateOfflineFileName = KeysNamesUtils.FileDirsNames
+                .currentPassionateOffline(passionate.getEmail());
+        String localAnimalSetFileName = KeysNamesUtils.FileDirsNames
+                .localAnimalsSet(passionate.getEmail());
+
+        File filePassionateOffline = new File(passionateOfflineFileName);
+        File fileLocalAnimalSet = new File(localAnimalSetFileName);
+
+        if (!filePassionateOffline.exists()) {
+            DataManipulationHelper.saveDataInternally(this, passionate, passionateOfflineFileName);
+        }
+
+        if (!fileLocalAnimalSet.exists() && animalSet.size() > 0) {
+            DataManipulationHelper.saveDataInternally(this, animalSet, localAnimalSetFileName);
         }
 
         // Build the network request
@@ -931,7 +970,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                                         Toast.makeText(this,
                                                 "Animale aggiornato con successo",
                                                 Toast.LENGTH_LONG).show();
-
+                                        DataManipulationHelper.saveDataInternally(this, animalSet,
+                                                KeysNamesUtils.FileDirsNames.localAnimalsSet(passionate.getEmail()));
                                         // Update the local animal's files
                                     })
                                     .addOnFailureListener(e ->
@@ -940,5 +980,9 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         }
                     }
                 });
+    }
+
+    public boolean isConnectionEnabled() {
+        return isConnectionEnabled;
     }
 }

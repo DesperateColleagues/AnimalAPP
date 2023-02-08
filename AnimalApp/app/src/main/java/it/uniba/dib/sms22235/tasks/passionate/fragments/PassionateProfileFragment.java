@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -198,67 +199,72 @@ public class PassionateProfileFragment extends Fragment implements
             messageListAdapter.setOnItemClickListener(message -> {
             });
 
-            messageRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), messageRecyclerView, new RecyclerTouchListener.ClickListener() {
-                @Override
-                public void onClick(View view, int position) {
-                    String selection = messageListAdapter.getMessageAtPosition(position).getType();
+                messageRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), messageRecyclerView, new RecyclerTouchListener.ClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
 
-                    if (selection.equals(KeysNamesUtils.CollectionsNames.RESERVATIONS)) {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(
-                                KeysNamesUtils.BundleKeys.PASSIONATE_RESERVATIONS,
-                                ((PassionateNavigationActivity) requireActivity())
-                                        .getPassionateReservationsList());
-                        controller.navigate(R.id.action_passionate_profile_to_BookedReservationsFragment, bundle);
-                    } else if (selection.equals(KeysNamesUtils.CollectionsNames.REPORTS)) {
-                        controller.navigate(R.id.action_passionate_profile_to_reportsDashboardFragment);
-                    } else if (selection.equals(KeysNamesUtils.RolesNames.VETERINARIAN)) {
-                        Bundle bundle = new Bundle();
+                        if (((PassionateNavigationActivity) requireActivity()).isConnectionEnabled()) {
 
-                        List<Veterinarian> veterinarians = ((PassionateNavigationActivity) requireActivity()).getVeterinarianList();
-                        bundle.putSerializable(KeysNamesUtils.BundleKeys.VETERINARIANS_LIST,
-                                (Serializable) veterinarians);
+                            String selection = messageListAdapter.getMessageAtPosition(position).getType();
 
-                        controller.navigate(R.id.action_passionate_profile_to_passionateVeterinarianListFragment, bundle);
-                    } else if (selection.equals(KeysNamesUtils.RolesNames.PRIVATE_ORGANIZATION)) {
-                        Bundle bundle = new Bundle();
+                            if (selection.equals(KeysNamesUtils.CollectionsNames.RESERVATIONS)) {
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable(
+                                        KeysNamesUtils.BundleKeys.PASSIONATE_RESERVATIONS,
+                                        ((PassionateNavigationActivity) requireActivity())
+                                                .getPassionateReservationsList());
+                                controller.navigate(R.id.action_passionate_profile_to_BookedReservationsFragment, bundle);
+                            } else if (selection.equals(KeysNamesUtils.CollectionsNames.REPORTS)) {
+                                controller.navigate(R.id.action_passionate_profile_to_reportsDashboardFragment);
+                            } else if (selection.equals(KeysNamesUtils.RolesNames.VETERINARIAN)) {
+                                Bundle bundle = new Bundle();
 
-                        List<Organization> organizations = ((PassionateNavigationActivity) requireActivity()).getOrganizationList();
-                        bundle.putSerializable(KeysNamesUtils.BundleKeys.ORGANIZATIONS_LIST, (Serializable) organizations);
+                                List<Veterinarian> veterinarians = ((PassionateNavigationActivity) requireActivity()).getVeterinarianList();
+                                bundle.putSerializable(KeysNamesUtils.BundleKeys.VETERINARIANS_LIST,
+                                        (Serializable) veterinarians);
 
-                        controller.navigate(R.id.action_passionate_profile_to_passionateOrganizationListFragment, bundle);
-                    } else if (selection.equals(KeysNamesUtils.CollectionsNames.POKE_LINK)) {
-                        controller.navigate(R.id.action_passionate_profile_to_passionatePokAnimalList);
-                    } else if (selection.equals(KeysNamesUtils.RolesNames.ANIMAL)) {
-                        ScanOptions options = new ScanOptions();
-                        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
-                        options.setPrompt("Scannerizza il QR code"); // todo translate
-                        options.setBeepEnabled(false);
-                        options.setBarcodeImageEnabled(true);
-                        options.setOrientationLocked(false);
+                                controller.navigate(R.id.action_passionate_profile_to_passionateVeterinarianListFragment, bundle);
+                            } else if (selection.equals(KeysNamesUtils.RolesNames.PRIVATE_ORGANIZATION)) {
+                                Bundle bundle = new Bundle();
 
-                        qrDecodeLauncher.launch(options);
-                    }
-                    else if (selection.equals("notNow")){
-                        notNowDialog(
-                                username + " " + getResources().getString(R.string.not_now),
-                                getResources().getString(R.string.not_now_message),
-                                getResources().getString(R.string.not_now_button)
+                                List<Organization> organizations = ((PassionateNavigationActivity) requireActivity()).getOrganizationList();
+                                bundle.putSerializable(KeysNamesUtils.BundleKeys.ORGANIZATIONS_LIST, (Serializable) organizations);
+
+                                controller.navigate(R.id.action_passionate_profile_to_passionateOrganizationListFragment, bundle);
+                            } else if (selection.equals(KeysNamesUtils.CollectionsNames.POKE_LINK)) {
+                                controller.navigate(R.id.action_passionate_profile_to_passionatePokAnimalList);
+                            } else if (selection.equals(KeysNamesUtils.RolesNames.ANIMAL)) {
+                                ScanOptions options = new ScanOptions();
+                                options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
+                                options.setPrompt("Scannerizza il QR code"); // todo translate
+                                options.setBeepEnabled(false);
+                                options.setBarcodeImageEnabled(true);
+                                options.setOrientationLocked(false);
+
+                                qrDecodeLauncher.launch(options);
+                            } else if (selection.equals("notNow")) {
+                                notNowDialog(
+                                        username + " " + getResources().getString(R.string.not_now),
+                                        getResources().getString(R.string.not_now_message),
+                                        getResources().getString(R.string.not_now_button)
                                 );
-                    } else if (selection.equals("ascanio")){
-                        notNowDialog(
-                                username + " " + getResources().getString(R.string.ascanio),
-                                getResources().getString(R.string.ascanio_message),
-                                getResources().getString(R.string.ascanio_button)
-                        );
+                            } else if (selection.equals("ascanio")) {
+                                notNowDialog(
+                                        username + " " + getResources().getString(R.string.ascanio),
+                                        getResources().getString(R.string.ascanio_message),
+                                        getResources().getString(R.string.ascanio_button)
+                                );
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Rete non disponibile", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
 
-                @Override
-                public void onLongClick(View view, int position) {
+                    @Override
+                    public void onLongClick(View view, int position) {
 
-                }
-            }));
+                    }
+                }));
 
             animalRecycleView.setAdapter(animalListAdapter);
             animalRecycleView.setLayoutManager(new LinearLayoutManager(

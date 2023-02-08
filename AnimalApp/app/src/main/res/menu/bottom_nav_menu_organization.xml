@@ -10,4 +10,9 @@
         android:id="@+id/organization_import_data"
         android:icon="@drawable/ic_baseline_import_export_24"
         android:title="Importazione dati" />
+
+    <item
+        android:id="@+id/organization_requests"
+        android:icon="@drawable/ic_baseline_question_answer_24"
+        android:title="@string/title_fragment_requests"/>
 </menu>

@@ -115,7 +115,7 @@ public class InterfacesOperationsHelper {
             } catch (ParseException e) {
                 return false;
             }
-            return (distanceA < 0 && distanceB < 0);
+            return (distanceA <= 0 && distanceB <= 0);
         }
 
         public void checkIfAtHome(Animal animal, ImageView image) {
@@ -276,7 +276,6 @@ public class InterfacesOperationsHelper {
             Log.d("ANIMAL", animal);
             db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
                     .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.POST_ANIMAL, animal)
-                    .whereNotEqualTo(KeysNamesUtils.PhotoDiaryFields.FILE_NAME, KeysNamesUtils.FileDirsNames.animalProfilePic(animal))
                     .addSnapshotListener((value, error) -> {
 
                         // Handle the error if the listening is not working
@@ -289,6 +288,11 @@ public class InterfacesOperationsHelper {
                             // Check for every document
                             for (DocumentChange change : value.getDocumentChanges()) {
                                 PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(change.getDocument());
+
+                                if (post.getFileName().equals(KeysNamesUtils.FileDirsNames.animalProfilePic(animal))) {
+                                    continue;
+                                }
+
                                 switch (change.getType()) {
                                     case ADDED:
                                         postsList.add(post);
@@ -297,6 +301,7 @@ public class InterfacesOperationsHelper {
                                         postsList.remove(post);
                                         break;
                                 }
+
                             }
 
                             // Notify the changes on the adapter
