@@ -22,7 +22,6 @@ import java.util.List;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
-import it.uniba.dib.sms22235.tasks.organization.OrganizationNavigationActivity;
 
 public class ReportsDashboardFragment extends Fragment {
 
@@ -41,10 +40,8 @@ public class ReportsDashboardFragment extends Fragment {
             controller = Navigation.findNavController(container);
         }
 
-        if (!(requireActivity() instanceof OrganizationNavigationActivity)) {
-            ((NavigationActivityInterface) requireActivity()).setNavViewVisibility(View.GONE);
-        }
         ((NavigationActivityInterface) requireActivity()).getFab().setVisibility(View.GONE);
+        ((NavigationActivityInterface) requireActivity()).setNavViewVisibility(View.GONE);
 
         return inflater.inflate(R.layout.fragment_reports_dashboard, container, false);
     }
