@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -131,6 +133,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     private transient ArrayList<Reservation> availableReservationsList;
     private transient ArrayList<Veterinarian> veterinariansList;
     private transient ArrayList<Organization> organizationList;
+    private transient boolean online;
 
     private transient FloatingActionButton fab;
     private transient BottomNavigationView navView;
@@ -182,12 +185,11 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         public void onLost(@NonNull Network network) {
             super.onLost(network);
 
+            online = false;
             isConnectionEnabled = false;
             isConnectionEnabledMutable.postValue(isConnectionEnabled);
 
-            Toast.makeText(PassionateNavigationActivity.this,
-                    "Connessione persa: avvio modalità offline.\nAlcune funzionalità possono non essere più disponibili",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.offline_warning), Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -219,18 +221,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_activity_passionate_navigation);
 
-        isConnectionEnabledMutable = new MutableLiveData<>();
-        isConnectionEnabledMutable.setValue(isConnectionEnabled);
-        isConnectionEnabledMutable.observe(this, aBoolean -> {
-            if (aBoolean) {
-                navView.findViewById(R.id.passionate_pet_care).setVisibility(View.VISIBLE);
-                navView.findViewById(R.id.passionate_requests).setVisibility(View.VISIBLE);
-            } else {
-                navView.findViewById(R.id.passionate_pet_care).setVisibility(View.GONE);
-                navView.findViewById(R.id.passionate_requests).setVisibility(View.GONE);
-            }
-        });
-
         assert navHostFragment != null;
 
         // Set up the navigation system
@@ -256,7 +246,19 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             availableReservationsList = (ArrayList<Reservation>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.AVAILABLE_RESERVATIONS);
             veterinariansList = (ArrayList<Veterinarian>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.VETERINARIANS_LIST);
             organizationList = (ArrayList<Organization>) loginBundle.getSerializable(KeysNamesUtils.BundleKeys.ORGANIZATIONS_LIST);
+            online = loginBundle.getBoolean(KeysNamesUtils.BundleKeys.ONLINE);
         }
+
+        isConnectionEnabledMutable = new MutableLiveData<>();
+        isConnectionEnabledMutable.setValue(isConnectionEnabled);
+        isConnectionEnabledMutable.observe(this, aBoolean -> {
+            if (aBoolean && !online) {
+                onlineDialog();
+            } else if (!aBoolean && !online){
+                navView.findViewById(R.id.passionate_pet_care).setOnClickListener(this::offlineSnackbar);
+                navView.findViewById(R.id.passionate_requests).setOnClickListener(this::offlineSnackbar);
+            }
+        });
 
         // Init the animal data set if it is null
         if (animalSet == null) {
@@ -984,5 +986,54 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
     public boolean isConnectionEnabled() {
         return isConnectionEnabled;
+    }
+
+    private void offlineSnackbar(View view) {
+        Snackbar snackbar = Snackbar.make(view, getResources().getString(R.string.offline_error),Snackbar.LENGTH_LONG);
+        View snackbarView = snackbar.getView();
+        TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+        TypedValue value = new TypedValue();
+        this.getTheme().resolveAttribute(android.R.attr.windowBackground, value, true);
+        snackbarView.setBackgroundColor(value.data);
+        switch (getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK) {
+            case android.content.res.Configuration.UI_MODE_NIGHT_YES:
+                textView.setTextColor(Color.WHITE);
+                break;
+            case android.content.res.Configuration.UI_MODE_NIGHT_NO:
+                textView.setTextColor(Color.BLACK);
+                break;
+        }
+        textView.setTextSize(15);
+        snackbar.show();
+    }
+
+    private void onlineDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AnimalCardRoundedDialog);
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        View root = inflater.inflate(R.layout.fragment_dialog_online, null);
+
+        // Set dialog main options
+        builder.setView(root);
+
+        // Set dialog title
+        View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+        TextView titleText = titleView.findViewById(R.id.dialog_title);
+        titleText.setText(getString(R.string.online_dialog_title));
+        builder.setCustomTitle(titleView);
+
+        final AlertDialog dialog = builder.create();
+
+        root.findViewById(R.id.btnOnlineChoiceYes).setOnClickListener(view -> {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(intent);
+            this.finish();
+        });
+        root.findViewById(R.id.btnOnlineChoiceNo).setOnClickListener(view -> {
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 }

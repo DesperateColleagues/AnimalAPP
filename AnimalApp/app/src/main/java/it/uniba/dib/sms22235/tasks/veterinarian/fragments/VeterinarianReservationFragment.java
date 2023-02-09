@@ -93,7 +93,7 @@ public class VeterinarianReservationFragment extends Fragment implements
                         // If the reservation happened before now, the vet would be able to upload a diagnosis
                         if (checkIfDateDiagnosable(selectedDate, selectedTime)) {/*
 
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AnimalCardRoundedDialog);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme);
                                 builder.setTitle("Aggiunta diagnosi");
 
                                 final EditText input = new EditText(getContext());

@@ -131,9 +131,7 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
 
                     isConnectionEnabled = false;
 
-                    Toast.makeText(getApplicationContext(),
-                            "Connessione persa: avvio modalità offline.\nAlcune funzionalità possono non essere più disponibili",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.offline_warning), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

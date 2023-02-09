@@ -214,6 +214,7 @@ public class QueryPurchasesManager {
 
         // If nof filters are present select all table's rows
         if (animals == null && categories == null && costs == null && dateFrom.equals("") && dateTo.equals("")){
+            query.append(where);
             query.append(";");
         } else {
             // If there is the animal's filter

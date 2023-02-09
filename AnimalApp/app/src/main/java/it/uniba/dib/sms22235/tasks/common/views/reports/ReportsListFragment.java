@@ -183,7 +183,7 @@ public class ReportsListFragment extends Fragment {
 
                                 btnDistance.setText(textBtn);
                             } else {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AnimalCardRoundedDialog);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme);
                                 @SuppressLint("InflateParams")
                                 View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
                                 TextView titleText = titleView.findViewById(R.id.dialog_title);
@@ -199,6 +199,7 @@ public class ReportsListFragment extends Fragment {
                                 }).setNegativeButton("Annulla", ((dialog, which) -> {
                                     dialog.dismiss();
                                 }));
+                                builder.create().show();
                             }
 
                 } else if (shouldShowRequestPermissionRationale(permissionAccessFineLocation)) {

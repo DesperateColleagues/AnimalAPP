@@ -29,6 +29,7 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 
 import it.uniba.dib.sms22235.entities.users.Animal;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class DialogAnimalCardFragment extends DialogFragment {
 
@@ -80,7 +81,7 @@ public class DialogAnimalCardFragment extends DialogFragment {
         txtAnimalCardBirthDate.setText(animal.getBirthDate());
 
         ImageView imgAnimalCardPhoto = root.findViewById(R.id.animalCardProfileSend);
-        animalProfileListener.loadProfilePic(animal.getMicrochipCode(), imgAnimalCardPhoto);
+        animalProfileListener.loadProfilePic(KeysNamesUtils.FileDirsNames.animalProfilePic(animal.getMicrochipCode()), imgAnimalCardPhoto);
 
         Button shareButton = root.findViewById(R.id.shareButton);
         shareButton.setOnClickListener(v -> {
