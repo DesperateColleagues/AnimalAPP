@@ -131,9 +131,7 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
 
                     isConnectionEnabled = false;
 
-                    Toast.makeText(getApplicationContext(),
-                            "Connessione persa: avvio modalità offline.\nAlcune funzionalità possono non essere più disponibili",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.offline_warning), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -151,7 +149,8 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.organization_profile,
                 R.id.organization_import_data,
-                R.id.organization_requests
+                R.id.organization_requests,
+                R.id.organization_reports
         ).build();
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_activity_organization_navigation);

@@ -2,12 +2,22 @@
     <string name="app_name">AnimalApp</string>
 
     <string name="hello_blank_fragment">Fragment vuoto</string>
+
     <string name="generic_error">Errore generico, contattare gli sviluppatori</string>
+    <string name="offline_error">Sezione non disponibile in modalità offline</string>
+
     <string name="chilometri">" Chilometri"</string>
-    <string name="offline_dialog">L\'applicazione è in modalità offline. Potrai accedere a un numero limitato di
-    funzionalità. Quando la connessione ad internet sarà ristabilità, ti sarà proposto
-    di passare alla modalità online rieffettuando il login.</string>
-    <string name="no_more_offline_dialog">Ho capito, non mostrare più questo avviso.</string>
+
+    <string name="offline_dialog_title">Accesso offline</string>
+    <string name="offline_dialog">Entrerai nell\'app in modalità offline. Potrai accedere a un numero limitato di funzionalità. Quando la connessione ad internet sarà ristabilità, ti sarà proposto di passare alla modalità online rieffettuando il login.</string>
+    <string name="no_more_offline_dialog">Ho capito, non mostrare più questo avviso</string>
+    <string name="online_dialog_title">Tornare online?</string>
+    <string name="online_dialog">La connessione ad internet sembra essere tornata, vuoi tornare online effettuando nuovamente il login?</string>
+    <string name="online_choice_no">No, rimango offline</string>
+    <string name="online_choice_yes">Si, portami online!</string>
+    <string name="offline_warning">Connessione persa: passaggio a modalità offline</string>
+
+
     <string name="camera_permission">Operazione non completata.
         In caso di schermata nera, verificare i permessi dell\'applicazione.</string>
     <string name="location_permission">Impossibile effettuare ricerche: permesso posizione mancante.</string>

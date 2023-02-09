@@ -190,6 +190,7 @@ public class KeysNamesUtils {
         public static String REPORT_UPDATE = "reportUpdate";
         public static String REPORT_MODE_ADD = "reportModeUpdate";
         public static String REPORT_SHOW = "reportShow";
+        public static String ONLINE = "online";
     }
 
     public static class RequestFields {

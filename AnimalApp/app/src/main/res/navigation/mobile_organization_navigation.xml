@@ -57,6 +57,47 @@
     </fragment>
 
     <fragment
+        android:id="@+id/organization_reports"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.reports.ReportsDashboardFragment"
+        android:label="ReportsDashboardFragment"
+        tools:layout="@layout/fragment_reports_dashboard">
+
+        <action
+            android:id="@+id/action_reportsDashboardFragment_to_reportDetailsFragment"
+            app:destination="@id/reportAddNewFragment"
+            app:popUpTo="@id/reportsDashboardFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/action_reportsDashboardFragment_to_reportDetailFragment"
+            app:destination="@id/reportDetailFragment"
+            app:popUpTo="@id/reportsDashboardFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/reportAddNewFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.reports.ReportAddNewFragment"
+        android:label="ReportDetailsFragment"
+        tools:layout="@layout/fragment_reports_add_new"/>
+
+    <fragment
+        android:id="@+id/reportDetailFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.reports.ReportDetailFragment"
+        android:label="ReportDetailFragment"
+        tools:layout="@layout/fragment_reports_details">
+        <action
+            android:id="@+id/action_reportDetailFragment_to_animalProfile"
+            app:destination="@id/animalProfile"
+            app:popUpTo="@id/reportDetailFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
         android:id="@+id/organization_import_data"
         android:name="it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationImportDataFragment"
         android:label="Importa dati animali"

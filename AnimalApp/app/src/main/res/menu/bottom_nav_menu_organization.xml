@@ -15,4 +15,9 @@
         android:id="@+id/organization_requests"
         android:icon="@drawable/ic_baseline_question_answer_24"
         android:title="@string/title_fragment_requests"/>
+
+    <item
+        android:id="@+id/organization_reports"
+        android:icon="@drawable/ic_baseline_question_answer_24"
+        android:title="Reports"/>
 </menu>
