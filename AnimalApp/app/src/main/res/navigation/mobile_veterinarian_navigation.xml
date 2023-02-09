@@ -71,13 +71,13 @@
         android:label="Dashboard segnalazioni"
         tools:layout="@layout/fragment_reports_dashboard">
         <action
-            android:id="@+id/action_reportsDashboardFragment_to_reportDetailsFragment"
+            android:id="@+id/action_reportsDashboardFragment_to_reportAddNewFragment"
             app:destination="@id/reportAddNewFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
         <action
             android:id="@+id/action_reportsDashboardFragment_to_reportDetailFragment"
-            app:destination="@id/reportDetailFragment2"
+            app:destination="@id/reportDetailFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
@@ -87,8 +87,9 @@
         android:name="it.uniba.dib.sms22235.tasks.common.views.reports.ReportAddNewFragment"
         android:label="Dettagli segnalazione"
         tools:layout="@layout/fragment_reports_add_new"/>
+
     <fragment
-        android:id="@+id/reportDetailFragment2"
+        android:id="@+id/reportDetailFragment"
         android:name="it.uniba.dib.sms22235.tasks.common.views.reports.ReportDetailFragment"
         android:label="ReportDetailFragment" >
         <action

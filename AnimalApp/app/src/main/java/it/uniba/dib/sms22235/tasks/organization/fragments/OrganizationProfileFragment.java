@@ -66,6 +66,10 @@ public class OrganizationProfileFragment extends Fragment {
         ((NavigationActivityInterface) requireActivity()).setNavViewVisibility(View.VISIBLE);
         ((NavigationActivityInterface) requireActivity()).getFab().setVisibility(View.GONE);
 
+        rootView.findViewById(R.id.cardViewOrganization).setOnClickListener(v -> {
+            controller.navigate(R.id.action_organization_profile_to_reportsDashboardFragment);
+        });
+
         assistedAnimalRecyclerView = rootView.findViewById(R.id.assistedAnimalList);
 
         adapter = new AnimalListAdapter(RecyclerView.VERTICAL);

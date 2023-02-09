@@ -153,6 +153,7 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
                 R.id.organization_import_data,
                 R.id.organization_requests
         ).build();
+
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_activity_organization_navigation);
         assert navHostFragment != null;
@@ -310,6 +311,8 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
     private void registerAnimalFirebase(@NonNull Animal animal) {
         String docKeyAnimal = KeysNamesUtils.RolesNames.ANIMAL
                 + "_" + animal.getMicrochipCode();
+
+        animal.setOwner(getUserId());
 
         // Check if the microchip code is duplicated first
         db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)

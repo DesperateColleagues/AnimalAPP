@@ -40,6 +40,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -54,12 +56,11 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class ReportsListFragment extends Fragment {
 
-    private final boolean isMine;
+    private boolean isMine;
 
     private FirebaseFirestore db;
     private FirebaseAuth auth;
 
-    private final transient NavController navController;
 
     private ArrayList<Report> reportsList;
     private ArrayList<Report> reportsListFiltered;
@@ -72,7 +73,20 @@ public class ReportsListFragment extends Fragment {
 
     private ReportsAdapter reportsAdapter;
     private ReportsAdapter reportsAdapterFiltered;
+
     private RecyclerView recyclerView;
+
+    private ManageNavigationReports manageNavigationReports;
+
+    public void setManageNavigationReports(ManageNavigationReports manageNavigationReports) {
+        this.manageNavigationReports = manageNavigationReports;
+    }
+
+    public interface ManageNavigationReports {
+        void navigateToReportDetail(Bundle bundle);
+        void navigateToAddNewReport();
+        void navigateToAddNewReport(Bundle bundle);
+    }
 
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
         if (isGranted) {
@@ -100,10 +114,7 @@ public class ReportsListFragment extends Fragment {
 
     private boolean isGranted;
 
-    ReportsListFragment(boolean isMine, NavController navController) {
-        this.isMine = isMine;
-        this.navController = navController;
-
+    public ReportsListFragment() {
         reportsList = new ArrayList<>();
     }
 
@@ -115,6 +126,12 @@ public class ReportsListFragment extends Fragment {
 
         client = LocationServices.getFusedLocationProviderClient(requireActivity());
 
+        Bundle arguments = getArguments();
+
+        if (arguments != null) {
+            isMine = arguments.getBoolean("isMine");
+        }
+
         return inflater.inflate(R.layout.fragment_reports_list, container, false);
     }
 
@@ -125,12 +142,14 @@ public class ReportsListFragment extends Fragment {
 
         reportsAdapter = new ReportsAdapter();
         reportsAdapter.setContext(requireContext());
+
+
         recyclerView = view.findViewById(R.id.recyclerReports);
 
         Button btnAddReport = view.findViewById(R.id.btnAddReport);
 
         btnAddReport.setOnClickListener(v ->
-                navController.navigate(R.id.action_reportsDashboardFragment_to_reportDetailsFragment));
+                manageNavigationReports.navigateToAddNewReport());
 
         if (!isMine) {
             btnAddReport.setVisibility(View.GONE);
@@ -147,6 +166,8 @@ public class ReportsListFragment extends Fragment {
                             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                                     locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                                 reportsAdapterFiltered = new ReportsAdapter();
+                                reportsAdapterFiltered.setContext(requireContext());
+
                                 reportsListFiltered = new ArrayList<>();
 
                                 String textBtn = "Tutte";
@@ -238,7 +259,7 @@ public class ReportsListFragment extends Fragment {
                                     Bundle bundle = new Bundle();
                                     bundle.putSerializable(KeysNamesUtils.BundleKeys.REPORT_UPDATE, report);
                                     bundle.putBoolean(KeysNamesUtils.BundleKeys.REPORT_MODE_ADD, false);
-                                    navController.navigate(R.id.action_reportsDashboardFragment_to_reportDetailsFragment, bundle);
+                                    manageNavigationReports.navigateToAddNewReport(bundle);
                                     customBsdDialog.dismiss();
                                 });
 
@@ -270,7 +291,11 @@ public class ReportsListFragment extends Fragment {
 
                         if (reportsSnapshot.size() > 0) {
                             for (DocumentSnapshot snapshot : reportsSnapshot) {
-                                reportsList.add(Report.loadReport(snapshot));
+                                Report report = Report.loadReport(snapshot);
+
+                                if (!report.getCompleted()) {
+                                    reportsList.add(report);
+                                }
                             }
 
                             reportsAdapter.setReportsList(reportsList);
@@ -282,7 +307,7 @@ public class ReportsListFragment extends Fragment {
                             reportsAdapter.setOnItemClickListener(report -> {
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable(KeysNamesUtils.BundleKeys.REPORT_SHOW, report);
-                                navController.navigate(R.id.action_reportsDashboardFragment_to_reportDetailFragment, bundle);
+                                manageNavigationReports.navigateToReportDetail(bundle);
                             });
                         }
                     });

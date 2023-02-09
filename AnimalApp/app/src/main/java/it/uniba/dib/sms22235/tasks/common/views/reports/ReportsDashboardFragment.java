@@ -22,8 +22,10 @@ import java.util.List;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
+import it.uniba.dib.sms22235.tasks.organization.OrganizationNavigationActivity;
 
-public class ReportsDashboardFragment extends Fragment {
+public class ReportsDashboardFragment extends Fragment implements
+        ReportsListFragment.ManageNavigationReports {
 
     private transient NavController controller;
 
@@ -50,9 +52,6 @@ public class ReportsDashboardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((NavigationActivityInterface) requireActivity()).getFab().setOnClickListener(v ->
-                controller.navigate(R.id.action_reportsDashboardFragment_to_reportDetailsFragment));
-
         ViewPager viewPager = view.findViewById(R.id.viewpagerReports);
         setupViewPager(viewPager);
 
@@ -63,12 +62,38 @@ public class ReportsDashboardFragment extends Fragment {
     private void setupViewPager(@NonNull ViewPager viewPager) {
         Adapter adapter = new Adapter(getChildFragmentManager());
 
-        ReportsListFragment communityList = new ReportsListFragment(false, controller);
-        ReportsListFragment myList = new ReportsListFragment(true, controller);
+        Bundle communityBundle = new Bundle();
+        communityBundle.putBoolean("isMine", false);
+
+        Bundle myBundle = new Bundle();
+        myBundle.putBoolean("isMine", true);
+
+        ReportsListFragment communityList = new ReportsListFragment();
+        communityList.setArguments(communityBundle);
+        communityList.setManageNavigationReports(this);
+
+        ReportsListFragment myList = new ReportsListFragment();
+        myList.setArguments(myBundle);
+        myList.setManageNavigationReports(this);
 
         adapter.addFragment(communityList, "Segnalazioni community");
         adapter.addFragment(myList, "Mie segnalazioni");
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public void navigateToReportDetail(Bundle bundle) {
+        controller.navigate(R.id.action_reportsDashboardFragment_to_reportDetailFragment, bundle);
+    }
+
+    @Override
+    public void navigateToAddNewReport() {
+        controller.navigate(R.id.action_reportsDashboardFragment_to_reportAddNewFragment);
+    }
+
+    @Override
+    public void navigateToAddNewReport(Bundle bundle) {
+        controller.navigate(R.id.action_reportsDashboardFragment_to_reportAddNewFragment, bundle);
     }
 
     static class Adapter extends FragmentPagerAdapter {

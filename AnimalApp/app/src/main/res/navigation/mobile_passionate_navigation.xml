@@ -126,17 +126,16 @@
         android:name="it.uniba.dib.sms22235.tasks.common.views.reports.ReportsDashboardFragment"
         android:label="ReportsDashboardFragment"
         tools:layout="@layout/fragment_reports_dashboard">
+
         <action
-            android:id="@+id/action_reportsDashboardFragment_to_reportDetailsFragment"
+            android:id="@+id/action_reportsDashboardFragment_to_reportAddNewFragment"
             app:destination="@id/reportAddNewFragment"
-            app:popUpTo="@id/reportsDashboardFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
 
         <action
             android:id="@+id/action_reportsDashboardFragment_to_reportDetailFragment"
             app:destination="@id/reportDetailFragment"
-            app:popUpTo="@id/reportsDashboardFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
 
