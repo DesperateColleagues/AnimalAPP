@@ -14,7 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -26,15 +25,12 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.checkerframework.checker.units.qual.A;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
-import it.uniba.dib.sms22235.tasks.common.dialogs.CustomBsdDialog;
+import it.uniba.dib.sms22235.tasks.common.dialogs.RequestsBSDialog;
 import it.uniba.dib.sms22235.tasks.common.dialogs.requests.DialogAddRequest;
 import it.uniba.dib.sms22235.tasks.common.dialogs.requests.DialogRequestBackbench;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
@@ -275,7 +271,7 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
     }
 
     private void manageBackbenchRequest(Request request) {
-        CustomBsdDialog bsdDialogRequest = new CustomBsdDialog();
+        RequestsBSDialog bsdDialogRequest = new RequestsBSDialog();
 
         bsdDialogRequest.setOnUpdateRequestListener(() -> {
             DialogRequestBackbench dialogRequestBackbench = new DialogRequestBackbench(request);

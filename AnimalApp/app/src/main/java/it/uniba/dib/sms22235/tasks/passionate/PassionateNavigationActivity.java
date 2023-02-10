@@ -289,7 +289,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         if (organizationList == null) {
             organizationList = new ArrayList<>();
         } else {
-            Toast.makeText(this, "" + organizationList.size(), Toast.LENGTH_SHORT).show();
+            Log.e("AnimalAPP - Passionate", "PassionateNavigationActivity:292 - Dimensione lista organizzazione: " + organizationList.size());
         }
 
         // Manage offline files

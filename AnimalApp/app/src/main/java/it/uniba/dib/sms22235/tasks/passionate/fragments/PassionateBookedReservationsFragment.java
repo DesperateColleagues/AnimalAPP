@@ -121,7 +121,7 @@ public class PassionateBookedReservationsFragment extends Fragment {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
                 LocalDate date = LocalDate.parse(reservation.getDate(), formatter);
                 long reservationDate = TimeUnit.DAYS.toMillis(date.toEpochDay());
-                //Log.wtf("Prenotazione", "Numero: " + i + "\nC: " + currentDate + "\nR: " + reservationDate + "\nData prenotazione: " + reservation.getDate());
+                //Log.e("AnimalAPP - Prenotazione", "Numero: " + i + "\nC: " + currentDate + "\nR: " + reservationDate + "\nData prenotazione: " + reservation.getDate());
                 if(currentDate < reservationDate) {
                     currentReservationsList.add(reservation);
                 }
@@ -131,7 +131,7 @@ public class PassionateBookedReservationsFragment extends Fragment {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
                 LocalDate date = LocalDate.parse(reservation.getDate(), formatter);
                 long reservationDate = TimeUnit.DAYS.toMillis(date.toEpochDay());
-                //Log.wtf("Prenotazione", "Numero: " + i + "\nC: " + currentDate + "\nR: " + reservationDate + "\nData prenotazione: " + reservation.getDate());
+                //Log.e("AnimalAPP - Prenotazione", "Numero: " + i + "\nC: " + currentDate + "\nR: " + reservationDate + "\nData prenotazione: " + reservation.getDate());
                 if(currentDate > reservationDate) {
                     currentReservationsList.add(reservation);
                 }

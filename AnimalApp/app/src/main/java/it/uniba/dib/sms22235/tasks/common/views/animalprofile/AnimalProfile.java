@@ -218,7 +218,7 @@ public class AnimalProfile extends Fragment implements
             });
 
             btnQrCodeGenerator.setOnClickListener(v -> {
-                BsdDialogQr bsdDialogQr = new BsdDialogQr(mAnimal.getMicrochipCode(), mAnimal.getName(), mAnimal.getOwner());
+                BsdDialogQr bsdDialogQr = new BsdDialogQr(mAnimal.getMicrochipCode(), mAnimal.getName(), mAnimal.getOwner(), false);
                 bsdDialogQr.show(getChildFragmentManager(), "BsdDialogQr");
             });
 

@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -171,7 +172,7 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
 
         if (arguments != null) {
             report = (Report) arguments.getSerializable(KeysNamesUtils.BundleKeys.REPORT_UPDATE);
-            Toast.makeText(getContext(), "" + report.getReportDescription() , Toast.LENGTH_SHORT).show();
+            Log.e("AnimalAPP - Report", "ReportAddNewFragment:175 - Descrizione segnalazione: " + report.getReportDescription());
             isAdd = arguments.getBoolean(KeysNamesUtils.BundleKeys.REPORT_MODE_ADD);
         } else {
             // Create a first instance of the report

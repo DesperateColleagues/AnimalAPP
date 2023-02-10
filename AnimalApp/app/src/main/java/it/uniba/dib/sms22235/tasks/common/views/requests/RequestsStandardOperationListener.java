@@ -43,7 +43,7 @@ public interface RequestsStandardOperationListener {
 
                     if (snapshots.size() > 0) {
                         Animal animal = Animal.loadAnimal(snapshots.get(0));
-                        BsdDialogQr bsdDialogQr = new BsdDialogQr(animal.getMicrochipCode(), animal.getName(), animal.getOwner());
+                        BsdDialogQr bsdDialogQr = new BsdDialogQr(animal.getMicrochipCode(), animal.getName(), animal.getOwner(), true);
                         bsdDialogQr.show(childFragmentManager, "BsdDialogQr");
                     }
                 });

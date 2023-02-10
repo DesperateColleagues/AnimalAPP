@@ -32,13 +32,13 @@ public class QueryPurchasesManager {
         try {
             dbHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS purchases;");
         } catch (SQLException e){
-            Log.e("DROP ERROR", e.getMessage());
+            Log.e("AnimalAPP - Spese", "QueryPurchasesManager:35 - drop table purchases error");
         }
 
         try {
             dbHelper.getWritableDatabase().execSQL(KeysNamesUtils.PurchaseContract.CREATE_TABLE);
         } catch (SQLException e) {
-            Log.e("CREATE ERROR", e.getMessage());
+            Log.e("AnimalAPP - Spese", "QueryPurchasesManager:35 - create table purchases error");
         }
     }
 

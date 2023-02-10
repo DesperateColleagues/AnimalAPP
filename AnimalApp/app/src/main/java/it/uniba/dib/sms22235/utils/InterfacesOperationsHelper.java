@@ -237,7 +237,7 @@ public class InterfacesOperationsHelper {
                                 List<DocumentSnapshot> diagnosisDocuments = task.getResult().getDocuments();
                                 for (DocumentSnapshot snapshot : diagnosisDocuments) {
                                     adapter.addDiagnosis(Diagnosis.loadDiagnosis(snapshot));
-                                    Log.wtf("Diagnosi", Diagnosis.loadDiagnosis(snapshot).toString());
+                                    Log.e("AnimalAPP - Diagnosi", "InterfacesOperationsHelper:240 - Diagnosi: " + Diagnosis.loadDiagnosis(snapshot));
                                 }
                             }
                             adapter.setOnItemClickListener(listener);
@@ -260,7 +260,7 @@ public class InterfacesOperationsHelper {
                                 List<DocumentSnapshot> examsDocuments = task.getResult().getDocuments();
                                 for (DocumentSnapshot snapshot : examsDocuments) {
                                     adapter.addExam(Exam.loadExam(snapshot));
-                                    Log.wtf("Esami", Exam.loadExam(snapshot).toString());
+                                    Log.e("AnimalAPP - Esami", "InterfacesOperationsHelper:263 - Esame: " + Exam.loadExam(snapshot));
                                 }
                             }
                             adapter.setOnItemClickListener(listener);

@@ -50,8 +50,8 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.commonoperations.ReportsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Report;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
-import it.uniba.dib.sms22235.tasks.common.dialogs.CustomBsdDialog;
 import it.uniba.dib.sms22235.tasks.common.dialogs.DialogEntityDetailsFragment;
+import it.uniba.dib.sms22235.tasks.common.dialogs.ReportsBSDialog;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class ReportsListFragment extends Fragment {
@@ -252,20 +252,20 @@ public class ReportsListFragment extends Fragment {
 
                             // Set a listener that specify what to do when a mine reports is clicked
                             reportsAdapter.setOnItemClickListener(report -> {
-                                CustomBsdDialog customBsdDialog = new CustomBsdDialog();
+                                ReportsBSDialog reportsBSDialog = new ReportsBSDialog();
 
                                 // Manage the update of a request by opening the ReportAddNewFragment
                                 // with the value of the report that's about to be modifies
-                                customBsdDialog.setOnUpdateRequestListener(() -> {
+                                reportsBSDialog.setOnUpdateRequestListener(() -> {
                                     Bundle bundle = new Bundle();
                                     bundle.putSerializable(KeysNamesUtils.BundleKeys.REPORT_UPDATE, report);
                                     bundle.putBoolean(KeysNamesUtils.BundleKeys.REPORT_MODE_ADD, false);
                                     manageNavigationReports.navigateToAddNewReport(bundle);
-                                    customBsdDialog.dismiss();
+                                    reportsBSDialog.dismiss();
                                 });
 
                                 // Manage report's confirmation by updating its reference of the FireStore
-                                customBsdDialog.setOnConfirmRequestListener(() -> {
+                                reportsBSDialog.setOnConfirmRequestListener(() -> {
                                         report.setCompleted(true);
 
                                         db.collection(KeysNamesUtils.CollectionsNames.REPORTS)
@@ -277,7 +277,7 @@ public class ReportsListFragment extends Fragment {
 
                                 });
 
-                                customBsdDialog.show(getChildFragmentManager(), "CustomBsdDialog");
+                                reportsBSDialog.show(getChildFragmentManager(), "CustomBsdDialog");
                             });
                         }
                     });

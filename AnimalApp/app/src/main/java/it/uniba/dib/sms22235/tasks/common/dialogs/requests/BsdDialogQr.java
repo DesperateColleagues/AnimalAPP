@@ -24,11 +24,13 @@ public class BsdDialogQr extends BottomSheetDialogFragment {
     private final String microchip;
     private final String animalName;
     private final String currentOwner;
+    private final boolean isSell;
 
-    public BsdDialogQr(String microchip, String animalName, String currentOwner) {
+    public BsdDialogQr(String microchip, String animalName, String currentOwner, boolean isSell) {
         this.microchip = microchip;
         this.animalName = animalName;
         this.currentOwner = currentOwner;
+        this.isSell = isSell;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,7 +43,7 @@ public class BsdDialogQr extends BottomSheetDialogFragment {
 
         ImageView imgQr = view.findViewById(R.id.imgQr);
 
-        String content = microchip + " - " + animalName + " - " + currentOwner;
+        String content = microchip + " - " + animalName + " - " + currentOwner + " - " + isSell;
 
         // Generate Qr code
 

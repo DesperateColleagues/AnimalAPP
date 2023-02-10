@@ -52,7 +52,7 @@ public class DialogAddExamFragment extends DialogFragment {
 
         if (exam != null) {
             titleText.setText(getResources().getString(R.string.modifica_esame));
-            Log.wtf("Esame", exam.toString());
+            Log.e("AnimalAPP - Esami", "DialogAddExamFragment:55 - Esame: " + exam.toString());
             txtInputExamDescription.setText(exam.getDescription());
             txtInputExamType.setText(exam.getType());
         } else {

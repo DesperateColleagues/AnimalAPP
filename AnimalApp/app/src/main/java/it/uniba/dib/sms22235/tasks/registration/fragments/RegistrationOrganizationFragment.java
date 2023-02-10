@@ -118,7 +118,6 @@ public class RegistrationOrganizationFragment extends Fragment implements Dialog
                 // Encode the password before saving it
                 try {
                     password = InputFieldCheck.encodePassword(password);
-                    Log.wtf("password", password);
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }

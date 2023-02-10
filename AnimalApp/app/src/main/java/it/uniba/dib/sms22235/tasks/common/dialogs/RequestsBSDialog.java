@@ -12,7 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import it.uniba.dib.sms22235.R;
 
-public class CustomBsdDialog extends BottomSheetDialogFragment {
+public class RequestsBSDialog extends BottomSheetDialogFragment {
 
     private OnUpdateRequestListener onUpdateRequestListener;
     private OnConfirmRequestListener onConfirmRequestListener;

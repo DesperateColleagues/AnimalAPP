@@ -5,6 +5,7 @@
 
     <string name="generic_error">Errore generico, contattare gli sviluppatori</string>
     <string name="offline_error">Sezione non disponibile in modalità offline</string>
+    <string name="campi_vuoti">Campi vuoti!</string>
 
     <string name="chilometri">" Chilometri"</string>
 
@@ -16,6 +17,7 @@
     <string name="online_choice_no">No, rimango offline</string>
     <string name="online_choice_yes">Si, portami online!</string>
     <string name="offline_warning">Connessione persa: passaggio a modalità offline</string>
+    <string name="online_login_message">Login online effettuato!</string>
 
     <string name="camera_permission">Operazione non completata.
         In caso di schermata nera, verificare i permessi dell\'applicazione.</string>
@@ -162,6 +164,9 @@
     <string name="completa_richiesta">Completamento richiesta</string>
     <string name="aggiungi_nuovo_backbench">Aggiungi animale allo stallo temporaneo</string>
 
+    <!-- Stringhe sottostanti riferite alle segnalazioni -->
+    <string name="modifica_segnalazione">Modifica segnalazione</string>
+
     <string name="animal_profile_infos">
         ·<b>Specie:</b>* \n·<b>Razza:</b>*\n<br/>·<b>Data di nascita:</b>*\n<br/>·<b>Codice microchip:*</b>
     </string>
@@ -170,6 +175,13 @@
     <string name="importazione_avvenuta">Inserimento completato con successo!</string>
     <string name="importazione_fallita">Errore nell\'ottenimento del file da importare</string>"
     <string name="animali_assistenza">Animali assistiti</string>
+    <string name="empty_list">Non c\'è niente qui, per ora</string>
+
+    <!-- Stringhe sottostanti riferite alla modalità PokAnimal -->
+    <string name="bill_pc">Il PC di Bill</string>
+    <string name="seleziona_amico">Seleziona amico</string>
+
+    <string name="completa_inserimento">Completa inserimento</string>
 
     <!-- Perchè non lasciare qualche easter egg? -->
 
@@ -182,13 +194,6 @@
     <string name="ascanio">lascia entrare Ascanio!</string>
     <string name="ascanio_message"><i>Hey, lascia entrare Ascanio, dall\'otto di gennaio\nPerciò, limarla è tosta: esce, ma non mi rosica</i></string>
     <string name="ascanio_button">Il bucio le brucia!</string>
-
-    <!-- Stringhe sottostanti riferite all'ente e alle sue funzioni -->
-    <string name="empty_list">Non c\'è niente qui, per ora</string>
-    <string name="bill_pc">Il PC di Bill</string>
-    <string name="seleziona_amico">Seleziona amico</string>
-
-    <string name="completa_inserimento">Completa inserimento</string>
 
     <string-array name="rangeSliderValues">
         <item>0</item>

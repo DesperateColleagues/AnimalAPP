@@ -52,13 +52,14 @@ public class RequestDetailFragment extends Fragment {
             String microchip = split[0];
             String animalName = split[1];
             String oldOwner = split[2];
+            boolean isSell = Boolean.parseBoolean(split[3]);
 
             String newOwner = ((NavigationActivityInterface) requireActivity()).getUserId();
 
             // Start the change owner operations by updating the DB entry that corresponds
             // to the decoded QR fields
 
-            if (microchip.equals(request.getAnimal().split(" - ")[1])) {
+            if (microchip.equals(request.getAnimal().split(" - ")[1]) && isSell) {
                 listener.transferOperations(
                         db, storage, newOwner, microchip, animalName,
                         oldOwner, getResources().getString(R.string.ricarica_sessione),

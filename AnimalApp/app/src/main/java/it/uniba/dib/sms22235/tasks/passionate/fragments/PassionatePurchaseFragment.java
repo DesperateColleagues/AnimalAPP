@@ -250,7 +250,7 @@ public class PassionatePurchaseFragment extends Fragment implements
 
         if (cursor != null) {
             if (cursor.getCount() > 0) {
-                Log.e("COUNT", cursor.getCount() + "");
+                Log.e("AnimalAPP - Spese", "PassionatePurchaseFragment:253 - Dimensione cursore: " + cursor.getCount());
                 while (cursor.moveToNext()){
                     // Retrieve the purchase using Cursor
                     Purchase purchase = new Purchase(

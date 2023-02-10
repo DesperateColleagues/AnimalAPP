@@ -150,7 +150,7 @@ public class OrganizationImportDataFragment extends Fragment {
             importedAnimalsJSONArray = new JSONArray(sn.useDelimiter("\\A").next());
         } catch (Exception e) {
             Toast.makeText(getContext(), getResources().getString(R.string.importazione_fallita), Toast.LENGTH_LONG).show();
-            Log.wtf("Animal Import", e.getMessage());
+            Log.e("AnimalAPP - Import Animali", "OrganizationImportDataFragment:153 - getMessage: " + e.getMessage());
         }
     }
 
@@ -177,7 +177,7 @@ public class OrganizationImportDataFragment extends Fragment {
                 isFetched++;
             } catch (Exception e) {
                 Toast.makeText(getContext(), getResources().getString(R.string.importazione_fallita), Toast.LENGTH_LONG).show();
-                Log.wtf("Animal Loading", e.getMessage());
+                Log.e("AnimalAPP - Import Animali", "OrganizationImportDataFragment:181 - getMessage: " + e.getMessage());
         }
     }
 }

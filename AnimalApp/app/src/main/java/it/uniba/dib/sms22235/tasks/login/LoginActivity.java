@@ -19,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -196,7 +195,7 @@ public class LoginActivity extends AppCompatActivity {
                                             // Get the role of the user by splitting the document name
                                             String role = docName.split("_")[0];
 
-                                            Log.wtf("Role",role);
+                                            Log.e("AnimalAPP - Login", "LoginActivity:198 - Ruolo utente: " + role);
 
                                             /*
                                              * Check what is the role of the logged user. Retrieve
@@ -394,7 +393,7 @@ public class LoginActivity extends AppCompatActivity {
                                             }
                                         }
                                     });
-                            Toast.makeText(this, "Login corretto", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getResources().getString(R.string.online_login_message), Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         btnLogin.setEnabled(true);
