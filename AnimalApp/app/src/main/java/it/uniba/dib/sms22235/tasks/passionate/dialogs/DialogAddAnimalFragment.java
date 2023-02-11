@@ -18,7 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.users.Animal;
@@ -63,6 +67,8 @@ public class DialogAddAnimalFragment extends DialogFragment implements android.a
         titleText.setText("Registrazione animale");
         builder.setCustomTitle(titleView);
 
+        SimpleDateFormat dateSDF = new SimpleDateFormat("dd/MM/yy", Locale.ITALY);
+
         // Retrieve EditTexts objects from the inflated view
         EditText txtInputAnimalName = root.findViewById(R.id.txtInputAnimalName);
         EditText txtInputAnimalSpecies = root.findViewById(R.id.txtInputAnimalSpecies);
@@ -79,22 +85,34 @@ public class DialogAddAnimalFragment extends DialogFragment implements android.a
         Button btnConfirmAnimalRegistration = root.findViewById(R.id.btnConfirmAnimalRegistration);
 
         btnConfirmAnimalRegistration.setOnClickListener(v -> {
+            long dateDistance = -1;
+
             String animalName = txtInputAnimalName.getText().toString();
             String animalSpecies = txtInputAnimalSpecies.getText().toString();
             String race = txtInputRace.getText().toString();
             String microchipCode = txtInputMicrochipCode.getText().toString();
             String birthDate = txtInputBirthDate.getText().toString();
 
+            try {
+                Date d1 = dateSDF.parse(birthDate);
+                Date d2 = new Date();
+                dateDistance = d2.getTime() - d1.getTime();
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+
             boolean isEmptyInput = animalName.equals("") || animalSpecies.equals("")
                     || race.equals("") || microchipCode.equals("") || birthDate.equals("");
 
             // If the input is not empty the animal can be registered
-            if (!isEmptyInput){
+            if (!isEmptyInput && dateDistance >= 0){
                 listener.onDialogAddAnimalDismissed(new Animal(animalName, animalSpecies, race,
                         microchipCode, birthDate));
                 dismiss();
-            } else {
-                Toast.makeText(getContext(), "Alcuni campi sono vuoti!", Toast.LENGTH_SHORT).show();
+            } else if (isEmptyInput) {
+                Toast.makeText(getContext(), getResources().getString(R.string.alcuni_campi_vuoti), Toast.LENGTH_SHORT).show();
+            } else if (dateDistance < 0) {
+                Toast.makeText(getContext(), getResources().getString(R.string.error_date), Toast.LENGTH_SHORT).show();
             }
         });
 

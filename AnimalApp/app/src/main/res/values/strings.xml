@@ -3,9 +3,10 @@
 
     <string name="hello_blank_fragment">Fragment vuoto</string>
 
-    <string name="generic_error">Errore generico, contattare gli sviluppatori</string>
-    <string name="offline_error">Sezione non disponibile in modalità offline</string>
-    <string name="campi_vuoti">Campi vuoti!</string>
+    <string name="error_generic">Errore generico, contattare gli sviluppatori</string>
+    <string name="error_offline">Sezione non disponibile in modalità offline</string>
+    <string name="error_date">La data selezionata si trova nel futuro</string>
+    <string name="alcuni_campi_vuoti">Campi vuoti!</string>
 
     <string name="chilometri">" Chilometri"</string>
 
@@ -18,6 +19,7 @@
     <string name="online_choice_yes">Si, portami online!</string>
     <string name="offline_warning">Connessione persa: passaggio a modalità offline</string>
     <string name="online_login_message">Login online effettuato!</string>
+    <string name="online_login_unstable">Credenziali non corrette o rete troppo instabile</string>
 
     <string name="camera_permission">Operazione non completata.
         In caso di schermata nera, verificare i permessi dell\'applicazione.</string>

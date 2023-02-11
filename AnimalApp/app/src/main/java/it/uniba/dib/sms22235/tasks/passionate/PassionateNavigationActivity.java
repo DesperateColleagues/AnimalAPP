@@ -2,7 +2,6 @@ package it.uniba.dib.sms22235.tasks.passionate;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -32,9 +31,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 
 import androidx.navigation.fragment.NavHostFragment;
@@ -45,7 +42,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -55,7 +51,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -79,7 +74,6 @@ import it.uniba.dib.sms22235.entities.operations.PokeLink;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.DialogEntityDetailsFragment;
-import it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragment;
 import it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragmentListener;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
@@ -989,7 +983,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     }
 
     private void offlineSnackbar(View view) {
-        Snackbar snackbar = Snackbar.make(view, getResources().getString(R.string.offline_error),Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(view, getResources().getString(R.string.error_offline),Snackbar.LENGTH_LONG);
         View snackbarView = snackbar.getView();
         TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
         TypedValue value = new TypedValue();

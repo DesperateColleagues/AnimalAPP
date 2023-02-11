@@ -74,7 +74,7 @@ public class DialogAddAddress extends DialogFragment {
                 }
 
             } else {
-                Toast.makeText(requireContext(), getResources().getString(R.string.campi_vuoti), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getResources().getString(R.string.alcuni_campi_vuoti), Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -55,7 +55,7 @@ public class DialogReportAddInfo extends DialogFragment {
                 listener.onInfoAdded(title, description);
                 dismiss();
             } else {
-                Toast.makeText(requireContext(), getResources().getString(R.string.campi_vuoti), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getResources().getString(R.string.alcuni_campi_vuoti), Toast.LENGTH_SHORT).show();
             }
         });
 

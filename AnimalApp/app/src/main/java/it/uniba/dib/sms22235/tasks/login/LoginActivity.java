@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -397,8 +396,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     } else {
                         btnLogin.setEnabled(true);
-                        Toast.makeText(this, "Email o password non corretti o rete non abilitata",
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, getResources().getString(R.string.online_login_unstable), Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -499,7 +497,7 @@ public class LoginActivity extends AppCompatActivity {
                     newActivityRunning(PassionateNavigationActivity.class, bundle);
                 }
             } else {
-                Toast.makeText(this, getString(R.string.generic_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_generic), Toast.LENGTH_SHORT).show();
             }
         }
     }

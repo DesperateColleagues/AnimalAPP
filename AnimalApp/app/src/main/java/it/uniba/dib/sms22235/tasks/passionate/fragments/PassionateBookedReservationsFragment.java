@@ -98,7 +98,7 @@ public class PassionateBookedReservationsFragment extends Fragment {
                 updateState();
                 btnReservationType.setText(R.string.appuntamenti_futuri);
             } else {
-                Toast.makeText(getContext(), requireContext().getResources().getString(R.string.generic_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), requireContext().getResources().getString(R.string.error_generic), Toast.LENGTH_SHORT).show();
             }
         });
 
