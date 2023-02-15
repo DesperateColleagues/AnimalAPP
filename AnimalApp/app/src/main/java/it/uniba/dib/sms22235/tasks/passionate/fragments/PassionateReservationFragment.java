@@ -45,7 +45,6 @@ public class PassionateReservationFragment extends Fragment implements DialogCho
     private ArrayList<Reservation> dailyReservationsList;
     private ReservationsAdapter adapter;
     private String currentDate;
-    private String currentTime;
     private Reservation selectedReservation;
 
 
@@ -85,8 +84,6 @@ public class PassionateReservationFragment extends Fragment implements DialogCho
 
         SimpleDateFormat dateSDF = new SimpleDateFormat("dd/MM/yy", Locale.ITALY);
         currentDate = dateSDF.format(new Date());
-        SimpleDateFormat timeSDF = new SimpleDateFormat("HH:mm", Locale.ITALY);
-        currentTime = timeSDF.format(new Date());
 
         adapter = new ReservationsAdapter();
         adapter.setListType(KeysNamesUtils.ReservationListType.PASSIONATE.getValue());

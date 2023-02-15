@@ -3,6 +3,7 @@ package it.uniba.dib.sms22235.tasks.passionate.dialogs;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -17,9 +18,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
@@ -98,6 +102,7 @@ public class DialogAddPurchaseFragment extends DialogFragment
         btnConfirmPurchase.setOnClickListener(v -> {
             float cost = -1;
             int amount = -1;
+            long distance = -1;
 
             String inputProductName = txtInputProductName.getText().toString();
             String inputCost = txtInputCost.getText().toString();
@@ -105,6 +110,17 @@ public class DialogAddPurchaseFragment extends DialogFragment
             String inputDatePurchase = txtInputDatePurchase.getText().toString();
             String inputCategory = txtInputCategory.getText().toString();
             String animal = spinnerAnimals.getSelectedItem().toString();
+
+            SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd", Locale.ITALY);
+            try {
+                Date d1 = dateSDF.parse(inputDatePurchase);
+                Date d2 = dateSDF.parse(dateSDF.format(new Date()));
+                distance = d2.getTime() - d1.getTime();
+                Log.e("AnimalAPP - Date Parsing", "DialogAddPurchaseFragment:119 - Current date: " + d2.getTime());
+                Log.e("AnimalAPP - Date Parsing","DialogAddPurchaseFragment:120 - Product date: " + d1.getTime());
+            } catch (ParseException e) {
+                Log.e("AnimalAPP - Date Parsing Error","DialogAddPurchaseFragment:122" + e.getMessage());
+            }
 
             boolean isEmpty = inputProductName.equals("") || inputCost.equals("")
                     || inputAmount.equals("") || inputDatePurchase.equals("")
@@ -123,15 +139,16 @@ public class DialogAddPurchaseFragment extends DialogFragment
                     isCorrectInput = false;
                 }
 
-                if (isCorrectInput && cost > 0 && amount > 0) {
+                if (isCorrectInput && cost > 0 && amount > 0 && distance >= 0) {
                     // Extract the microhip code from the string
                     String microchip = animal.split(" - ")[1];
                     listener.onDialogAddPurchaseFragmentDismissed(new Purchase(
                             microchip, inputProductName,
                             dateSql, inputCategory, cost, amount
                     ));
-
                     dismiss();
+                } else if (distance < 0) {
+                    Toast.makeText(getContext(), "Distanza", Toast.LENGTH_LONG).show();
                 }
             }
         });

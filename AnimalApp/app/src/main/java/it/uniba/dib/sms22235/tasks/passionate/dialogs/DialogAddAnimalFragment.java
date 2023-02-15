@@ -95,7 +95,7 @@ public class DialogAddAnimalFragment extends DialogFragment implements android.a
 
             try {
                 Date d1 = dateSDF.parse(birthDate);
-                Date d2 = new Date();
+                Date d2 = dateSDF.parse(dateSDF.format(new Date()));
                 dateDistance = d2.getTime() - d1.getTime();
             } catch (ParseException e) {
                 throw new RuntimeException(e);

@@ -77,6 +77,7 @@
         android:onClick="txtRecoverPasswordAction"
         android:text="@string/password_dimenticata"
         android:textAlignment="center"
+        android:visibility="gone"
         android:textColor="?attr/colorOnSecondary"/>
 
     <Button
