@@ -30,6 +30,11 @@ public class Passionate extends AbstractPersonUser implements Serializable {
         return username;
     }
 
+    @Override
+    public String getUserIdentifier() {
+        return getUsername();
+    }
+
 
     /**
      * This method is used to create a user object

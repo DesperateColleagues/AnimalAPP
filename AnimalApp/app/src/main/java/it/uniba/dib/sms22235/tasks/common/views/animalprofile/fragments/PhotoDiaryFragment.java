@@ -28,11 +28,15 @@ import java.util.List;
 import java.util.UUID;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.entities.users.AbstractPersonUser;
+import it.uniba.dib.sms22235.entities.users.Animal;
+import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.animalprofile.DialogShowImage;
 import it.uniba.dib.sms22235.adapters.animals.AnimalPostAdapter;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
-import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
+import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class PhotoDiaryFragment extends Fragment implements DialogShowImage.DialogShowImageListener {
 
@@ -72,14 +76,11 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
     }
 
     private PhotoDiaryFragmentListener listener;
-
     private List<PhotoDiaryPost> posts;
-
     private String animalMicrochip;
-    private final String owner;
-
+    private Animal animal;
+    private AbstractPersonUser user;
     private FirebaseAuth mAuth;
-
     private int viewMode;
 
     private final ActivityResultLauncher<Intent> cropResult = registerForActivityResult(
@@ -95,7 +96,7 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
                         if (uri != null) {
                             // Update firestore and storage
                             listener.onPostAdded(new PhotoDiaryPost(
-                                uri.toString(),animalMicrochip
+                                uri.toString(), animal.getMicrochipCode()
                             ));
                         }
                     }
@@ -132,12 +133,16 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
 
     public PhotoDiaryFragment(String animalMicrochip, String owner) {
         this.animalMicrochip = animalMicrochip;
-        this.owner = owner;
     }
 
     public PhotoDiaryFragment(String animalMicrochip, String owner, int viewMode) {
         this.animalMicrochip = animalMicrochip;
-        this.owner = owner;
+        this.viewMode = viewMode;
+    }
+
+    public PhotoDiaryFragment(Animal animal, AbstractPersonUser user, int viewMode) {
+        this.animal = animal;
+        this.user = user;
         this.viewMode = viewMode;
     }
 
@@ -174,21 +179,19 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
 
         Button btnAddAnimalPost = view.findViewById(R.id.btnAddAnimalPost);
 
-        if (viewMode == 0) {
+
+        if (viewMode != KeysNamesUtils.AnimalInformationViewModeFields.PHOTO_ONLY) {
+            btnAddAnimalPost.setVisibility(View.GONE);
+        } else if (getActivity() instanceof PassionateNavigationActivity) {
+            if (((Passionate) ((NavigationActivityInterface) requireActivity()).getUser()).getUserIdentifier().equals(animal.getOwner()) &&
+                    viewMode == KeysNamesUtils.AnimalInformationViewModeFields.PHOTO_ONLY) {
             btnAddAnimalPost.setOnClickListener(v -> {
                 Intent i = new Intent();
                 i.setType("image/*");
                 i.setAction(Intent.ACTION_GET_CONTENT);
                 photoUploadAndSaveActivity.launch(i);
             });
-        } else {
-            if ((getActivity()) instanceof VeterinarianNavigationActivity) {
-                btnAddAnimalPost.setVisibility(View.GONE);
             }
-        }
-
-        if (viewMode == 1) {
-            btnAddAnimalPost.setVisibility(View.GONE);
         }
 
         postGridAdapter.setOnItemClickListener(uri -> {
@@ -200,7 +203,7 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
         RecyclerView diaryRecycler = view.findViewById(R.id.diaryRecycler);
         diaryRecycler.setLayoutManager(new GridLayoutManager(context, 3));
         diaryRecycler.setAdapter(postGridAdapter);
-        listener.loadPost(postGridAdapter, posts, animalMicrochip);
+        listener.loadPost(postGridAdapter, posts, animal.getMicrochipCode());
     }
 
     @Override

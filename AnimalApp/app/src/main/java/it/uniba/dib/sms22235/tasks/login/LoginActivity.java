@@ -377,7 +377,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 Task<QuerySnapshot> taskVeterinarians = getVeterinariansTask();
                                                 taskVeterinarians.addOnCompleteListener(task -> {
                                                     if (task.isSuccessful()) {
-                                                        QuerySnapshot veterinariansSnapshot = (QuerySnapshot) task.getResult();
+                                                        QuerySnapshot veterinariansSnapshot = task.getResult();
                                                         if(!veterinariansSnapshot.isEmpty()){
                                                             List<DocumentSnapshot> veterinariansDocuments = veterinariansSnapshot.getDocuments();
                                                             for (DocumentSnapshot snapshot : veterinariansDocuments) {
@@ -488,9 +488,7 @@ public class LoginActivity extends AppCompatActivity {
                         editor.apply();
                     });
                     Button button = root.findViewById(R.id.btnOfflineChoice);
-                    button.setOnClickListener(view -> {
-                        newActivityRunning(PassionateNavigationActivity.class, bundle);
-                    });
+                    button.setOnClickListener(view -> newActivityRunning(PassionateNavigationActivity.class, bundle));
 
                     builder.create().show();
                 } else {

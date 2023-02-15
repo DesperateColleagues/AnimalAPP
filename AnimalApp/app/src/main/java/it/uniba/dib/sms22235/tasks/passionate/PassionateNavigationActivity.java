@@ -71,6 +71,7 @@ import it.uniba.dib.sms22235.adapters.animals.AnimalDiagnosisAdapter;
 import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
 import it.uniba.dib.sms22235.adapters.animals.PokAnimalAdapter;
 import it.uniba.dib.sms22235.entities.operations.PokeLink;
+import it.uniba.dib.sms22235.entities.users.AbstractPersonUser;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.DialogEntityDetailsFragment;
@@ -455,6 +456,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                 KeysNamesUtils.FileDirsNames.passionatePostRefDirAnimal(post.getPostAnimal())
                 + "/" + fileName;
 
+        Log.e("AnimalAPP - Upload Foto", "PassionateNavigationActivity:459 - fileReference: " + fileReference);
+
         // Get a reference of the storage by passing the tree structure
         StorageReference storageReference = FirebaseStorage.getInstance().getReference
                 (fileReference);
@@ -790,6 +793,11 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             navView.setVisibility(View.VISIBLE);
             fab.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public Passionate getUser() {
+        return passionate;
     }
 
     @Override

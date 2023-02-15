@@ -168,6 +168,13 @@ public class KeysNamesUtils {
         public static String IS_TEMP = "temp";
     }
 
+    public static class AnimalInformationViewModeFields {
+        public static int VIEW_ONLY = 0;
+        public static int VET = 1;
+        public static int PHOTO_ONLY = 2;
+        public static int NONE = 3;
+    }
+
     public static class BundleKeys {
         public static String PASSIONATE = "passionate";
         public static String VETERINARIAN = "veterinarian";

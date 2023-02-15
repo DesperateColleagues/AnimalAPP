@@ -67,7 +67,8 @@ public class VeterinarianAnimalListFragment extends Fragment {
             public void onClick(View view, int position) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, adapter.getAnimalAtPosition(position));
-                bundle.putInt("ViewMode", 1);
+                bundle.putSerializable("UserObject",((NavigationActivityInterface) requireActivity()).getUser());
+                bundle.putInt("ViewMode", KeysNamesUtils.AnimalInformationViewModeFields.VET);
                 controller.navigate(R.id.action_veterinarian_animal_list_to_animalProfile, bundle);
             }
 

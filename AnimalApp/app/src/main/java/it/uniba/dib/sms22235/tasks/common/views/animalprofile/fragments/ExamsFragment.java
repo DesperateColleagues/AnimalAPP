@@ -24,29 +24,31 @@ import java.util.Locale;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Exam;
+import it.uniba.dib.sms22235.entities.users.AbstractPersonUser;
+import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.DialogEntityDetailsFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.BSDialogEditExamFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.DialogAddExamFragment;
 import it.uniba.dib.sms22235.utils.InterfacesOperationsHelper;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class ExamsFragment extends Fragment implements
 DialogAddExamFragment.DialogAddExamFragmentListener {
 
-    private final String animal;
-    private final String owner;
-
+    private final Animal animal;
+    private AbstractPersonUser user;
     private RecyclerView examsRecyclerView;
     private AnimalExamsAdapter adapter;
-
     private FirebaseAuth mAuth;
-
     private InterfacesOperationsHelper helper;
+    private int viewMode;
 
-    public ExamsFragment(String animal, String owner) {
+    public ExamsFragment(Animal animal, AbstractPersonUser user, int viewMode) {
         this.animal = animal;
-        this.owner = owner;
+        this.user = user;
+        this.viewMode = viewMode;
     }
 
     public interface ExamsFragmentListener {
@@ -89,7 +91,7 @@ DialogAddExamFragment.DialogAddExamFragmentListener {
 
         Button btnAddAnimalOperation = view.findViewById(R.id.btnAddAnimalOperation);
 
-        if ((getActivity()) instanceof VeterinarianNavigationActivity) {
+        if ((getActivity()) instanceof VeterinarianNavigationActivity && viewMode != KeysNamesUtils.AnimalInformationViewModeFields.VIEW_ONLY) {
             btnAddAnimalOperation.setVisibility(View.VISIBLE);
             btnAddAnimalOperation.setText(getResources().getString(R.string.aggiungi_esame));
             btnAddAnimalOperation.setOnClickListener(v -> {
@@ -98,10 +100,10 @@ DialogAddExamFragment.DialogAddExamFragmentListener {
                 dialogAddExamFragment.setListener(this);
                 dialogAddExamFragment.show(getParentFragmentManager(), "DialogAddExamFragment");
             });
-            listener.getAnimalExams(adapter, examsRecyclerView, animal, onClickEditListener);
+            listener.getAnimalExams(adapter, examsRecyclerView, animal.getMicrochipCode(), onClickEditListener);
         } else {
             btnAddAnimalOperation.setVisibility(View.GONE);
-            listener.getAnimalExams(adapter, examsRecyclerView, animal, onClickViewListener);
+            listener.getAnimalExams(adapter, examsRecyclerView, animal.getMicrochipCode(), onClickViewListener);
         }
 
         examsRecyclerView = view.findViewById(R.id.recyclerVerticalList);
@@ -119,7 +121,7 @@ DialogAddExamFragment.DialogAddExamFragmentListener {
         SimpleDateFormat timeSDF = new SimpleDateFormat("HH:mm", Locale.ITALY);
         String timeAdded = timeSDF.format(new Date());
 
-        exam.setAnimal(animal);
+        exam.setAnimal(animal.getMicrochipCode());
         exam.setDateAdded(dateAdded);
         exam.setTimeAdded(timeAdded);
 

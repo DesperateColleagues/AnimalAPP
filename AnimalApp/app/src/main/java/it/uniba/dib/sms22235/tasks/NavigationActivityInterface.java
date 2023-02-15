@@ -5,6 +5,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
+import it.uniba.dib.sms22235.entities.users.AbstractPersonUser;
+
 /**
  * This interface determines the common operation of the NavigationActivities
  ** */
@@ -58,5 +60,7 @@ public interface NavigationActivityInterface {
      * This method is used to restore the normal visibility to the nav bar
      * */
     void restoreBottomAppBarVisibility();
+
+    AbstractPersonUser getUser();
 
 }

@@ -63,4 +63,8 @@ public class AbstractPersonUser implements Serializable, Cloneable {
     public void setPurpose(String purpose) {
         this.purpose = purpose;
     }
+
+    public String getUserIdentifier() {
+        return getEmail();
+    }
 }

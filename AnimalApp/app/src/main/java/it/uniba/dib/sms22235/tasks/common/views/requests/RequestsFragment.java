@@ -3,6 +3,7 @@ package it.uniba.dib.sms22235.tasks.common.views.requests;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,7 +158,7 @@ public class RequestsFragment extends Fragment implements DialogAddRequest.Dialo
                 adapter.notifyDataSetChanged();
 
             } else {
-                Toast.makeText(getContext(), "Ciao", Toast.LENGTH_SHORT).show();
+                Log.e("AnimalAPP - Richieste & Offerte", "RequestsFragment:161 - Filtri cancellati");
                 adapter.setRequestsList(subRequestsList);
                 adapter.notifyDataSetChanged();
                 subRequestsListFiltered.clear();

@@ -155,6 +155,7 @@ public class ReportDetailFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, animal);
                     bundle.putBoolean(KeysNamesUtils.BundleKeys.ANIMAL_SHOW_ONLY, true);
+                    bundle.putInt("ViewMode", KeysNamesUtils.AnimalInformationViewModeFields.NONE);
                     navController.navigate(R.id.action_reportDetailFragment_to_animalProfile, bundle);
                 }));
 

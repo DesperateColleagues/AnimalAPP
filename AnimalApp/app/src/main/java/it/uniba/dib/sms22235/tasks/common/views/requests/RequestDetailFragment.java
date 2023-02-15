@@ -157,7 +157,7 @@ public class RequestDetailFragment extends Fragment {
                             Animal animal = Animal.loadAnimal(query.getDocuments().get(0));
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, animal);
-                            bundle.putInt("ViewMode", 1);
+                            bundle.putInt("ViewMode", KeysNamesUtils.AnimalInformationViewModeFields.NONE);
                             navController.navigate(R.id.action_request_detail_to_animalProfile, bundle);
                         });
             });

@@ -44,6 +44,7 @@ import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
 import it.uniba.dib.sms22235.adapters.animals.AnimalPostAdapter;
 import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
+import it.uniba.dib.sms22235.entities.users.AbstractPersonUser;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragmentListener;
@@ -365,6 +366,11 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
             navViewVeterinarian.setVisibility(View.VISIBLE);
             fab.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public Veterinarian getUser() {
+        return veterinarian;
     }
 
     @Override

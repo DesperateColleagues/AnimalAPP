@@ -2,6 +2,7 @@ package it.uniba.dib.sms22235.tasks.common.views.requests;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,7 +23,10 @@ import it.uniba.dib.sms22235.adapters.commonoperations.RequestAdapter;
 import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.Request;
 import it.uniba.dib.sms22235.entities.users.Animal;
+import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.requests.BsdDialogQr;
+import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
+import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public interface RequestsStandardOperationListener {
@@ -96,8 +100,18 @@ public interface RequestsStandardOperationListener {
 
                             // Scan global request to create the sub list
                             for (Request r : reqList) {
-                                if (!r.getUserEmail().equals(Objects.requireNonNull(auth.getCurrentUser()).getEmail()) && !r.getIsCompleted()) {
-                                    subRequestsList.add(r);
+                                if (context instanceof VeterinarianNavigationActivity) {
+                                    if (
+                                            !r.getUserEmail().equals(Objects.requireNonNull(auth.getCurrentUser()).getEmail()) &&
+                                            !r.getIsCompleted() &&
+                                            r.getRequestType().equals("Aiuto")
+                                    ) {
+                                        subRequestsList.add(r);
+                                    }
+                                } else {
+                                    if (!r.getUserEmail().equals(Objects.requireNonNull(auth.getCurrentUser()).getEmail()) && !r.getIsCompleted()) {
+                                        subRequestsList.add(r);
+                                    }
                                 }
                             }
 

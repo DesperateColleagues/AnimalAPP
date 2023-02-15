@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import android.text.Html;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +33,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.uniba.dib.sms22235.R;
+import it.uniba.dib.sms22235.entities.users.AbstractPersonUser;
+import it.uniba.dib.sms22235.entities.users.Organization;
+import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.tasks.common.dialogs.requests.BsdDialogQr;
+import it.uniba.dib.sms22235.tasks.organization.OrganizationNavigationActivity;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAnimalCardFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
@@ -42,6 +47,7 @@ import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDia
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogEditAnimalDataFragment;
+import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class AnimalProfile extends Fragment implements
@@ -103,6 +109,8 @@ public class AnimalProfile extends Fragment implements
 
     private Animal mAnimal;
 
+    private AbstractPersonUser user;
+
     private AnimalProfileListener generalListener;
     private AnimalProfileEditListener passionateListener;
 
@@ -132,12 +140,14 @@ public class AnimalProfile extends Fragment implements
         if (arguments != null) {
             mAnimal = (Animal) arguments.get(KeysNamesUtils.BundleKeys.ANIMAL);
             viewMode = arguments.getInt("ViewMode");
+            user = (AbstractPersonUser) arguments.getSerializable("UserObject");
+            Log.e("AnimalAPP - AnimalProfile", "AnimalProfile:144 - ViewMode: " + viewMode);
         }
 
         try {
             // Attach the listener to the Fragment
             generalListener = (AnimalProfileListener) context;
-            if (viewMode == 0) {
+            if (((NavigationActivityInterface) requireActivity()).getUser().getPurpose().equals(KeysNamesUtils.RolesNames.COMMON_USER)) {
                 passionateListener = (AnimalProfileEditListener) context;
             }
         } catch (ClassCastException e) {
@@ -202,32 +212,39 @@ public class AnimalProfile extends Fragment implements
 
         ImageButton shareProfile = view.findViewById(R.id.btnShareProfile);
         ImageButton btnQrCodeGenerator = view.findViewById(R.id.btnQrCodeGenerator);
+        // todo: check
+        if (((NavigationActivityInterface) requireActivity()).getUser().getPurpose().equals(KeysNamesUtils.RolesNames.COMMON_USER) &&
+                ((NavigationActivityInterface) requireActivity()).getUser() instanceof Passionate) {
+            if (((NavigationActivityInterface) requireActivity()).getUser().getUserIdentifier().equals(mAnimal.getOwner())) {
+                animalPicPreview.setOnClickListener(v -> {
+                    Intent i = new Intent();
+                    i.setType("image/*");
+                    i.setAction(Intent.ACTION_GET_CONTENT);
+                    photoUploadAndSaveActivity.launch(i);
+                });
 
-        if (viewMode == 0) {
-            animalPicPreview.setOnClickListener(v -> {
-                Intent i = new Intent();
-                i.setType("image/*");
-                i.setAction(Intent.ACTION_GET_CONTENT);
-                photoUploadAndSaveActivity.launch(i);
-            });
+                shareProfile.setOnClickListener(v -> {
+                    DialogAnimalCardFragment animalCardFragment = new DialogAnimalCardFragment(mAnimal);
+                    animalCardFragment.setAnimalProfileListener(generalListener);
+                    animalCardFragment.show(getChildFragmentManager(), "DialogAnimalCardFragment");
+                });
 
-            shareProfile.setOnClickListener(v -> {
-                DialogAnimalCardFragment animalCardFragment = new DialogAnimalCardFragment(mAnimal);
-                animalCardFragment.setAnimalProfileListener(generalListener);
-                animalCardFragment.show(getChildFragmentManager(), "DialogAnimalCardFragment");
-            });
+                btnQrCodeGenerator.setOnClickListener(v -> {
+                    BsdDialogQr bsdDialogQr = new BsdDialogQr(mAnimal.getMicrochipCode(), mAnimal.getName(), mAnimal.getOwner(), false);
+                    bsdDialogQr.show(getChildFragmentManager(), "BsdDialogQr");
+                });
 
-            btnQrCodeGenerator.setOnClickListener(v -> {
-                BsdDialogQr bsdDialogQr = new BsdDialogQr(mAnimal.getMicrochipCode(), mAnimal.getName(), mAnimal.getOwner(), false);
-                bsdDialogQr.show(getChildFragmentManager(), "BsdDialogQr");
-            });
-
-            updateProfile.setOnClickListener(v -> {
-                dialogEditAnimalDataFragment.setAnimal(mAnimal);
-                dialogEditAnimalDataFragment.setVeterinarianList(passionateListener.getVeterinarianList());
-                dialogEditAnimalDataFragment.show(requireActivity().getSupportFragmentManager(),
-                        "DialogEditAnimalDataFragment");
-            });
+                updateProfile.setOnClickListener(v -> {
+                    dialogEditAnimalDataFragment.setAnimal(mAnimal);
+                    dialogEditAnimalDataFragment.setVeterinarianList(passionateListener.getVeterinarianList());
+                    dialogEditAnimalDataFragment.show(requireActivity().getSupportFragmentManager(),
+                            "DialogEditAnimalDataFragment");
+                });
+            } else {
+                updateProfile.setVisibility(View.GONE);
+                shareProfile.setVisibility(View.GONE);
+                btnQrCodeGenerator.setVisibility(View.GONE);
+            }
         } else {
             updateProfile.setVisibility(View.GONE);
             shareProfile.setVisibility(View.GONE);
@@ -257,10 +274,13 @@ public class AnimalProfile extends Fragment implements
         Adapter adapter = new Adapter(getChildFragmentManager());
         String animal = mAnimal.getMicrochipCode();
 
-        adapter.addFragment(new PhotoDiaryFragment(animal, mAnimal.getOwner(), viewMode), "Photo diary");
+        /*adapter.addFragment(new PhotoDiaryFragment(animal, mAnimal.getOwner(), viewMode), "Photo diary");
+        adapter.addFragment(new DiagnosisFragment(animal, mAnimal.getOwner(), viewMode), "Diagnosi");
+        adapter.addFragment(new ExamsFragment(animal, mAnimal.getOwner(), viewMode),"Esami"); //TODO:Stringhe*/
 
-        adapter.addFragment(new DiagnosisFragment(animal, mAnimal.getOwner()), "Diagnosi");
-        adapter.addFragment(new ExamsFragment(animal, mAnimal.getOwner()),"Esami"); //TODO:Stringhe
+        adapter.addFragment(new PhotoDiaryFragment(mAnimal, user, viewMode), "Photo diary");
+        adapter.addFragment(new DiagnosisFragment(mAnimal, user, viewMode), "Diagnosi");
+        adapter.addFragment(new ExamsFragment(mAnimal, user, viewMode),"Esami"); //TODO:Stringhe
 
         viewPager.setAdapter(adapter);
     }
@@ -301,7 +321,6 @@ public class AnimalProfile extends Fragment implements
         if ((getActivity()) instanceof PassionateNavigationActivity) {
             passionateListener.onDialogChoosedVeterinarian(mAnimal);
         }
-
         generalListener.onAnimalUpdated(mAnimal);
     }
 }

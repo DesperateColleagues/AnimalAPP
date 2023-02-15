@@ -63,6 +63,7 @@ import it.uniba.dib.sms22235.adapters.animals.AnimalPostAdapter;
 import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.entities.operations.Request;
+import it.uniba.dib.sms22235.entities.users.AbstractPersonUser;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.ImportedAnimal;
 import it.uniba.dib.sms22235.entities.users.Organization;
@@ -337,6 +338,11 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
             navView.setVisibility(View.VISIBLE);
             fab.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public Organization getUser() {
+        return organization;
     }
 
     @Override

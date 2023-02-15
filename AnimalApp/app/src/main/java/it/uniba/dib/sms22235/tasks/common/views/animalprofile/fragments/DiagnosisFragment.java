@@ -24,29 +24,31 @@ import java.util.Locale;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.animals.AnimalDiagnosisAdapter;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
+import it.uniba.dib.sms22235.entities.users.AbstractPersonUser;
+import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.DialogEntityDetailsFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.BSDialogEditDiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.DialogAddDiagnosisFragment;
 import it.uniba.dib.sms22235.utils.InterfacesOperationsHelper;
+import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
 public class DiagnosisFragment extends Fragment implements
         DialogAddDiagnosisFragment.DialogAddDiagnosisFragmentListener {
 
-    private final String animal;
-    private final String owner;
-
+    private final Animal animal;
+    private AbstractPersonUser user;
     private RecyclerView diagnosisRecyclerView;
     private AnimalDiagnosisAdapter adapter;
-
     private DiagnosisFragmentListener listener;
-
     private FirebaseAuth mAuth;
+    private int viewMode;
 
-    public DiagnosisFragment(String animal, String owner) {
+    public DiagnosisFragment(Animal animal, AbstractPersonUser user, int viewMode) {
         this.animal = animal;
-        this.owner = owner;
+        this.user = user;
+        this.viewMode = viewMode;
     }
 
     public interface DiagnosisFragmentListener {
@@ -84,7 +86,7 @@ public class DiagnosisFragment extends Fragment implements
 
         Button btnAddAnimalOperation = view.findViewById(R.id.btnAddAnimalOperation);
 
-        if ((getActivity()) instanceof VeterinarianNavigationActivity) {
+        if ((getActivity()) instanceof VeterinarianNavigationActivity && viewMode != KeysNamesUtils.AnimalInformationViewModeFields.VIEW_ONLY) {
             btnAddAnimalOperation.setVisibility(View.VISIBLE);
             btnAddAnimalOperation.setText(getResources().getString(R.string.aggiungi_diagnosi));
             btnAddAnimalOperation.setOnClickListener(v -> {
@@ -92,10 +94,10 @@ public class DiagnosisFragment extends Fragment implements
                 dialogAddDiagnosisFragment.setListener(this);
                 dialogAddDiagnosisFragment.show(getParentFragmentManager(), "DialogAddDiagnosisFragment");
             });
-            listener.getAnimalDiagnosis(adapter, diagnosisRecyclerView, animal, onClickEditListener);
+            listener.getAnimalDiagnosis(adapter, diagnosisRecyclerView, animal.getMicrochipCode(), onClickEditListener);
         } else {
             btnAddAnimalOperation.setVisibility(View.GONE);
-            listener.getAnimalDiagnosis(adapter, diagnosisRecyclerView, animal, onClickViewListener);
+            listener.getAnimalDiagnosis(adapter, diagnosisRecyclerView, animal.getMicrochipCode(), onClickViewListener);
         }
 
         diagnosisRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false));
@@ -110,7 +112,7 @@ public class DiagnosisFragment extends Fragment implements
         SimpleDateFormat timeSDF = new SimpleDateFormat("HH:mm", Locale.ITALY);
         String timeAdded = timeSDF.format(new Date());
 
-        diagnosis.setAnimal(animal);
+        diagnosis.setAnimal(animal.getMicrochipCode());
         diagnosis.setDateAdded(dateAdded);
         diagnosis.setTimeAdded(timeAdded);
 

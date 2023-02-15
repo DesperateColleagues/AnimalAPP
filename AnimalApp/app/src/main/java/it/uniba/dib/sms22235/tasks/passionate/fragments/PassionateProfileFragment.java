@@ -30,7 +30,6 @@ import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 import org.jetbrains.annotations.Contract;
-import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -107,8 +106,8 @@ public class PassionateProfileFragment extends Fragment implements
 
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, animal);
-                            bundle.putInt("ViewMode", 1);
-
+                            bundle.putSerializable("UserObject",((NavigationActivityInterface) requireActivity()).getUser());
+                            bundle.putInt("ViewMode", KeysNamesUtils.AnimalInformationViewModeFields.VIEW_ONLY);
                             controller.navigate(R.id.action_passionate_profile_to_animalProfile, bundle);
                         }
                     });
@@ -278,7 +277,7 @@ public class PassionateProfileFragment extends Fragment implements
                 public void onClick(View view, int position) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, animalListAdapter.getAnimalAtPosition(position));
-                    bundle.putInt("ViewMode", 0);
+                    bundle.putInt("ViewMode", KeysNamesUtils.AnimalInformationViewModeFields.PHOTO_ONLY);
                     controller.navigate(R.id.action_passionate_profile_to_animalProfile, bundle);
                 }
 
