@@ -80,7 +80,6 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
     private String animalMicrochip;
     private Animal animal;
     private AbstractPersonUser user;
-    private FirebaseAuth mAuth;
     private int viewMode;
 
     private final ActivityResultLauncher<Intent> cropResult = registerForActivityResult(
@@ -131,14 +130,6 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
         throw new UnsupportedOperationException();
     }
 
-    public PhotoDiaryFragment(String animalMicrochip, String owner) {
-        this.animalMicrochip = animalMicrochip;
-    }
-
-    public PhotoDiaryFragment(String animalMicrochip, String owner, int viewMode) {
-        this.animalMicrochip = animalMicrochip;
-        this.viewMode = viewMode;
-    }
 
     public PhotoDiaryFragment(Animal animal, AbstractPersonUser user, int viewMode) {
         this.animal = animal;
@@ -166,7 +157,6 @@ public class PhotoDiaryFragment extends Fragment implements DialogShowImage.Dial
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         posts = new ArrayList<>();
-        mAuth = FirebaseAuth.getInstance();
         return inflater.inflate(R.layout.fragment_passionate_photo_diary, container, false);
     }
 

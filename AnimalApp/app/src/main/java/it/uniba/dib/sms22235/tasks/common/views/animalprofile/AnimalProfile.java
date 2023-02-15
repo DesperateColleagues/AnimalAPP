@@ -139,8 +139,8 @@ public class AnimalProfile extends Fragment implements
         // Get the arguments obtained from the navigation
         if (arguments != null) {
             mAnimal = (Animal) arguments.get(KeysNamesUtils.BundleKeys.ANIMAL);
-            viewMode = arguments.getInt("ViewMode");
-            user = (AbstractPersonUser) arguments.getSerializable("UserObject");
+            viewMode = arguments.getInt(KeysNamesUtils.BundleKeys.VIEW_MODE);
+            user = (AbstractPersonUser) arguments.getSerializable(KeysNamesUtils.BundleKeys.USER_OBJECT);
             Log.e("AnimalAPP - AnimalProfile", "AnimalProfile:144 - ViewMode: " + viewMode);
         }
 
@@ -254,7 +254,7 @@ public class AnimalProfile extends Fragment implements
         ImageView animalPosition = view.findViewById(R.id.animalPosition);
 
         animalPosition.setOnClickListener(view1 -> {
-            Toast.makeText(getContext(), "Rosso: in stallo\nVerde: a casa", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.a_casa_o_in_stallo), Toast.LENGTH_SHORT).show();
         });
 
         generalListener.checkIfAtHome(mAnimal, animalPosition);
@@ -274,13 +274,9 @@ public class AnimalProfile extends Fragment implements
         Adapter adapter = new Adapter(getChildFragmentManager());
         String animal = mAnimal.getMicrochipCode();
 
-        /*adapter.addFragment(new PhotoDiaryFragment(animal, mAnimal.getOwner(), viewMode), "Photo diary");
-        adapter.addFragment(new DiagnosisFragment(animal, mAnimal.getOwner(), viewMode), "Diagnosi");
-        adapter.addFragment(new ExamsFragment(animal, mAnimal.getOwner(), viewMode),"Esami"); //TODO:Stringhe*/
-
-        adapter.addFragment(new PhotoDiaryFragment(mAnimal, user, viewMode), "Photo diary");
-        adapter.addFragment(new DiagnosisFragment(mAnimal, user, viewMode), "Diagnosi");
-        adapter.addFragment(new ExamsFragment(mAnimal, user, viewMode),"Esami"); //TODO:Stringhe
+        adapter.addFragment(new PhotoDiaryFragment(mAnimal, user, viewMode), getString(R.string.photo_diary));
+        adapter.addFragment(new DiagnosisFragment(mAnimal, user, viewMode), getString(R.string.title_fragment_diagnosis));
+        adapter.addFragment(new ExamsFragment(mAnimal, user, viewMode),getString(R.string.title_fragment_exams));
 
         viewPager.setAdapter(adapter);
     }

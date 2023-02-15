@@ -38,12 +38,10 @@ public class DiagnosisFragment extends Fragment implements
         DialogAddDiagnosisFragment.DialogAddDiagnosisFragmentListener {
 
     private final Animal animal;
-    private AbstractPersonUser user;
-    private RecyclerView diagnosisRecyclerView;
+    private final AbstractPersonUser user;
     private AnimalDiagnosisAdapter adapter;
     private DiagnosisFragmentListener listener;
-    private FirebaseAuth mAuth;
-    private int viewMode;
+    private final int viewMode;
 
     public DiagnosisFragment(Animal animal, AbstractPersonUser user, int viewMode) {
         this.animal = animal;
@@ -73,7 +71,6 @@ public class DiagnosisFragment extends Fragment implements
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mAuth = FirebaseAuth.getInstance();
         return inflater.inflate(R.layout.fragment_simple_vertical_list, container, false);
     }
 
@@ -81,7 +78,7 @@ public class DiagnosisFragment extends Fragment implements
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        diagnosisRecyclerView = view.findViewById(R.id.recyclerVerticalList);
+        RecyclerView diagnosisRecyclerView = view.findViewById(R.id.recyclerVerticalList);
         adapter = new AnimalDiagnosisAdapter();
 
         Button btnAddAnimalOperation = view.findViewById(R.id.btnAddAnimalOperation);
@@ -147,17 +144,17 @@ public class DiagnosisFragment extends Fragment implements
 
     private void showInfo(Diagnosis diagnosis) {
         String info = "• <b>" +
-                "Animale" +
+                getResources().getString(R.string.animale) +
                 ": </b>"+
                 diagnosis.getAnimal() +
                 "\n<br>" +
                 "• <b>" +
-                "Descrizione" +
+                getResources().getString(R.string.descrizione) +
                 ": </b>"+
                 diagnosis.getDescription() +
                 "\n<br>" +
                 "• <b>" +
-                "Data aggiunta al sistema" +
+                getResources().getString(R.string.diagnosis_date_added_system) +
                 ": </b>" +
                 diagnosis.getDateAdded();
         DialogEntityDetailsFragment entityDetailsFragment = new DialogEntityDetailsFragment(info);

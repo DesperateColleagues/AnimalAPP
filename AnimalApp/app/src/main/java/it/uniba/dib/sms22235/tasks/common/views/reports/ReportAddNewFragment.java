@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -141,8 +142,7 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
         if (isGranted) {
             this.isGranted = true;
         } else {
-            Toast.makeText(getContext(), "Impossibile effettuare ricerche: abilitare " +
-                            "il permesso alla posizione",
+            Toast.makeText(getContext(), getString(R.string.location_permission),
                     Toast.LENGTH_SHORT).show();
             this.isGranted = false;
         }
@@ -246,21 +246,17 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
             if (ActivityCompat.checkSelfPermission(getContext(), permissionAccessFineLocation) == PackageManager.PERMISSION_GRANTED ||
                     ActivityCompat.checkSelfPermission(getContext(), permissionAccessCoarseLocation) == PackageManager.PERMISSION_GRANTED || isGranted) {
                 getCurrentLocation();
-            } else  if (shouldShowRequestPermissionRationale(permissionAccessFineLocation)) {
-                String info = "Il permesso <b>POSIZIONE</b> è essenziale per poter gestire tutte" +
-                        " le informazioni relative alle segnalazione. Senza di esso non ti sarà possibile " +
-                        "<br>• Inserire una nuova segnalazione" +
-                        "<br>• Filtrare le segnalazioni esistenti";
+            } else if (shouldShowRequestPermissionRationale(permissionAccessFineLocation)) {
 
                 @SuppressLint("InflateParams")
                 View titleView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_dialogs_title, null);
                 TextView titleText = titleView.findViewById(R.id.dialog_title);
-                titleText.setText("Perchè accettare il permesso");
+                titleText.setText(getString(R.string.title_location_permission_spiegazione));
 
-                DialogEntityDetailsFragment dialogEntityDetailsFragment = new DialogEntityDetailsFragment(info);
+                DialogEntityDetailsFragment dialogEntityDetailsFragment = new DialogEntityDetailsFragment(getString(R.string.location_permission_spiegazione));
                 dialogEntityDetailsFragment.setTitleView(titleView);
-                dialogEntityDetailsFragment.setPositiveButton("Chiudi", (dialog, which) -> dialog.dismiss());
-                dialogEntityDetailsFragment.setNegativeButton("Chiedi permesso", ((dialog, which) -> {
+                dialogEntityDetailsFragment.setPositiveButton(getString(R.string.cancella), (dialog, which) -> dialog.dismiss());
+                dialogEntityDetailsFragment.setNegativeButton(getString(R.string.chiedi_permesso), ((dialog, which) -> {
                     requestPermissionLauncher.launch(permissionAccessFineLocation);
                     dialog.dismiss();
                 }));
@@ -289,7 +285,7 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
 
             // If the obligatory fields are filled then the report is ready to be submitted
             if (report.reportReady()) {
-                Toast.makeText(getContext(), "Report pronto per essere inserito", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Report pronto per essere inserito", Toast.LENGTH_SHORT).show();
 
                 // If the picture uri is empty, just save the report to the FireStore
                 // otherwise save the report's picture and the report reference to FireStore
@@ -298,7 +294,7 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
                             .document(report.getReportId())
                             .set(report)
                             .addOnSuccessListener(unused -> {
-                                Toast.makeText(getContext(), "Segnalazione inserita con successo", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), getString(R.string.segnalazione_inserita_successo), Toast.LENGTH_SHORT).show();
                                 controller.popBackStack();
                             });
                 } else {
@@ -312,7 +308,7 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
 
                     // Give to the user a feedback to wait
                     ProgressDialog progressDialog = new ProgressDialog(requireContext(),R.style.Widget_App_ProgressDialog);
-                    progressDialog.setMessage("Salvando l'immagine...");
+                    progressDialog.setMessage(getString(R.string.salvando_immagine));
                     progressDialog.show();
 
                     // Start the upload task
@@ -328,7 +324,7 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
                                                 .document(report.getReportId())
                                                 .set(report)
                                                 .addOnSuccessListener(unused -> {
-                                                    Toast.makeText(getContext(), "Segnalazione inserita con successo", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(getContext(), getString(R.string.segnalazione_inserita_successo), Toast.LENGTH_SHORT).show();
                                                     progressDialog.dismiss();
                                                     controller.popBackStack();
                                                 });
@@ -408,7 +404,16 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
                 txtPositionSumUp.setText(addresses.get(0).getAddressLine(0));
                 report.setReportAddress(addresses.get(0).getAddressLine(0));
             } else {
-                txtPositionSumUp.setText("Latitudine: " + latitude + "\nLongitudine: " + longitude);
+                txtPositionSumUp.setText(
+                        new StringBuilder()
+                                .append(getString(R.string.latitudine))
+                                .append(" ")
+                                .append(latitude)
+                                .append("\n")
+                                .append(getString(R.string.longitudine))
+                                .append(" ")
+                                .append(longitude)
+                );
                 report.setReportAddress("");
             }
 
@@ -422,7 +427,12 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
 
     @Override
     public void onInfoAdded(String title, String description) {
-        txtReportDetailTitle.setText("Segnalazione - " + title);
+        txtReportDetailTitle.setText(
+                new StringBuilder()
+                        .append(getString(R.string.segnalazione))
+                        .append(" ")
+                        .append(title)
+                        );
         txtReportDescription.setVisibility(View.VISIBLE);
         txtReportDescription.setText(description);
 

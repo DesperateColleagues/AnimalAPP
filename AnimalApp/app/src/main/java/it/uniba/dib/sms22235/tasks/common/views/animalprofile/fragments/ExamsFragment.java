@@ -39,11 +39,8 @@ DialogAddExamFragment.DialogAddExamFragmentListener {
 
     private final Animal animal;
     private AbstractPersonUser user;
-    private RecyclerView examsRecyclerView;
     private AnimalExamsAdapter adapter;
-    private FirebaseAuth mAuth;
-    private InterfacesOperationsHelper helper;
-    private int viewMode;
+    private final int viewMode;
 
     public ExamsFragment(Animal animal, AbstractPersonUser user, int viewMode) {
         this.animal = animal;
@@ -61,7 +58,7 @@ DialogAddExamFragment.DialogAddExamFragmentListener {
     @Override
     public void onAttach(@NonNull Context context) {
         NavigationActivityInterface activity = (NavigationActivityInterface) getActivity();
-        helper = new InterfacesOperationsHelper(getContext());
+        InterfacesOperationsHelper helper = new InterfacesOperationsHelper(getContext());
         try {
             // Attach the listener to the Fragment
             listener = (ExamsFragment.ExamsFragmentListener) context;
@@ -77,7 +74,6 @@ DialogAddExamFragment.DialogAddExamFragmentListener {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mAuth = FirebaseAuth.getInstance();
         return inflater.inflate(R.layout.fragment_simple_vertical_list, container, false);
     }
 
@@ -85,7 +81,7 @@ DialogAddExamFragment.DialogAddExamFragmentListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        examsRecyclerView = view.findViewById(R.id.recyclerVerticalList);
+        RecyclerView examsRecyclerView = view.findViewById(R.id.recyclerVerticalList);
         adapter = new AnimalExamsAdapter();
         adapter.setContext(getContext());
 

@@ -80,7 +80,7 @@ public class ReportDetailFragment extends Fragment {
         txtReportDetailTitle.setText(report.getReportTitle());
         txtReportDescriptionDetail.setText(report.getReportDescription());
         txtPositionSumUpDetail.setText(report.getReportAddress());
-        txtReportReporterDetail.setText("Dati segnalatore:\n- " + report.getReporter());
+        txtReportReporterDetail.setText(getString(R.string.segnalatore) + " " + report.getReporter());
 
         if (!report.getReportAnimal().equals("")) {
             txtReportAnimalDetail.setText(report.getReportAnimal());
@@ -110,7 +110,7 @@ public class ReportDetailFragment extends Fragment {
         @SuppressLint("UseCompatLoadingForDrawables") final Drawable marker =
                 requireContext().getResources().getDrawable(org.osmdroid.library.R.drawable.marker_default);
 
-        OverlayItem item = new OverlayItem("Posizione segnalazione", "", startPoint);
+        OverlayItem item = new OverlayItem(getString(R.string.posizione_segnalazione), "", startPoint);
         item.setMarker(marker);
         overlayArray.add(item);
 
@@ -134,7 +134,7 @@ public class ReportDetailFragment extends Fragment {
         btnReportMapIntent.setOnClickListener(v -> {
             double myLatitude = report.getLat();
             double myLongitude = report.getLon();
-            String labelLocation = "Segnalazione " + report.getReporter();
+            String labelLocation = getString(R.string.segnalazione) + " " + report.getReporter();
 
             Intent intent = new Intent(Intent.ACTION_VIEW,
                     Uri.parse("geo:<" + myLatitude  + ">,<" + myLongitude + ">?q=<" +
@@ -155,7 +155,7 @@ public class ReportDetailFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, animal);
                     bundle.putBoolean(KeysNamesUtils.BundleKeys.ANIMAL_SHOW_ONLY, true);
-                    bundle.putInt("ViewMode", KeysNamesUtils.AnimalInformationViewModeFields.NONE);
+                    bundle.putInt(KeysNamesUtils.BundleKeys.VIEW_MODE, KeysNamesUtils.AnimalInformationViewModeFields.NONE);
                     navController.navigate(R.id.action_reportDetailFragment_to_animalProfile, bundle);
                 }));
 

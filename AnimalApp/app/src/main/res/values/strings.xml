@@ -3,10 +3,17 @@
 
     <string name="hello_blank_fragment">Fragment vuoto</string>
 
+    <!-- Stringhe sottostanti utili per dialogs -->
+    <string name="ok">OK</string>
+    <string name="conferma">Conferma</string>
+    <string name="cancella">Cancella</string>
+    <string name="modifica">Modifica</string>
     <string name="error_generic">Errore generico, contattare gli sviluppatori</string>
     <string name="error_offline">Sezione non disponibile in modalità offline</string>
     <string name="error_date">La data selezionata si trova nel futuro</string>
     <string name="alcuni_campi_vuoti">Campi vuoti!</string>
+    <string name="salvando_immagine">Salvando l\'immagine…</string>
+    <string name="salvata_immagine">Immagine caricata con successo!</string>
 
     <string name="chilometri">" Chilometri"</string>
 
@@ -24,6 +31,9 @@
     <string name="camera_permission">Operazione non completata.
         In caso di schermata nera, verificare i permessi dell\'applicazione.</string>
     <string name="location_permission">Impossibile effettuare ricerche: permesso posizione mancante.</string>
+    <string name="location_permission_spiegazione">Il permesso <b>POSIZIONE</b> è essenziale per poter gestire tutte le informazioni relative alle segnalazione. Senza di esso non ti sarà possibile inserire una nuove segnalazioni e filtrare le segnalazioni esistenti</string>
+    <string name="title_location_permission_spiegazione">Perchè accettare il permesso</string>
+    <string name="chiedi_permesso">"Chiedi permesso</string>
     <string name="dettagli_profilo">Dettagli profilo utente</string>
 
 
@@ -70,7 +80,7 @@
     <string name="aggiungi_animale">Aggiungi animale</string>
     <string name="nome_animale">Nome animale</string>
     <string name="specie_animale">Specie animale</string>
-    <string name="razza">Razza</string>
+    <string name="razza">Razza animale</string>
     <string name="animal_profile_help">Clicca sul nome dell\'animale per andare al suo AnimalProfile</string>
     <string name="codice_microchip">Codice microchip</string>
     <string name="data_di_nascita">Data di nascita</string>
@@ -81,6 +91,11 @@
     <string name="seleziona_immagine">Seleziona immagine</string>
     <string name="salva">Salva</string>
     <string name="titolo_immagine">Titolo immagine</string>
+
+    <!-- Stringhe sottostanti riferite all' AnimalProfile -->
+    <string name="a_casa_o_in_stallo">"Rosso: in stallo\nVerde: a casa"</string>
+    <string name="title_fragment_diagnosis">Elenco diagnosi</string>
+    <string name="title_fragment_exams">Elenco esami</string>
 
     <!-- Stringhe sottostanti riferite alle prenotazioni del passionate -->
     <string name="aggiungi_appuntamento">Aggiungi appuntamento</string>
@@ -144,11 +159,6 @@
     <string name="inserimento_spesa">Inserimento spesa</string>
     <string name="date">Date</string>
 
-    <!-- Stringhe sottostanti utili per dialogs -->
-
-    <string name="ok">OK</string>
-    <string name="conferma">Conferma</string>
-    <string name="cancella">Cancella</string>
 
     <!-- Stringhe sottostanti riferite alle richieste -->
     <string name="title_fragment_requests">Richieste &amp; offerte</string>
@@ -164,10 +174,21 @@
     <string name="conferma_richiesta_messaggio">Vuoi contrassegnare come "completato" questo elemento?</string>
     <string name="ricarica_sessione">Spostamento completato, riesegui il login</string>
     <string name="completa_richiesta">Completamento richiesta</string>
+
+    <string name="descrizione_stallo">Breve descrizione dello stallo</string>
+    <string name="descrizione_stallo_inserita_successo">Descrizione stallo inserita correttamente</string>
+    <string name="inserisci_descrizione_stallo">Inserisci descrizione stallo</string>
     <string name="aggiungi_nuovo_backbench">Aggiungi animale allo stallo temporaneo</string>
+    <string name="modifica_immagine_stallo">Modifica immagine stallo</string>
 
     <!-- Stringhe sottostanti riferite alle segnalazioni -->
+    <string name="segnalazione">Segnalazione -</string>
+    <string name="latitudine">Latitudine</string>
+    <string name="longitudine">Longitudine</string>
     <string name="modifica_segnalazione">Modifica segnalazione</string>
+    <string name="segnalazione_inserita_successo">Segnalazione inserita con successo</string>
+    <string name="segnalatore">Utente segnalatore: </string>
+    <string name="posizione_segnalazione">Posizione segnalazione</string>
 
     <string name="animal_profile_infos">
         ·<b>Specie:</b>* \n·<b>Razza:</b>*\n<br/>·<b>Data di nascita:</b>*\n<br/>·<b>Codice microchip:*</b>
@@ -184,6 +205,9 @@
     <string name="seleziona_amico">Seleziona amico</string>
 
     <string name="completa_inserimento">Completa inserimento</string>
+
+    <!-- Stringhe sottostanti riferite alle diagnosi -->
+    <string name="diagnosis_date_added_system">Data aggiunta al sistema</string>
 
     <!-- Perchè non lasciare qualche easter egg? -->
 

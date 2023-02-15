@@ -150,13 +150,11 @@ public class BackBenchFragment extends Fragment {
 
         btnAddBackBenchDescription.setOnClickListener(v -> {
             EditText inputEditTextField = new EditText(getContext());
-            inputEditTextField.setHint("Descrizione stallo");
-
-            // todo: refactor dialog
+            inputEditTextField.setHint(getResources().getString(R.string.descrizione_stallo));
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.AnimalCardRoundedDialog)
                     .setView(inputEditTextField)
-                    .setPositiveButton("Conferma", (dialogInterface, i) -> {
+                    .setPositiveButton(getString(R.string.conferma), (dialogInterface, i) -> {
                         String description = inputEditTextField.getText().toString();
 
                         if (!description.equals("")) {
@@ -166,16 +164,16 @@ public class BackBenchFragment extends Fragment {
                                     .document(KeysNamesUtils.FileDirsNames.backBenchPic(ownerEmail))
                                     .set(backbench)
                                     .addOnSuccessListener(unused ->
-                                            Toast.makeText(getContext(), "Descrizione stallo inserita correttamente",
+                                            Toast.makeText(getContext(), getResources().getString(R.string.descrizione_stallo_inserita_successo),
                                                     Toast.LENGTH_SHORT).show());
                         }
                     })
-                    .setNegativeButton("Annulla", null);
+                    .setNegativeButton(getString(R.string.cancella), null);
 
             // Set dialog title
             View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
             TextView titleText = titleView.findViewById(R.id.dialog_title);
-            titleText.setText("Inserisci descrizione stallo");
+            titleText.setText(getResources().getString(R.string.inserisci_descrizione_stallo));
             builder.setCustomTitle(titleView);
 
             builder.create().show();
@@ -200,7 +198,7 @@ public class BackBenchFragment extends Fragment {
 
         // Give to the user a feedback to wait
         ProgressDialog progressDialog = new ProgressDialog(requireContext(),R.style.Widget_App_ProgressDialog);
-        progressDialog.setMessage("Salvando l'immagine...");
+        progressDialog.setMessage(getString(R.string.salvando_immagine));
         progressDialog.show();
 
         // Start the upload task
@@ -214,7 +212,7 @@ public class BackBenchFragment extends Fragment {
                                     .document(KeysNamesUtils.FileDirsNames.backBenchPic(email))
                                     .set(backbench)
                                     .addOnSuccessListener(unused -> {
-                                        Toast.makeText(getContext(), "Immagine stallo caricata", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), getResources().getString(R.string.salvata_immagine), Toast.LENGTH_SHORT).show();
                                         progressDialog.dismiss();
                                     });
                         });
@@ -247,12 +245,12 @@ public class BackBenchFragment extends Fragment {
                             backbench = Backbench.loadBackbench(change.getDocument());
                             txtBackbenchDescription.setText(backbench.getDescription());
                             if(!backbench.getDescription().equals("")) {
-                                btnAddBackBenchDescription.setText("Modifica");
+                                btnAddBackBenchDescription.setText(getResources().getString(R.string.modifica));
                             }
                             if (isAdded()) {
-                                Glide.with(getActivity()).load(backbench.getDownloadableImage()).into(imgBackbench); //todo check edit
+                                Glide.with(getActivity()).load(backbench.getDownloadableImage()).into(imgBackbench);
                                 //Fragment BackBenchFragment not attached to a context.
-                                btnAddBackBenchImage.setText("Modifica immagine stallo");
+                                btnAddBackBenchImage.setText(getResources().getString(R.string.modifica_immagine_stallo));
                             }
                         }
                     }
