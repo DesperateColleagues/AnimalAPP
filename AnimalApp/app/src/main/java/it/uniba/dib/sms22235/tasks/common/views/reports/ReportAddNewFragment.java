@@ -3,7 +3,6 @@ package it.uniba.dib.sms22235.tasks.common.views.reports;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,7 +14,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,8 +43,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+
 import com.yalantis.ucrop.UCrop;
 
 import org.osmdroid.util.GeoPoint;
@@ -62,7 +59,6 @@ import java.util.UUID;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Report;
 import it.uniba.dib.sms22235.entities.users.Animal;
-import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.DialogEntityDetailsFragment;
 import it.uniba.dib.sms22235.tasks.common.dialogs.reports.DialogMap;
@@ -70,7 +66,11 @@ import it.uniba.dib.sms22235.tasks.common.dialogs.reports.DialogReportAddInfo;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMapListener,
+/**
+ * This fragment is used to let the user insert all the data of a Report
+ * */
+public class ReportAddNewFragment extends Fragment implements
+        DialogMap.DialogMapListener,
         DialogReportAddInfo.DialogReportAddInfoListener {
 
     private ImageView imgReport;
@@ -94,6 +94,8 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
     private NavController controller;
 
     private boolean isGranted;
+
+    private ReportAdditionListener listener;
 
     private final ActivityResultLauncher<Intent> cropResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), resCrop -> {
@@ -147,6 +149,22 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
             this.isGranted = false;
         }
     });
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        NavigationActivityInterface activity = (NavigationActivityInterface) getActivity();
+
+        try {
+            // Attach the listener to the Fragment
+            listener = (ReportAdditionListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(
+                    (activity != null ? activity.toString() : null)
+                            + "Must implement the interface");
+        }
+
+        super.onAttach(context);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -290,47 +308,9 @@ public class ReportAddNewFragment extends Fragment implements DialogMap.DialogMa
                 // If the picture uri is empty, just save the report to the FireStore
                 // otherwise save the report's picture and the report reference to FireStore
                 if (report.getReportHelpPictureUri().equals("")) {
-                    db.collection(KeysNamesUtils.CollectionsNames.REPORTS)
-                            .document(report.getReportId())
-                            .set(report)
-                            .addOnSuccessListener(unused -> {
-                                Toast.makeText(getContext(), getString(R.string.segnalazione_inserita_successo), Toast.LENGTH_SHORT).show();
-                                controller.popBackStack();
-                            });
+                    listener.addBaseReport(report, db, controller, getContext());
                 } else {
-                    String fileName = report.getReportId();
-
-                    // Create the storage tree structure
-                    String fileReference = KeysNamesUtils.FileDirsNames.REPORT_POST +
-                            "/" + KeysNamesUtils.FileDirsNames.reportPic(ownerEmail) + "/" + fileName;
-
-                    StorageReference storageReference = storage.getReference(fileReference);
-
-                    // Give to the user a feedback to wait
-                    ProgressDialog progressDialog = new ProgressDialog(requireContext(),R.style.Widget_App_ProgressDialog);
-                    progressDialog.setMessage(getString(R.string.salvando_immagine));
-                    progressDialog.show();
-
-                    // Start the upload task
-                    UploadTask uploadTask = storageReference.putFile(Uri.parse(report.getReportHelpPictureUri()));
-
-                    uploadTask.addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            task.getResult().getStorage()
-                                    .getDownloadUrl().addOnCompleteListener(taskUri -> {
-                                        report.setReportHelpPictureUri(taskUri.getResult().toString());
-
-                                        db.collection(KeysNamesUtils.CollectionsNames.REPORTS)
-                                                .document(report.getReportId())
-                                                .set(report)
-                                                .addOnSuccessListener(unused -> {
-                                                    Toast.makeText(getContext(), getString(R.string.segnalazione_inserita_successo), Toast.LENGTH_SHORT).show();
-                                                    progressDialog.dismiss();
-                                                    controller.popBackStack();
-                                                });
-                                    });
-                        }
-                    });
+                    listener.addBaseReportWithImage(report, ownerEmail, db, storage, controller, getContext());
                 }
             }
         });

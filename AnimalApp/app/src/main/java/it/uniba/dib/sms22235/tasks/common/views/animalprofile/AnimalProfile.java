@@ -53,6 +53,9 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 public class AnimalProfile extends Fragment implements
         DialogEditAnimalDataFragment.DialogEditAnimalDataFragmentListener{
 
+    /**
+     * This interface is used to notify the events that occur in the AnimalProfile
+     * */
     public interface AnimalProfileListener {
         /**
          * This method is used to save to DB the animal profile pic
@@ -188,13 +191,16 @@ public class AnimalProfile extends Fragment implements
                 "• <b>" +
                 getResources().getString(R.string.data_di_nascita) +
                 ": </b>"+
-                mAnimal.getBirthDate() +
-                "\n<br>" +
-                "• <b>" +
-                getResources().getString(R.string.codice_microchip) +
-                ": </b>"+
-                mAnimal.getMicrochipCode() +
-                "\n<br>";
+                mAnimal.getBirthDate();
+
+        if (((NavigationActivityInterface) requireActivity()).getUserId().equals(mAnimal.getOwner())) {
+            info = info + "\n<br>" +
+                    "• <b>" +
+                    getResources().getString(R.string.codice_microchip) +
+                    ": </b>"+
+                    mAnimal.getMicrochipCode() +
+                    "\n<br>";
+        }
 
         ViewPager viewPager = view.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -212,7 +218,7 @@ public class AnimalProfile extends Fragment implements
 
         ImageButton shareProfile = view.findViewById(R.id.btnShareProfile);
         ImageButton btnQrCodeGenerator = view.findViewById(R.id.btnQrCodeGenerator);
-        // todo: check
+
         if (((NavigationActivityInterface) requireActivity()).getUser().getPurpose().equals(KeysNamesUtils.RolesNames.COMMON_USER) &&
                 ((NavigationActivityInterface) requireActivity()).getUser() instanceof Passionate) {
             if (((NavigationActivityInterface) requireActivity()).getUser().getUserIdentifier().equals(mAnimal.getOwner())) {
@@ -272,7 +278,6 @@ public class AnimalProfile extends Fragment implements
 
     private void setupViewPager(@NonNull ViewPager viewPager) {
         Adapter adapter = new Adapter(getChildFragmentManager());
-        String animal = mAnimal.getMicrochipCode();
 
         adapter.addFragment(new PhotoDiaryFragment(mAnimal, user, viewMode), getString(R.string.photo_diary));
         adapter.addFragment(new DiagnosisFragment(mAnimal, user, viewMode), getString(R.string.title_fragment_diagnosis));

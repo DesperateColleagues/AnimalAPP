@@ -52,6 +52,9 @@ import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDiaryFragment;
+import it.uniba.dib.sms22235.tasks.common.views.backbenches.BackbenchOperationsListener;
+import it.uniba.dib.sms22235.tasks.common.views.reports.ReportAdditionListener;
+import it.uniba.dib.sms22235.tasks.common.views.reports.ReportsListFragmentListener;
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsAnimalTransferOperationsListener;
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsStandardOperationListener;
 import it.uniba.dib.sms22235.tasks.login.LoginActivity;
@@ -72,7 +75,10 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         RequestsStandardOperationListener,
         UserProfileInfoFragmentListener,
         RequestsAnimalTransferOperationsListener,
-        NavigationActivityInterface {
+        NavigationActivityInterface,
+        ReportsListFragmentListener,
+        BackbenchOperationsListener,
+        ReportAdditionListener {
 
     private FloatingActionButton fab;
     private FirebaseFirestore db;

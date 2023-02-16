@@ -36,6 +36,9 @@ import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This fragment is used to show the detail of a report once the user clicks on it
+ * */
 public class ReportDetailFragment extends Fragment {
 
     private Report report = null;

@@ -110,7 +110,7 @@ public class DialogMap extends DialogFragment {
                 TextView titleText = titleView.findViewById(R.id.dialog_title);
                 titleText.setText("Conferma posizione");
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.AnimalCardRoundedDialog);
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme);
                 builder.setMessage("Sicuro di voler confermare la posizione inserita?")
                         .setCustomTitle(titleView)
                         .setPositiveButton("Conferma", ((dialog, which) -> {

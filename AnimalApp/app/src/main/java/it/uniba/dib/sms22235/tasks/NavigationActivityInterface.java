@@ -61,6 +61,11 @@ public interface NavigationActivityInterface {
      * */
     void restoreBottomAppBarVisibility();
 
+    /**
+     * This method return the user as person
+     *
+     * @return the user abstraction
+     * */
     AbstractPersonUser getUser();
 
 }

@@ -81,6 +81,8 @@ import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDiaryFragment;
+import it.uniba.dib.sms22235.tasks.common.views.reports.ReportAdditionListener;
+import it.uniba.dib.sms22235.tasks.common.views.reports.ReportsListFragmentListener;
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsAnimalTransferOperationsListener;
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsStandardOperationListener;
 import it.uniba.dib.sms22235.tasks.login.LoginActivity;
@@ -116,6 +118,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         RequestsStandardOperationListener,
         RequestsAnimalTransferOperationsListener,
         UserProfileInfoFragmentListener,
+        ReportsListFragmentListener,
+        ReportAdditionListener,
         Serializable {
 
     private transient FirebaseFirestore db;

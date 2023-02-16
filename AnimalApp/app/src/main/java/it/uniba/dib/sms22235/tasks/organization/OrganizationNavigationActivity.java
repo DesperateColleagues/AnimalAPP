@@ -74,6 +74,8 @@ import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDiaryFragment;
+import it.uniba.dib.sms22235.tasks.common.views.reports.ReportAdditionListener;
+import it.uniba.dib.sms22235.tasks.common.views.reports.ReportsListFragmentListener;
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsAnimalTransferOperationsListener;
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsStandardOperationListener;
 import it.uniba.dib.sms22235.tasks.login.LoginActivity;
@@ -93,7 +95,9 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
         RequestsStandardOperationListener,
         UserProfileInfoFragmentListener,
         OrganizationAnimalListFragment.OrganizationAnimalsFragmentListener,
-        OrganizationProfileFragment.OrganizationProfileFragmentListener {
+        OrganizationProfileFragment.OrganizationProfileFragmentListener,
+        ReportsListFragmentListener,
+        ReportAdditionListener {
 
     private transient Organization organization;
 

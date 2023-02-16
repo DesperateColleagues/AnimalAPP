@@ -9,6 +9,10 @@ import androidx.annotation.Nullable;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This sub class of SQLiteOpenHelper is used to instantiate the DB using the common
+ * DB schema and contract classed
+ * */
 class DBHelper extends SQLiteOpenHelper {
     private final static int VERSION = 1;
     private final static String DB_NAME = "AnimalAppDb";

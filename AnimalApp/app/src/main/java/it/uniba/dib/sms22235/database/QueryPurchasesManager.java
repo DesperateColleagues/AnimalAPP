@@ -16,10 +16,16 @@ import java.util.List;
 import it.uniba.dib.sms22235.entities.operations.Interval;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This class serves as manager of all the query related to the purchases of the user
+ * */
 public class QueryPurchasesManager {
 
     private final DBHelper dbHelper;
 
+    /**
+     * @param context the context of the application
+     * */
     public QueryPurchasesManager(Context context){
         dbHelper = new DBHelper(context);
     }
@@ -263,9 +269,19 @@ public class QueryPurchasesManager {
     }
 
     /**
+     * This method is used to build the selection args array
+     *
+     * @param owner the owner of the purchases
+     * @param animals a list of the selected animals to search. Null if not present
+     * @param categories a list of the select categories to search. Null if not present
+     * @param costs an interval of cost to search. Null if not present
+     * @param dateFrom the lower bound of the date interval
+     * @param dateTo the upper bound of the date interval
+     *
+     * @return the selection args array
      * */
     @NonNull
-    private String [] buildSelectionArgs(String owner, List<String> animals, List<String> categories,
+    public String [] buildSelectionArgs(String owner, List<String> animals, List<String> categories,
                                          Interval<Float> costs, String dateFrom, String dateTo) {
         ArrayList<String> selectionArgs = new ArrayList<>();
 
@@ -299,7 +315,7 @@ public class QueryPurchasesManager {
      * @return the place holders' string
      * */
     @NonNull
-    private String makePlaceholders(int len) {
+    public String makePlaceholders(int len) {
         if (len < 1) {
             // It will lead to an invalid query anyway ..
             throw new RuntimeException("No placeholders");

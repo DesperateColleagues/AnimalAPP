@@ -151,6 +151,7 @@ public class InterfacesOperationsHelper {
                     });
         }
 
+        @SuppressLint("UseCompatLoadingForDrawables")
         public void loadProfilePic(String fileName, ImageView imageView) {
             db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
                     .whereEqualTo(KeysNamesUtils.PhotoDiaryFields.FILE_NAME, fileName)
@@ -171,6 +172,8 @@ public class InterfacesOperationsHelper {
                                 // Extract the post and load it with GLIDE
                                 PhotoDiaryPost post = PhotoDiaryPost.loadPhotoDiaryPost(change.getDocument());
                                 Glide.with(context).load(post.getPostUri()).into(imageView);
+                            } else {
+                                Glide.with(context).load(context.getDrawable(R.drawable.phd_circle)).into(imageView);
                             }
                         }
 

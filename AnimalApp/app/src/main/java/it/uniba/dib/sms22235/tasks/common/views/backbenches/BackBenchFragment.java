@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,8 +38,12 @@ import java.util.UUID;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.entities.operations.Backbench;
+import it.uniba.dib.sms22235.tasks.common.views.reports.ReportsListFragmentListener;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This fragment is used to add and display backbenches' info
+ * */
 public class BackBenchFragment extends Fragment {
 
     private FirebaseFirestore db;
@@ -51,6 +56,8 @@ public class BackBenchFragment extends Fragment {
 
     private Button btnAddBackBenchImage;
     private Button btnAddBackBenchDescription;
+
+    private BackbenchOperationsListener listener;
 
     public BackBenchFragment() {
         // not supported
@@ -101,6 +108,22 @@ public class BackBenchFragment extends Fragment {
                 }
             });
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        NavigationActivityInterface activity = (NavigationActivityInterface) getActivity();
+
+        try {
+            // Attach the listener to the Fragment
+            listener = (BackbenchOperationsListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(
+                    (activity != null ? activity.toString() : null)
+                            + "Must implement the interface");
+        }
+
+        super.onAttach(context);
+    }
+
     @SuppressLint("InflateParams")
     @Nullable
     @Override
@@ -123,7 +146,6 @@ public class BackBenchFragment extends Fragment {
 
         // Create a new backbench instance and load its info
         backbench = new Backbench(ownerEmail);
-        loadBackbenchInfo(ownerEmail);
 
         btnAddBackBenchImage = view.findViewById(R.id.btnAddBackBenchImage);
 
@@ -158,26 +180,21 @@ public class BackBenchFragment extends Fragment {
                         String description = inputEditTextField.getText().toString();
 
                         if (!description.equals("")) {
-                            backbench.setDescription(description);
-
-                            db.collection(KeysNamesUtils.CollectionsNames.BACKBENCH)
-                                    .document(KeysNamesUtils.FileDirsNames.backBenchPic(ownerEmail))
-                                    .set(backbench)
-                                    .addOnSuccessListener(unused ->
-                                            Toast.makeText(getContext(), getResources().getString(R.string.descrizione_stallo_inserita_successo),
-                                                    Toast.LENGTH_SHORT).show());
+                            listener.updateBackBenchDescription(description, ownerEmail, db, getContext());
                         }
                     })
                     .setNegativeButton(getString(R.string.cancella), null);
 
             // Set dialog title
-            View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+            @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
             TextView titleText = titleView.findViewById(R.id.dialog_title);
             titleText.setText(getResources().getString(R.string.inserisci_descrizione_stallo));
             builder.setCustomTitle(titleView);
 
             builder.create().show();
         });
+
+        loadBackbenchInfo(ownerEmail);
     }
 
     /**
@@ -187,37 +204,7 @@ public class BackBenchFragment extends Fragment {
      * @param email the email of the user whose adding the preview pic
      * */
     private void addBackbenchPic(Uri uri, String email) {
-        String fileName = KeysNamesUtils.FileDirsNames.backBenchPic(email);
-
-        // Create the storage tree structure
-        String fileReference = KeysNamesUtils.FileDirsNames.BACKBENCH_POST +
-                "/" + fileName;
-
-        StorageReference storageReference = storage.getReference(fileReference);
-
-
-        // Give to the user a feedback to wait
-        ProgressDialog progressDialog = new ProgressDialog(requireContext(),R.style.Widget_App_ProgressDialog);
-        progressDialog.setMessage(getString(R.string.salvando_immagine));
-        progressDialog.show();
-
-        // Start the upload task
-        UploadTask uploadTask = storageReference.putFile(uri);
-        uploadTask.addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                task.getResult().getStorage()
-                        .getDownloadUrl().addOnCompleteListener(taskUri -> {
-                            backbench.setDownloadableImage(taskUri.getResult().toString());
-                            db.collection(KeysNamesUtils.CollectionsNames.BACKBENCH)
-                                    .document(KeysNamesUtils.FileDirsNames.backBenchPic(email))
-                                    .set(backbench)
-                                    .addOnSuccessListener(unused -> {
-                                        Toast.makeText(getContext(), getResources().getString(R.string.salvata_immagine), Toast.LENGTH_SHORT).show();
-                                        progressDialog.dismiss();
-                                    });
-                        });
-            }
-        });
+        listener.updateBackbenchImage(email, db, storage, uri, getContext());
     }
 
     /**
@@ -226,7 +213,7 @@ public class BackBenchFragment extends Fragment {
      * @param email the email of the user whose info will be loaded
      * */
     private void loadBackbenchInfo(String email) {
-        db.collection(KeysNamesUtils.CollectionsNames.BACKBENCH)
+        /*db.collection(KeysNamesUtils.CollectionsNames.BACKBENCH)
                 .whereEqualTo(KeysNamesUtils.BackbenchFields.OWNER, email)
                 .addSnapshotListener((value, error) -> {
                     // Handle the error if the listening is not working
@@ -254,6 +241,18 @@ public class BackBenchFragment extends Fragment {
                             }
                         }
                     }
-                });
+                });*/
+
+        listener.loadBackbenchInfo(
+                db,
+                ownerEmail,
+                txtBackbenchDescription,
+                btnAddBackBenchDescription,
+                btnAddBackBenchImage,
+                imgBackbench,
+                getActivity(),
+                getContext(),
+                isAdded()
+        );
     }
 }

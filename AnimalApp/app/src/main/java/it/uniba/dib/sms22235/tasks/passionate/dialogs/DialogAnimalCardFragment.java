@@ -50,7 +50,7 @@ public class DialogAnimalCardFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle SavedInstanceBundle){
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 getContext(),
-                R.style.AnimalCardRoundedDialog);
+                R.style.AlertDialogTheme);
 
         // Create the inflater and inflate the layout
         LayoutInflater inflater = requireActivity().getLayoutInflater();
@@ -91,13 +91,13 @@ public class DialogAnimalCardFragment extends DialogFragment {
                 bitmap, UUID.randomUUID().toString(), null);
             Uri imageUri =  Uri.parse(path);
 
-            Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
-            whatsappIntent.setType("image/jpeg");
-            whatsappIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+            Intent mediaIntent = new Intent(Intent.ACTION_SEND);
+            mediaIntent.setType("image/jpeg");
+            mediaIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
             try {
-                startActivity(Intent.createChooser(whatsappIntent, "Select"));
+                startActivity(Intent.createChooser(mediaIntent, "Seleziona"));
             } catch (android.content.ActivityNotFoundException ex) {
-                Toast.makeText(requireContext(), "Whatsapp non installato", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "App per condividere immagine non installate sul dispositivo", Toast.LENGTH_SHORT).show();
             }
         });
 

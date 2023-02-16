@@ -24,6 +24,10 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.organization.OrganizationNavigationActivity;
 
+/**
+ * This fragment is used to display the ViewPager which holds the list
+ * of community and personal reports
+ * */
 public class ReportsDashboardFragment extends Fragment implements
         ReportsListFragment.ManageNavigationReports {
 

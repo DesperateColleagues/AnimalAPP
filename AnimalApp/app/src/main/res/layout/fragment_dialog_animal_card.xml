@@ -33,7 +33,7 @@
                 android:layout_marginBottom="15dp"
                 android:layout_gravity="center"
                 app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                tools:srcCompat="@drawable/phd_circle" />
+                tools:background="@drawable/phd_circle" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -91,7 +91,8 @@
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/txtAnimalCardMicrochipCode"
@@ -99,6 +100,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textColor="?attr/colorOnSecondary"
+                android:visibility="gone"
                 android:textAlignment="center"/>
 
         </LinearLayout>

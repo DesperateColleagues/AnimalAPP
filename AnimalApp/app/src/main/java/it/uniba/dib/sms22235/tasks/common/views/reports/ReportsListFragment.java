@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -26,8 +27,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -37,23 +36,24 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.checkerframework.checker.units.qual.A;
-
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.commonoperations.ReportsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Report;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.DialogEntityDetailsFragment;
-import it.uniba.dib.sms22235.tasks.common.dialogs.ReportsBSDialog;
-import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This fragment is used to show a list of reports. The class manages whether the user selects
+ * his own reports or the communities ones.
+ *
+ * @author Giacomo Detomaso - DesperateColleagues2.5
+ * */
 public class ReportsListFragment extends Fragment {
 
     private boolean isMine;
@@ -61,8 +61,7 @@ public class ReportsListFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseAuth auth;
 
-
-    private ArrayList<Report> reportsList;
+    private ArrayList<Report> communityReportsList;
     private ArrayList<Report> reportsListFiltered;
 
     private int counterTouchKm;
@@ -78,13 +77,34 @@ public class ReportsListFragment extends Fragment {
 
     private ManageNavigationReports manageNavigationReports;
 
+    private ReportsListFragmentListener listener;
+
     public void setManageNavigationReports(ManageNavigationReports manageNavigationReports) {
         this.manageNavigationReports = manageNavigationReports;
     }
 
+    /**
+     * This interface is used to perform navigation to various fragments of the reports section.
+     * The class that implements this interface must perform the navigation indicates by the contract.
+     * */
     public interface ManageNavigationReports {
+        /**
+         * This method is used to navigate to the report detail fragment
+         *
+         * @param bundle a bundle of data to pass to the fragment
+         * */
         void navigateToReportDetail(Bundle bundle);
+
+        /**
+         * This method is used to navigate to the fragment that allows user to add a new report
+         * */
         void navigateToAddNewReport();
+
+        /**
+         * This method is used to navigate to the fragment that allows user to add a new report
+         *
+         * @param bundle a bundle of data to pass to the fragment
+         * */
         void navigateToAddNewReport(Bundle bundle);
     }
 
@@ -115,7 +135,23 @@ public class ReportsListFragment extends Fragment {
     private boolean isGranted;
 
     public ReportsListFragment() {
-        reportsList = new ArrayList<>();
+        communityReportsList = new ArrayList<>();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        NavigationActivityInterface activity = (NavigationActivityInterface) getActivity();
+
+        try {
+            // Attach the listener to the Fragment
+            listener = (ReportsListFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(
+                    (activity != null ? activity.toString() : null)
+                            + "Must implement the interface");
+        }
+
+        super.onAttach(context);
     }
 
     @Nullable
@@ -151,6 +187,7 @@ public class ReportsListFragment extends Fragment {
         btnAddReport.setOnClickListener(v ->
                 manageNavigationReports.navigateToAddNewReport());
 
+        // Manage community requests
         if (!isMine) {
             btnAddReport.setVisibility(View.GONE);
 
@@ -161,48 +198,55 @@ public class ReportsListFragment extends Fragment {
             String permissionAccessCoarseLocation = Manifest.permission.ACCESS_COARSE_LOCATION;
 
             btnDistance.setOnClickListener(v -> {
+                // Before doing any kind of operations that requires position access, it is
+                // needed to check if the permissions are granted. It is used the classic pattern
+                // for permission's requests, with the rationale too. The permissions requested are
+                // ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION
                 if (ActivityCompat.checkSelfPermission(getContext(), permissionAccessFineLocation) == PackageManager.PERMISSION_GRANTED ||
                         ActivityCompat.checkSelfPermission(getContext(), permissionAccessCoarseLocation) == PackageManager.PERMISSION_GRANTED || isGranted) {
-                            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                                    locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                                reportsAdapterFiltered = new ReportsAdapter();
-                                reportsAdapterFiltered.setContext(requireContext());
 
-                                reportsListFiltered = new ArrayList<>();
+                    // If the permission is granted and GPS provider is enabled, it is possible
+                    // to perform filtering
+                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                            locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                        reportsAdapterFiltered = new ReportsAdapter();
+                        reportsAdapterFiltered.setContext(requireContext());
 
-                                String textBtn = "Tutte";
+                        reportsListFiltered = new ArrayList<>();
 
-                                if (counterTouchKm == 4) {
-                                    counterTouchKm = 0;
+                        String textBtn = "Tutte";
+
+                        if (counterTouchKm == 4) {
+                            counterTouchKm = 0;
                                     recyclerView.setAdapter(reportsAdapter);
-                                } else {
-                                    textBtn = (distanceMeters[counterTouchKm] / 1000) + getResources().getString(R.string.chilometri);
-                                    filterByCurrentLocation();
-                                    counterTouchKm++;
-                                }
+                        } else {
+                            textBtn = (distanceMeters[counterTouchKm] / 1000) + getResources().getString(R.string.chilometri);
+                            filterByCurrentLocation();
+                            counterTouchKm++;
+                        }
 
-                                btnDistance.setText(textBtn);
-                            } else {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme);
-                                @SuppressLint("InflateParams")
-                                View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
-                                TextView titleText = titleView.findViewById(R.id.dialog_title);
-                                titleText.setText("Abilita posizione");
-                                builder.setCustomTitle(titleView);
-                                builder.setMessage("Per accedere a questa funzione, è necessario abilitare la posizione");
-
-                                builder.setPositiveButton("Conferma", (dialog, which) -> {
-                                    // When location service is not enabled open location setting
-                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                                    dialog.dismiss();
-                                }).setNegativeButton("Annulla", ((dialog, which) -> {
-                                    dialog.dismiss();
-                                }));
-                                builder.create().show();
-                            }
+                        btnDistance.setText(textBtn);
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme);
+                        @SuppressLint("InflateParams")
+                        View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+                        TextView titleText = titleView.findViewById(R.id.dialog_title);
+                        titleText.setText("Abilita posizione");
+                        builder.setCustomTitle(titleView);
+                        builder.setMessage("Per accedere a questa funzione, è necessario abilitare la posizione");
+                        builder.setPositiveButton("Conferma", (dialog, which) -> {
+                            // When location service is not enabled open location setting
+                            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                            dialog.dismiss();
+                        }).setNegativeButton("Annulla", ((dialog, which) -> {
+                            dialog.dismiss();
+                        }));
+                        builder.create().show();
+                    }
 
                 } else if (shouldShowRequestPermissionRationale(permissionAccessFineLocation)) {
+                    // Prepare the explanation message
                     String info = "Il permesso <b>POSIZIONE</b> è essenziale per poter gestire tutte" +
                             " le informazioni relative alle segnalazione. Senza di esso non ti sarà possibile:<br> " +
                             "<br>• Inserire una nuova segnalazione" +
@@ -232,91 +276,38 @@ public class ReportsListFragment extends Fragment {
             view.findViewById(R.id.linearLocationFilter).setVisibility(View.GONE);
         }
 
-        // Manage reports of the current logged user
         if (isMine) {
-            db.collection(KeysNamesUtils.CollectionsNames.REPORTS)
-                    .whereEqualTo(KeysNamesUtils.ReportsFields.REPORTER, Objects.requireNonNull(auth.getCurrentUser()).getEmail())
-                    .get().addOnSuccessListener(queryDocumentSnapshots -> {
-                        List<DocumentSnapshot> reportsSnapshot = queryDocumentSnapshots.getDocuments();
-                        ArrayList<Report> reportsList = new ArrayList<>();
-
-                        if (reportsSnapshot.size() > 0) {
-                            for (DocumentSnapshot snapshot : reportsSnapshot) {
-                                reportsList.add(Report.loadReport(snapshot));
-                            }
-
-                            reportsAdapter.setReportsList(reportsList);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
-                                    RecyclerView.VERTICAL, false));
-                            recyclerView.setAdapter(reportsAdapter);
-
-                            // Set a listener that specify what to do when a mine reports is clicked
-                            reportsAdapter.setOnItemClickListener(report -> {
-                                ReportsBSDialog reportsBSDialog = new ReportsBSDialog();
-
-                                // Manage the update of a request by opening the ReportAddNewFragment
-                                // with the value of the report that's about to be modifies
-                                reportsBSDialog.setOnUpdateRequestListener(() -> {
-                                    Bundle bundle = new Bundle();
-                                    bundle.putSerializable(KeysNamesUtils.BundleKeys.REPORT_UPDATE, report);
-                                    bundle.putBoolean(KeysNamesUtils.BundleKeys.REPORT_MODE_ADD, false);
-                                    manageNavigationReports.navigateToAddNewReport(bundle);
-                                    reportsBSDialog.dismiss();
-                                });
-
-                                // Manage report's confirmation by updating its reference of the FireStore
-                                reportsBSDialog.setOnConfirmRequestListener(() -> {
-                                        report.setCompleted(true);
-
-                                        db.collection(KeysNamesUtils.CollectionsNames.REPORTS)
-                                                .document(report.getReportId())
-                                                .set(report)
-                                                .addOnSuccessListener(unused -> {
-                                                    reportsAdapter.notifyDataSetChanged();
-                                                });
-
-                                });
-
-                                reportsBSDialog.show(getChildFragmentManager(), "CustomBsdDialog");
-                            });
-                        }
-                    });
+            // Manage reports of the current logged user
+            listener.onPersonalRequestMode(
+                    db,
+                    auth.getCurrentUser().getEmail(),
+                    reportsAdapter,
+                    recyclerView,
+                    getChildFragmentManager(),
+                    getContext(),
+                    manageNavigationReports
+            );
         } else {
             // Manage community's reports
-            db.collection(KeysNamesUtils.CollectionsNames.REPORTS)
-                    .whereNotEqualTo(KeysNamesUtils.ReportsFields.REPORTER, Objects.requireNonNull(auth.getCurrentUser()).getEmail())
-                    .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        List<DocumentSnapshot> reportsSnapshot = queryDocumentSnapshots.getDocuments();
-                        reportsList = new ArrayList<>();
+            communityReportsList = new ArrayList<>();
 
-                        if (reportsSnapshot.size() > 0) {
-                            for (DocumentSnapshot snapshot : reportsSnapshot) {
-                                Report report = Report.loadReport(snapshot);
-
-                                if (!report.getCompleted()) {
-                                    reportsList.add(report);
-                                }
-                            }
-
-                            reportsAdapter.setReportsList(reportsList);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
-                                    RecyclerView.VERTICAL, false));
-                            recyclerView.setAdapter(reportsAdapter);
-
-                            // Set a listener that specify what to do when a community reports is clicked
-                            reportsAdapter.setOnItemClickListener(report -> {
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable(KeysNamesUtils.BundleKeys.REPORT_SHOW, report);
-                                manageNavigationReports.navigateToReportDetail(bundle);
-                            });
-                        }
-                    });
+            listener.onCommunityRequestMode(
+                    db,
+                    auth.getCurrentUser().getEmail(),
+                    communityReportsList,
+                    reportsAdapter,
+                    recyclerView,
+                    getContext(),
+                    manageNavigationReports
+            );
         }
     }
 
+    /**
+     * This method is used to filter the reports by the current's user location
+     * */
     @SuppressLint({"MissingPermission", "NotifyDataSetChanged"})
-    private void filterByCurrentLocation() {
+    public void filterByCurrentLocation() {
         // When location service is enabled get last location
         client.getLastLocation().addOnCompleteListener(task -> {
             // Initialize location
@@ -329,11 +320,15 @@ public class ReportsListFragment extends Fragment {
                         .setInterval(10000)
                         .setFastestInterval(1000)
                         .setNumUpdates(1);
+
                 // Use a location callback to access the fetch results
                 LocationCallback locationCallback = new LocationCallback() {
                     @Override
                     public void onLocationResult(@NonNull LocationResult locationResult) {
                         mLocation = locationResult.getLastLocation();
+
+                        // Fill the report filtered ArrayList
+                        filter(mLocation);
                     }
                 };
 
@@ -342,10 +337,9 @@ public class ReportsListFragment extends Fragment {
                         locationRequest,
                         locationCallback,
                         Looper.myLooper());
+                } else {
+                    filter(mLocation);
                 }
-
-                // Fill the report filtered ArrayList
-                filter(mLocation);
 
                 if (reportsListFiltered.size() > 0) {
                     reportsAdapterFiltered.setReportsList(reportsListFiltered);
@@ -354,18 +348,27 @@ public class ReportsListFragment extends Fragment {
             });
     }
 
-    private void filter(Location currentLocation) {
+    /**
+     * This method is used to perform filtering based on current location
+     *
+     * @param currentLocation the current location of the user
+     * */
+    public void filter(Location currentLocation) {
         if (counterTouchKm != 4) {
-            for (Report report : reportsList) {
+            for (Report report : communityReportsList) {
                 Location reportLocation = new Location(LocationManager.GPS_PROVIDER);
 
                 reportLocation.setLatitude(report.getLat());
                 reportLocation.setLongitude(report.getLon());
 
-                double distance = reportLocation.distanceTo(currentLocation);
+                if (reportLocation != null) {
+                    double distance = reportLocation.distanceTo(currentLocation);
 
-                if (distance < distanceMeters[counterTouchKm]) {
-                    reportsListFiltered.add(report);
+                    if (distance < distanceMeters[counterTouchKm]) {
+                        reportsListFiltered.add(report);
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Impossibile eseguire il filtraggio. Provare a riavviare l'applicazione", Toast.LENGTH_SHORT).show();
                 }
             }
         }
