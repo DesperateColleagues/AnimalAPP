@@ -74,6 +74,7 @@ import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDiaryFragment;
+import it.uniba.dib.sms22235.tasks.common.views.backbenches.BackbenchOperationsListener;
 import it.uniba.dib.sms22235.tasks.common.views.reports.ReportAdditionListener;
 import it.uniba.dib.sms22235.tasks.common.views.reports.ReportsListFragmentListener;
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsAnimalTransferOperationsListener;
@@ -97,6 +98,7 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
         OrganizationAnimalListFragment.OrganizationAnimalsFragmentListener,
         OrganizationProfileFragment.OrganizationProfileFragmentListener,
         ReportsListFragmentListener,
+        BackbenchOperationsListener,
         ReportAdditionListener {
 
     private transient Organization organization;
@@ -154,7 +156,8 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.organization_profile,
                 R.id.organization_import_data,
-                R.id.organization_requests
+                R.id.organization_requests,
+                R.id.backBenchFragment
         ).build();
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()

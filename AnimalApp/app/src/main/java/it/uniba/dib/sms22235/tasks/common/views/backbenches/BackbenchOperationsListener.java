@@ -10,15 +10,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -41,18 +38,27 @@ public interface BackbenchOperationsListener {
                 .whereEqualTo(KeysNamesUtils.BackbenchFields.OWNER, ownerEmail)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (queryDocumentSnapshots.size() > 0) {
-                        Backbench backbench = Backbench.loadBackbench(queryDocumentSnapshots.getDocuments().get(0));
-                        backbench.setDescription(description);
+                    Backbench backbench;
 
-                        db.collection(KeysNamesUtils.CollectionsNames.BACKBENCH)
-                                .document(KeysNamesUtils.FileDirsNames.backBenchPic(ownerEmail))
-                                .set(backbench)
-                                .addOnSuccessListener(unused ->
-                                        Toast.makeText(context, context.getString(R.string.descrizione_stallo_inserita_successo),
-                                                Toast.LENGTH_SHORT).show());
+                    // Determines if the backbench has to be instantiated or retrieved by the document
+                    if (queryDocumentSnapshots.size() > 0) {
+                        backbench = Backbench.loadBackbench(queryDocumentSnapshots.getDocuments().get(0));
+                    } else {
+                        backbench = new Backbench(ownerEmail);
                     }
+
+                    backbench.setDescription(description);
+                    saveBackbench(db, backbench, ownerEmail, context);
                 });
+    }
+
+    default void saveBackbench(@NonNull FirebaseFirestore db, Backbench backbench, String ownerEmail, Context context) {
+        db.collection(KeysNamesUtils.CollectionsNames.BACKBENCH)
+                .document(KeysNamesUtils.FileDirsNames.backBenchPic(ownerEmail))
+                .set(backbench)
+                .addOnSuccessListener(unused ->
+                        Toast.makeText(context, context.getString(R.string.descrizione_stallo_inserita_successo),
+                                Toast.LENGTH_SHORT).show());
     }
 
     default void updateBackbenchImage(String ownerEmail,
@@ -64,42 +70,46 @@ public interface BackbenchOperationsListener {
                 .whereEqualTo(KeysNamesUtils.BackbenchFields.OWNER, ownerEmail)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    Backbench backbench;
+
+                    // Determines if the backbench has to be instantiated or retrieved by the document
                     if (queryDocumentSnapshots.size() > 0) {
-                        Backbench backbench = Backbench.loadBackbench(queryDocumentSnapshots.getDocuments().get(0));
-
-                        String fileName = KeysNamesUtils.FileDirsNames.backBenchPic(ownerEmail);
-
-                        // Create the storage tree structure
-                        String fileReference = KeysNamesUtils.FileDirsNames.BACKBENCH_POST +
-                                "/" + fileName;
-
-                        StorageReference storageReference = storage.getReference(fileReference);
-
-
-                        // Give to the user a feedback to wait
-                        ProgressDialog progressDialog = new ProgressDialog(context, R.style.Widget_App_ProgressDialog);
-                        progressDialog.setMessage(context.getString(R.string.salvando_immagine));
-                        progressDialog.show();
-
-                        // Start the upload task
-                        UploadTask uploadTask = storageReference.putFile(uri);
-                        uploadTask.addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                task.getResult().getStorage()
-                                        .getDownloadUrl().addOnCompleteListener(taskUri -> {
-                                            backbench.setDownloadableImage(taskUri.getResult().toString());
-                                            db.collection(KeysNamesUtils.CollectionsNames.BACKBENCH)
-                                                    .document(KeysNamesUtils.FileDirsNames.backBenchPic(ownerEmail))
-                                                    .set(backbench)
-                                                    .addOnSuccessListener(unused -> {
-                                                        Toast.makeText(context, context.getResources().getString(R.string.salvata_immagine), Toast.LENGTH_SHORT).show();
-                                                        progressDialog.dismiss();
-                                                    });
-                                        });
-                            }
-                        });
+                        backbench = Backbench.loadBackbench(queryDocumentSnapshots.getDocuments().get(0));
+                    } else {
+                        backbench = new Backbench(ownerEmail);
                     }
 
+                    String fileName = KeysNamesUtils.FileDirsNames.backBenchPic(ownerEmail);
+
+                    // Create the storage tree structure
+                    String fileReference = KeysNamesUtils.FileDirsNames.BACKBENCH_POST +
+                            "/" + fileName;
+
+                    StorageReference storageReference = storage.getReference(fileReference);
+
+
+                    // Give to the user a feedback to wait
+                    ProgressDialog progressDialog = new ProgressDialog(context, R.style.Widget_App_ProgressDialog);
+                    progressDialog.setMessage(context.getString(R.string.salvando_immagine));
+                    progressDialog.show();
+
+                    // Start the upload task
+                    UploadTask uploadTask = storageReference.putFile(uri);
+                    uploadTask.addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            task.getResult().getStorage()
+                                    .getDownloadUrl().addOnCompleteListener(taskUri -> {
+                                        backbench.setDownloadableImage(taskUri.getResult().toString());
+                                        db.collection(KeysNamesUtils.CollectionsNames.BACKBENCH)
+                                                .document(KeysNamesUtils.FileDirsNames.backBenchPic(ownerEmail))
+                                                .set(backbench)
+                                                .addOnSuccessListener(unused -> {
+                                                    Toast.makeText(context, context.getResources().getString(R.string.salvata_immagine), Toast.LENGTH_SHORT).show();
+                                                    progressDialog.dismiss();
+                                                });
+                                    });
+                        }
+                    });
                 });
 
     }
@@ -115,27 +125,24 @@ public interface BackbenchOperationsListener {
                                    boolean isAdded) {
         db.collection(KeysNamesUtils.CollectionsNames.BACKBENCH)
                 .whereEqualTo(KeysNamesUtils.BackbenchFields.OWNER, email)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        // Handle the error if the listening is not working
-                        if (error != null) {
-                            Log.w("Error listen", "listen:error", error);
-                            return;
-                        }
+                .addSnapshotListener((value, error) -> {
+                    // Handle the error if the listening is not working
+                    if (error != null) {
+                        Log.w("Error listen", "listen:error", error);
+                        return;
+                    }
 
-                        if (value != null) {
+                    if (value != null) {
 
-                            if (value.getDocumentChanges().size() > 0) {
-                                // The backbench image document collection can contain one document per owner
-                                DocumentChange change = value.getDocumentChanges().get(0);
+                        if (value.getDocumentChanges().size() > 0) {
+                            // The backbench image document collection can contain one document per owner
+                            DocumentChange change = value.getDocumentChanges().get(0);
 
-                                // Extract the post and load it with GLIDE
-                                assignValueToBackbench(txtBackbenchDescription,
-                                        btnAddBackBenchDescription,
-                                        btnAddBackBenchImage,
-                                        imgBackbench, isAdded, context, fragmentActivity, change);
-                            }
+                            // Extract the post and load it with GLIDE
+                            assignValueToBackbench(txtBackbenchDescription,
+                                    btnAddBackBenchDescription,
+                                    btnAddBackBenchImage,
+                                    imgBackbench, isAdded, context, fragmentActivity, change);
                         }
                     }
                 });

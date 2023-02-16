@@ -71,7 +71,6 @@ import it.uniba.dib.sms22235.adapters.animals.AnimalDiagnosisAdapter;
 import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
 import it.uniba.dib.sms22235.adapters.animals.PokAnimalAdapter;
 import it.uniba.dib.sms22235.entities.operations.PokeLink;
-import it.uniba.dib.sms22235.entities.users.AbstractPersonUser;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.DialogEntityDetailsFragment;
@@ -81,6 +80,7 @@ import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDiaryFragment;
+import it.uniba.dib.sms22235.tasks.common.views.backbenches.BackbenchOperationsListener;
 import it.uniba.dib.sms22235.tasks.common.views.reports.ReportAdditionListener;
 import it.uniba.dib.sms22235.tasks.common.views.reports.ReportsListFragmentListener;
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsAnimalTransferOperationsListener;
@@ -120,6 +120,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         UserProfileInfoFragmentListener,
         ReportsListFragmentListener,
         ReportAdditionListener,
+        BackbenchOperationsListener,
         Serializable {
 
     private transient FirebaseFirestore db;

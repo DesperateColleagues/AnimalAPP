@@ -110,5 +110,11 @@
             app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/backBenchFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.backbenches.BackBenchFragment"
+        android:label="BackBenchFragment"
+        tools:layout="@layout/fragment_backbench"/>
+
 
 </navigation>
