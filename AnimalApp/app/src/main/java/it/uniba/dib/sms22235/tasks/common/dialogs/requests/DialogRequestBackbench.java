@@ -25,9 +25,22 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.Request;
 
+/**
+ * This dialog is used to set the temporary residence of an animal
+ * in backbenches' requests
+ * */
 public class DialogRequestBackbench extends DialogFragment {
 
+    /**
+     * This interface perform actions that occur when the temporary residence is added
+     * */
     public interface DialogRequestBackbenchListener {
+        /**
+         * This method is called when a new temporary residence is added
+         *
+         * @param residence the new residence
+         * @param request the request
+         * */
         void onValueAdded(AnimalResidence residence, Request request);
     }
 
@@ -47,7 +60,7 @@ public class DialogRequestBackbench extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),
-                R.style.AnimalCardRoundedDialog);
+                R.style.AlertDialogTheme);
 
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         @SuppressLint("InflateParams") View root = inflater.inflate(R.layout.fragment_dialog_request_backbench, null);

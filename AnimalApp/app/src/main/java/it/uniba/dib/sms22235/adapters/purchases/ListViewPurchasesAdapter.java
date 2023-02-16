@@ -18,6 +18,9 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * Adapter to display purchases as a list
+ * */
 public class ListViewPurchasesAdapter extends ArrayAdapter<Purchase> {
     private ArrayList<Purchase> purchasesList;
 

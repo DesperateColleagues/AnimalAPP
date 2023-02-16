@@ -3,7 +3,6 @@ package it.uniba.dib.sms22235.tasks.common.views.requests;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,8 +26,25 @@ import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.login.LoginActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This interface describes the operations that occur when an animal ownership is transfered
+ * */
 public interface RequestsAnimalTransferOperationsListener {
 
+    /**
+     * This method perform all the operations in the transfer
+     *
+     * @param db the db reference
+     * @param storage the storage reference
+     * @param newOwner the new owner of the animal
+     * @param microchip the microchip of the animal
+     * @param animalName the name of the animal
+     * @param oldOwner the old owner of the animal
+     * @param reloadMessage the message of reloading of the app
+     * @param context the app context
+     * @param activity the attached activity
+     * @param request the request reference
+     * */
     default void transferOperations(@NonNull FirebaseFirestore db, FirebaseStorage storage,
                                     String newOwner, String microchip,
                                     String animalName, String oldOwner, String reloadMessage,
@@ -61,7 +77,17 @@ public interface RequestsAnimalTransferOperationsListener {
                 });
     }
 
-    default Task<byte[]> getPostBytesTask(@NonNull PhotoDiaryPost post, @NonNull FirebaseStorage storage,
+    /**
+     * This method is used to obtain a task which returns the byte of the image of the post
+     *
+     * @param post the post
+     * @param storage the storage reference
+     * @param currentFolderReference the current foldere reference
+     *
+     * @return the task with the bytes of the post's image
+     * */
+    default Task<byte[]> getPostBytesTask(@NonNull PhotoDiaryPost post,
+                                          @NonNull FirebaseStorage storage,
                                           String currentFolderReference) {
         // Build the file name of the current post
         String fileName = post.getFileName();
@@ -77,6 +103,13 @@ public interface RequestsAnimalTransferOperationsListener {
         return currentReference.getBytes(FIVE_MEGABYTE);
     }
 
+    /**
+     * This method is used to delete the current reference of the post
+     *
+     * @param post the post
+     * @param storage the storage reference
+     * @param currentFolderReference the current foldere reference
+     * */
     default void deleteCurrentReference(@NonNull PhotoDiaryPost post,
                                         @NonNull FirebaseStorage storage,
                                         String currentFolderReference) {
@@ -89,15 +122,39 @@ public interface RequestsAnimalTransferOperationsListener {
         currentReference.delete();
     }
 
+    /**
+     * This method gives a task that updates the the post uri
+     *
+     * @param collectionName the name of the collection
+     * @param db the db reference
+     * @param post the post
+     * */
     @NonNull
-    default Task<Void> updatePostUriTask(String collectionName, @NonNull FirebaseFirestore db, @NonNull PhotoDiaryPost post) {
+    default Task<Void> updatePostUriTask(String collectionName,
+                                         @NonNull FirebaseFirestore db,
+                                         @NonNull PhotoDiaryPost post) {
         return db.collection(collectionName)
                 .document(post.getFileName())
                 .set(post);
     }
 
-    default void completeRequest(@NonNull FirebaseFirestore db, String reloadMessage, Context context,
-                                 ProgressDialog progressDialog, @NonNull Request request, FragmentActivity activity) {
+
+    /**
+     * This method is used to complete the request
+     *
+     * @param db db reference
+     * @param reloadMessage the reload message
+     * @param progressDialog the progress dialog
+     * @param context the context of the app
+     * @param request the request to complete
+     * @param activity holder activity
+     * */
+    default void completeRequest(@NonNull FirebaseFirestore db,
+                                 String reloadMessage,
+                                 Context context,
+                                 ProgressDialog progressDialog,
+                                 @NonNull Request request,
+                                 FragmentActivity activity) {
         request.setIsCompleted(true);
 
         db.collection(KeysNamesUtils.CollectionsNames.REQUESTS)

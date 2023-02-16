@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 
+/**
+ * This adapter is used to manage the animal's diagnosis data and to give them a representation
+ * */
 public class AnimalDiagnosisAdapter extends RecyclerView.Adapter<AnimalDiagnosisAdapter.ViewHolder> {
     private ArrayList<Diagnosis> diagnosisList;
 

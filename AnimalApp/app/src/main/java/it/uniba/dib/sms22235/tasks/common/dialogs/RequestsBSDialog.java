@@ -12,6 +12,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import it.uniba.dib.sms22235.R;
 
+/**
+ * A bottom sheet dialog for requests
+ * */
 public class RequestsBSDialog extends BottomSheetDialogFragment {
 
     private OnUpdateRequestListener onUpdateRequestListener;

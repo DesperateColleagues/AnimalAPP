@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.common.dialogs.userprofile;
+package it.uniba.dib.sms22235.tasks.common.views.userprofile;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,6 +14,9 @@ import com.google.firebase.storage.StorageReference;
 
 import it.uniba.dib.sms22235.R;
 
+/**
+ * This interface perform the operation of the user profile to display info
+ * */
 public interface UserProfileInfoFragmentListener {
 
     /**

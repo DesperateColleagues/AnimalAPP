@@ -162,7 +162,7 @@ public class BackBenchFragment extends Fragment {
             EditText inputEditTextField = new EditText(getContext());
             inputEditTextField.setHint(getResources().getString(R.string.descrizione_stallo));
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.AnimalCardRoundedDialog)
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.AlertDialogTheme)
                     .setView(inputEditTextField)
                     .setPositiveButton(getString(R.string.conferma), (dialogInterface, i) -> {
                         String description = inputEditTextField.getText().toString();
@@ -201,39 +201,9 @@ public class BackBenchFragment extends Fragment {
      * @param email the email of the user whose info will be loaded
      * */
     private void loadBackbenchInfo(String email) {
-        /*db.collection(KeysNamesUtils.CollectionsNames.BACKBENCH)
-                .whereEqualTo(KeysNamesUtils.BackbenchFields.OWNER, email)
-                .addSnapshotListener((value, error) -> {
-                    // Handle the error if the listening is not working
-                    if (error != null) {
-                        Log.w("Error listen", "listen:error", error);
-                        return;
-                    }
-
-                    if (value != null) {
-
-                        if (value.getDocumentChanges().size() > 0) {
-                            // The backbench image document collection can contain one document per owner
-                            DocumentChange change = value.getDocumentChanges().get(0);
-
-                            // Extract the post and load it with GLIDE
-                            backbench = Backbench.loadBackbench(change.getDocument());
-                            txtBackbenchDescription.setText(backbench.getDescription());
-                            if(!backbench.getDescription().equals("")) {
-                                btnAddBackBenchDescription.setText(getResources().getString(R.string.modifica));
-                            }
-                            if (isAdded()) {
-                                Glide.with(getActivity()).load(backbench.getDownloadableImage()).into(imgBackbench);
-                                //Fragment BackBenchFragment not attached to a context.
-                                btnAddBackBenchImage.setText(getResources().getString(R.string.modifica_immagine_stallo));
-                            }
-                        }
-                    }
-                });*/
-
         listener.loadBackbenchInfo(
                 db,
-                ownerEmail,
+                email,
                 txtBackbenchDescription,
                 btnAddBackBenchDescription,
                 btnAddBackBenchImage,

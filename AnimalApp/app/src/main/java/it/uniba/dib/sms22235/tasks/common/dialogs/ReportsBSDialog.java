@@ -13,6 +13,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import it.uniba.dib.sms22235.R;
 
+/**
+ * A bottom sheet dialog for reports
+ * */
 public class ReportsBSDialog extends BottomSheetDialogFragment {
 
     private OnUpdateRequestListener onUpdateRequestListener;

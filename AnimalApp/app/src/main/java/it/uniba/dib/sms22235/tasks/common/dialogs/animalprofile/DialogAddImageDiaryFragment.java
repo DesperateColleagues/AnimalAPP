@@ -34,6 +34,9 @@ import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 
 public class DialogAddImageDiaryFragment extends DialogFragment {
 
+    /**
+     * This interface performs the operations that happens when user select the image
+     * */
     public interface DialogAddImageDiaryFragmentListener {
         /**
          * This callback is activated when the post is successfully saved.

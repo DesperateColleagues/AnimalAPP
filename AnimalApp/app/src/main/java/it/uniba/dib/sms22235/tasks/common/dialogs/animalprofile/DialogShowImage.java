@@ -18,12 +18,31 @@ import com.bumptech.glide.Glide;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 
+/**
+ * This dialog is used to show a specific image
+ * */
 public class DialogShowImage extends DialogFragment {
 
     private final String uri;
 
+    /**
+     * This interface is used to perform operations that occur when a picture is selected
+     * and shown in this dialog
+     * */
     public interface DialogShowImageListener {
+
+        /**
+         * This method is called when a picture is set to be deleted
+         *
+         * @param uri the uri of the picture to delete
+         * */
         void onPicDeletionSelected(String uri);
+
+        /**
+         * This method is called when a picture is set to be shared
+         *
+         * @param uri the uri of the image to share
+         * */
         void onPicShared(String uri);
     }
 

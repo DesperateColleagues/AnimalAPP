@@ -56,6 +56,7 @@ public class AnimalResidence {
         isTemp = temp;
     }
 
+    @NonNull
     public static AnimalResidence loadResidence(@NonNull DocumentSnapshot document) {
         AnimalResidence a = new AnimalResidence(
                 (String) document.get(KeysNamesUtils.ResidenceFields.START_DATE),

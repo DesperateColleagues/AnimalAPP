@@ -21,6 +21,10 @@ import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This adapter is used to manage the entities (veterinarian or organizations)
+ * data and to give them a representation
+ * */
 public class EntityInfoAdapter extends RecyclerView.Adapter<EntityInfoAdapter.ViewHolder> {
 
     private Context context;

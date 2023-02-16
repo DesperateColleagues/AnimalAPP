@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Request;
 
+/**
+ * This adapter is used to manage requests data and to give them a representation
+ * */
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHolder> {
     private ArrayList<Request> requestsList;
     private OnItemClickListener onItemClickListener;

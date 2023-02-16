@@ -34,6 +34,9 @@ import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.DialogAddExamFragment;
 import it.uniba.dib.sms22235.utils.InterfacesOperationsHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This fragment is used to display the animal's exams
+ * */
 public class ExamsFragment extends Fragment implements
 DialogAddExamFragment.DialogAddExamFragmentListener {
 
@@ -48,8 +51,22 @@ DialogAddExamFragment.DialogAddExamFragmentListener {
         this.viewMode = viewMode;
     }
 
+    /**
+     * This interface describes the operations to do with exams
+     * */
     public interface ExamsFragmentListener {
-        void getAnimalExams(AnimalExamsAdapter adapter, RecyclerView recyclerView, String animal, AnimalExamsAdapter.OnItemClickListener onClickListener);
+        /**
+         * This method is used to load animal's exams
+         *
+         * @param adapter the adapter to manage retrieved data
+         * @param recyclerView the view where data will be displayed
+         * @param animal the animal microchip
+         * @param onClickListener the listener of the selected element of the recycler
+         **/
+        void getAnimalExams(AnimalExamsAdapter adapter,
+                            RecyclerView recyclerView,
+                            String animal,
+                            AnimalExamsAdapter.OnItemClickListener onClickListener);
     }
 
 

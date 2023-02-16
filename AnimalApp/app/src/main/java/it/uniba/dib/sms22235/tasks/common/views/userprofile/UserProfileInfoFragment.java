@@ -1,4 +1,4 @@
-package it.uniba.dib.sms22235.tasks.common.dialogs.userprofile;
+package it.uniba.dib.sms22235.tasks.common.views.userprofile;
 
 import android.app.Activity;
 import android.content.Context;
@@ -35,6 +35,9 @@ import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This fragment displays the profile info of the current user
+ * */
 public class UserProfileInfoFragment extends Fragment {
 
     private Passionate passionate;

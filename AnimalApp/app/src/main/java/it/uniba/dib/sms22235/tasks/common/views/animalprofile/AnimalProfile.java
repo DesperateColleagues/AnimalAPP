@@ -50,6 +50,9 @@ import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogEditAnimalDataFragme
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This fragment is used to display the animal profile
+ * */
 public class AnimalProfile extends Fragment implements
         DialogEditAnimalDataFragment.DialogEditAnimalDataFragmentListener{
 
@@ -91,9 +94,11 @@ public class AnimalProfile extends Fragment implements
          * */
         void checkIfAtHome(Animal animal, ImageView image);
 
-
     }
 
+    /**
+     * This interface describe the event that happens when the animal profile is edited
+     * */
     public interface AnimalProfileEditListener {
         /**
          * This method is used to get the list of all the veterinarians present in the database

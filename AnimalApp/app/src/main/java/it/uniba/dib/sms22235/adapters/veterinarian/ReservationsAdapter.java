@@ -16,6 +16,9 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * Adapter to represent reservations
+ * */
 public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapter.ViewHolder> {
     private ArrayList<Reservation> reservationsList;
     private String currentDate;

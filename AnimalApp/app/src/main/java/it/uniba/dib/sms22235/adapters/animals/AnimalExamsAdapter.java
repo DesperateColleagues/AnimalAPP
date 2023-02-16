@@ -20,6 +20,9 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Exam;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This adapter is used to manage the animal's exams data and to give them a representation
+ * */
 public class AnimalExamsAdapter extends RecyclerView.Adapter<AnimalExamsAdapter.ViewHolder> {
     private ArrayList<Exam> examsList;
     private Context context;

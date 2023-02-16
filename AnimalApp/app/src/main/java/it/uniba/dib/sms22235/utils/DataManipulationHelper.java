@@ -17,6 +17,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * This class is used to manipulate data such as files and images
+ * */
 public class DataManipulationHelper {
 
     private DataManipulationHelper() {

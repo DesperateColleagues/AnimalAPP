@@ -17,6 +17,9 @@ import java.util.List;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 
+/**
+ * This adapter is used to manage the animal's post data and to give them a representation
+ * */
 public class AnimalPostAdapter extends RecyclerView.Adapter<AnimalPostAdapter.ViewHolder> {
     private final List<PhotoDiaryPost> posts;
     private final Context context;

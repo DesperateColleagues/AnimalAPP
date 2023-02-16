@@ -40,7 +40,12 @@ import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.Request;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-public class RequestsFragment extends Fragment implements DialogAddRequest.DialogAddRequestListener,
+/**
+ * This fragment is used to support all the operations of the requests. Requests can be
+ * added to the list and be filtered.
+ * */
+public class RequestsFragment extends Fragment implements
+        DialogAddRequest.DialogAddRequestListener,
         DialogRequestBackbench.DialogRequestBackbenchListener {
 
     private ArrayList<Request> requestsList;

@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Report;
 
+/**
+ * This adapter is used to manage the reports data and to give them a representation
+ * */
 public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.ViewHolder>{
 
     private Context context;

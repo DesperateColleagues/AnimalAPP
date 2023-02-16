@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.InfoMessage;
 
+/**
+ * Adapter to represent messages
+ * */
 public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.ViewHolder>{
 
     private final ArrayList<InfoMessage> infoMessages;

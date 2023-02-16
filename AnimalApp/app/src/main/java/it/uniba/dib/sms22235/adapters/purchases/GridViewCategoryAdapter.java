@@ -13,6 +13,9 @@ import java.util.ArrayList;
 
 import it.uniba.dib.sms22235.R;
 
+/**
+ * Adapter to give a representation to the category of purchases
+ * */
 public class GridViewCategoryAdapter extends BaseAdapter {
 
     private final Context context;//the context of the application

@@ -9,16 +9,33 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
+/**
+ * This class is used to check input fields with regex
+ * */
 public class InputFieldCheck {
 
     public static int MIN_CHAR = 6;
 
+    /**
+     * This method verifies if an email is valid or no
+     *
+     * @param email the email to check
+     *
+     * @return boolean value
+     * */
     public static boolean isEmailValid(String email) {
         String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$";
         Pattern p = Pattern.compile(regex);
         return p.matcher(email).matches();
     }
 
+    /**
+     * This method verifies is a phone number is valid
+     *
+     * @param number the number
+     *
+     * @return boolean value
+     * */
     public static boolean isNumberValid(String number)
     {
 

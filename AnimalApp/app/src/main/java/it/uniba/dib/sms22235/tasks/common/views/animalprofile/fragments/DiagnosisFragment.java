@@ -15,8 +15,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -34,6 +32,9 @@ import it.uniba.dib.sms22235.tasks.veterinarian.dialogs.DialogAddDiagnosisFragme
 import it.uniba.dib.sms22235.utils.InterfacesOperationsHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This fragment is used to display diagnosis
+ * */
 public class DiagnosisFragment extends Fragment implements
         DialogAddDiagnosisFragment.DialogAddDiagnosisFragmentListener {
 
@@ -49,8 +50,22 @@ public class DiagnosisFragment extends Fragment implements
         this.viewMode = viewMode;
     }
 
+    /**
+     * This interface describes the actions of the diagnosis on this fragment
+     * */
     public interface DiagnosisFragmentListener {
-        void getAnimalDiagnosis(AnimalDiagnosisAdapter adapter, RecyclerView recyclerView, String animal, AnimalDiagnosisAdapter.OnItemClickListener onClickListener);
+        /**
+         * This method is used to load the existing diagnosis of an animal
+         *
+         * @param adapter the adapter to manage retrieved data
+         * @param recyclerView the view where data will be displayed
+         * @param animal the animal microchip
+         * @param onClickListener the listener of the selected element of the recycler
+         * */
+        void loadAnimalDiagnosis(AnimalDiagnosisAdapter adapter,
+                                 RecyclerView recyclerView,
+                                 String animal,
+                                 AnimalDiagnosisAdapter.OnItemClickListener onClickListener);
     }
 
     @Override
@@ -91,10 +106,10 @@ public class DiagnosisFragment extends Fragment implements
                 dialogAddDiagnosisFragment.setListener(this);
                 dialogAddDiagnosisFragment.show(getParentFragmentManager(), "DialogAddDiagnosisFragment");
             });
-            listener.getAnimalDiagnosis(adapter, diagnosisRecyclerView, animal.getMicrochipCode(), onClickEditListener);
+            listener.loadAnimalDiagnosis(adapter, diagnosisRecyclerView, animal.getMicrochipCode(), onClickEditListener);
         } else {
             btnAddAnimalOperation.setVisibility(View.GONE);
-            listener.getAnimalDiagnosis(adapter, diagnosisRecyclerView, animal.getMicrochipCode(), onClickViewListener);
+            listener.loadAnimalDiagnosis(adapter, diagnosisRecyclerView, animal.getMicrochipCode(), onClickViewListener);
         }
 
         diagnosisRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false));

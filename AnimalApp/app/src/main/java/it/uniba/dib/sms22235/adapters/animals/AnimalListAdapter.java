@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.users.Animal;
 
+/**
+ * This adapter is used to manage the animal's list data and to give them a representation
+ * */
 public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.ViewHolder> {
     private final ArrayList<Animal> animalList;
     private final ArrayList<Bitmap> animalPic;

@@ -30,12 +30,24 @@ import java.util.ArrayList;
 import it.uniba.dib.sms22235.BuildConfig;
 import it.uniba.dib.sms22235.R;
 
+/**
+ * This dialog is used to show a map, that the user can click to select a position
+ * */
 public class DialogMap extends DialogFragment {
 
     private final GeoPoint location;
     private DialogMapListener listener;
 
+    /**
+     * This interface specify the action that occur when the map is tapped
+     * */
     public interface DialogMapListener {
+        /**
+         * This method is called when the user confirm its position
+         *
+         * @param latitude latitude
+         * @param longitude longitude
+         * */
         void onPositionConfirmed(double latitude, double longitude);
     }
 
@@ -53,7 +65,7 @@ public class DialogMap extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater(); //get the layout inflater
         @SuppressLint("InflateParams") View root = inflater.inflate(R.layout.fragment_dialog_report_map, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.AnimalCardRoundedDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme);
         builder.setView(root);
 
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);

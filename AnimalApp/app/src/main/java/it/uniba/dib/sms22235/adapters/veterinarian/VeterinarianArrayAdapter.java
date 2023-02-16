@@ -16,6 +16,9 @@ import java.util.List;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 
+/**
+ * Array adapter to represent items
+ * */
 public class VeterinarianArrayAdapter extends ArrayAdapter<Veterinarian> {
 
     private final List<Veterinarian> list;

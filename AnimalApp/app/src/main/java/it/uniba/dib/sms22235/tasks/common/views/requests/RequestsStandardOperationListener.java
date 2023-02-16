@@ -29,7 +29,11 @@ import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This interface describes the standards operations of the requests management system
+ * */
 public interface RequestsStandardOperationListener {
+
     /**
      * This method is used to perform an action to the animal request
      *

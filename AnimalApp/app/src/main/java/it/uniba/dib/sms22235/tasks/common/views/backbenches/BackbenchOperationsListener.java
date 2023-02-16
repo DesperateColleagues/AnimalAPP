@@ -29,6 +29,15 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
  * */
 public interface BackbenchOperationsListener {
 
+    /**
+     * This method is used to update the backbench description on firebase. If the
+     * backbench reference has not been already added it is created
+     *
+     * @param description the description updated
+     * @param ownerEmail email of the owner of the backbench
+     * @param db the db reference
+     * @param context the app context
+     * */
     default void updateBackBenchDescription(String description,
                                             String ownerEmail,
                                             @NonNull FirebaseFirestore db,
@@ -52,7 +61,18 @@ public interface BackbenchOperationsListener {
                 });
     }
 
-    default void saveBackbench(@NonNull FirebaseFirestore db, Backbench backbench, String ownerEmail, Context context) {
+    /**
+     * This method is used to save the backbench on firebase.
+     *
+     * @param ownerEmail email of the owner of the backbench
+     * @param backbench the backbench to be saved
+     * @param db the db reference
+     * @param context the app context
+     * */
+    default void saveBackbench(@NonNull FirebaseFirestore db,
+                               Backbench backbench,
+                               String ownerEmail,
+                               Context context) {
         db.collection(KeysNamesUtils.CollectionsNames.BACKBENCH)
                 .document(KeysNamesUtils.FileDirsNames.backBenchPic(ownerEmail))
                 .set(backbench)
@@ -61,6 +81,16 @@ public interface BackbenchOperationsListener {
                                 Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * This method is used to update the backbench image on firebase. If the
+     * backbench reference has not been already added it is created
+     *
+     * @param ownerEmail email of the owner of the backbench
+     * @param db the db reference
+     * @param storage the storage reference
+     * @param uri the uri of the image
+     * @param context the app context
+     * */
     default void updateBackbenchImage(String ownerEmail,
                                  @NonNull FirebaseFirestore db,
                                  FirebaseStorage storage,
@@ -114,6 +144,18 @@ public interface BackbenchOperationsListener {
 
     }
 
+    /**
+     * This method is used to load the backbench data and displays them into their views
+     *
+     * @param db db reference
+     * @param email the email of the owner of the backbench
+     * @param txtBackbenchDescription text view where description will be displayes
+     * @param btnAddBackBenchDescription button to add a new description which text will be changed
+     * @param btnAddBackBenchImage button to add new image which text will be changed
+     * @param isAdded boolean value that indicates if the fragment has been added to the activity
+     * @param context the app context
+     * @param fragmentActivity the activity of the fragment
+     * */
     default void loadBackbenchInfo(@NonNull FirebaseFirestore db,
                                    String email,
                                    TextView txtBackbenchDescription,
@@ -148,6 +190,17 @@ public interface BackbenchOperationsListener {
                 });
     }
 
+    /**
+     * This method is used to assign the value loaded from the db to the view elements
+     *
+     * @param txtBackbenchDescription text view where description will be displayes
+     * @param btnAddBackBenchDescription button to add a new description which text will be changed
+     * @param btnAddBackBenchImage button to add new image which text will be changed
+     * @param isAdded boolean value that indicates if the fragment has been added to the activity
+     * @param context the app context
+     * @param fragmentActivity the activity of the fragment
+     * @param documentChange the document retrieved
+     * */
     default void assignValueToBackbench(@NonNull TextView txtBackbenchDescription,
                                         Button btnAddBackBenchDescription,
                                         Button btnAddBackBenchImage,
@@ -155,8 +208,7 @@ public interface BackbenchOperationsListener {
                                         boolean isAdded,
                                         Context context,
                                         FragmentActivity fragmentActivity,
-                                        @NonNull DocumentChange documentChange
-    ) {
+                                        @NonNull DocumentChange documentChange) {
         Backbench backbench = Backbench.loadBackbench(documentChange.getDocument());
 
         txtBackbenchDescription.setText(backbench.getDescription());

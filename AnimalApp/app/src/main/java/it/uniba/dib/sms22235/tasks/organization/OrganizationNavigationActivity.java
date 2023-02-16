@@ -1,7 +1,5 @@
 package it.uniba.dib.sms22235.tasks.organization;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -12,7 +10,6 @@ import android.net.NetworkRequest;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +19,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -32,8 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -44,9 +38,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,13 +55,12 @@ import it.uniba.dib.sms22235.adapters.animals.AnimalPostAdapter;
 import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.entities.operations.Request;
-import it.uniba.dib.sms22235.entities.users.AbstractPersonUser;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.ImportedAnimal;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
-import it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragmentListener;
+import it.uniba.dib.sms22235.tasks.common.views.userprofile.UserProfileInfoFragmentListener;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFragment;
@@ -77,7 +68,6 @@ import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.PhotoDia
 import it.uniba.dib.sms22235.tasks.common.views.backbenches.BackbenchOperationsListener;
 import it.uniba.dib.sms22235.tasks.common.views.reports.ReportAdditionListener;
 import it.uniba.dib.sms22235.tasks.common.views.reports.ReportsListFragmentListener;
-import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsAnimalTransferOperationsListener;
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsStandardOperationListener;
 import it.uniba.dib.sms22235.tasks.login.LoginActivity;
 import it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationAnimalListFragment;
@@ -457,7 +447,7 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void getAnimalDiagnosis(AnimalDiagnosisAdapter adapter, RecyclerView recyclerView, String animal, AnimalDiagnosisAdapter.OnItemClickListener onClickListener) {
+    public void loadAnimalDiagnosis(AnimalDiagnosisAdapter adapter, RecyclerView recyclerView, String animal, AnimalDiagnosisAdapter.OnItemClickListener onClickListener) {
         InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
         animalHelper.getAnimalDiagnosis(adapter, recyclerView, animal, onClickListener);
     }

@@ -38,8 +38,14 @@ import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This class displays the post of the animal
+ * */
 public class PhotoDiaryFragment extends Fragment implements DialogShowImage.DialogShowImageListener {
 
+    /**
+     * This interface displays the common operations of photo diary
+     * */
     public interface PhotoDiaryFragmentListener {
         /**
          * This callback is called when the post is added to the fragment and is now

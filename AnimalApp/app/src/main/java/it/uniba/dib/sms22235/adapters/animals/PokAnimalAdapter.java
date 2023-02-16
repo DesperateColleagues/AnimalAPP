@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.PokeLink;
 
+/**
+ * This adapter is used to manage the animal's poke mode data and to give them a representation
+ * */
 public class PokAnimalAdapter extends RecyclerView.Adapter<PokAnimalAdapter.ViewHolder> {
 
     private Context context;

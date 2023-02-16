@@ -30,12 +30,24 @@ import it.uniba.dib.sms22235.entities.operations.Request;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * Dialog used to add new request info
+ * */
 public class DialogAddRequest extends DialogFragment {
 
     private String opType;
     private DialogAddRequestListener listener;
 
+    /**
+     * Interface with operations that occur when the request is added
+     * */
     public interface DialogAddRequestListener {
+        /**
+         * This method is called when the request is added
+         *
+         * @param request the request added
+         * @param animalMicrochip the microchip of the animal
+         * */
         void onRequestAdded(Request request, String animalMicrochip);
     }
 
@@ -47,7 +59,7 @@ public class DialogAddRequest extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),
-                R.style.AnimalCardRoundedDialog);
+                R.style.AlertDialogTheme);
 
         if (requireActivity() instanceof PassionateNavigationActivity) {
             opType = KeysNamesUtils.RequestFields.R_TYPE_REQUEST;

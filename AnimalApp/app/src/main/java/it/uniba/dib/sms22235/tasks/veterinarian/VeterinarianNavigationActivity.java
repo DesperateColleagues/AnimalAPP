@@ -44,10 +44,9 @@ import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
 import it.uniba.dib.sms22235.adapters.animals.AnimalPostAdapter;
 import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.PhotoDiaryPost;
-import it.uniba.dib.sms22235.entities.users.AbstractPersonUser;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
-import it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragmentListener;
+import it.uniba.dib.sms22235.tasks.common.views.userprofile.UserProfileInfoFragmentListener;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.DiagnosisFragment;
 import it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments.ExamsFragment;
@@ -450,7 +449,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void getAnimalDiagnosis(AnimalDiagnosisAdapter adapter, RecyclerView recyclerView, String animal, AnimalDiagnosisAdapter.OnItemClickListener onClickListener){
+    public void loadAnimalDiagnosis(AnimalDiagnosisAdapter adapter, RecyclerView recyclerView, String animal, AnimalDiagnosisAdapter.OnItemClickListener onClickListener){
         InterfacesOperationsHelper.AnimalCommonOperations animalHelper = new InterfacesOperationsHelper.AnimalCommonOperations(this, db);
         animalHelper.getAnimalDiagnosis(adapter, recyclerView, animal, onClickListener);
     }

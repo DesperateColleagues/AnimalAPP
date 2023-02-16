@@ -34,6 +34,9 @@ import it.uniba.dib.sms22235.entities.operations.Request;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This fragment displays all the details of a request
+ * */
 public class RequestDetailFragment extends Fragment {
 
     private Request request;

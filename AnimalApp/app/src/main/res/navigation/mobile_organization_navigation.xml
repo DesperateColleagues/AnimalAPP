@@ -70,7 +70,7 @@
 
     <fragment
         android:id="@+id/userProfileInfoFragment"
-        android:name="it.uniba.dib.sms22235.tasks.common.dialogs.userprofile.UserProfileInfoFragment"
+        android:name="it.uniba.dib.sms22235.tasks.common.views.userprofile.UserProfileInfoFragment"
         android:label="@string/dettagli_profilo"
         tools:layout="@layout/fragment_user_profile_info"/>
 

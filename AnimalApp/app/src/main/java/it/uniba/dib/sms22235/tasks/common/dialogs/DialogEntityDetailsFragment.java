@@ -16,6 +16,9 @@ import androidx.fragment.app.DialogFragment;
 
 import it.uniba.dib.sms22235.R;
 
+/**
+ * Common dialog where to display a message and perform actions
+ * */
 public class DialogEntityDetailsFragment extends DialogFragment{
 
     private final String info;

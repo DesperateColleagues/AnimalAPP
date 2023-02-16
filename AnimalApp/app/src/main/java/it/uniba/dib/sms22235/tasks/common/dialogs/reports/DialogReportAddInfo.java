@@ -16,9 +16,21 @@ import androidx.fragment.app.DialogFragment;
 
 import it.uniba.dib.sms22235.R;
 
+/**
+ * Dialog used to add info to the report such as TITLE and DESCRIPTION
+ * */
 public class DialogReportAddInfo extends DialogFragment {
 
+    /**
+     * This interface describe operation to do with the added info
+     * */
     public interface DialogReportAddInfoListener {
+        /**
+         * This method is called when a new info is added
+         *
+         * @param title title of the report
+         * @param description the description of the report
+         * */
         void onInfoAdded(String title, String description);
     }
 
@@ -34,7 +46,7 @@ public class DialogReportAddInfo extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater(); //get the layout inflater
         @SuppressLint("InflateParams") View root = inflater.inflate(R.layout.fragment_dialog_report_add_info, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.AnimalCardRoundedDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme);
         builder.setView(root);
 
         @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);

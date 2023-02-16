@@ -19,6 +19,11 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 import it.uniba.dib.sms22235.R;
 
+/**
+ * This dialog is used to display a QR code based on animal data. It is used in
+ * various occasions such as animal ownership transfer, or to show the animal profile
+ * of another user.
+ * */
 public class BsdDialogQr extends BottomSheetDialogFragment {
 
     private final String microchip;
