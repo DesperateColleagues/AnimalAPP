@@ -62,7 +62,7 @@ public class DialogAddAddress extends DialogFragment {
                     civicNumberInt = Integer.parseInt(civicNumber);
                     postalNumberInt = Integer.parseInt(postalNumber);
                 } catch (NumberFormatException e) {
-                    Toast.makeText(requireContext(), "Il campo CAP o numero civico, non è un numero INTERO", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.error_numero_civico_intero), Toast.LENGTH_SHORT).show();
                     isNumber = false;
                 }
 

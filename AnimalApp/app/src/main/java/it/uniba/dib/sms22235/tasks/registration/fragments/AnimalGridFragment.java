@@ -18,12 +18,10 @@ import it.uniba.dib.sms22235.R;
  */
 public class AnimalGridFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -39,7 +37,6 @@ public class AnimalGridFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment AnimalGridFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static AnimalGridFragment newInstance(String param1, String param2) {
         AnimalGridFragment fragment = new AnimalGridFragment();
         Bundle args = new Bundle();
@@ -56,14 +53,6 @@ public class AnimalGridFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        /*ArrayList<Animal> a = new ArrayList<>();
-        Animal a1 = new Animal("Bobby","Cane","Violenza e delusione","01001",1);
-        a.add(a1);
-        Animal a2 = new Animal("Paco","Cane","La pasta di ammezzzogiorno","01002",1);
-        a.add(a2);
-        Animal a3 = new Animal("Mira","Gatto","Coccole e cibi di lusso","01003",1);
-        a.add(a3);*/
 
         LinearLayoutManager lineMan = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
     }

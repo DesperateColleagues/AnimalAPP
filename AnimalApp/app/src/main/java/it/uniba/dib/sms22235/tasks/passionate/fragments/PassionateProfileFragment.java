@@ -156,7 +156,7 @@ public class PassionateProfileFragment extends Fragment implements
         username = ((PassionateNavigationActivity) requireActivity())
                 .getUserId();
 
-        String title = "Benvenuto, " + username;
+        String title = getString(R.string.benvenuto) + ", " + username;
         ((TextView) rootView.findViewById(R.id.txtPassionateWelcome)).setText(title);
 
         LinkedHashSet<Animal> animalSet =
@@ -235,7 +235,7 @@ public class PassionateProfileFragment extends Fragment implements
                             } else if (selection.equals(KeysNamesUtils.RolesNames.ANIMAL)) {
                                 ScanOptions options = new ScanOptions();
                                 options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
-                                options.setPrompt("Scannerizza il QR code"); // todo translate
+                                options.setPrompt(getString(R.string.scannerizza_qr_code));
                                 options.setBeepEnabled(false);
                                 options.setBarcodeImageEnabled(true);
                                 options.setOrientationLocked(false);
@@ -255,7 +255,7 @@ public class PassionateProfileFragment extends Fragment implements
                                 );
                             }
                         } else {
-                            Toast.makeText(getContext(), "Rete non disponibile", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.error_offline), Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -277,7 +277,7 @@ public class PassionateProfileFragment extends Fragment implements
                 public void onClick(View view, int position) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(KeysNamesUtils.BundleKeys.ANIMAL, animalListAdapter.getAnimalAtPosition(position));
-                    bundle.putInt("ViewMode", KeysNamesUtils.AnimalInformationViewModeFields.PHOTO_ONLY);
+                    bundle.putInt(KeysNamesUtils.BundleKeys.VIEW_MODE, KeysNamesUtils.AnimalInformationViewModeFields.PHOTO_ONLY);
                     controller.navigate(R.id.action_passionate_profile_to_animalProfile, bundle);
                 }
 

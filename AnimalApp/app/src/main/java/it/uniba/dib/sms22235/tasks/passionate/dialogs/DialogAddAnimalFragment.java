@@ -64,7 +64,7 @@ public class DialogAddAnimalFragment extends DialogFragment implements android.a
         // Set dialog title
         View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
         TextView titleText = titleView.findViewById(R.id.dialog_title);
-        titleText.setText("Registrazione animale");
+        titleText.setText(R.string.registrazione_animale);
         builder.setCustomTitle(titleView);
 
         SimpleDateFormat dateSDF = new SimpleDateFormat("dd/MM/yy", Locale.ITALY);

@@ -333,9 +333,9 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         // standard behavior
         if (item.getItemId() == R.id.profile_info) {
             LinkedHashMap<String, String> map = new LinkedHashMap<>();
-            map.put("Username", passionate.getUsername());
-            map.put("Numero di animali", "" + animalSet.size());
-            map.put("Numero di spese effettuate", "" + purchasesList.size());
+            map.put(getString(R.string.username), passionate.getUsername());
+            map.put(getString(R.string.numero_animali), "" + animalSet.size());
+            map.put(getString(R.string.numero_spese), "" + purchasesList.size());
 
             Bundle bundle = new Bundle();
             bundle.putSerializable(KeysNamesUtils.BundleKeys.USER_PROFILE, passionate);
@@ -378,11 +378,11 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                     registerAnimalFirebase(animal);
 
             } else {
-                Toast.makeText(this, "Animale duplicato: codice microchip già esistente",
+                Toast.makeText(this, getString(R.string.animale_duplicato),
                         Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Impossibile salvare l'animale: rete assente",
+            Toast.makeText(this, getString(R.string.salvataggio_animale_fallimento_rete),
                     Toast.LENGTH_SHORT).show();
         }
 
@@ -422,7 +422,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         KeysNamesUtils.FileDirsNames.ADD_PURCHASE);
             }
         } else {
-            Toast.makeText(this, "Errore nell'inserimento della spesa", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.error_spesa_inserimento), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -469,7 +469,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
 
         // Give to the user a feedback to wait
         ProgressDialog progressDialog = new ProgressDialog(this,R.style.Widget_App_ProgressDialog);
-        progressDialog.setMessage("Salvando l'immagine...");
+        progressDialog.setMessage(getString(R.string.salvando_immagine));
         progressDialog.show();
 
         // Start the upload task
@@ -488,7 +488,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                                     .set(post)
                                     .addOnSuccessListener(documentReference -> {
                                         Toast.makeText(PassionateNavigationActivity.this,
-                                                "Caricamento completato con successo", Toast.LENGTH_LONG).show();
+                                                getString(R.string.caricamento_successo), Toast.LENGTH_LONG).show();
                                         progressDialog.dismiss();
                                     });
                         });
@@ -576,12 +576,12 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                                     .document(docKeyReservation)
                                     .set(reservation)
                                     .addOnSuccessListener(unused -> {
-                                        Toast.makeText(this, "Prenotazione confermata!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(this, getString(R.string.prenotazione_conferma_successo), Toast.LENGTH_SHORT).show();
                                     }).addOnFailureListener(e -> {
-                                        Log.d("DEB", e.getMessage());
+                                        Log.d("AnimalAPP - Prenotazione visita","PassionateNavigationActivity:581 - " + e.getMessage());
                                     });
                         } else {
-                            Toast.makeText(this, "Si è verificato un errore, provare più tardi.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getString(R.string.error_generic), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -625,7 +625,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         if (isConnectionEnabled) {
             updateAnimalVeterinarian(animal);
         } else {
-            Toast.makeText(this, "Impossibile modificare l'animale: rete assente",
+            Toast.makeText(this, getString(R.string.salvataggio_animale_fallimento_rete),
                     Toast.LENGTH_SHORT).show();
         }
 
@@ -663,10 +663,10 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         spinner.setAdapter(spinnerAdapter);
                         spinner.setVisibility(View.VISIBLE);
                     } else {
-                        String info = "Impossibile trovare animali di proprietà " + "di " + username;
+                        String info = getString(R.string.impossibile_trovare_animali_di) + username;
 
                         DialogEntityDetailsFragment dialogEntityDetailsFragment = new DialogEntityDetailsFragment(info);
-                        dialogEntityDetailsFragment.setPositiveButton("Chiudi", (dialog, which) -> {
+                        dialogEntityDetailsFragment.setPositiveButton(getString(R.string.chiudi), (dialog, which) -> {
                             dialog.dismiss();
                             dialogFragment.dismiss();
                         });
@@ -741,7 +741,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                             .document(pokeLink.getId())
                             .set(pokeLink)
                             .addOnSuccessListener(unused -> {
-                                Toast.makeText(this, "Link aggiunto con successo", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, getString(R.string.link_aggiunta_successo), Toast.LENGTH_SHORT).show();
                             });
                 });
     }
@@ -756,7 +756,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                     if (adapter.removeElementById(id)) {
                         adapter.notifyDataSetChanged();
                     }
-                    Toast.makeText(this, "Link eliminato con successo", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.link_eliminazione_successo), Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -861,7 +861,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                                     .addOnSuccessListener(unused -> {
 
                                         Toast.makeText(this,
-                                                "Animale registrato con successo",
+                                                getString(R.string.animale_inserimento_successo),
                                                 Toast.LENGTH_LONG).show();
 
                                         // Update the local animal's files
@@ -869,8 +869,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                                                 KeysNamesUtils.FileDirsNames.localAnimalsSet(passionate.getEmail()));
                                     })
                                     .addOnFailureListener(e ->
-                                            Toast.makeText(this, "Animale duplicato: " +
-                                                            "codice microchip già esistente",
+                                            Toast.makeText(this, getString(R.string.animale_duplicato),
                                                     Toast.LENGTH_SHORT).show());
                         }
                     }
@@ -886,7 +885,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
                 .add(purchase)
                 .addOnSuccessListener(documentReference -> Toast.makeText(this,
-                        "Spesa salvata con successo",
+                                getString(R.string.spesa_aggiunta_successo),
                         Toast.LENGTH_LONG).show())
                 .addOnFailureListener(e -> {
                     // Add changes to local files
@@ -977,14 +976,14 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                                     .set(animal)
                                     .addOnSuccessListener(unused -> {
                                         Toast.makeText(this,
-                                                "Animale aggiornato con successo",
+                                                getString(R.string.aggiornamento_completo),
                                                 Toast.LENGTH_LONG).show();
                                         DataManipulationHelper.saveDataInternally(this, animalSet,
                                                 KeysNamesUtils.FileDirsNames.localAnimalsSet(passionate.getEmail()));
                                         // Update the local animal's files
                                     })
                                     .addOnFailureListener(e ->
-                                            Toast.makeText(this, "Errore interno, dati non aggiornati",
+                                            Toast.makeText(this, getString(R.string.error_generic),
                                                     Toast.LENGTH_SHORT).show());
                         }
                     }

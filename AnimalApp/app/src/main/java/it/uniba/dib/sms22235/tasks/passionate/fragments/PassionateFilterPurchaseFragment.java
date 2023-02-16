@@ -83,17 +83,17 @@ public class PassionateFilterPurchaseFragment extends Fragment {
             if (animaList == null) {
                 animaList = new ArrayList<>();
 
-                Toast.makeText(getContext(), "Lista animali vuota, impossibile effettuare ricerche",
+                Toast.makeText(getContext(), getString(R.string.lista_animali_vuota_no_ricerche),
                         Toast.LENGTH_SHORT).show();
             }
         }
 
         categories = new ArrayList<>();
 
-        categories.add("Toelettatura");
-        categories.add("Divertimento");
-        categories.add("Cibo");
-        categories.add("Spese mediche");
+        categories.add(getString(R.string.toelettatura));
+        categories.add(getString(R.string.divertimento));
+        categories.add(getString(R.string.cibo));
+        categories.add(getString(R.string.spese_mediche));
 
         return inflater.inflate(R.layout.fragment_passionate_filter_purchase, container, false);
     }

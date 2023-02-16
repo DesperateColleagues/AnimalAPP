@@ -134,7 +134,7 @@ public class DialogAddPurchaseFragment extends DialogFragment
                     amount = Integer.parseInt(inputAmount);
                 } catch (NumberFormatException e) {
                     Toast.makeText(getContext(),
-                            "Il campo quantità o costo deve essere numerico",
+                            getString(R.string.costo_quantita_non_numero),
                             Toast.LENGTH_SHORT).show();
                     isCorrectInput = false;
                 }
@@ -148,7 +148,7 @@ public class DialogAddPurchaseFragment extends DialogFragment
                     ));
                     dismiss();
                 } else if (distance < 0) {
-                    Toast.makeText(getContext(), "Distanza", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), getString(R.string.error_date), Toast.LENGTH_LONG).show();
                 }
             }
         });

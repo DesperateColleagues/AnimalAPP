@@ -137,7 +137,7 @@ public class PassionatePurchaseFragment extends Fragment implements
                 dialogAddPurchaseFragment.show(requireActivity().getSupportFragmentManager(),
                         "DialogAddPurchaseFragment");
             } else {
-                Toast.makeText(context, "Impossibile inserire una spesa se non si hanno animali registrati", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.aggiunta_spesa_fallita_no_animali), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -279,7 +279,7 @@ public class PassionatePurchaseFragment extends Fragment implements
                     purchasesSubList.add(purchase);
                 }
             } else {
-                Toast.makeText(requireContext(), "Nessun risultato", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.nessun_risultato), Toast.LENGTH_SHORT).show();
             }
         }
 

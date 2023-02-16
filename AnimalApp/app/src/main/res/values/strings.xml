@@ -5,9 +5,12 @@
 
     <!-- Stringhe sottostanti utili per dialogs -->
     <string name="ok">OK</string>
+    <string name="no">NO</string>
     <string name="conferma">Conferma</string>
     <string name="cancella">Cancella</string>
     <string name="modifica">Modifica</string>
+    <string name="chiudi">Chiudi</string>
+    <string name="seleziona">Seleziona</string>
     <string name="error_generic">Errore generico, contattare gli sviluppatori</string>
     <string name="error_offline">Sezione non disponibile in modalità offline</string>
     <string name="error_date">La data selezionata si trova nel futuro</string>
@@ -27,24 +30,27 @@
     <string name="offline_warning">Connessione persa: passaggio a modalità offline</string>
     <string name="online_login_message">Login online effettuato!</string>
     <string name="online_login_unstable">Credenziali non corrette o rete troppo instabile</string>
+    <string name="missing_mail_app">Impossibile procedere, non è installata un\'app di gestione mail</string>
 
     <string name="camera_permission">Operazione non completata.
         In caso di schermata nera, verificare i permessi dell\'applicazione.</string>
-    <string name="location_permission">Impossibile effettuare ricerche: permesso posizione mancante.</string>
+    <string name="location_permission">Per accedere a questa funzione, è necessario abilitare l\'accesso alla posizione</string>
     <string name="location_permission_spiegazione">Il permesso <b>POSIZIONE</b> è essenziale per poter gestire tutte le informazioni relative alle segnalazione. Senza di esso non ti sarà possibile inserire una nuove segnalazioni e filtrare le segnalazioni esistenti</string>
     <string name="title_location_permission_spiegazione">Perchè accettare il permesso</string>
     <string name="chiedi_permesso">"Chiedi permesso</string>
     <string name="dettagli_profilo">Dettagli profilo utente</string>
+    <string name="abilita_posizione">Abilita posizione</string>
 
 
     <!-- Stringhe sottostanti riferite alla registrazione -->
     <string name="animalapp_login">AnimalApp - Login</string>
+    <string name="inserisci_credenziali">Inserisci le tue credenziali per accedere</string>
     <string name="email">E-Mail</string>
     <string name="password">Password</string>
     <string name="password_dimenticata">Password dimenticata?</string>
     <string name="login">Login</string>
     <string name="registrati">Registrati</string>
-    <string name="benvenuto">Benvenuto!</string>
+    <string name="benvenuto">Benvenuto</string>
     <string name="role_message">Prima di tutto, a che categoria appartieni?</string>
     <string name="padrone">Padrone</string>
     <string name="appassionato">Appassionato</string>
@@ -91,11 +97,15 @@
     <string name="seleziona_immagine">Seleziona immagine</string>
     <string name="salva">Salva</string>
     <string name="titolo_immagine">Titolo immagine</string>
+    <string name="aggiornamento_completo">Aggiornamento completato con successo</string>
+    <string name="spostando_post_scambio">Spostando i post…</string>
+    <string name="registrazione_animale">Registrazione animale</string>
 
     <!-- Stringhe sottostanti riferite all' AnimalProfile -->
     <string name="a_casa_o_in_stallo">"Rosso: in stallo\nVerde: a casa"</string>
     <string name="title_fragment_diagnosis">Elenco diagnosi</string>
     <string name="title_fragment_exams">Elenco esami</string>
+    <string name="scannerizza_qr_code">Scannerizza il QR code</string>
 
     <!-- Stringhe sottostanti riferite alle prenotazioni del passionate -->
     <string name="aggiungi_appuntamento">Aggiungi appuntamento</string>
@@ -174,21 +184,28 @@
     <string name="conferma_richiesta_messaggio">Vuoi contrassegnare come "completato" questo elemento?</string>
     <string name="ricarica_sessione">Spostamento completato, riesegui il login</string>
     <string name="completa_richiesta">Completamento richiesta</string>
+    <string name="nuova_richiesta_inserita_successo">Richiesta aggiunta correttamente</string>
+    <string name="sbagliato_animale_scansionato">L\'animale scansionato non corrisponde alla richiesta! Riprovare inquadrando il codice QR corretto.</string>
 
     <string name="descrizione_stallo">Breve descrizione dello stallo</string>
     <string name="descrizione_stallo_inserita_successo">Descrizione stallo inserita correttamente</string>
     <string name="inserisci_descrizione_stallo">Inserisci descrizione stallo</string>
     <string name="aggiungi_nuovo_backbench">Aggiungi animale allo stallo temporaneo</string>
+    <string name="nuova_backbench_inserita_successo">Residenza temporanea registrata con successo</string>
     <string name="modifica_immagine_stallo">Modifica immagine stallo</string>
 
     <!-- Stringhe sottostanti riferite alle segnalazioni -->
     <string name="segnalazione">Segnalazione -</string>
+    <string name="mie_segnalazioni">Mie segnalazioni</string>
+    <string name="altri_segnalazioni">Segnalazioni community</string>
     <string name="latitudine">Latitudine</string>
     <string name="longitudine">Longitudine</string>
     <string name="modifica_segnalazione">Modifica segnalazione</string>
     <string name="segnalazione_inserita_successo">Segnalazione inserita con successo</string>
     <string name="segnalatore">Utente segnalatore: </string>
     <string name="posizione_segnalazione">Posizione segnalazione</string>
+    <string name="tutte">Tutte</string>
+    <string name="error_location_filter">Impossibile eseguire il filtraggio. Provare a riavviare l\'applicazione</string>
 
     <string name="animal_profile_infos">
         ·<b>Specie:</b>* \n·<b>Razza:</b>*\n<br/>·<b>Data di nascita:</b>*\n<br/>·<b>Codice microchip:*</b>
@@ -199,6 +216,11 @@
     <string name="importazione_fallita">Errore nell\'ottenimento del file da importare</string>"
     <string name="animali_assistenza">Animali assistiti</string>
     <string name="empty_list">Non c\'è niente qui, per ora</string>
+    <string name="indirizzo_ente">Indirizzo ente</string>
+    <string name="numero_telefono">Numero di telefono</string>
+    <string name="tipo_ente">Tipo di ente</string>
+    <string name="title_offerta_animale_import">Offro: %s - %s</string>
+    <string name="offerta_animale_import">Offro questo %s di nome %s attualmente accudito dalla nostra associazione</string>
 
     <!-- Stringhe sottostanti riferite alla modalità PokAnimal -->
     <string name="bill_pc">Il PC di Bill</string>
@@ -210,16 +232,45 @@
     <string name="diagnosis_date_added_system">Data aggiunta al sistema</string>
 
     <!-- Perchè non lasciare qualche easter egg? -->
-
     <string name="not_now">usa Pietraidrica!</string>
     <string name="not_now_message">Le parole del Prof. Oak rimbombano:\n\n<i>"C'è un luogo e un momento per ogni cosa! Ma non ora."</i></string>
     <string name="not_now_button">Premi per continuare</string>
-
     <!-- Stavo programmando le richieste. A mezzanotte dell'otto di Gennaio. Che fai, non aggiungi un altro easter egg? -->
-
     <string name="ascanio">lascia entrare Ascanio!</string>
     <string name="ascanio_message"><i>Hey, lascia entrare Ascanio, dall\'otto di gennaio\nPerciò, limarla è tosta: esce, ma non mi rosica</i></string>
     <string name="ascanio_button">Il bucio le brucia!</string>
+
+    <string name="cancellazione_successo">Eliminazione completata con successo</string>
+    <string name="modifica_animale_fallita_rete">Impossibile modificare l\'animale: rete assente</string>
+    <string name="seleziona_categoria">Seleziona categoria</string>
+    <string name="username_tuo">Lo username inserito è il tuo!</string>
+    <string name="costo_quantita_non_numero">Il campo quantità o costo deve essere numerico</string>
+    <string name="error_no_app_mappe">App per condividere immagine non installate sul dispositivo</string>
+    <string name="scegli_animale_prenotazione">Scegli animale per cui prenotare</string>
+    <string name="modifica_info_animale">Modifica informazioni animale</string>
+    <string name="dettagli_appuntamento">Dettagli appuntamento</string>
+    <string name="toelettatura">Toelettatura</string>
+    <string name="cibo">Cibo</string>
+    <string name="divertimento">Divertimento</string>
+    <string name="spese_mediche">Spese mediche</string>
+    <string name="lista_animali_vuota_no_ricerche">Lista animali vuota, impossibile effettuare ricerche</string>
+    <string name="conferma_elimina_pokelink">Sicuro di voler eliminare questo PokeLink?</string>
+    <string name="eliminazione_pokelink">Eliminazione PokeLink</string>
+    <string name="nessun_risultato">Nessun risultato</string>
+    <string name="aggiunta_spesa_fallita_no_animali">Impossibile inserire una spesa se non si hanno animali registrati</string>
+    <string name="numero_animali">Numero di animali</string>
+    <string name="numero_spese">Numero di spese effettuate</string>
+    <string name="animale_duplicato">Animale duplicato: codice microchip già esistente</string>
+    <string name="salvataggio_animale_fallimento_rete">Impossibile salvare l\'animale: rete assente</string>
+    <string name="error_spesa_inserimento">Errore nell\'inserimento della spesa</string>
+    <string name="caricamento_successo">Caricamento completato con successo</string>
+    <string name="prenotazione_conferma_successo">Prenotazione confermata!</string>
+    <string name="impossibile_trovare_animali_di">\"Impossibile trovare animali di proprietà di \"</string>
+    <string name="link_aggiunta_successo">Link aggiunto con successo</string>
+    <string name="link_eliminazione_successo">Link eliminato con successo</string>
+    <string name="animale_inserimento_successo">Animale registrato con successo</string>
+    <string name="spesa_aggiunta_successo">Spesa salvata con successo</string>
+    <string name="error_numero_civico_intero">Il campo CAP o numero civico, non è un numero INTERO</string>
 
     <string-array name="rangeSliderValues">
         <item>0</item>

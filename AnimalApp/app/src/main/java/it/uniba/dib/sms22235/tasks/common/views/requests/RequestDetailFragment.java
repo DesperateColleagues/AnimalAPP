@@ -68,8 +68,7 @@ public class RequestDetailFragment extends Fragment {
                         oldOwner, getResources().getString(R.string.ricarica_sessione),
                         getContext(), requireActivity(), request);
             } else {
-                Toast.makeText(getContext(), "L'animale scansionato non corrisponde alla richiesta!" +
-                                "Riprovare inquadrando il codice QR corretto.",
+                Toast.makeText(getContext(), getString(R.string.sbagliato_animale_scansionato),
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -135,7 +134,7 @@ public class RequestDetailFragment extends Fragment {
         });
 
         // Manage backbenches requests
-        if (request.getRequestType().equals("Offerta stallo")) {
+        if (request.getRequestType().equals(KeysNamesUtils.RequestFields.R_TYPE_BACKBENCH_OFFER)) {
 
             FrameLayout frameLayout = view.findViewById(R.id.frameBackbench);
             frameLayout.setVisibility(View.VISIBLE);
@@ -149,7 +148,7 @@ public class RequestDetailFragment extends Fragment {
         }
 
         // Manage animal request
-        if (request.getRequestType().equals("Offerta animale")) {
+        if (request.getRequestType().equals(KeysNamesUtils.RequestFields.R_TYPE_ANIMAL_OFFER)) {
             Button btnShowAnimalProfile = view.findViewById(R.id.btnShowAnimalProfile);
             btnShowAnimalProfile.setOnClickListener(v -> {
                 ((NavigationActivityInterface) requireActivity()).getFireStoreInstance()
@@ -169,7 +168,7 @@ public class RequestDetailFragment extends Fragment {
             btnConfirmAnimalRequestQr.setOnClickListener(v -> {
                 ScanOptions options = new ScanOptions();
                 options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
-                options.setPrompt("Scannerizza il QR code"); // todo translate
+                options.setPrompt(getString(R.string.scannerizza_qr_code));
                 options.setBeepEnabled(false);
                 options.setBarcodeImageEnabled(true);
                 options.setOrientationLocked(false);
@@ -193,7 +192,7 @@ public class RequestDetailFragment extends Fragment {
 
             startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Impossibile procedere, non è installata un'app di gestione mail", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getString(R.string.missing_mail_app), Toast.LENGTH_LONG).show();
         }
     }
 

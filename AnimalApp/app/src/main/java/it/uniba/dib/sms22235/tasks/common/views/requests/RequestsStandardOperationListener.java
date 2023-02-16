@@ -2,7 +2,6 @@ package it.uniba.dib.sms22235.tasks.common.views.requests;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,13 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.commonoperations.RequestAdapter;
 import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.Request;
 import it.uniba.dib.sms22235.entities.users.Animal;
-import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.requests.BsdDialogQr;
-import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
@@ -71,7 +69,7 @@ public interface RequestsStandardOperationListener {
         db.collection(KeysNamesUtils.CollectionsNames.RESIDENCE)
                 .document(id).set(residence)
                 .addOnSuccessListener(documentReference ->
-                        Toast.makeText(context, "Residenza temporanea registrata con successo",
+                        Toast.makeText(context, context.getResources().getString(R.string.nuova_backbench_inserita_successo),
                                 Toast.LENGTH_SHORT).show());
     }
     /**
@@ -108,7 +106,7 @@ public interface RequestsStandardOperationListener {
                                     if (
                                             !r.getUserEmail().equals(Objects.requireNonNull(auth.getCurrentUser()).getEmail()) &&
                                             !r.getIsCompleted() &&
-                                            r.getRequestType().equals("Aiuto")
+                                            r.getRequestType().equals(KeysNamesUtils.RequestFields.R_TYPE_HELP_OFFER)
                                     ) {
                                         subRequestsList.add(r);
                                     }
@@ -157,7 +155,7 @@ public interface RequestsStandardOperationListener {
                 .document(request.getId())
                 .set(request)
                 .addOnSuccessListener(documentReference ->
-                        Toast.makeText(context, "Richiesta aggiunta correttamente", Toast.LENGTH_SHORT).show());
+                        Toast.makeText(context, context.getResources().getString(R.string.nuova_richiesta_inserita_successo), Toast.LENGTH_SHORT).show());
 
         if (isMine) {
             subRequestsList.add(request);
@@ -182,7 +180,9 @@ public interface RequestsStandardOperationListener {
                 .document(request.getId())
                 .set(request)
                 .addOnSuccessListener(unused -> {
-                    Toast.makeText(context, "Aggiornamento completato con successo", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,
+                            context.getResources().getString(R.string.aggiornamento_completo),
+                            Toast.LENGTH_SHORT).show();
                     adapter.notifyDataSetChanged();
                 });
     }

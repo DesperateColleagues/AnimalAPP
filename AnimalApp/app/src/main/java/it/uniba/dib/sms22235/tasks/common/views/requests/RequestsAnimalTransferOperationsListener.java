@@ -166,7 +166,7 @@ public interface RequestsAnimalTransferOperationsListener {
                     final AlertDialog reloadDialog = reloadDialogBuilder.create();
                     reloadDialog.setCancelable(false);
                     reloadDialog.setMessage(reloadMessage);
-                    reloadDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialogInterface, i) -> {
+                    reloadDialog.setButton(AlertDialog.BUTTON_POSITIVE, context.getResources().getString(R.string.ok), (dialogInterface, i) -> {
                         Intent intent = new Intent(context, LoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
@@ -175,7 +175,8 @@ public interface RequestsAnimalTransferOperationsListener {
                     reloadDialog.show();
 
                     Toast.makeText(context,
-                            "Aggiornamento completato con successo", Toast.LENGTH_SHORT).show();
+                            context.getResources().getString(R.string.aggiornamento_completo),
+                            Toast.LENGTH_SHORT).show();
 
                 });
     }
@@ -196,7 +197,7 @@ public interface RequestsAnimalTransferOperationsListener {
 
         // Give to the user a feedback to wait
         ProgressDialog progressDialog = new ProgressDialog(context, R.style.Widget_App_ProgressDialog);
-        progressDialog.setMessage("Spostando i post...");
+        progressDialog.setMessage(context.getResources().getString(R.string.spostando_post_scambio));
         progressDialog.setCancelable(false);
         progressDialog.show();
 

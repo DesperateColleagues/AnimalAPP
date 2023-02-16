@@ -78,7 +78,7 @@ public class DialogEditAnimalDataFragment extends DialogFragment {
 
         @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
         TextView titleText = titleView.findViewById(R.id.dialog_title);
-        titleText.setText("Modifica informazioni animale");
+        titleText.setText(getString(R.string.modifica_info_animale));
         builder.setCustomTitle(titleView);
 
         veterinarianListSpinner = root.findViewById(R.id.animalSpinner);

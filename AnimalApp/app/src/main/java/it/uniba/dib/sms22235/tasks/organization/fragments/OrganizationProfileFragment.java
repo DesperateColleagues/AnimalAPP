@@ -30,7 +30,6 @@ import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
 
 public class OrganizationProfileFragment extends Fragment {
 
-    private RecyclerView assistedAnimalRecyclerView;
     private AnimalListAdapter adapter;
     private OrganizationProfileFragmentListener listener;
     private transient NavController controller;
@@ -61,7 +60,7 @@ public class OrganizationProfileFragment extends Fragment {
         controller = Navigation.findNavController(container);
 
         TextView organizationWelcome = rootView.findViewById(R.id.txtOrganizationWelcome);
-        organizationWelcome.setText("Benvenuto, " + ((OrganizationNavigationActivity) requireActivity()).getUserId());
+        organizationWelcome.setText(getString(R.string.benvenuto) + ", " +((OrganizationNavigationActivity) requireActivity()).getUserId());
 
         ((NavigationActivityInterface) requireActivity()).setNavViewVisibility(View.VISIBLE);
         ((NavigationActivityInterface) requireActivity()).getFab().setVisibility(View.GONE);
@@ -70,7 +69,7 @@ public class OrganizationProfileFragment extends Fragment {
             controller.navigate(R.id.action_organization_profile_to_reportsDashboardFragment);
         });
 
-        assistedAnimalRecyclerView = rootView.findViewById(R.id.assistedAnimalList);
+        RecyclerView assistedAnimalRecyclerView = rootView.findViewById(R.id.assistedAnimalList);
 
         adapter = new AnimalListAdapter(RecyclerView.VERTICAL);
         adapter.setContext(getContext());

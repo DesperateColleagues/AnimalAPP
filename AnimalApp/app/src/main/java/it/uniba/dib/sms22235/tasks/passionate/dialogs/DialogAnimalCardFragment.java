@@ -95,9 +95,9 @@ public class DialogAnimalCardFragment extends DialogFragment {
             mediaIntent.setType("image/jpeg");
             mediaIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
             try {
-                startActivity(Intent.createChooser(mediaIntent, "Seleziona"));
+                startActivity(Intent.createChooser(mediaIntent, getString(R.string.seleziona)));
             } catch (android.content.ActivityNotFoundException ex) {
-                Toast.makeText(requireContext(), "App per condividere immagine non installate sul dispositivo", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.error_no_app_mappe), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -117,7 +117,6 @@ public class DialogAnimalCardFragment extends DialogFragment {
             //does not have background drawable, then draw white background on the canvas
             canvas.drawColor(Color.WHITE);
         }
-
         // Render the view on the created canvas
         view.draw(canvas);
 

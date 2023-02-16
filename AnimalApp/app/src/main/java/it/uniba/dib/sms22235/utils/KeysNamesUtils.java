@@ -212,6 +212,9 @@ public class KeysNamesUtils {
         public static String REQUEST_TYPE = "requestType";
         public static String R_TYPE_OFFER = "offer";
         public static String R_TYPE_REQUEST = "request";
+        public static String R_TYPE_ANIMAL_OFFER = "Offerta animale";
+        public static String R_TYPE_BACKBENCH_OFFER = "Offerta stallo";
+        public static String R_TYPE_HELP_OFFER = "Aiuto";
     }
 
     public static class FileDirsNames {

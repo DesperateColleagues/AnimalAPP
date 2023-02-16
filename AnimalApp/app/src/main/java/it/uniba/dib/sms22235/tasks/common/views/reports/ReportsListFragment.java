@@ -214,11 +214,11 @@ public class ReportsListFragment extends Fragment {
 
                         reportsListFiltered = new ArrayList<>();
 
-                        String textBtn = "Tutte";
+                        String textBtn = getString(R.string.tutte);
 
                         if (counterTouchKm == 4) {
                             counterTouchKm = 0;
-                                    recyclerView.setAdapter(reportsAdapter);
+                            recyclerView.setAdapter(reportsAdapter);
                         } else {
                             textBtn = (distanceMeters[counterTouchKm] / 1000) + getResources().getString(R.string.chilometri);
                             filterByCurrentLocation();
@@ -231,37 +231,32 @@ public class ReportsListFragment extends Fragment {
                         @SuppressLint("InflateParams")
                         View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
                         TextView titleText = titleView.findViewById(R.id.dialog_title);
-                        titleText.setText("Abilita posizione");
+                        titleText.setText(getString(R.string.abilita_posizione));
                         builder.setCustomTitle(titleView);
-                        builder.setMessage("Per accedere a questa funzione, è necessario abilitare la posizione");
-                        builder.setPositiveButton("Conferma", (dialog, which) -> {
+                        builder.setMessage(getString(R.string.location_permission));
+                        builder.setPositiveButton(getString(R.string.conferma), (dialog, which) -> {
                             // When location service is not enabled open location setting
                             startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                             dialog.dismiss();
-                        }).setNegativeButton("Annulla", ((dialog, which) -> {
+                        }).setNegativeButton(getString(R.string.cancella), ((dialog, which) -> {
                             dialog.dismiss();
                         }));
                         builder.create().show();
                     }
 
                 } else if (shouldShowRequestPermissionRationale(permissionAccessFineLocation)) {
-                    // Prepare the explanation message
-                    String info = "Il permesso <b>POSIZIONE</b> è essenziale per poter gestire tutte" +
-                            " le informazioni relative alle segnalazione. Senza di esso non ti sarà possibile:<br> " +
-                            "<br>• Inserire una nuova segnalazione" +
-                            "<br>• Filtrare le segnalazioni esistenti";
 
                     @SuppressLint("InflateParams")
                     View titleView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_dialogs_title, null);
                     TextView titleText = titleView.findViewById(R.id.dialog_title);
-                    titleText.setText("Perchè accettare il permesso");
+                    titleText.setText(getString(R.string.title_location_permission_spiegazione));
 
-                    DialogEntityDetailsFragment dialogEntityDetailsFragment = new DialogEntityDetailsFragment(info);
+                    DialogEntityDetailsFragment dialogEntityDetailsFragment = new DialogEntityDetailsFragment(getString(R.string.location_permission_spiegazione));
 
                     dialogEntityDetailsFragment.setTitleView(titleView);
-                    dialogEntityDetailsFragment.setPositiveButton("Chiudi", (dialog, which) -> dialog.dismiss());
-                    dialogEntityDetailsFragment.setNegativeButton("Chiedi permesso", ((dialog, which) -> {
+                    dialogEntityDetailsFragment.setPositiveButton(getString(R.string.cancella), (dialog, which) -> dialog.dismiss());
+                    dialogEntityDetailsFragment.setNegativeButton(getString(R.string.chiedi_permesso), ((dialog, which) -> {
                         requestPermissionLauncher.launch(permissionAccessFineLocation);
                         dialog.dismiss();
                     }));
@@ -272,7 +267,7 @@ public class ReportsListFragment extends Fragment {
                     requestPermissionLauncher.launch(permissionAccessFineLocation);
                 }
             });
-       } else {
+        } else {
             view.findViewById(R.id.linearLocationFilter).setVisibility(View.GONE);
         }
 
@@ -337,15 +332,15 @@ public class ReportsListFragment extends Fragment {
                         locationRequest,
                         locationCallback,
                         Looper.myLooper());
-                } else {
-                    filter(mLocation);
-                }
+            } else {
+                filter(mLocation);
+            }
 
-                if (reportsListFiltered.size() > 0) {
-                    reportsAdapterFiltered.setReportsList(reportsListFiltered);
-                    recyclerView.setAdapter(reportsAdapterFiltered);
-                }
-            });
+            if (reportsListFiltered.size() > 0) {
+                reportsAdapterFiltered.setReportsList(reportsListFiltered);
+                recyclerView.setAdapter(reportsAdapterFiltered);
+            }
+        });
     }
 
     /**
@@ -368,7 +363,7 @@ public class ReportsListFragment extends Fragment {
                         reportsListFiltered.add(report);
                     }
                 } else {
-                    Toast.makeText(getContext(), "Impossibile eseguire il filtraggio. Provare a riavviare l'applicazione", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.error_location_filter), Toast.LENGTH_SHORT).show();
                 }
             }
         }

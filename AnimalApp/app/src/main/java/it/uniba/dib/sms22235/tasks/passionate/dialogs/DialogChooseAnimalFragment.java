@@ -51,7 +51,7 @@ public class DialogChooseAnimalFragment extends DialogFragment {
         // Set dialog title
         @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
         TextView titleText = titleView.findViewById(R.id.dialog_title);
-        titleText.setText("Scegli animale per cui prenotare");
+        titleText.setText(getString(R.string.scegli_animale_prenotazione));
         builder.setCustomTitle(titleView);
         builder.setView(root);
 

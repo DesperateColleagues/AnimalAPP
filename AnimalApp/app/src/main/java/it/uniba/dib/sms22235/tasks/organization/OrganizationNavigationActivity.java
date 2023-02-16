@@ -185,13 +185,6 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
         if (veterinariansList == null) {
             veterinariansList = new ArrayList<>();
         }
-
-        /*getStorageInstance().getReference("trovatelli_post/profile_A10001.jpg").getBytes(1024 * 1024 * 5).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                getStorageInstance().getReference("org1@gmail.com_post/profile_A10001.jpg").putBytes(bytes);
-            }
-        });*/
     }
 
     @Override
@@ -205,9 +198,9 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
         // standard behavior
         if (item.getItemId() == R.id.profile_info) {
             LinkedHashMap<String, String> map = new LinkedHashMap<>();
-            map.put("Indirizzo ente", organization.getOrgAddress());
-            map.put("Numero di telefono", organization.getPhoneNumber());
-            map.put("Tipo di ente", organization.getPurpose());
+            map.put(getString(R.string.indirizzo_ente), organization.getOrgAddress());
+            map.put(getString(R.string.numero_telefono), organization.getPhoneNumber());
+            map.put(getString(R.string.tipo_ente), organization.getPurpose());
 
             Bundle bundle = new Bundle();
             bundle.putSerializable(KeysNamesUtils.BundleKeys.USER_PROFILE, organization);
@@ -277,10 +270,10 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
                                     .set(post);
 
 
-                            String title = String.format("Offro: %s - %s", animal.getAnimalSpecies(), animal.getRace());
-                            String body = String.format("Offro questo %s di nome %s attualmente accudito dalla nostra associazione", animal.getAnimalSpecies(), animal.getName());
+                            String title = String.format(getString(R.string.title_offerta_animale_import), animal.getAnimalSpecies(), animal.getRace());
+                            String body = String.format(getString(R.string.offerta_animale_import), animal.getAnimalSpecies(), animal.getName());
 
-                            Request request = new Request(title, body, "Offerta animale");
+                            Request request = new Request(title, body, KeysNamesUtils.RequestFields.R_TYPE_ANIMAL_OFFER);
                             request.setUserEmail(organization.getEmail());
                             request.setAnimal(animal.getName() + " - " + animal.getMicrochipCode());
 
@@ -441,7 +434,7 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
             InterfacesOperationsHelper.AnimalOwnerOperations animalHelper = new InterfacesOperationsHelper.AnimalOwnerOperations(this, db);
             animalHelper.onAnimalUpdated(selectedAnimal);
         } else {
-            Toast.makeText(this, "Impossibile modificare l'animale: rete assente",
+            Toast.makeText(this, getString(R.string.modifica_animale_fallita_rete),
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -485,7 +478,7 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
                             db.collection(KeysNamesUtils.CollectionsNames.PHOTO_DIARY)
                                     .document(PhotoDiaryPost.loadPhotoDiaryPost(queryDocumentSnapshots.getDocuments().get(0)).getFileName())
                                     .delete().addOnSuccessListener(unused1 -> {
-                                        Toast.makeText(this, "Eliminazione completata con successo", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(this, getString(R.string.cancellazione_successo), Toast.LENGTH_SHORT).show();
                                     });
                         }
                     });

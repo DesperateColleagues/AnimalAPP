@@ -115,22 +115,22 @@ public class PassionatePokAnimalList extends Fragment implements
         recyclerView.setAdapter(adapter);
 
         adapter.setListener((pokeLink) -> {
-            String info = "Sicuro di voler eliminare questo PokeLink?";
+            String info = getString(R.string.conferma_elimina_pokelink);
             DialogEntityDetailsFragment dialogEntityDetailsFragment = new DialogEntityDetailsFragment(info);
 
             // Set dialog title
             @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
             TextView titleText = titleView.findViewById(R.id.dialog_title);
-            titleText.setText("Eliminazione PokeLink");
+            titleText.setText(getString(R.string.eliminazione_pokelink));
             dialogEntityDetailsFragment.setTitleView(titleView);
             dialogEntityDetailsFragment.show(getChildFragmentManager(), "DialogEntityDetailsFragment");
 
-            dialogEntityDetailsFragment.setPositiveButton("Elimina", (dialog, which) -> {
+            dialogEntityDetailsFragment.setPositiveButton(getString(R.string.cancella), (dialog, which) -> {
                 listener.deletePokeLink(pokeLink.getId(), adapter);
                 dialog.dismiss();
             });
 
-            dialogEntityDetailsFragment.setNegativeButton("Chiudi", ((dialog, which) -> dialog.dismiss()));
+            dialogEntityDetailsFragment.setNegativeButton(getString(R.string.no), ((dialog, which) -> dialog.dismiss()));
 
         });
     }

@@ -43,7 +43,7 @@ public class DialogAddCategoryFragment extends DialogFragment {
 
         @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
         TextView titleText = titleView.findViewById(R.id.dialog_title);
-        titleText.setText("Seleziona categoria");
+        titleText.setText(R.string.seleziona_categoria);
 
         // Instantiate the grid view adapter
         GridViewCategoryAdapter gridViewCategoryAdapter = new GridViewCategoryAdapter(getContext());

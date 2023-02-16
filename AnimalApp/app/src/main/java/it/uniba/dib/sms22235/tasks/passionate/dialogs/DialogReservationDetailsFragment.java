@@ -41,7 +41,7 @@ public class DialogReservationDetailsFragment extends DialogFragment {
         // Set dialog title
         View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
         TextView titleText = titleView.findViewById(R.id.dialog_title);
-        titleText.setText("Dettagli appuntamento");
+        titleText.setText(getString(R.string.dettagli_appuntamento));
         builder.setCustomTitle(titleView);
 
         TextView txtReservationAnimal = root.findViewById(R.id.txtReservationAnimal);

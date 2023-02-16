@@ -146,7 +146,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         } else {
-            Toast.makeText(this, "Inserisci le tue credenziali per accedere",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.inserisci_credenziali),Toast.LENGTH_LONG).show();
         }
     }
 
@@ -319,9 +319,9 @@ public class LoginActivity extends AppCompatActivity {
                                                             for (DocumentSnapshot snapshot : organizationsDocuments) {
                                                                 organizations.add(Organization.loadOrganization(snapshot));
                                                             }
-                                                        } else {
-                                                            Toast.makeText(this, "Non carico", Toast.LENGTH_SHORT).show();
-                                                        }
+                                                        } /*else {
+                                                            Toast.makeText(this, getString(R.string.error_generic), Toast.LENGTH_SHORT).show();
+                                                        }*/
                                                         // Fill the bundle. If one of the snapshot (or both) are empty
                                                         // the bundle will be filled with an empty array list, in order
                                                         // to prevent nullable errors

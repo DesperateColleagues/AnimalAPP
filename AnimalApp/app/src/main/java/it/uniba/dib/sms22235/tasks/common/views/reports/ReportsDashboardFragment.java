@@ -80,8 +80,8 @@ public class ReportsDashboardFragment extends Fragment implements
         myList.setArguments(myBundle);
         myList.setManageNavigationReports(this);
 
-        adapter.addFragment(communityList, "Segnalazioni community");
-        adapter.addFragment(myList, "Mie segnalazioni");
+        adapter.addFragment(communityList, getString(R.string.altri_segnalazioni));
+        adapter.addFragment(myList, getString(R.string.mie_segnalazioni));
         viewPager.setAdapter(adapter);
     }
 

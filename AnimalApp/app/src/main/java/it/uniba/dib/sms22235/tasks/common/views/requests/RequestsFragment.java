@@ -66,15 +66,15 @@ public class RequestsFragment extends Fragment implements
     private RequestsStandardOperationListener listener;
 
     private final RequestAdapter.OnItemClickListener mineRequestsClickListener = (request) -> {
-        if (!request.getIsCompleted() && request.getRequestType().equals("Aiuto")) {
+        if (!request.getIsCompleted() && request.getRequestType().equals(KeysNamesUtils.RequestFields.R_TYPE_HELP_OFFER)) {
             confirmRequest(request);
         }
 
-        if (!request.getIsCompleted() && request.getRequestType().equals("Offerta stallo")) {
+        if (!request.getIsCompleted() && request.getRequestType().equals(KeysNamesUtils.RequestFields.R_TYPE_BACKBENCH_OFFER)) {
             manageBackbenchRequest(request);
         }
 
-        if (!request.getIsCompleted() && request.getRequestType().equals("Offerta animale")) {
+        if (!request.getIsCompleted() && request.getRequestType().equals(KeysNamesUtils.RequestFields.R_TYPE_ANIMAL_OFFER)) {
             manageAnimalRequest(request);
         }
     };
@@ -269,7 +269,7 @@ public class RequestsFragment extends Fragment implements
             builder.setPositiveButton(getResources().getString(R.string.conferma), (dialog, id) -> {
                 request.setIsCompleted(true);
                 listener.onRequestConfirmed(request, db, adapter, getContext());
-            }).setNegativeButton("No", (dialog, which) -> dialog.dismiss());
+            }).setNegativeButton(getString(R.string.no), (dialog, which) -> dialog.dismiss());
 
             builder.show();
     }

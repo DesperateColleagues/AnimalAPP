@@ -52,9 +52,9 @@ public class DialogAddPassionateAnimalToPokeLink extends DialogFragment {
             String friendId = ((EditText) root.findViewById(R.id.txtInputPassionateLink)).getText().toString();
 
             if (friendId.equals("")) {
-                Toast.makeText(getContext(), "Campo vuoto! Impossibile procedere", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.alcuni_campi_vuoti), Toast.LENGTH_SHORT).show();
             } else if (friendId.equals(((PassionateNavigationActivity) requireActivity()).getUserId())) {
-                Toast.makeText(getContext(), "Lo username inserito è il tuo!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.username_tuo), Toast.LENGTH_SHORT).show();
             } else {
                 listener.onFriendAdded(friendId);
                 dismiss();
