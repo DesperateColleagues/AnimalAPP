@@ -94,6 +94,7 @@ public class ReportAddNewFragment extends Fragment implements
     private NavController controller;
 
     private boolean isGranted;
+    private boolean isAnimalSelected = false;
 
     private ReportAdditionListener listener;
 
@@ -212,15 +213,28 @@ public class ReportAddNewFragment extends Fragment implements
         if (requireActivity() instanceof PassionateNavigationActivity) {
             LinkedHashSet<Animal> animalSet = ((PassionateNavigationActivity) requireActivity()).getAnimalSet();
 
-            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
-                    android.R.layout.simple_spinner_dropdown_item, buildSpinnerEntries(animalSet));
-            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinner.setAdapter(spinnerAdapter);
+            if (animalSet.size() > 0) {
+                ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
+                        android.R.layout.simple_spinner_dropdown_item, buildSpinnerEntries(animalSet));
+                spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(spinnerAdapter);
+
+                isAnimalSelected = true;
+            } else {
+                spinner.setVisibility(View.GONE);
+                view.findViewById(R.id.txtReportDetailTitleAnimalSection).setVisibility(View.GONE);
+                checkBox.setVisibility(View.GONE);
+                view.findViewById(R.id.divider).setVisibility(View.GONE);
+
+                isAnimalSelected = false;
+            }
         } else {
             spinner.setVisibility(View.GONE);
             view.findViewById(R.id.txtReportDetailTitleAnimalSection).setVisibility(View.GONE);
             checkBox.setVisibility(View.GONE);
             view.findViewById(R.id.divider).setVisibility(View.GONE);
+
+            isAnimalSelected = false;
         }
 
         checkBox.setOnClickListener(v -> {
@@ -295,7 +309,7 @@ public class ReportAddNewFragment extends Fragment implements
 
         // Confirm the report by checking fields and by adding it to the FireStore
         btnReportConfirm.setOnClickListener(v -> {
-            if (requireActivity() instanceof PassionateNavigationActivity) {
+            if (isAnimalSelected) {
                 report.setReportAnimal((String) spinner.getSelectedItem());
             } else {
                 report.setReportAnimal("");
