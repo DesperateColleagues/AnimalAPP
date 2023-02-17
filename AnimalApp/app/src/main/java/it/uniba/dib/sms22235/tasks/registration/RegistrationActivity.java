@@ -87,6 +87,7 @@ public class RegistrationActivity extends AppCompatActivity
                                                     // Go to the profile fragment of the passionate
                                                     Bundle bundle = new Bundle();
                                                     bundle.putSerializable(KeysNamesUtils.BundleKeys.PASSIONATE, passionate);
+                                                    bundle.putBoolean(KeysNamesUtils.BundleKeys.ONLINE, true);
 
                                                     progressDialog.dismiss();
 
@@ -148,7 +149,7 @@ public class RegistrationActivity extends AppCompatActivity
         // First register the organization with Firebase auth system
         // in order to authenticate it during login
         ProgressDialog progressDialog = new ProgressDialog(this,R.style.Widget_App_ProgressDialog);
-        progressDialog.setMessage(getString(R.string.salvando_veterinario));
+        progressDialog.setMessage(getString(R.string.registrando_ente));
         progressDialog.show();
 
         mAuth.createUserWithEmailAndPassword(org.getEmail(), org.getPassword())

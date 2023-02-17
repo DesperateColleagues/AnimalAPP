@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".tasks.passionate.fragments.PassionateProfileFragment">
 
@@ -124,6 +125,19 @@
             android:layout_marginBottom="10dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"/>
+        <TextView
+            android:id="@+id/nothingHereTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:text="@string/no_animal"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:textColor="?attr/colorOnSecondary"
+            app:drawableTopCompat="@drawable/nothing_here" />
 
     </RelativeLayout>
 

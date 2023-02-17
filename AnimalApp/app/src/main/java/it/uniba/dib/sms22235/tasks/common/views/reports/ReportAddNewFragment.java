@@ -240,8 +240,10 @@ public class ReportAddNewFragment extends Fragment implements
         checkBox.setOnClickListener(v -> {
             if (spinner.getVisibility() == View.VISIBLE) {
                 spinner.setVisibility(View.GONE);
+                isAnimalSelected = false;
             } else {
                 spinner.setVisibility(View.VISIBLE);
+                isAnimalSelected = true;
             }
         });
 

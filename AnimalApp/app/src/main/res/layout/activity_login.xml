@@ -37,7 +37,6 @@
             android:ems="10"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
-            android:text="marcobari@libero.it"
             android:minHeight="48dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -61,7 +60,6 @@
             android:inputType="textPassword"
             android:minHeight="48dp"
             android:textColorHint="#2E7D32"
-            android:text="123456"
             android:importantForAutofill="no" />
 
     </com.google.android.material.textfield.TextInputLayout>

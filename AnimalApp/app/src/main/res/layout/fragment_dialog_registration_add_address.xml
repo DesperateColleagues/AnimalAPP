@@ -130,6 +130,7 @@
                 android:layout_weight="1"
                 android:autofillHints=""
                 android:drawablePadding="10dp"
+                android:maxLength="5"
                 android:ems="10"
                 android:hint="@string/cap"
                 android:inputType="number"

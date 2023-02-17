@@ -431,6 +431,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onPurchaseDeleted(int pos, ArrayList<Purchase> dataSetPurchase, ListViewPurchasesAdapter adapter) {
         if (isConnectionEnabled()) {
@@ -441,10 +442,11 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             @SuppressLint("InflateParams")
             View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
             TextView titleText = titleView.findViewById(R.id.dialog_title);
-            titleText.setText(getString(R.string.eliminazione)+ " - " + dataSetPurchase.get(pos).getItemName());
+
+            titleText.setText(R.string.delete + dataSetPurchase.get(pos).getItemName());
             builder.setCustomTitle(titleView);
             // Show the purchase info
-            builder.setMessage(R.string.elimina_spesa_domanda);
+            builder.setMessage(R.string.delete_confirm);
 
             builder.setPositiveButton(R.string.conferma, ((dialog, which) ->{
 
@@ -452,8 +454,12 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                     .document(id).delete()
                     .addOnSuccessListener(unused -> {
                         // Delete purchase from all possibles data set
+                        // First remove it from the total purchase list
                         purchasesList.remove(purchase);
-                        dataSetPurchase.remove(pos);
+
+                        if (!purchasesList.equals(dataSetPurchase))
+                            dataSetPurchase.remove(pos);
+
                         queryPurchases.deleteLocalPurchaseById(id);
                         adapter.notifyDataSetChanged();
                     }); }));
@@ -461,7 +467,6 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             builder.setNegativeButton(R.string.cancella, ((dialog, which) -> dialog.dismiss()));
 
             builder.create().show();
-            //db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.error_offline), Toast.LENGTH_SHORT).show();
         }

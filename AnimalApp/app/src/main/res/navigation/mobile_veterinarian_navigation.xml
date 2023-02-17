@@ -26,6 +26,11 @@
             app:destination="@id/userProfileInfoFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_veterinarian_profile_to_animalProfile"
+            app:destination="@id/animalProfile"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
 
     <fragment

@@ -268,7 +268,7 @@
     <string name="spesa_aggiunta_successo">Expense saved successfully</string>
     <string name="error_numero_civico_intero">CAP or street number field is not a whole number</string>
     <string name="error_corta_password">Password too short, minimum 6 characters.</string>
-    <string name="error_numero_non_valido">Invalid phone number.</string>
+    <string name="error_numero_non_valido">Invalid phone number. Check the prefix!</string>
     <string name="error_mail_non_valida">Invalid email.</string>
     <string name="registrazione_successo">Registration completed successfully</string>
     <string name="error_email_usata">Email already in use.</string>
@@ -348,5 +348,10 @@
     <string name="dati_spesa">Dati spesa</string>
     <string name="nome_item">Item name</string>
     <string name="title_fragment_pokeanimal">PokAnimal Mode</string>
+
+    <string name="delete_confirm">Are you sure to delete this purchase?</string>
+    <string name="delete">Delete</string>
+    <string name="registrando_ente">Registering organization…</string>
+
 
 </resources>

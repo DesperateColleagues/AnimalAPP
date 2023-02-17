@@ -202,9 +202,13 @@ public class RequestsFragment extends Fragment implements
                 btnChangeViewRequest.setText(getResources().getString(R.string.richieste_altri));
                 // Load all users' request
                 loadOtherRequests();
+                if (!(requireActivity() instanceof PassionateNavigationActivity)) {
+                    requestsParamsChipGroup.setVisibility(View.GONE);
+                } else {
+                    requestsParamsChipGroup.setVisibility(View.VISIBLE);
+                }
                 isMine = false;
 
-                requestsParamsChipGroup.setVisibility(View.VISIBLE);
 
                 // Set the correct adapter
                 // Manage the click on other's users requests
@@ -236,8 +240,17 @@ public class RequestsFragment extends Fragment implements
 
         // Scan global request to create the sub list
         for (Request r : requestsList) {
-            if (!r.getUserEmail().equals(Objects.requireNonNull(auth.getCurrentUser()).getEmail()) && !r.getIsCompleted()) {
-                subRequestsList.add(r);
+            if (!(requireActivity() instanceof PassionateNavigationActivity)) {
+                if (!r.getUserEmail().equals(Objects.requireNonNull(auth.getCurrentUser()).getEmail()) &&
+                        !r.getIsCompleted() &&
+                        r.getRequestType().equals(KeysNamesUtils.RequestFields.R_TYPE_HELP_OFFER)) {
+                    subRequestsList.add(r);
+                }
+            } else {
+                if (!r.getUserEmail().equals(Objects.requireNonNull(auth.getCurrentUser()).getEmail()) &&
+                        !r.getIsCompleted()) {
+                    subRequestsList.add(r);
+                }
             }
         }
 

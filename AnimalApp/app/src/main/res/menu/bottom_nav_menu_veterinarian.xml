@@ -7,11 +7,6 @@
         android:title="@string/title_fragment_veterinarian_profile"/>
 
     <item
-        android:id="@+id/veterinarian_animal_list"
-        android:icon="@drawable/pets2"
-        android:title="@string/title_fragment_veterinarian_animal_list"/>
-
-    <item
         android:id="@+id/veterinarian_reservation"
         android:icon="@drawable/ic_baseline_calendar_month_24"
         android:title="@string/title_fragment_veterinarian_reservations"/>

@@ -69,6 +69,9 @@ public class PassionateProfileFragment extends Fragment implements
     private PassionateProfileFragment.ProfileFragmentListener listener;
     private String username;
     private transient NavController controller;
+    private TextView animalListPassionateLabel;
+    private RecyclerView animalRecycleView;
+    private TextView nothingHereTextView;
 
     // Manage Qr scanning
     private final ActivityResultLauncher<ScanOptions> qrDecodeLauncher = registerForActivityResult(new ScanContract(), result -> {
@@ -161,7 +164,10 @@ public class PassionateProfileFragment extends Fragment implements
         View rootView = inflater.inflate(R.layout.fragment_passionate_profile, container, false);
 
         RecyclerView messageRecyclerView = rootView.findViewById(R.id.messagesList);
-        RecyclerView animalRecycleView = rootView.findViewById(R.id.animalList);
+        animalRecycleView = rootView.findViewById(R.id.animalList);
+        nothingHereTextView = rootView.findViewById(R.id.nothingHereTextView);
+        animalListPassionateLabel = rootView.findViewById(R.id.animalListPassionateLabel);
+
         username = ((PassionateNavigationActivity) requireActivity())
                 .getUserId();
 
@@ -172,6 +178,13 @@ public class PassionateProfileFragment extends Fragment implements
                 ((PassionateNavigationActivity) requireActivity()).getAnimalSet();
 
         if (animalSet != null) {
+
+            if (animalSet.size() == 0)
+            {
+                animalListPassionateLabel.setVisibility(View.GONE);
+                nothingHereTextView.setVisibility(View.VISIBLE);
+                animalRecycleView.setVisibility(View.GONE);
+            }
             // Path to internal storage
             String path =
                     KeysNamesUtils.FileDirsNames.BASE_PATH +
@@ -318,9 +331,6 @@ public class PassionateProfileFragment extends Fragment implements
                 dialogAddAnimalFragment.setListener(this);
                 dialogAddAnimalFragment.show(getParentFragmentManager(), "DialogAddAnimalFragment");
             });
-        } else {
-            TextView animalListPassionateLabel = rootView.findViewById(R.id.animalListPassionateLabel);
-            animalListPassionateLabel.setText(getResources().getString(R.string.no_animal));
         }
 
         return rootView;
@@ -356,6 +366,9 @@ public class PassionateProfileFragment extends Fragment implements
         animalListAdapter.notifyItemInserted(animalListAdapter.getItemCount());
         // Execute listener method to perform data saving
         listener.onAnimalRegistered(animal);
+        animalListPassionateLabel.setVisibility(View.VISIBLE);
+        nothingHereTextView.setVisibility(View.GONE);
+        animalRecycleView.setVisibility(View.VISIBLE);
     }
 
     @Override

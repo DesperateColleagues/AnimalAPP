@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -252,7 +253,19 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
     @Override
     public void onAnimalRegistered(@NonNull Animal animal) {
         if (isConnectionEnabled) {
-            registerAnimalFirebase(animal);
+            db.collection(KeysNamesUtils.CollectionsNames.ANIMALS)
+                            .whereEqualTo(KeysNamesUtils.AnimalFields.MICROCHIP_CODE, animal.getMicrochipCode())
+                                    .get()
+                                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                                if (queryDocumentSnapshots.isEmpty()) {
+                                                    animal.setOwner(getUserId());
+                                                    registerAnimalFirebase(animal);
+                                                } else {
+                                                    Toast.makeText(getApplicationContext(), getString(R.string.animale_duplicato) +
+                                                            " - " + getString(R.string.codice_microchip) + ": " + animal.getMicrochipCode(),Toast.LENGTH_SHORT)
+                                                            .show();
+                                                }
+                                            });
         }
     }
 

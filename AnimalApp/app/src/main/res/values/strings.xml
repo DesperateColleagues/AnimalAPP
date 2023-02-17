@@ -275,7 +275,7 @@
     <string name="spesa_aggiunta_successo">Spesa salvata con successo</string>
     <string name="error_numero_civico_intero">Il campo CAP o numero civico, non è un numero INTERO</string>
     <string name="error_corta_password">Password troppo corta, minimo 6 caratteri.</string>
-    <string name="error_numero_non_valido">Numero di telefono non valido.</string>
+    <string name="error_numero_non_valido">Numero di telefono non valido. E\' necessario inserire anche il prefisso!</string>
     <string name="error_mail_non_valida">Email non valida.</string>
     <string name="registrazione_successo">Registrazione avvenuta con successo</string>
     <string name="error_email_usata">Email già usata.</string>
@@ -355,6 +355,10 @@
     <string name="dati_spesa">Dati spesa</string>
     <string name="nome_item">Nome item</string>
     <string name="title_fragment_pokeanimal">Modalità PokAnimal</string>
+
+    <string name="delete_confirm">Sicuro di voler eliminare questa spesa?</string>
+    <string name="delete">Eliminazione</string>
+    <string name="registrando_ente">Registrando ente…</string>
 
     <string-array name="rangeSliderValues">
         <item>0</item>

@@ -58,6 +58,7 @@ import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsAnimalTransferO
 import it.uniba.dib.sms22235.tasks.common.views.requests.RequestsStandardOperationListener;
 import it.uniba.dib.sms22235.tasks.login.LoginActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianAnimalListFragment;
+import it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianProfileFragment;
 import it.uniba.dib.sms22235.tasks.veterinarian.fragments.VeterinarianReservationFragment;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
@@ -71,6 +72,7 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 public class VeterinarianNavigationActivity extends AppCompatActivity implements
         VeterinarianReservationFragment.VeterinarianReservationFragmentListener,
         VeterinarianAnimalListFragment.VeterinarianAnimalListFragmentListener,
+        VeterinarianProfileFragment.VeterinarianProfileFragmentListener,
         AnimalProfile.AnimalProfileListener,
         ExamsFragment.ExamsFragmentListener,
         PhotoDiaryFragment.PhotoDiaryFragmentListener,

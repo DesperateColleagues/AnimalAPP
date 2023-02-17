@@ -24,6 +24,7 @@ import it.uniba.dib.sms22235.entities.operations.AnimalResidence;
 import it.uniba.dib.sms22235.entities.operations.Request;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.common.dialogs.requests.BsdDialogQr;
+import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
@@ -102,7 +103,7 @@ public interface RequestsStandardOperationListener {
 
                             // Scan global request to create the sub list
                             for (Request r : reqList) {
-                                if (context instanceof VeterinarianNavigationActivity) {
+                                if (!(context instanceof PassionateNavigationActivity)) {
                                     if (
                                             !r.getUserEmail().equals(Objects.requireNonNull(auth.getCurrentUser()).getEmail()) &&
                                             !r.getIsCompleted() &&
