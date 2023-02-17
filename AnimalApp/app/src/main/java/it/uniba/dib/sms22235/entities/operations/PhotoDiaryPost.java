@@ -11,6 +11,9 @@ import java.util.Objects;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This class represent a post used fot the photo diary
+ * */
 public class PhotoDiaryPost implements Serializable {
     private String postUri;
     private final String postAnimal;
@@ -41,6 +44,11 @@ public class PhotoDiaryPost implements Serializable {
         return fileName;
     }
 
+    /**
+     * This method is used to create a new PhotoDiaryPost object by a document
+     *
+     * @param document the document
+     * */
     @NonNull
     @Contract("_ -> new")
     public static PhotoDiaryPost loadPhotoDiaryPost(@NonNull DocumentSnapshot document) {

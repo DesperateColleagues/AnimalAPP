@@ -1,6 +1,9 @@
 package it.uniba.dib.sms22235.entities.operations;
 
 
+/**
+ * This class is an info message
+ * */
 public class InfoMessage {
     private String leftText;
     private int rightImage;

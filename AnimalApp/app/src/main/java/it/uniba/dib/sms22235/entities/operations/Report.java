@@ -8,6 +8,9 @@ import java.io.Serializable;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This class represent a report inserted by the user
+ * */
 public class Report implements Serializable {
     private String reportId;
     private String reporter;

@@ -10,6 +10,9 @@ import java.util.UUID;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This class represent an exam
+ * */
 public class Exam implements Serializable {
 
     private String id;
@@ -87,6 +90,12 @@ public class Exam implements Serializable {
         this.timeAdded = timeAdded;
     }
 
+    /**
+     * This method is used to create a new Exam object by a document
+     *
+     * @param document the document
+     * */
+    @NonNull
     public static Exam loadExam(@NonNull DocumentSnapshot document) {
         Exam exam = new Exam(
                 (String) document.get(KeysNamesUtils.ExamsFields.EXAM_ID),

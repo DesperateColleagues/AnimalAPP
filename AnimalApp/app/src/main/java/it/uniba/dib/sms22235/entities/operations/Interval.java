@@ -1,5 +1,8 @@
 package it.uniba.dib.sms22235.entities.operations;
 
+/**
+ * This class is used to represent an interval of two values
+ * */
 public class Interval <T extends Number> {
     private final T min;
     private final T max;

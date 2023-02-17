@@ -10,6 +10,9 @@ import java.util.UUID;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This class represent a diagnosis
+ * */
 public class Diagnosis implements Serializable {
 
     private String id;

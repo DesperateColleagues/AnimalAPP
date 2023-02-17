@@ -38,6 +38,10 @@ public class ListViewPurchasesAdapter extends ArrayAdapter<Purchase> {
         this.purchasesList = purchasesList;
     }
 
+    public ArrayList<Purchase> getPurchasesList() {
+        return purchasesList;
+    }
+
     @Override
     public int getCount() {
         return purchasesList.size();

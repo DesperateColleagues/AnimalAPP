@@ -8,6 +8,9 @@ import org.jetbrains.annotations.Contract;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This class represent an organization inside the app
+ * */
 public class Organization extends AbstractPersonUser implements InfoEntity {
     private final String orgName;
     private final String phoneNumber;

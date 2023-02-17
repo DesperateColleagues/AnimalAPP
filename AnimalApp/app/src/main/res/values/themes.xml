@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/light_main</item>
         <item name="colorPrimaryVariant">@color/light_variation</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="customColorDrawableValue">@color/white</item>
 
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>

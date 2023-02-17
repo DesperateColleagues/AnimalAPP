@@ -13,6 +13,7 @@
         <item name="colorPrimary">@color/dark_main</item>
         <item name="colorPrimaryVariant">@color/dark_variation</item>
         <item name="colorOnPrimary">@color/black</item>
+        <item name="customColorDrawableValue">@color/black</item>
 
         <item name="colorSecondary">@color/dark_accent</item>
         <item name="android:colorSecondary">@color/dark_accent</item>

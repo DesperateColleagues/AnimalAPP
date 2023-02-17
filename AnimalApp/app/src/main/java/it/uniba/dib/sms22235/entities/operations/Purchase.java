@@ -6,9 +6,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This class represent a purchase of the user
+ * */
 public class Purchase implements Serializable, Cloneable {
     private String owner;
     private String animal;
@@ -17,6 +21,7 @@ public class Purchase implements Serializable, Cloneable {
     private String category;
     private float cost;
     private int amount;
+    private String id;
 
     public Purchase() {}
 
@@ -36,6 +41,7 @@ public class Purchase implements Serializable, Cloneable {
         this.cost = cost;
         this.amount = amount;
         this.date = date;
+        id = UUID.randomUUID().toString();
     }
 
     public void setOwner(String owner) {
@@ -70,6 +76,14 @@ public class Purchase implements Serializable, Cloneable {
         return date;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     /**
      * This method is used to create a purchase object
      * given the document stored in FirebaseFirestore
@@ -88,8 +102,23 @@ public class Purchase implements Serializable, Cloneable {
                 Objects.requireNonNull(document.getLong(KeysNamesUtils.PurchaseContract.COLUMN_NAME_AMOUNT)).intValue()
         );
 
+        purchase.setId(document.getString(KeysNamesUtils.PurchaseContract.COLUMN_NAME_ID));
         purchase.setOwner((String) document.get(KeysNamesUtils.PurchaseContract.COLUMN_NAME_OWNER));
+
         return purchase;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Purchase purchase = (Purchase) o;
+        return id.equals(purchase.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @NonNull

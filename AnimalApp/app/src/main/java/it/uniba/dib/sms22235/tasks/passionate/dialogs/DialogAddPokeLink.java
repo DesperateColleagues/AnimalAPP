@@ -112,6 +112,7 @@ public class DialogAddPokeLink extends DialogFragment {
                         type,
                         description
                 );
+                dismiss();
             }
         });
 

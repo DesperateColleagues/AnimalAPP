@@ -8,6 +8,9 @@ import java.io.Serializable;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This class represent a reservation, that the veterinarian can add and the passionate accepts
+ * */
 public class Reservation implements Serializable, Cloneable {
 
     private String owner;

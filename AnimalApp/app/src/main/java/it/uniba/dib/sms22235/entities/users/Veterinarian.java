@@ -10,6 +10,9 @@ import java.io.Serializable;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This class represent a veterinarian
+ * */
 public class Veterinarian extends AbstractPersonUser implements  Serializable, Cloneable, InfoEntity{
     private final String clinicName;
     private final String phoneNumber;

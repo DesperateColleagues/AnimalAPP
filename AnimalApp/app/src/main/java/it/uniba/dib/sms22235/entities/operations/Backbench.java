@@ -6,6 +6,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This class represent a backbench
+ * */
 public class Backbench {
     private String description = "";
     private String owner;
@@ -35,6 +38,11 @@ public class Backbench {
         return downloadableImage;
     }
 
+    /**
+     * This method is used to create a new Backbench object by a document
+     *
+     * @param document the document
+     * */
     @NonNull
     public static Backbench loadBackbench(@NonNull DocumentSnapshot document) {
         Backbench backbench = new Backbench((String) document.get(KeysNamesUtils.BackbenchFields.OWNER));

@@ -1,5 +1,8 @@
 package it.uniba.dib.sms22235.entities.users;
 
+/**
+ * Animal imported from json
+ * */
 public class ImportedAnimal extends Animal {
     private String profilePicPath;
     private String picsFolder;

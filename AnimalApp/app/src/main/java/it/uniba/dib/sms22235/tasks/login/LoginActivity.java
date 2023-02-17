@@ -278,6 +278,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                                                     // Update the local DB with the changes in purchases' table
                                                                     manager.insertPurchase(
+                                                                            purchase.getId(),
                                                                             purchase.getAnimal(),
                                                                             purchase.getItemName(),
                                                                             purchase.getOwner(),

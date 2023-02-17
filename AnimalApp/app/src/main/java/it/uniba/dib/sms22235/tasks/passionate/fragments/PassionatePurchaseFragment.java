@@ -1,5 +1,7 @@
 package it.uniba.dib.sms22235.tasks.passionate.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -57,6 +60,17 @@ public class PassionatePurchaseFragment extends Fragment implements
          * @param purchase the registered purchase
          * */
         void onPurchaseRegistered(Purchase purchase);
+
+        /**
+         * This callback is used to eliminate a purchase once the user click confirm to delete option
+         *
+         * @param pos the position of the purchase to delete
+         * @param dataSetPurchase the data set where the purchase will be eliminated
+         * @param adapter the adapter to update
+         * */
+        void onPurchaseDeleted(int pos,
+                               ArrayList<Purchase> dataSetPurchase,
+                               ListViewPurchasesAdapter adapter);
     }
 
     private transient PurchaseFragmentListener listener;
@@ -121,6 +135,37 @@ public class PassionatePurchaseFragment extends Fragment implements
         // Once the purchases are retrieved from the activity the list view che be built
         purchaseListView = view.findViewById(R.id.purchaseListView);
         purchaseListView.setAdapter(purchaseAdapter);
+        purchaseListView.setOnItemClickListener((parent, view1, position, id) -> {
+            ListViewPurchasesAdapter currentAdapter = (ListViewPurchasesAdapter) parent.getAdapter();
+            ArrayList<Purchase> currentDataSet = currentAdapter.getPurchasesList();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme);
+
+            // Set dialog title
+            @SuppressLint("InflateParams")
+            View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+            TextView titleText = titleView.findViewById(R.id.dialog_title);
+            titleText.setText("Dati spesa");
+            builder.setCustomTitle(titleView);
+            // Show the purchase info
+            builder.setMessage(
+                    "• Nome item: " + currentDataSet.get(position).getItemName() +
+                    "\n• Costo unitario: " + currentDataSet.get(position).getCost() +
+                    "\n• Costo totale: " + (currentDataSet.get(position).getCost() * currentDataSet.get(position).getAmount() +
+                    "\n• Data acquisto: " + currentDataSet.get(position).getDate()));
+
+            // Set a positive action that let the user delete the purchase. The purchase is deleted
+            // only if the user confirm the deletion by another alert dialog
+            builder.setPositiveButton("Elimina", (dialog, which) -> {
+                listener.onPurchaseDeleted(position, currentDataSet, currentAdapter);
+                dialog.dismiss();
+            });
+
+            builder.setNegativeButton("Esci", ((dialog, which) -> dialog.dismiss()));
+
+            builder.create().show();
+
+        });
 
         // Obtain data from Activity
         LinkedHashSet<Animal> animalSet = ((PassionateNavigationActivity) requireActivity())
@@ -229,7 +274,12 @@ public class PassionatePurchaseFragment extends Fragment implements
                             );
 
                             purchase.setOwner(cursor.getString(cursor.getColumnIndexOrThrow(
-                                    KeysNamesUtils.PurchaseContract.COLUMN_NAME_OWNER)));
+                                    KeysNamesUtils.PurchaseContract.COLUMN_NAME_OWNER
+                            )));
+
+                            purchase.setId(cursor.getString(cursor.getColumnIndexOrThrow(
+                                    KeysNamesUtils.PurchaseContract.COLUMN_NAME_ID
+                            )));
 
                             adapterSearchedPurchases.addPurchase(purchase);
                             purchaseListView.setAdapter(adapterSearchedPurchases);
@@ -278,6 +328,10 @@ public class PassionatePurchaseFragment extends Fragment implements
                             cursor.getInt(cursor.getColumnIndexOrThrow(
                                     KeysNamesUtils.PurchaseContract.COLUMN_NAME_AMOUNT))
                     );
+
+                    purchase.setId(cursor.getString(cursor.getColumnIndexOrThrow(
+                            KeysNamesUtils.PurchaseContract.COLUMN_NAME_ID
+                    )));
 
                     purchase.setOwner(cursor.getString(cursor.getColumnIndexOrThrow(
                             KeysNamesUtils.PurchaseContract.COLUMN_NAME_OWNER)));

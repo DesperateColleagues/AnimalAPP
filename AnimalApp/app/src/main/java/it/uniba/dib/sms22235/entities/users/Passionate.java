@@ -10,6 +10,9 @@ import java.io.Serializable;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This class represent a passionate
+ * */
 public class Passionate extends AbstractPersonUser implements Serializable {
     protected String username;
 

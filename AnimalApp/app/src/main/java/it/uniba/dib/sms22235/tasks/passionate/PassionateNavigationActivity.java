@@ -42,6 +42,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -70,6 +71,7 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.animals.AnimalDiagnosisAdapter;
 import it.uniba.dib.sms22235.adapters.animals.AnimalExamsAdapter;
 import it.uniba.dib.sms22235.adapters.animals.PokAnimalAdapter;
+import it.uniba.dib.sms22235.adapters.purchases.ListViewPurchasesAdapter;
 import it.uniba.dib.sms22235.entities.operations.PokeLink;
 import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
@@ -395,12 +397,11 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     @SuppressWarnings("unchecked")
     @Override
     public void onPurchaseRegistered(@NonNull Purchase purchase) {
-
         purchase.setOwner(getUserId());
 
         purchasesList.add(purchase);
 
-        long testValue = queryPurchases.insertPurchase(
+        long testValue = queryPurchases.insertPurchase(purchase.getId(),
                 purchase.getAnimal(), purchase.getItemName(),
                 purchase.getOwner(), purchase.getDate(), purchase.getCategory(),
                 purchase.getCost(), purchase.getAmount());
@@ -427,6 +428,44 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             }
         } else {
             Toast.makeText(this, getString(R.string.error_spesa_inserimento), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onPurchaseDeleted(int pos, ArrayList<Purchase> dataSetPurchase, ListViewPurchasesAdapter adapter) {
+        if (isConnectionEnabled()) {
+            String id = dataSetPurchase.get(pos).getId();
+            Purchase purchase = dataSetPurchase.get(pos);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
+            // Set dialog title
+            @SuppressLint("InflateParams")
+            View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+            TextView titleText = titleView.findViewById(R.id.dialog_title);
+            titleText.setText("Eliminazione - " + dataSetPurchase.get(pos).getItemName());
+            builder.setCustomTitle(titleView);
+            // Show the purchase info
+            builder.setMessage("Sicuro di voler eliminare la spesa selezionata?");
+
+            builder.setPositiveButton("Conferma", ((dialog, which) ->{
+                    Toast.makeText(this, "Ciao " + purchase.getId(), Toast.LENGTH_SHORT).show();
+
+            db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
+                    .document(id).delete()
+                    .addOnSuccessListener(unused -> {
+                        // Delete purchase from all possibles data set
+                        purchasesList.remove(purchase);
+                        dataSetPurchase.remove(pos);
+                        queryPurchases.deleteLocalPurchaseById(id);
+                        adapter.notifyDataSetChanged();
+                    }); }));
+
+            builder.setNegativeButton("Annulla", ((dialog, which) -> dialog.dismiss()));
+
+            builder.create().show();
+            //db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
+        } else {
+            Toast.makeText(getApplicationContext(), "Questa funzionalità è disponibile " +
+                    "solo con internet attivato. Impossibile procedere", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -885,9 +924,10 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
      *
      * @param purchase the purchase to be registered
      * */
-    private void registerPurchaseFirebase(Purchase purchase) {
+    private void registerPurchaseFirebase(@NonNull Purchase purchase) {
         db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
-                .add(purchase)
+                .document(purchase.getId())
+                .set(purchase)
                 .addOnSuccessListener(documentReference -> Toast.makeText(this,
                                 getString(R.string.spesa_aggiunta_successo),
                         Toast.LENGTH_LONG).show())

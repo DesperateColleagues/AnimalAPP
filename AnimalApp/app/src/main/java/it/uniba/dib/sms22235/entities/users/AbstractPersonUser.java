@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Abstraction of a person
+ * */
 public class AbstractPersonUser implements Serializable, Cloneable {
     protected String fullName;
     protected String email;

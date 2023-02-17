@@ -341,6 +341,10 @@
     <string name="numero_civico">Numero civico</string>
     <string name="cap">CAP</string>
 
+    <string name="my_animal">Mio animale</string>
+    <string name="friend_animal">Animale amico</string>
+    <string name="common_trait">Tratto in comune</string>
+
     <string-array name="rangeSliderValues">
         <item>0</item>
         <item>30</item>

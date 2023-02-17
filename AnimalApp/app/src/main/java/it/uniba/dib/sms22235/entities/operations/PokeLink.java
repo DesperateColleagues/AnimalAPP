@@ -11,6 +11,9 @@ import java.util.Objects;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This class represent a poke link of the user
+ * */
 public class PokeLink implements Serializable {
     private String id;
     private String passionateAnimal;

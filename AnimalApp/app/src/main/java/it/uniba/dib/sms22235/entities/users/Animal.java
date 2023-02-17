@@ -10,6 +10,9 @@ import java.util.Objects;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * A class that represent an animal
+ * */
 public class Animal implements Serializable, Cloneable {
     private String name;
     private String animalSpecies;
@@ -25,14 +28,13 @@ public class Animal implements Serializable, Cloneable {
 
     public Animal(){}
 
-    public String getVeterinarian() {
-        return veterinarian;
-    }
-
-    public void setVeterinarian(String veterinarian) {
-        this.veterinarian = veterinarian;
-    }
-
+    /**
+     * @param name the name of the animal
+     * @param animalSpecies the specie of the animal
+     * @param race the race of the animal
+     * @param microchipCode the microchip of the animal
+     * @param birthDate the birth date of the animal
+     * */
     public Animal(String name, String animalSpecies, String race, String microchipCode,
                   String birthDate) {
         this.name = name;
@@ -40,6 +42,14 @@ public class Animal implements Serializable, Cloneable {
         this.animalSpecies = animalSpecies;
         this.microchipCode = microchipCode;
         this.birthDate = birthDate;
+    }
+
+    public String getVeterinarian() {
+        return veterinarian;
+    }
+
+    public void setVeterinarian(String veterinarian) {
+        this.veterinarian = veterinarian;
     }
 
     public String getNature() {

@@ -42,6 +42,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="start"
+                        app:tint="?attr/customColorDrawableValue"
                         android:src="@drawable/ic_baseline_filter_list_24" />
 
                     <TextView

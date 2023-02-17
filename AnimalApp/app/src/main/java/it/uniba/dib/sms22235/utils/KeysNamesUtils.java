@@ -132,7 +132,7 @@ public class KeysNamesUtils {
         public static String COLUMN_NAME_OWNER = "owner";
 
         public static String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (\n" +
-                COLUMN_NAME_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"+
+                COLUMN_NAME_ID + " VARCHAR(255) PRIMARY KEY,\n"+
                 COLUMN_NAME_ANIMAL + " VARCHAR(255) NOT NULL,\n" +
                 COLUMN_NAME_ITEM_NAME + " VARCHAR(255) NOT NULL,\n" +
                 COLUMN_NAME_OWNER + " VARCHAR(255) DEFAULT NULL, \n" +

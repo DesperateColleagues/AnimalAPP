@@ -9,6 +9,9 @@ import java.util.UUID;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * THis class represent a request
+ * */
 public class Request implements Serializable {
 
     private String id;

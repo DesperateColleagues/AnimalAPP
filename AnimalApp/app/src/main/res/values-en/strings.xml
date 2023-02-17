@@ -334,4 +334,8 @@
     <string name="numero_civico">House number</string>
     <string name="cap">Postal Code</string>
 
+    <string name="my_animal">My animal</string>
+    <string name="friend_animal">Friend\'s animal</string>
+    <string name="common_trait">Common trait</string>
+
 </resources>

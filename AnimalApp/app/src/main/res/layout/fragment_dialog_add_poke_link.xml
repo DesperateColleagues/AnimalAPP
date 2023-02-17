@@ -14,6 +14,13 @@
         android:layout_marginTop="10dp"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSecondary"
+            android:textSize="16sp"
+            android:text="@string/my_animal"/>
+
         <Spinner
             android:id="@+id/passionateAnimalsSpinner"
             android:layout_width="match_parent"
@@ -25,6 +32,14 @@
             android:popupBackground="@drawable/bg_spinner_dropdown"
             android:minHeight="48dp" />
 
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSecondary"
+            android:textSize="16sp"
+            android:text="@string/friend_animal"/>
+
         <Spinner
             android:id="@+id/otherAnimalsSpinner"
             android:layout_width="match_parent"
@@ -35,6 +50,14 @@
             android:textColor="?attr/colorOnSecondary"
             android:popupBackground="@drawable/bg_spinner_dropdown"
             android:minHeight="48dp" />
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSecondary"
+            android:textSize="16sp"
+            android:text="@string/common_trait"/>
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/typeChipGroup"
@@ -81,7 +104,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:layout_marginTop="10dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText

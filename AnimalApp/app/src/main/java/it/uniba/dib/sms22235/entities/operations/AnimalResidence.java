@@ -6,6 +6,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This class represent an animal residence. It is temporary by defaul
+ * */
 public class AnimalResidence {
     private String animal;
     private String startDate;
@@ -56,6 +59,11 @@ public class AnimalResidence {
         isTemp = temp;
     }
 
+    /**
+     * This method create a new residence object by a document snapshot
+     *
+     * @param document document where to load data
+     * */
     @NonNull
     public static AnimalResidence loadResidence(@NonNull DocumentSnapshot document) {
         AnimalResidence a = new AnimalResidence(

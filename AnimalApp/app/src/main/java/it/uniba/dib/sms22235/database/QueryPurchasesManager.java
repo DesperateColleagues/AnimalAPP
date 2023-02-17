@@ -48,6 +48,14 @@ public class QueryPurchasesManager {
         }
     }
 
+    public void deleteLocalPurchaseById(String UUID) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        db.delete(KeysNamesUtils.CollectionsNames.PURCHASES,
+                KeysNamesUtils.PurchaseContract.COLUMN_NAME_ID + " = ?",
+                new String[]{UUID});
+    }
+
     /**
      * This method is used to insert into purchase table a new purchase record
      *
@@ -61,12 +69,13 @@ public class QueryPurchasesManager {
      *
      * @return the number of rows of the table if the query is run successfully. -1 otherwise
      * */
-    public long insertPurchase(String animal, String itemName, String owner, String date,
+    public long insertPurchase(String id, String animal, String itemName, String owner, String date,
                                String category, float cost, int amount) {
         long testValue = 0;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
+        cv.put(KeysNamesUtils.PurchaseContract.COLUMN_NAME_ID, id);
         cv.put(KeysNamesUtils.PurchaseContract.COLUMN_NAME_ANIMAL, animal);
         cv.put(KeysNamesUtils.PurchaseContract.COLUMN_NAME_ITEM_NAME, itemName);
         cv.put(KeysNamesUtils.PurchaseContract.COLUMN_NAME_OWNER, owner);

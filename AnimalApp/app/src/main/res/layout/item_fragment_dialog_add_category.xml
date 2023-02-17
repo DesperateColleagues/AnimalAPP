@@ -21,6 +21,7 @@
         android:id="@+id/txtImageCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="?attr/colorOnSecondary"
         android:layout_marginBottom="10dp" android:textAlignment="center"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="14sp"
