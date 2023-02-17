@@ -90,7 +90,7 @@ public class DialogEntityDetailsFragment extends DialogFragment{
         if (titleView == null) {
             titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
             TextView titleText = titleView.findViewById(R.id.dialog_title);
-            titleText.setText("Dettagli");
+            titleText.setText(R.string.dettagli);
         }
 
         builder.setCustomTitle(titleView);

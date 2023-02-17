@@ -337,5 +337,16 @@
     <string name="my_animal">My animal</string>
     <string name="friend_animal">Friend\'s animal</string>
     <string name="common_trait">Common trait</string>
+    <string name="aggiunta_a_photodiary">Add to photo diary</string>
+    <string name="aggiunta_nuova_richiesta">New request added</string>
+    <string name="dettagli">Details</string>
+    <string name="conferma_posizione">Confirm position</string>
+    <string name="confermare_posizione_domanda">Are you sure you want to confirm the position?</string>
+    <string name="info_segnalazione">Report informations</string>
+    <string name="elimina_spesa_domanda">Are you sure you want to delete the purchase?</string>
+    <string name="eliminazione">Deleting </string>
+    <string name="dati_spesa">Dati spesa</string>
+    <string name="nome_item">Item name</string>
+    <string name="title_fragment_pokeanimal">PokAnimal Mode</string>
 
 </resources>

@@ -120,17 +120,17 @@ public class DialogMap extends DialogFragment {
 
                 @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
                 TextView titleText = titleView.findViewById(R.id.dialog_title);
-                titleText.setText("Conferma posizione");
+                titleText.setText(R.string.conferma_posizione);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme);
-                builder.setMessage("Sicuro di voler confermare la posizione inserita?")
+                builder.setMessage(R.string.confermare_posizione_domanda)
                         .setCustomTitle(titleView)
-                        .setPositiveButton("Conferma", ((dialog, which) -> {
+                        .setPositiveButton(R.string.conferma_abbinamento, ((dialog, which) -> {
                             listener.onPositionConfirmed(loc.getLatitude(), loc.getLongitude());
                             dialog.dismiss();
                             dismiss();
                         }))
-                        .setNegativeButton("Annulla", (dialog, which) -> dialog.dismiss());
+                        .setNegativeButton(R.string.cancella, (dialog, which) -> dialog.dismiss());
 
                 builder.show();
 

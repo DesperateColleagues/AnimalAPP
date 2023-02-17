@@ -344,6 +344,17 @@
     <string name="my_animal">Mio animale</string>
     <string name="friend_animal">Animale amico</string>
     <string name="common_trait">Tratto in comune</string>
+    <string name="aggiunta_a_photodiary">Aggiunta al photo diary</string>
+    <string name="aggiunta_nuova_richiesta">Aggiunta nuova richiesta</string>
+    <string name="dettagli">Dettagli</string>
+    <string name="conferma_posizione">Conferma posizione</string>
+    <string name="confermare_posizione_domanda">Sicuro di voler confermare la posizione inserita?</string>
+    <string name="info_segnalazione">Informazioni segnalazione</string>
+    <string name="elimina_spesa_domanda">Sicuro di voler eliminare la spesa selezionata?</string>
+    <string name="eliminazione">Eliminazione</string>
+    <string name="dati_spesa">Dati spesa</string>
+    <string name="nome_item">Nome item</string>
+    <string name="title_fragment_pokeanimal">Modalità PokAnimal</string>
 
     <string-array name="rangeSliderValues">
         <item>0</item>

@@ -145,23 +145,23 @@ public class PassionatePurchaseFragment extends Fragment implements
             @SuppressLint("InflateParams")
             View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
             TextView titleText = titleView.findViewById(R.id.dialog_title);
-            titleText.setText("Dati spesa");
+            titleText.setText(R.string.dati_spesa);
             builder.setCustomTitle(titleView);
             // Show the purchase info
             builder.setMessage(
-                    "• Nome item: " + currentDataSet.get(position).getItemName() +
-                    "\n• Costo unitario: " + currentDataSet.get(position).getCost() +
-                    "\n• Costo totale: " + (currentDataSet.get(position).getCost() * currentDataSet.get(position).getAmount() +
-                    "\n• Data acquisto: " + currentDataSet.get(position).getDate()));
+                    "• " + getString(R.string.nome_item) +  ": " + currentDataSet.get(position).getItemName() +
+                    "\n• " + getString(R.string.costo) + ": " + currentDataSet.get(position).getCost() +
+                    "\n• " + getString(R.string.costo_totale) + ": " + (currentDataSet.get(position).getCost() * currentDataSet.get(position).getAmount() +
+                    "\n• " + getString(R.string.data_acquisto) + ": " + currentDataSet.get(position).getDate()));
 
             // Set a positive action that let the user delete the purchase. The purchase is deleted
             // only if the user confirm the deletion by another alert dialog
-            builder.setPositiveButton("Elimina", (dialog, which) -> {
+            builder.setPositiveButton(R.string.cancella, (dialog, which) -> {
                 listener.onPurchaseDeleted(position, currentDataSet, currentAdapter);
                 dialog.dismiss();
             });
 
-            builder.setNegativeButton("Esci", ((dialog, which) -> dialog.dismiss()));
+            builder.setNegativeButton(R.string.chiudi, ((dialog, which) -> dialog.dismiss()));
 
             builder.create().show();
 

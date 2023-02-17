@@ -441,13 +441,12 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             @SuppressLint("InflateParams")
             View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
             TextView titleText = titleView.findViewById(R.id.dialog_title);
-            titleText.setText("Eliminazione - " + dataSetPurchase.get(pos).getItemName());
+            titleText.setText(getString(R.string.eliminazione)+ " - " + dataSetPurchase.get(pos).getItemName());
             builder.setCustomTitle(titleView);
             // Show the purchase info
-            builder.setMessage("Sicuro di voler eliminare la spesa selezionata?");
+            builder.setMessage(R.string.elimina_spesa_domanda);
 
-            builder.setPositiveButton("Conferma", ((dialog, which) ->{
-                    Toast.makeText(this, "Ciao " + purchase.getId(), Toast.LENGTH_SHORT).show();
+            builder.setPositiveButton(R.string.conferma, ((dialog, which) ->{
 
             db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
                     .document(id).delete()
@@ -459,13 +458,12 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         adapter.notifyDataSetChanged();
                     }); }));
 
-            builder.setNegativeButton("Annulla", ((dialog, which) -> dialog.dismiss()));
+            builder.setNegativeButton(R.string.cancella, ((dialog, which) -> dialog.dismiss()));
 
             builder.create().show();
             //db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
         } else {
-            Toast.makeText(getApplicationContext(), "Questa funzionalità è disponibile " +
-                    "solo con internet attivato. Impossibile procedere", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.error_offline), Toast.LENGTH_SHORT).show();
         }
     }
 

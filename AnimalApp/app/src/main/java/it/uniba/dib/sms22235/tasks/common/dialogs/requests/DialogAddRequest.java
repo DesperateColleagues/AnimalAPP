@@ -79,7 +79,7 @@ public class DialogAddRequest extends DialogFragment {
         // Set dialog title
         @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
         TextView titleText = titleView.findViewById(R.id.dialog_title);
-        titleText.setText("Aggiunta nuova richiesta");
+        titleText.setText(R.string.aggiunta_nuova_richiesta);
         builder.setCustomTitle(titleView);
         builder.setView(root);
 

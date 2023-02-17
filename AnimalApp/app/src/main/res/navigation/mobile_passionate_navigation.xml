@@ -169,7 +169,7 @@
     <fragment
         android:id="@+id/passionatePokAnimalList"
         android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionatePokAnimalList"
-        android:label="PassionatePokAnimalList"
+        android:label="@string/title_fragment_pokeanimal"
         tools:layout="@layout/fragment_passionate_pokanimal"/>
 
     <fragment

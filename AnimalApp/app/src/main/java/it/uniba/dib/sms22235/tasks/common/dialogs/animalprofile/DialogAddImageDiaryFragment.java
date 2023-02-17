@@ -108,7 +108,7 @@ public class DialogAddImageDiaryFragment extends DialogFragment {
 
         @SuppressLint("InflateParams") View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
         TextView titleText = titleView.findViewById(R.id.dialog_title);
-        titleText.setText("Aggiunta al photo diary");
+        titleText.setText(R.string.aggiunta_a_photodiary);
 
         photoDiaryImageInsert = root.findViewById(R.id.photoDiaryImageInsert);
         Spinner spinnerAnimalsAddPhotoDiary = root.findViewById(R.id.spinnerAnimalsAddPhotoDiary);
