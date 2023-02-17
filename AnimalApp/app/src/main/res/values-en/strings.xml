@@ -303,5 +303,35 @@
     <string name="carattere">Behaviour</string>
     <string name="peso">Weight</string>
     <string name="titolo_abbinamento">Match title</string>
+    <string name="apri_maps">Open in Google Maps</string>
+    <string name="visualizza_profilo_animale">View Animal Profile</string>
+    <string name="informazioni_profilo">Profile informations</string>
+    <string name="logout">Logout</string>
+    <string name="spesa">Purchase</string>
+    <string name="costo_totale">Total price</string>
+    <string name="costo_x_quantita">Price X Quantity</string>
+    <string name="informazioni_aggiuntive">Additional infos</string>
+    <string name="offerta_stallo">Backbench Offer</string>
+    <string name="aiuto">Aiuto</string>
+    <string name="offerta_animale">Offerta animale</string>
+    <string name="conferma_abbinamento">Confirm match</string>
+    <string name="antemprima_stallo">Backbench preview</string>
+    <string name="descrizione_della_richiesta">Request description</string>
+    <string name="titolo_richiesta">Request title</string>
+    <string name="inserisci_richiesta">Insert request</string>
+    <string name="descrizione_carattere">Behaviour description</string>
+    <string name="peso_kg">Weight (kg)</string>
+    <string name="dati_animale_segnalazione">Animal infos</string>
+    <string name="indirizzo">Address</string>
+    <string name="aggiungi_pokelink">Add PokeLink</string>
+    <string name="aggiungi_post">Add post</string>
+    <string name="applica_filtri">Apply filters</string>
+    <string name="inserisci_la_localit_cliccando_sulla_mappa">Insert location by clicking on the map: </string>
+    <string name="titolo">Title</string>
+    <string name="via">Road</string>
+    <string name="citt">City</string>
+    <string name="sigla_provincia">Province abbreviation</string>
+    <string name="numero_civico">House number</string>
+    <string name="cap">Postal Code</string>
 
 </resources>

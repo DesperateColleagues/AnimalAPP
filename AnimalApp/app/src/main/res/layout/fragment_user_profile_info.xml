@@ -23,7 +23,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginBottom="20dp"
                 android:textSize="22sp"
-                android:text="Informazioni profilo"/>
+                android:text="@string/informazioni_profilo"/>
 
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -50,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="?attr/colorOnSecondary"
-                    android:text="Nome: "/>
+                    android:text="@string/nome"/>
 
                 <TextView
                     android:id="@+id/txtName"
@@ -58,7 +58,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="?attr/colorOnSecondary"
-                    android:text="Giacomo Detomaso"
                     android:textAlignment="textEnd"/>
 
             </LinearLayout>
@@ -76,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="?attr/colorOnSecondary"
-                    android:text="Email: "/>
+                    android:text="@string/email"/>
 
                 <TextView
                     android:id="@+id/txtEmail"
@@ -84,7 +83,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="?attr/colorOnSecondary"
-                    android:text="giacomodetomaso24@gmail.com"
                     android:textAlignment="textEnd"/>
 
             </LinearLayout>
@@ -102,7 +100,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginBottom="10dp"
                 android:textSize="18sp"
-                android:text="Informazioni aggiuntive"/>
+                android:text="@string/informazioni_aggiuntive"/>
 
             <TextView
                 android:id="@+id/txtInfo"

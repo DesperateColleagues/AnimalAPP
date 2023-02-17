@@ -53,42 +53,23 @@
                     android:layout_height="wrap_content"
                     app:dividerThickness="1dp" />
 
-                <LinearLayout
+
+                <TextView
+                    android:id="@+id/txtRequestType"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/txtRequestType"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal"
-                        android:textColor="?attr/colorOnSecondary"
-                        android:textSize="16sp"
-                        android:text="@string/oggetto"
-                        />
-
-                    <TextView
-                        android:id="@+id/txtRequestOperationType"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:textColor="?attr/colorOnSecondary"
-                        android:textSize="16sp"
-                        android:text="@string/operation"
-                        />
-                </LinearLayout>
+                    android:gravity="center_horizontal"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:textSize="16sp"
+                    android:text="@string/oggetto"
+                    />
 
                 <TextView
                     android:id="@+id/txtRequestOwner"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"

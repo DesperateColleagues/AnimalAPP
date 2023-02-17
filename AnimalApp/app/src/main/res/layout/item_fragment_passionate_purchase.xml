@@ -53,7 +53,7 @@
                         android:layout_marginTop="5dp"
                         android:textSize="12sp"
                         android:autoSizeTextType="uniform"
-                        android:text="data"/>
+                        android:text="@string/data_appuntamento"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -71,7 +71,7 @@
                         android:autoSizeTextType="uniform"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="Spesa"
+                        android:text="@string/spesa"
                         android:singleLine="false"
                         android:maxEms="6"
                         android:textSize="16sp"/>
@@ -85,7 +85,7 @@
                         android:autoSizeTextType="uniform"
                         android:textSize="12sp"
                         android:layout_marginTop="10dp"
-                        android:text="Animale" />
+                        android:text="@string/animale" />
 
                 </LinearLayout>
 
@@ -102,7 +102,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="Costo totale"
+                        android:text="@string/costo_totale"
                         android:autoSizeTextType="uniform"
                         android:textSize="16sp"
                         android:gravity="end" />
@@ -116,7 +116,7 @@
                         android:autoSizeTextType="uniform"
                         android:gravity="end"
                         android:textSize="12sp"
-                        android:text="costo x quantita" />
+                        android:text="@string/costo_x_quantita" />
 
                 </LinearLayout>
 

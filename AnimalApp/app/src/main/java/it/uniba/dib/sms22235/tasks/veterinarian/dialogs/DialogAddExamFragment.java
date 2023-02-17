@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -50,6 +51,9 @@ public class DialogAddExamFragment extends DialogFragment {
 
         TextView titleText = titleView.findViewById(R.id.dialog_title);
 
+        LinearLayout outcomeLayout = root.findViewById(R.id.outcome_layout);
+        RadioGroup radioGrp = root.findViewById(R.id.outcomeRadioGrp);
+
         if (exam != null) {
             titleText.setText(getResources().getString(R.string.modifica_esame));
             Log.e("AnimalAPP - Esami", "DialogAddExamFragment:55 - Esame: " + exam.toString());
@@ -57,11 +61,10 @@ public class DialogAddExamFragment extends DialogFragment {
             txtInputExamType.setText(exam.getType());
         } else {
             titleText.setText(getResources().getString(R.string.aggiungi_esame));
+            outcomeLayout.setVisibility(View.GONE);
             exam = new Exam();
         }
         builder.setCustomTitle(titleView);
-
-        RadioGroup radioGrp = root.findViewById(R.id.outcomeRadioGrp);
 
         Button btnConfirmAddExam = root.findViewById(R.id.btnAddExam);
         btnConfirmAddExam.setOnClickListener(v -> {
@@ -70,7 +73,7 @@ public class DialogAddExamFragment extends DialogFragment {
             String type = txtInputExamType.getText().toString();
             int outcome = radioGrp.getCheckedRadioButtonId();
 
-            if (!type.equals("") && !description.equals("") && outcome != -1) {
+            if (!type.equals("") && !description.equals("")) {
                 if(outcome == R.id.pass) {
                     exam.setOutcome(KeysNamesUtils.ExamsFields.EXAM_PASS);
                 } else if (outcome == R.id.fail) {

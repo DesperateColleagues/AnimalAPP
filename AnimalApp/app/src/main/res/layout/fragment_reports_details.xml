@@ -51,7 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="?attr/colorOnSecondary"
-                    android:text="Informazioni"
+                    android:text="@string/informazioni"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:textSize="16sp"
@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="?attr/colorOnSecondary"
                     android:layout_weight="1"
-                    android:text="Dati di localizzazione"
+                    android:text="@string/dati_di_localizzazione"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_gravity="center_vertical"/>
@@ -131,7 +131,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="20dp"
                 android:drawableTop="@drawable/ic_baseline_map_24"
-                android:text="Visualizza su google maps" />
+                android:text="@string/apri_maps" />
 
             <com.google.android.material.divider.MaterialDivider
                 android:id="@+id/imgDivider"
@@ -152,7 +152,7 @@
                     android:textColor="?attr/colorOnSecondary"
                     android:layout_weight="1"
                     android:layout_gravity="center_vertical"
-                    android:text="Immagine"
+                    android:text="@string/immagine"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -177,7 +177,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="Dati animale"
+                android:text="@string/dati_animale"
                 android:textColor="?attr/colorOnSecondary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -197,7 +197,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="20dp"
-                android:text="Visualizza profilo animale" />
+                android:text="@string/visualizza_profilo_animale" />
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"

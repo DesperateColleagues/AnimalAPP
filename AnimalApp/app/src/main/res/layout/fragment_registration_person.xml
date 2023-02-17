@@ -150,7 +150,7 @@
             android:ems="10"
             android:cursorVisible="false"
             android:focusable="false"
-            android:hint="Indirizzo"
+            android:hint="@string/indirizzo"
             android:inputType="text"
             android:minHeight="48dp"
             android:textColorHint="#2E7D32"/>
@@ -189,5 +189,7 @@
         android:layout_marginRight="30dp"
         android:onClick="btnRegisterAction"
         android:minHeight="48dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         android:text="@string/registrati" />
 </LinearLayout>

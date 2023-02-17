@@ -310,6 +310,36 @@
     <string name="carattere">Carattere</string>
     <string name="peso">Peso</string>
     <string name="titolo_abbinamento">Titolo abbinamento</string>
+    <string name="apri_maps">Visualizza su Google Maps</string>
+    <string name="visualizza_profilo_animale">Visualizza profilo animale</string>
+    <string name="informazioni_profilo">Informazioni profilo</string>
+    <string name="logout">Logout</string>
+    <string name="spesa">Spesa</string>
+    <string name="costo_totale">Costo totale</string>
+    <string name="costo_x_quantita">Costo X Quantità</string>
+    <string name="informazioni_aggiuntive">Informazioni aggiuntive</string>
+    <string name="offerta_stallo">Offerta Stallo</string>
+    <string name="aiuto">Aiuto</string>
+    <string name="offerta_animale">Offerta animale</string>
+    <string name="conferma_abbinamento">Conferma abbinamento</string>
+    <string name="antemprima_stallo">Antemprima stallo</string>
+    <string name="descrizione_della_richiesta">Descrizione della richiesta</string>
+    <string name="titolo_richiesta">Titolo richiesta</string>
+    <string name="inserisci_richiesta">Inserisci richiesta</string>
+    <string name="descrizione_carattere">Descrizione carattere</string>
+    <string name="peso_kg">Peso (kg)</string>
+    <string name="dati_animale_segnalazione">Dati animale</string>
+    <string name="indirizzo">Indirizzo</string>
+    <string name="aggiungi_pokelink">Aggiungi PokeLink</string>
+    <string name="aggiungi_post">Aggiungi post</string>
+    <string name="applica_filtri">Applica filtri</string>
+    <string name="inserisci_la_localit_cliccando_sulla_mappa">Inserisci la località cliccando sulla mappa:</string>
+    <string name="titolo">Titolo</string>
+    <string name="via">Via:</string>
+    <string name="citt">Città</string>
+    <string name="sigla_provincia">Sigla provincia</string>
+    <string name="numero_civico">Numero civico</string>
+    <string name="cap">CAP</string>
 
     <string-array name="rangeSliderValues">
         <item>0</item>

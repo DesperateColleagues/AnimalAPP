@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="?attr/colorSecondary"
                 app:checkedIcon="@drawable/ic_baseline_check_24"
-                android:text="Offerta animale"
+                android:text="@string/offerta_animale"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:textColor="@color/black"
                 android:id="@+id/chipAnimal" />
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="?attr/colorSecondary"
                 app:checkedIcon="@drawable/ic_baseline_check_24"
-                android:text="Aiuto"
+                android:text="@string/aiuto"
                 android:id="@+id/chipHelp"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:textColor="@color/black"/>
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="?attr/colorSecondary"
                 app:checkedIcon="@drawable/ic_baseline_check_24"
-                android:text="Offerta stallo"
+                android:text="@string/offerta_stallo"
                 android:id="@+id/chipHome"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:textColor="@color/black"/>

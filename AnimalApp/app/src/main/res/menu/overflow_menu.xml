@@ -3,10 +3,10 @@
 
     <item
         android:id="@+id/profile_info"
-        android:title="Informazioni profilo" />
+        android:title="@string/informazioni_profilo" />
 
     <item
         android:id="@+id/logout"
-        android:title="Logout" />
+        android:title="@string/logout" />
 
 </menu>

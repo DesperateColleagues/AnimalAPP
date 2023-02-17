@@ -78,7 +78,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtRequestTitle;
         TextView txtRequestType;
-        TextView txtRequestOperationType;
         TextView txtRequestOwner;
         MaterialDivider requestDividerStatus;
         CardView itemRequestCardView;
@@ -87,7 +86,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
             super(itemView);
             txtRequestTitle = itemView.findViewById(R.id.txtRequestTitle);
             txtRequestType = itemView.findViewById(R.id.txtRequestType);
-            txtRequestOperationType = itemView.findViewById(R.id.txtRequestOperationType);
             txtRequestOwner = itemView.findViewById(R.id.txtRequestOwner);
             requestDividerStatus = itemView.findViewById(R.id.requestDividerStatus);
             itemRequestCardView = itemView.findViewById(R.id.itemRequestCardView);

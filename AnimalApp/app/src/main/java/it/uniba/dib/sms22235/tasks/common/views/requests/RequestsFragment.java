@@ -33,6 +33,7 @@ import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.common.dialogs.RequestsBSDialog;
 import it.uniba.dib.sms22235.tasks.common.dialogs.requests.DialogAddRequest;
 import it.uniba.dib.sms22235.tasks.common.dialogs.requests.DialogRequestBackbench;
+import it.uniba.dib.sms22235.tasks.organization.OrganizationNavigationActivity;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.adapters.commonoperations.RequestAdapter;
@@ -113,6 +114,11 @@ public class RequestsFragment extends Fragment implements
         adapter = new RequestAdapter();
         subRequestsList = new ArrayList<>();
         requestsList = new ArrayList<>();
+
+        if (getActivity() instanceof OrganizationNavigationActivity) {
+            ((OrganizationNavigationActivity) requireActivity()).getFab().setVisibility(View.VISIBLE);
+            ((OrganizationNavigationActivity) requireActivity()).getFab().setImageResource(R.drawable.ic_baseline_add_24);
+        }
 
         if (container != null) {
             controller = Navigation.findNavController(container);

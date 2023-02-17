@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Dati animale"
+        android:text="@string/dati_animale_segnalazione"
         android:textAlignment="center"
         android:textColor="?attr/colorOnSecondary"
         android:textSize="16sp"
@@ -32,6 +32,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_margin="15dp"
-        android:text="Segnalazione senza animale personale" />
+        android:text="@string/segnalazione_senza_animale_personale" />
 
 </LinearLayout>

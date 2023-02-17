@@ -41,7 +41,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:text="Descrizione della richiesta"/>
+                android:text="@string/descrizione_della_richiesta"/>
 
             <TextView
                 android:id="@+id/txtRequestDetailsEntityType"
@@ -95,7 +95,7 @@
                 android:textStyle="bold"
                 android:visibility="gone"
                 android:textColor="?attr/colorOnSecondary"
-                android:text="Antemprima stallo"
+                android:text="@string/antemprima_stallo"
                 android:textSize="18sp"/>
 
             <FrameLayout
@@ -116,7 +116,7 @@
                 android:drawableTop="@drawable/ic_baseline_pets_grenn_24"
                 android:textStyle="bold"
                 android:visibility="gone"
-                android:text="Visualizza profilo animale"/>
+                android:text="@string/visualizza_profilo_animale"/>
 
             <Button
                 android:id="@+id/btnConfirmAnimalRequestQr"
@@ -128,7 +128,7 @@
                 android:drawableTop="@drawable/ic_baseline_qr_code_scanner_24_real"
                 android:textStyle="bold"
                 android:visibility="gone"
-                android:text="Scannerizza codice Qr"/>
+                android:text="@string/scannerizza_qr_code"/>
 
         </LinearLayout>
 

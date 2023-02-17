@@ -40,7 +40,7 @@
             android:layout_weight="1"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="Chiudi"/>
+            android:text="@string/chiudi"/>
 
         <ImageButton
             android:id="@+id/btnDeleteImg"

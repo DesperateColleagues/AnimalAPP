@@ -11,7 +11,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
-        android:hint="Titolo"
+        android:hint="@string/titolo"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
@@ -36,7 +36,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="20dp"
-        android:hint="Descrizione"
+        android:hint="@string/descrizione"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
@@ -61,9 +61,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Conferma"
         android:layout_marginBottom="20dp"
         android:gravity="center_vertical"
+        android:textColor="@color/black"
+        android:text="@string/conferma"
+        android:textStyle="bold"
         android:layout_weight="5"
         android:drawableTint="?attr/colorPrimary"/>
 
