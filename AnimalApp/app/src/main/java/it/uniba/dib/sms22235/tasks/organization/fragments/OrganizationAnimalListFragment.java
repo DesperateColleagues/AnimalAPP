@@ -20,13 +20,26 @@ import it.uniba.dib.sms22235.tasks.organization.OrganizationNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
 
+/**
+ * This fragment is used to show the list of animals of the organization
+ * */
 public class OrganizationAnimalListFragment extends Fragment {
 
     private RecyclerView assistedAnimalRecyclerView;
     private AnimalListAdapter adapter;
     private transient NavController controller;
 
+    /**
+     * This interface notifies the action of the fragment
+     * */
     public interface OrganizationAnimalsFragmentListener {
+        /**
+         * This method is called to load all the assisted animal. The animal must be
+         * displayed using the adapter and the recycler provided
+         *
+         * @param adapter the animal list adapter
+         * @param recyclerView the recycler where to show data represented by the adapter
+         * */
         void getAssistedAnimals(AnimalListAdapter adapter, RecyclerView recyclerView);
     }
 

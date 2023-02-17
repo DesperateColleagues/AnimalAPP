@@ -1,6 +1,5 @@
 package it.uniba.dib.sms22235.tasks.veterinarian.dialogs;
-
-    import android.os.Bundle;
+import android.os.Bundle;
     import android.view.LayoutInflater;
     import android.view.View;
     import android.view.ViewGroup;
@@ -12,6 +11,9 @@ package it.uniba.dib.sms22235.tasks.veterinarian.dialogs;
 
     import it.uniba.dib.sms22235.R;
 
+/**
+ * Bottom sheet dialog to edit exams
+ * */
 public class BSDialogEditExamFragment extends BottomSheetDialogFragment {
 
     private OnDeleteListener onDeleteListener;

@@ -104,6 +104,10 @@ import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.InterfacesOperationsHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This Activity manages the navigation of the passionate in the app. It is responsible for
+ * db operations, and catches all the user actions by the callbacks from the interfaces implemented
+ * */
 public class PassionateNavigationActivity extends AppCompatActivity implements
         PassionateProfileFragment.ProfileFragmentListener,
         PassionatePurchaseFragment.PurchaseFragmentListener,

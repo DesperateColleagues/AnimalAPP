@@ -37,11 +37,17 @@ import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This fragment is used to display a purchases and to add them
+ * */
 public class PassionatePurchaseFragment extends Fragment implements
         DialogAddPurchaseFragment.DialogAddPurchaseFragmentListener,
         PassionateFilterPurchaseFragment.FilterPurchaseFragmentListener,
         Serializable {
 
+    /**
+     * Operation of this fragment
+     * */
     public interface PurchaseFragmentListener {
         /**
          * This method is called when the dialog to add the Purchase is dismissed.

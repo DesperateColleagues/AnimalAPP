@@ -25,6 +25,9 @@ import it.uniba.dib.sms22235.adapters.veterinarian.VeterinarianArrayAdapter;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 
+/**
+ * This dialog is used to edit animal data
+ * */
 public class DialogEditAnimalDataFragment extends DialogFragment {
 
     private List<Veterinarian> veterinarianList;
@@ -43,7 +46,15 @@ public class DialogEditAnimalDataFragment extends DialogFragment {
         this.veterinarianList = veterinarianList;
     }
 
+    /**
+     * Specify what happens when an animal is edited
+     * */
     public interface DialogEditAnimalDataFragmentListener{
+        /**
+         * Used to add a veterinarian to the animal
+         *
+         * @param selectedAnimal the selected animal microchip
+         * */
         void onDialogChoosedVeterinarian(Animal selectedAnimal);
     }
 

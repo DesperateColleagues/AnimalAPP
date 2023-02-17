@@ -16,8 +16,14 @@ import androidx.fragment.app.DialogFragment;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 
+/**
+ * Dialog used to add a passionate friend to the poke link
+ * */
 public class DialogAddPassionateAnimalToPokeLink extends DialogFragment {
 
+    /**
+     * Operations that occur when a friend is added to the poke link
+     * */
     public interface DialogAddPassionateAnimalToPokeLinkListener {
         /**
          * This method is called when the friend username has been added

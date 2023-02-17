@@ -17,6 +17,9 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 
+/**
+ * Class to show the veterinarian profile section
+ * */
 public class VeterinarianProfileFragment extends Fragment {
 
     @Override

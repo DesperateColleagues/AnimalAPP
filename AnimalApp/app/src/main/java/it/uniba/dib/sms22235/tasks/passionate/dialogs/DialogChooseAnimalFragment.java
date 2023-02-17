@@ -21,18 +21,29 @@ import java.util.List;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.users.Animal;
 
+/**
+ * A dialog with a spinner to select a specific animal
+ * */
 public class DialogChooseAnimalFragment extends DialogFragment {
 
     private Spinner animalListSpinner;
-    private List<Animal> animalsByVeterinarian;
+    private final List<Animal> animalsByVeterinarian;
 
     public DialogChooseAnimalFragment(List<Animal> animalsByVeterinarian) {
         this.animalsByVeterinarian = animalsByVeterinarian;
     }
 
 
+    /**
+     * Specify what happens when an animal is selected
+     * */
     public interface DialogChooseAnimalFragmentListener{
-        void onDialogChoosedAnimal(String selectedAnimal);
+        /**
+         * Callback called when an animal is selected
+         *
+         * @param selectedAnimal selected animal microchip
+         * */
+        void onDialogSelectedAnimal(String selectedAnimal);
     }
 
     private DialogChooseAnimalFragment.DialogChooseAnimalFragmentListener listener;
@@ -68,7 +79,7 @@ public class DialogChooseAnimalFragment extends DialogFragment {
 
         Button btnConfirmChooseAnimal = root.findViewById(R.id.btnConfirmChooseAnimal);
         btnConfirmChooseAnimal.setOnClickListener(v -> {
-            listener.onDialogChoosedAnimal((String) animalListSpinner.getSelectedItem());
+            listener.onDialogSelectedAnimal((String) animalListSpinner.getSelectedItem());
             dismiss();
         });
 

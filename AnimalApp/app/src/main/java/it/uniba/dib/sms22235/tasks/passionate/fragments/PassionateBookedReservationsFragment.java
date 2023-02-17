@@ -27,6 +27,9 @@ import it.uniba.dib.sms22235.adapters.veterinarian.ReservationsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This fragment shows all the passionate's booked reservations
+ * */
 public class PassionateBookedReservationsFragment extends Fragment {
 
     private RecyclerView reservationRecyclerView;

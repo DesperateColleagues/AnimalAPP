@@ -36,11 +36,29 @@ import it.uniba.dib.sms22235.entities.operations.Interval;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
-
+/**
+ * This fragment is used to add a filter to the purchase
+ * */
 public class PassionateFilterPurchaseFragment extends Fragment {
 
+    /**
+     * This interface specifies what operations are related to filtering
+     * */
     public interface FilterPurchaseFragmentListener {
-        ArrayList<Purchase> onFiltersAdded(String owner, List<String> animals, List<String> categories, Interval<Float> costs, String dateFrom, String dateTo);
+        /**
+         * This method is called when a filter is added. Null or empty values of the params
+         * means that NO filter of that specific category is selected
+         *
+         * @param owner the owner of the animal's purchase
+         * @param animals list of selected animal of the owner
+         * @param categories list of selected categories of the purchase
+         * @param costs an interval of costs
+         * @param dateFrom lower bound of date interval
+         * @param dateTo upper bound of date interval
+         * */
+        ArrayList<Purchase> onFiltersAdded(String owner, List<String> animals,
+                                           List<String> categories, Interval<Float> costs,
+                                           String dateFrom, String dateTo);
     }
 
     private String owner;

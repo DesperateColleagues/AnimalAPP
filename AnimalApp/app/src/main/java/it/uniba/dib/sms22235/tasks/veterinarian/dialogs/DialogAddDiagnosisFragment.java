@@ -16,14 +16,24 @@ import androidx.fragment.app.DialogFragment;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Diagnosis;
 
-
+/**
+ * Dialog to add diagnosis
+ * */
 public class DialogAddDiagnosisFragment extends DialogFragment {
 
     private TextView txtInputDiagnosisDescription;
     private DialogAddDiagnosisFragment.DialogAddDiagnosisFragmentListener listener;
     private Diagnosis diagnosis;
 
+    /**
+     * Operation of this fragment
+     * */
     public interface DialogAddDiagnosisFragmentListener{
+        /**
+         * Callback used when a diagnosis is added
+         *
+         * @param diagnosis the added diagnosis
+         * */
         void onDialogAddDiagnosisDismissed(Diagnosis diagnosis);
     }
 

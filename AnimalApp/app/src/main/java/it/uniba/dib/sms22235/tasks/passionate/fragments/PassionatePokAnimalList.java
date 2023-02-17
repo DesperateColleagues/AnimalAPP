@@ -24,10 +24,16 @@ import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAddPassionateAnimalToPokeLink;
 import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAddPokeLink;
 
+/**
+ * This fragment is used to display and add the poke links
+ * */
 public class PassionatePokAnimalList extends Fragment implements
         DialogAddPokeLink.DialogAddPokeLinkListener,
         DialogAddPassionateAnimalToPokeLink.DialogAddPassionateAnimalToPokeLinkListener {
 
+    /**
+     * The operations of this fragment
+     * */
     public interface PassionatePokAnimalListListener {
         /**
          * This method is used to load into a spinner all the animals

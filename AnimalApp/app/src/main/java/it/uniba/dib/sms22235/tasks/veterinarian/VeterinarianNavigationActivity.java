@@ -64,6 +64,10 @@ import it.uniba.dib.sms22235.entities.users.Veterinarian;
 import it.uniba.dib.sms22235.utils.InterfacesOperationsHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This Activity manages the navigation of the veterinarian in the app. It is responsible for
+ * db operations, and catches all the user actions by the callbacks from the interfaces implemented
+ * */
 public class VeterinarianNavigationActivity extends AppCompatActivity implements
         VeterinarianReservationFragment.VeterinarianReservationFragmentListener,
         VeterinarianAnimalListFragment.VeterinarianAnimalListFragmentListener,

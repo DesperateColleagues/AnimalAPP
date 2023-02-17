@@ -13,6 +13,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import it.uniba.dib.sms22235.R;
 
 
+/**
+ * Bottom sheet dialog to reservations
+ * */
 public class BSDialogEditDiagnosisFragment extends BottomSheetDialogFragment {
 
     private OnDeleteListener onDeleteListener;
