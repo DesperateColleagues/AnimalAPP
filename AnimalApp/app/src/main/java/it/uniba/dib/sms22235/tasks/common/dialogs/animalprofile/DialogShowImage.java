@@ -62,7 +62,7 @@ public class DialogShowImage extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater(); //get the layout inflater
         @SuppressLint("InflateParams") View root = inflater.inflate(R.layout.fragment_dialog_show_image, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.AnimalCardRoundedDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme);
         builder.setView(root);
 
         Glide.with(requireActivity()).load(uri).into((ImageView) root.findViewById(R.id.imgPhotoDiaryShow));

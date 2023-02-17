@@ -1058,7 +1058,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
     }
 
     private void onlineDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AnimalCardRoundedDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
 
         LayoutInflater inflater = this.getLayoutInflater();
         View root = inflater.inflate(R.layout.fragment_dialog_online, null);

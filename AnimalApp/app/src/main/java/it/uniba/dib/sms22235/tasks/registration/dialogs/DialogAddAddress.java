@@ -30,7 +30,7 @@ public class DialogAddAddress extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.AnimalCardRoundedDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme);
 
         LayoutInflater inflater = requireActivity().getLayoutInflater(); //get the layout inflater
         @SuppressLint("InflateParams") View root = inflater.inflate(R.layout.fragment_dialog_registration_add_address, null);

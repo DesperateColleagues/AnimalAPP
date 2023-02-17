@@ -312,8 +312,8 @@
     <string name="costo_x_quantita">Price X Quantity</string>
     <string name="informazioni_aggiuntive">Additional infos</string>
     <string name="offerta_stallo">Backbench Offer</string>
-    <string name="aiuto">Aiuto</string>
-    <string name="offerta_animale">Offerta animale</string>
+    <string name="aiuto">Help</string>
+    <string name="offerta_animale">Animal offer</string>
     <string name="conferma_abbinamento">Confirm match</string>
     <string name="antemprima_stallo">Backbench preview</string>
     <string name="descrizione_della_richiesta">Request description</string>

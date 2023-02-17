@@ -472,7 +472,7 @@ public class LoginActivity extends AppCompatActivity {
                 boolean showDialog = preferences.getBoolean("show_offline_dialog", true);
 
                 if (showDialog) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AnimalCardRoundedDialog);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
 
                     LayoutInflater inflater = this.getLayoutInflater();
                     View root = inflater.inflate(R.layout.fragment_dialog_confirm_offline_mode, null);

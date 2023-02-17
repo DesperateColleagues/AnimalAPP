@@ -115,10 +115,9 @@ public class RequestsFragment extends Fragment implements
         subRequestsList = new ArrayList<>();
         requestsList = new ArrayList<>();
 
-        if (getActivity() instanceof OrganizationNavigationActivity) {
-            ((OrganizationNavigationActivity) requireActivity()).getFab().setVisibility(View.VISIBLE);
-            ((OrganizationNavigationActivity) requireActivity()).getFab().setImageResource(R.drawable.ic_baseline_add_24);
-        }
+        ((NavigationActivityInterface) requireActivity()).getFab().setVisibility(View.VISIBLE);
+        ((NavigationActivityInterface) requireActivity()).getFab().setImageResource(R.drawable.ic_baseline_add_24);
+
 
         if (container != null) {
             controller = Navigation.findNavController(container);
@@ -147,6 +146,10 @@ public class RequestsFragment extends Fragment implements
         ChipGroup requestsParamsChipGroup = view.findViewById(R.id.requestsParamsChipGroup);
         requestsRecyclerView = view.findViewById(R.id.requestsRecyclerList);
         adapter.setContext(requireContext());
+
+        if (!(requireActivity() instanceof PassionateNavigationActivity)) {
+            requestsParamsChipGroup.setVisibility(View.GONE);
+        }
 
         requestsParamsChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
 

@@ -81,7 +81,7 @@ public class DialogEditAnimalDataFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle SavedInstanceBundle){
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 getContext(),
-                R.style.AnimalCardRoundedDialog);
+                R.style.AlertDialogTheme);
 
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View root = inflater.inflate(R.layout.fragment_dialog_choose_animal, null);
