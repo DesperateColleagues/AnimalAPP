@@ -70,17 +70,17 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.Vi
             }
         } else {
             String info = "• <b>" +
-                    "Nome" +
+                    context.getResources().getString(R.string.nome) +
                     ": </b>"+
                     animalList.get(position).getName() +
                     "\n<br>" +
                     "• <b>" +
-                    "Proprietario" +
+                    context.getResources().getString(R.string.proprietario) +
                     ": </b>"+
                     animalList.get(position).getOwner() +
                     "\n<br>" +
                     "• <b>" +
-                    "Dati" +
+                    context.getResources().getString(R.string.dati) +
                     ": </b>" +
                     animalList.get(position).getHeight() +
                     "m - " +

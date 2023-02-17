@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:text="Aggiungi una segnalazione"/>
+        android:text="@string/aggiungi_segnalazione"/>
 
     <LinearLayout
         android:layout_marginTop="10dp"
@@ -30,7 +30,7 @@
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Restringi l'area di ricerca"/>
+            android:text="@string/area_ricerca"/>
 
         <Button
             android:id="@+id/btnDistance"
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             style="?android:attr/buttonBarButtonStyle"
-            android:text="Tutte"/>
+            android:text="@string/tutte"/>
 
     </LinearLayout>
 

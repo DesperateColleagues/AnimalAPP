@@ -219,7 +219,7 @@ public interface RequestsAnimalTransferOperationsListener {
 
         postQuery.addOnCompleteListener(taskAll -> {
             if (taskAll.isSuccessful()) {
-                QuerySnapshot snapshotPost = (QuerySnapshot) taskAll.getResult();
+                QuerySnapshot snapshotPost = taskAll.getResult();
 
                 List<DocumentSnapshot> posts = snapshotPost.getDocuments();
 

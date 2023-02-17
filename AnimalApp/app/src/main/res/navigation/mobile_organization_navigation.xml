@@ -94,13 +94,13 @@
     <fragment
         android:id="@+id/reportAddNewFragment"
         android:name="it.uniba.dib.sms22235.tasks.common.views.reports.ReportAddNewFragment"
-        android:label="ReportDetailsFragment"
+        android:label="@string/title_fragment_add_report"
         tools:layout="@layout/fragment_reports_add_new"/>
 
     <fragment
         android:id="@+id/reportDetailFragment"
         android:name="it.uniba.dib.sms22235.tasks.common.views.reports.ReportDetailFragment"
-        android:label="ReportDetailFragment"
+        android:label="@string/title_fragment_details_report"
         tools:layout="@layout/fragment_reports_details">
         <action
             android:id="@+id/action_reportDetailFragment_to_animalProfile"

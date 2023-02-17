@@ -31,7 +31,7 @@ public class ListViewPurchasesAdapter extends ArrayAdapter<Purchase> {
 
     public void addPurchase(Purchase purchase){
         purchasesList.add(purchase);
-        Log.d("PURCHASE", "" + purchasesList.size());
+        Log.d("AnimalAPP - Acquisto", "ListViewPurchasesAdapter:34" + purchasesList.size());
     }
 
     public void setPurchasesList(ArrayList<Purchase> purchasesList) {

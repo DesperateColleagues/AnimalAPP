@@ -148,9 +148,9 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         // standard behavior
         if (item.getItemId() == R.id.profile_info) {
             LinkedHashMap<String, String> map = new LinkedHashMap<>();
-            map.put("Nome clinica", veterinarian.getClinicName());
-            map.put("Indirizzo clinica", veterinarian.getClinicAddress());
-            map.put("Numero di telefono", veterinarian.getPhoneNumber());
+            map.put(getString(R.string.nome_clinica), veterinarian.getClinicName());
+            map.put(getString(R.string.indirizzo_clinica), veterinarian.getClinicAddress());
+            map.put(getString(R.string.numero_telefono), veterinarian.getPhoneNumber());
 
             Bundle bundle = new Bundle();
             bundle.putSerializable(KeysNamesUtils.BundleKeys.USER_PROFILE, veterinarian);
@@ -196,7 +196,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
                                      Toast.makeText(this, getResources().getString(R.string.prenotazione_avvenuta), Toast.LENGTH_SHORT).show();
                                  }).addOnFailureListener(e -> {});
                      } else {
-                         Toast.makeText(this, "Appuntamento già presente.", Toast.LENGTH_SHORT).show();
+                         Toast.makeText(this, getString(R.string.error_appuntamento_presente), Toast.LENGTH_SHORT).show();
                      }
                  }
                 });
@@ -223,11 +223,11 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
                                     .update(KeysNamesUtils.ReservationFields.DIAGNOSIS, diagnosisID)
                                     .addOnSuccessListener(unused -> {
                                         Toast.makeText(this,
-                                                "Prenotazione aggionrnata con successo!",
+                                                getString(R.string.prenotazione_aggiornata),
                                                 Toast.LENGTH_LONG).show();
                                     })
                                     .addOnFailureListener(e ->
-                                            Toast.makeText(this, "Errore interno, dati non aggiornati",
+                                            Toast.makeText(this, getString(R.string.error_generic),
                                                     Toast.LENGTH_SHORT).show());
                         }
                     }
@@ -287,7 +287,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
                                     .get()
                                     .addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
-                                            QuerySnapshot assistedAnimalsSnapshot = (QuerySnapshot) task1.getResult();
+                                            QuerySnapshot assistedAnimalsSnapshot = task1.getResult();
                                             List<DocumentSnapshot> assistedAnimalsDocuments = assistedAnimalsSnapshot.getDocuments();
                                             for (DocumentSnapshot snapshot : assistedAnimalsDocuments) {
                                                 Animal a = Animal.loadAnimal(snapshot);
@@ -412,7 +412,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
 
         // Give to the user a feedback to wait
         ProgressDialog progressDialog = new ProgressDialog(this,R.style.Widget_App_ProgressDialog);
-        progressDialog.setMessage("Salvando l'immagine...");
+        progressDialog.setMessage(getString(R.string.salvando_immagine));
         progressDialog.show();
 
         // Start the upload task
@@ -431,7 +431,7 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
                                     .set(post)
                                     .addOnSuccessListener(documentReference -> {
                                         Toast.makeText(VeterinarianNavigationActivity.this,
-                                                "Caricamento completato con successo", Toast.LENGTH_LONG).show();
+                                                getString(R.string.caricamento_successo), Toast.LENGTH_LONG).show();
                                         progressDialog.dismiss();
                                     });
                         });

@@ -51,7 +51,7 @@ public class RegistrationActivity extends AppCompatActivity
 
         // Give to the user a feedback to wait
         ProgressDialog progressDialog = new ProgressDialog(this,R.style.Widget_App_ProgressDialog);
-        progressDialog.setMessage("Registrando l'utente...");
+        progressDialog.setMessage(getString(R.string.salvando_appassionato));
         progressDialog.show();
 
         db.collection(KeysNamesUtils.CollectionsNames.ACTORS)
@@ -74,7 +74,8 @@ public class RegistrationActivity extends AppCompatActivity
                                                 .set(passionate)
                                                 .addOnSuccessListener(unused -> {
                                                     // Show a message to let the user know
-                                                    Toast.makeText(this, "Registrazione avvenuta con successo",
+                                                    Toast.makeText(this,
+                                                                    getString(R.string.registrazione_successo),
                                                                     Toast.LENGTH_LONG)
                                                             .show();
 
@@ -94,14 +95,14 @@ public class RegistrationActivity extends AppCompatActivity
                                                 .addOnFailureListener(e -> Log.d("DEB", e.getMessage()));
 
                                     } else {
-                                        Toast.makeText(RegistrationActivity.this, "Email già usata.",
+                                        Toast.makeText(RegistrationActivity.this, getString(R.string.error_email_usata),
                                                 Toast.LENGTH_SHORT).show();
                                         progressDialog.dismiss();
                                     }
                                 });
 
                     } else {
-                        Toast.makeText(RegistrationActivity.this, "Username già usato.",
+                        Toast.makeText(RegistrationActivity.this, getString(R.string.error_username_usato),
                                 Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                     }
@@ -114,7 +115,7 @@ public class RegistrationActivity extends AppCompatActivity
         // in order to authenticate him during login
         // Give to the user a feedback to wait
         ProgressDialog progressDialog = new ProgressDialog(this,R.style.Widget_App_ProgressDialog);
-        progressDialog.setMessage("Registrando il veterinario...");
+        progressDialog.setMessage(getString(R.string.salvando_veterinario));
         progressDialog.show();
 
         mAuth.createUserWithEmailAndPassword(veterinarian.getEmail(), veterinarian.getPassword())
@@ -128,7 +129,7 @@ public class RegistrationActivity extends AppCompatActivity
                                 .document(docKey)
                                 .set(veterinarian)
                                 .addOnSuccessListener(unused -> {
-                                    Log.d("REG", "Registrazione avvenuta con successo");
+                                    Log.d("AnimalAPP - Registrazione", "RegistrationActivity:131 - " + getString(R.string.registrazione_successo));
                                     Bundle bundle = new Bundle();
                                     bundle.putSerializable(KeysNamesUtils.BundleKeys.VETERINARIAN, veterinarian);
                                     progressDialog.dismiss();
@@ -136,7 +137,7 @@ public class RegistrationActivity extends AppCompatActivity
                                 })
                                 .addOnFailureListener(e -> progressDialog.dismiss());
                     } else {
-                        Toast.makeText(RegistrationActivity.this, "Email già usata.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegistrationActivity.this, getString(R.string.error_email_usata), Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                     }
                 });
@@ -147,7 +148,7 @@ public class RegistrationActivity extends AppCompatActivity
         // First register the organization with Firebase auth system
         // in order to authenticate it during login
         ProgressDialog progressDialog = new ProgressDialog(this,R.style.Widget_App_ProgressDialog);
-        progressDialog.setMessage("Registrando il veterinario...");
+        progressDialog.setMessage(getString(R.string.salvando_veterinario));
         progressDialog.show();
 
         mAuth.createUserWithEmailAndPassword(org.getEmail(), org.getPassword())
@@ -169,7 +170,7 @@ public class RegistrationActivity extends AppCompatActivity
                                 .addOnFailureListener(e -> progressDialog.dismiss());
 
                     } else {
-                        Toast.makeText(RegistrationActivity.this, "Email già usata.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegistrationActivity.this, getString(R.string.error_email_usata), Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                     }
                 });

@@ -57,7 +57,7 @@ public class DialogAddDiagnosisFragment extends DialogFragment {
 
         Button btnAddDiagnosisFile = root.findViewById(R.id.btnAddDiagnosisFile);
         btnAddDiagnosisFile.setOnClickListener(view -> {
-            Toast.makeText(getContext(), "Feature will be implemented soon!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.error_generic), Toast.LENGTH_SHORT).show();
         });
 
         Button btnConfirmAddDiagnosis = root.findViewById(R.id.btnAddDiagnosis);

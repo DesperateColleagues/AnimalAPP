@@ -36,7 +36,7 @@
         In caso di schermata nera, verificare i permessi dell\'applicazione.</string>
     <string name="location_permission">Per accedere a questa funzione, è necessario abilitare l\'accesso alla posizione</string>
     <string name="location_permission_spiegazione">Il permesso <b>POSIZIONE</b> è essenziale per poter gestire tutte le informazioni relative alle segnalazione. Senza di esso non ti sarà possibile inserire una nuove segnalazioni e filtrare le segnalazioni esistenti</string>
-    <string name="title_location_permission_spiegazione">Perchè accettare il permesso</string>
+    <string name="title_location_permission_spiegazione">Perché accettare il permesso</string>
     <string name="chiedi_permesso">"Chiedi permesso</string>
     <string name="dettagli_profilo">Dettagli profilo utente</string>
     <string name="abilita_posizione">Abilita posizione</string>
@@ -69,10 +69,11 @@
     <string name="descrizione_ente">Descrizione ente</string>
 
     <!-- Stringhe sottostanti riferite al passionate -->
-    <string name="title_activity_passionate_navigation">PassionateNavigationActivity</string>
+    <string name="title_activity_passionate_navigation">Navigazione Appassionato</string>
     <string name="title_fragment_passionate_profile">Home</string>
     <string name="title_fragment_passionate_reservation">Prenotazioni</string>
     <string name="title_fragment_passionate_purchases">Spese</string>
+    <string name="title_fragment_reports">Lista segnalazioni</string>
     <string name="registra_animale">Registra animale</string>
     <string name="animali_proprieta">Animali di proprietà</string>
     <string name="no_animal">Non hai associato alcun animale</string>
@@ -118,6 +119,7 @@
     <string name="dettagli_data">Data e ora:</string>
     <string name="impossibile_prenotare">Impossibile prenotare un appuntamento per una data già superata</string>
     <string name="prenotazione_avvenuta">Prenotazione inserita con successo!</string>
+    <string name="prenotazione_aggiornata">Prenotazione aggiornata con successo!</string>
 
     <!-- Stringhe sottostanti riferite al veterinario -->
     <string name="title_activity_veterinarian_navigation">VeterinarianNavigationActivity</string>
@@ -187,9 +189,10 @@
     <string name="nuova_richiesta_inserita_successo">Richiesta aggiunta correttamente</string>
     <string name="sbagliato_animale_scansionato">L\'animale scansionato non corrisponde alla richiesta! Riprovare inquadrando il codice QR corretto.</string>
 
-    <string name="descrizione_stallo">Breve descrizione dello stallo</string>
+    <string name="descrizione_stallo">Descrizione dello stallo</string>
     <string name="descrizione_stallo_inserita_successo">Descrizione stallo inserita correttamente</string>
     <string name="inserisci_descrizione_stallo">Inserisci descrizione stallo</string>
+    <string name="inserisci_immagine_stallo">Inserisci immagine stallo</string>
     <string name="aggiungi_nuovo_backbench">Aggiungi animale allo stallo temporaneo</string>
     <string name="nuova_backbench_inserita_successo">Residenza temporanea registrata con successo</string>
     <string name="modifica_immagine_stallo">Modifica immagine stallo</string>
@@ -271,6 +274,42 @@
     <string name="animale_inserimento_successo">Animale registrato con successo</string>
     <string name="spesa_aggiunta_successo">Spesa salvata con successo</string>
     <string name="error_numero_civico_intero">Il campo CAP o numero civico, non è un numero INTERO</string>
+    <string name="error_corta_password">Password troppo corta, minimo 6 caratteri.</string>
+    <string name="error_numero_non_valido">Numero di telefono non valido.</string>
+    <string name="error_mail_non_valida">Email non valida.</string>
+    <string name="registrazione_successo">Registrazione avvenuta con successo</string>
+    <string name="error_email_usata">Email già usata.</string>
+    <string name="salvando_veterinario">Registrando il veterinario…</string>
+    <string name="error_username_usato">Username già usato.</string>
+    <string name="salvando_appassionato">Registrando l\'utente…</string>
+    <string name="indirizzo_clinica">Indirizzo clinica</string>
+    <string name="error_appuntamento_presente">Appuntamento già presente.</string>
+    <string name="proprietario">Proprietario</string>
+    <string name="dati">Dati</string>
+    <string name="contatto_veterinario">Contatto veterinario</string>
+    <string name="collegamenti_rapidi">Collegamenti rapidi</string>
+    <string name="area_ricerca">Restringi l\'area di ricerca</string>
+    <string name="aggiungi_segnalazione">Aggiungi una segnalazione</string>
+    <string name="aggiungi">Aggiungi</string>
+    <string name="altezza_m">Altezza (m)</string>
+    <string name="dati_segnalazione">Dati segnalazione</string>
+    <string name="informazioni">Informazioni</string>
+    <string name="dati_di_localizzazione">Dati di localizzazione</string>
+    <string name="immagine">Immagine</string>
+    <string name="dati_animale">Dati animale</string>
+    <string name="segnalazione_senza_animale_personale">Questa segnalazione non riguarda un mio animale</string>
+    <string name="conferma_segnalazione">Conferma segnalazione</string>
+    <string name="title_fragment_details_report">Dettagli segnalazione</string>
+    <string name="title_fragment_add_report">Aggiunta nuova segnalazione</string>
+    <string name="modifica_profilo">Modifica profilo</string>
+    <string name="profilo">Profilo</string>
+    <string name="importazione_dati">Importazione dati</string>
+    <string name="gestione_stallo">Gestione stallo</string>
+    <string name="username_amico">Username amico</string>
+    <string name="altezza">Altezza</string>
+    <string name="carattere">Carattere</string>
+    <string name="peso">Peso</string>
+    <string name="titolo_abbinamento">Titolo abbinamento</string>
 
     <string-array name="rangeSliderValues">
         <item>0</item>

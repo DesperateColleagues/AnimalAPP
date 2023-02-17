@@ -33,10 +33,10 @@ public class GridViewCategoryAdapter extends BaseAdapter {
         categories.add(R.drawable.ic_baseline_pets_24);
         categories.add(R.drawable.ic_baseline_medical_services_24);
 
-        categoriesString.add("Toelettatura");
-        categoriesString.add("Divertimento");
-        categoriesString.add("Cibo");
-        categoriesString.add("Spese mediche");
+        categoriesString.add(context.getResources().getString(R.string.toelettatura));
+        categoriesString.add(context.getResources().getString(R.string.divertimento));
+        categoriesString.add(context.getResources().getString(R.string.cibo));
+        categoriesString.add(context.getResources().getString(R.string.spese_mediche));
     }
 
     /**

@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="?attr/colorSecondary"
                 app:checkedIcon="@drawable/ic_baseline_check_24"
-                android:text="Carattere"
+                android:text="@string/carattere"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:textColor="@color/black"
                 android:id="@+id/chipNature" />
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="?attr/colorSecondary"
                 app:checkedIcon="@drawable/ic_baseline_check_24"
-                android:text="Altezza"
+                android:text="@string/altezza"
                 android:id="@+id/chipHeight"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:textColor="@color/black"/>
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="?attr/colorSecondary"
                 app:checkedIcon="@drawable/ic_baseline_check_24"
-                android:text="Peso"
+                android:text="@string/peso"
                 android:id="@+id/chipWeight"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:textColor="@color/black"/>
@@ -93,7 +93,7 @@
             android:inputType="textMultiLine"
             android:scrollbars="vertical"
             android:maxLength="20"
-            android:hint="Titolo abbinamento"
+            android:hint="@string/titolo_abbinamento"
             android:textColorHint="?attr/colorOnSecondary"
             tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 

@@ -1,9 +1,7 @@
 package it.uniba.dib.sms22235.tasks.passionate.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.animals.PokAnimalAdapter;
-import it.uniba.dib.sms22235.entities.operations.PokeLink;
 import it.uniba.dib.sms22235.tasks.common.dialogs.DialogEntityDetailsFragment;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.tasks.passionate.dialogs.DialogAddPassionateAnimalToPokeLink;

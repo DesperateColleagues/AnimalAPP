@@ -125,7 +125,7 @@ public class EntityInfoAdapter extends RecyclerView.Adapter<EntityInfoAdapter.Vi
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, addresses);
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Contatto veterinario");
+        intent.putExtra(Intent.EXTRA_SUBJECT, context.getResources().getString(R.string.contatto_veterinario));
 
         context.startActivity(intent);
     }

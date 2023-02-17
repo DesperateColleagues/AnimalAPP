@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AnimalApp</string>
+
+    <string name="hello_blank_fragment">Empty Fragment</string>
+
+    <!-- Strings below are useful for dialogs -->
+    <string name="ok">OK</string>
+    <string name="no">NO</string>
+    <string name="conferma">Confirm</string>
+    <string name="cancella">Cancel</string>
+    <string name="modifica">Edit</string>
+    <string name="chiudi">Close</string>
+    <string name="seleziona">Select</string>
+    <string name="error_generic">Generic error, please contact the developers</string>
+    <string name="error_offline">Section not available in offline mode</string>
+    <string name="error_date">Selected date is in the future</string>
+    <string name="alcuni_campi_vuoti">Empty fields!</string>
+    <string name="salvando_immagine">Saving image…</string>
+    <string name="salvata_immagine">Image uploaded successfully!</string>
+
+    <string name="chilometri">" Kilometers"</string>
+
+    <string name="offline_dialog_title">Offline access</string>
+    <string name="offline_dialog">You will enter the app in offline mode. You will be able to access a limited number of features. When the internet connection is restored, you will be prompted to switch to online mode by logging in again.</string>
+    <string name="no_more_offline_dialog">Got it, don\'t show this again</string>
+    <string name="online_dialog_title">Go back online?</string>
+    <string name="online_dialog">The internet connection seems to have been restored, do you want to go back online by logging in again?</string>
+    <string name="online_choice_no">No, stay offline</string>
+    <string name="online_choice_yes">Yes, take me online!</string>
+    <string name="offline_warning">Connection lost: switching to offline mode</string>
+    <string name="online_login_message">Online login successful!</string>
+    <string name="online_login_unstable">Incorrect credentials or too unstable network</string>
+    <string name="missing_mail_app">Unable to proceed, no mail management app is installed</string>
+
+    <string name="camera_permission">Operation not completed.
+    If you see a black screen, check the application permissions.</string>
+    <string name="location_permission">To access this feature, you must enable access to location</string>
+    <string name="location_permission_spiegazione">The <b>LOCATION</b> permission is essential in order to manage all information related to reports. Without it, you will not be able to insert new reports and filter existing ones.</string>
+    <string name="title_location_permission_spiegazione">Why accept permission</string>
+    <string name="chiedi_permesso">Ask permission</string>
+    <string name="dettagli_profilo">User profile details</string>
+    <string name="abilita_posizione">Enable location</string>
+
+    <!-- Strings below refer to registration -->
+    <string name="animalapp_login">AnimalApp - Login</string>
+    <string name="inserisci_credenziali">Enter your credentials to access</string>
+    <string name="email">E-Mail</string>
+    <string name="password">Password</string>
+    <string name="password_dimenticata">Forgot password?</string>
+    <string name="login">Login</string>
+    <string name="registrati">Register</string>
+    <string name="benvenuto">Welcome</string>
+    <string name="role_message">First of all, what category do you belong to?</string>
+    <string name="padrone">Pet owner</string>
+    <string name="appassionato">Pet enthusiast</string>
+    <string name="veterinario">Veterinarian</string>
+    <string name="organizzazione">Organization</string>
+    <string name="nome">Name</string>
+    <string name="cognome">Last name</string>
+    <string name="codice_fiscale">Tax code</string>
+    <string name="nome_clinica">Clinic name</string>
+    <string name="scelta_ruolo">Role selection</string>
+    <string name="username">Username</string>
+    <string name="nome_e_cognome">Full name</string>
+    <string name="telefono">Phone number</string>
+    <string name="nome_ente">Organization name</string>
+    <string name="scopo_ente">Organization purpose</string>
+    <string name="descrizione_ente">Organization description</string>
+
+    <!-- Strings related to "Pet enthusiast" role -->
+    <string name="title_activity_passionate_navigation">Passionate Navigation</string>
+    <string name="title_fragment_passionate_profile">Home</string>
+    <string name="title_fragment_passionate_reservation">Reservations</string>
+    <string name="title_fragment_passionate_purchases">Expenses</string>
+    <string name="title_fragment_reports">Reports list</string>
+    <string name="registra_animale">Register animal</string>
+    <string name="animali_proprieta">Owned animals</string>
+    <string name="no_animal">You have not associated any animal</string>
+
+    <string name="passionate_profile_cardlayout_reports_text">View Reports</string>
+    <string name="passionate_profile_cardlayout_pokelinks_text">View Pokelinks Mode</string>
+    <string name="passionate_profile_cardlayout_org_list_text">View Organizations</string>
+    <string name="passionate_profile_cardlayout_vet_list_text">View Veterinarians</string>
+    <string name="passionate_profile_cardlayout_QR_Scan">Scan QR Code</string>
+    <string name="aggiungi_animale">Add Animal</string>
+    <string name="nome_animale">Animal Name</string>
+    <string name="specie_animale">Animal Species</string>
+    <string name="razza">Animal Breed</string>
+    <string name="animal_profile_help">Click on the animal\'s name to go to its AnimalProfile</string>
+    <string name="codice_microchip">Microchip Code</string>
+    <string name="data_di_nascita">Date of Birth</string>
+    <string name="impostazione_foto_animal_card">"Please wait, setting up photo…"</string>
+    <string name="photo_diary">Photo Diary</string>
+    <string name="condividi_card">Share Card</string>
+    <string name="descrizione_immagine">Image Description</string>
+    <string name="seleziona_immagine">Select Image</string>
+    <string name="salva">Save</string>
+    <string name="titolo_immagine">Image Title</string>
+    <string name="aggiornamento_completo">Update Successful</string>
+    <string name="spostando_post_scambio">Moving Posts…</string>
+    <string name="registrazione_animale">Animal Registration</string>
+
+    <string name="a_casa_o_in_stallo">"Red: stalled\nGreen: at home"</string>
+    <string name="title_fragment_diagnosis">Diagnosis List</string>
+    <string name="title_fragment_exams">Exams List</string>
+    <string name="scannerizza_qr_code">Scan QR code</string>
+
+    <!-- Stringhe sottostanti riferite alle prenotazioni del passionate -->
+    <string name="aggiungi_appuntamento">Add Appointment</string>
+    <string name="appuntamenti_recenti">Recent Appointments</string>
+    <string name="tutti_appuntamenti_recenti">View All Recent Appointments</string>
+    <string name="appuntamenti_passati">Viewing: Past Appointments</string>
+    <string name="appuntamenti_futuri">Viewing: Future Appointments</string>
+    <string name="dettagli_animale">Animal:</string>
+    <string name="dettagli_veterinario">Veterinarian:</string>
+    <string name="dettagli_data">Date and Time:</string>
+    <string name="impossibile_prenotare">Cannot book appointment for a date that has already passed</string>
+    <string name="prenotazione_avvenuta">Appointment successfully booked!</string>
+    <string name="prenotazione_aggiornata">Appointment successfully updated!</string>
+
+    <!-- Stringhe sottostanti riferite al veterinario -->
+    <string name="title_activity_veterinarian_navigation">VeterinarianNavigationActivity</string>
+    <string name="title_fragment_veterinarian_profile">Vet Home</string>
+    <string name="title_fragment_veterinarian_animal_list">Animal List</string>
+    <string name="title_fragment_veterinarian_patients">Patients</string>
+    <string name="title_fragment_veterinarian_reservations">Reservations</string>
+    <string name="title_fragment_veterinarian_backbench">Your Stalled Animals Information</string>
+
+    <!-- Stringhe sottostanti riferite alle funzioni del veterinario -->
+    <string name="data_appuntamento">date</string>
+    <string name="ora_appuntamento">time</string>
+    <string name="aggiungi_prenotazione">Add Reservation</string>
+
+    <!-- Stringhe sottostanti riferite alle diagnosi -->
+    <string name="aggiungi_diagnosi">Add diagnosis</string>
+    <string name="mostra_diagnosi">Show diagnosis</string>
+    <string name="modifica_diagnosi">Edit diagnosis</string>
+    <string name="elimina_diagnosi">Delete diagnosis</string>
+    <string name="inserisci_diagnosi">Enter a brief summary of the visit</string>
+    <string name="inserisci_doc_diagnosi">Or add a .doc file with a detailed diagnosis</string>
+
+    <!-- Stringhe sottostanti riferite agli esami -->
+    <string name="aggiungi_esame">Add exam</string>
+    <string name="esito_esame">Exam result</string>
+    <string name="mostra_esame">Show exam</string>
+    <string name="modifica_esame">Edit exam</string>
+    <string name="elimina_esame">Delete exam</string>
+    <string name="esito_positivo">Positive result</string>
+    <string name="esito_negativo">Negative result</string>
+    <string name="tipo_esame">Type of exam</string>
+
+    <string name="proprietario_animale_vet_list">Owner:</string>
+    <string name="nome_animale_vet_list">Name:</string>
+
+    <!-- Stringhe sottostanti riferite agli acquisti -->
+    <string name="product">Product</string>
+    <string name="costo">Cost</string>
+    <string name="quantit">Quantity</string>
+    <string name="data_acquisto">Purchase date</string>
+    <string name="inserisci_spesa">Add expense</string>
+    <string name="categoria">Category</string>
+    <string name="filtri">FILTERS</string>
+    <string name="animale">Animal</string>
+    <string name="categorie">Categories</string>
+    <string name="costoh">Unit cost</string>
+    <string name="intervallo_date">Date range</string>
+    <string name="inserimento_spesa">Expense entry</string>
+    <string name="date">Dates</string>
+
+    <string name="title_fragment_requests">Requests &amp; Offers</string>
+    <string name="descrizione">Description</string>
+    <string name="offerta">Offer</string>
+    <string name="richiesta">Request</string>
+    <string name="operation">Type</string>
+    <string name="oggetto">Subject</string>
+    <string name="sendMail">Contact by email</string>
+    <string name="richieste_mie">View: personal</string>
+    <string name="richieste_altri">View: other users</string>
+    <string name="conferma_richiesta_titolo">Are you sure?</string>
+    <string name="conferma_richiesta_messaggio">Do you want to mark this item as "completed"?</string>
+    <string name="ricarica_sessione">Session moved, please log in again</string>
+    <string name="completa_richiesta">Request completion</string>
+    <string name="nuova_richiesta_inserita_successo">Request added successfully</string>
+    <string name="sbagliato_animale_scansionato">The scanned animal does not match the request! Please try again by framing the correct QR code.</string>
+
+    <string name="descrizione_stallo">Description of the backbench</string>
+    <string name="descrizione_stallo_inserita_successo">Backbench description inserted successfully</string>
+    <string name="inserisci_descrizione_stallo">Insert backbench description</string>
+    <string name="inserisci_immagine_stallo">Insert backbench image</string>
+    <string name="aggiungi_nuovo_backbench">Add animal to temporary backbench</string>
+    <string name="nuova_backbench_inserita_successo">Temporary residence registered successfully</string>
+    <string name="modifica_immagine_stallo">Edit backbench image</string>
+
+    <!-- Strings related to reports -->
+    <string name="segnalazione">Report -</string>
+    <string name="mie_segnalazioni">My reports</string>
+    <string name="altri_segnalazioni">Community reports</string>
+    <string name="latitudine">Latitude</string>
+    <string name="longitudine">Longitude</string>
+    <string name="modifica_segnalazione">Edit report</string>
+    <string name="segnalazione_inserita_successo">Report added successfully</string>
+    <string name="segnalatore">Reporting user: </string>
+    <string name="posizione_segnalazione">Report position</string>
+    <string name="tutte">All</string>
+    <string name="error_location_filter">Unable to execute filtering. Try restarting the application</string>
+
+    <string name="animal_profile_infos">
+    ·<b>Species:</b>* \n·<b>Breed:</b>*\n<br/>·<b>Date of birth:</b>*\n<br/>·<b>Microchip code:*</b>
+    </string>
+
+    <!-- Strings related to organizations -->
+    <string name="importazione_avvenuta">Import completed successfully!</string>
+    <string name="importazione_fallita">Error retrieving file to import</string>
+    <string name="animali_assistenza">Assisted animals</string>
+    <string name="empty_list">Nothing here yet</string>
+    <string name="indirizzo_ente">Organization address</string>
+    <string name="numero_telefono">Phone number</string>
+    <string name="tipo_ente">Organization type</string>
+    <string name="title_offerta_animale_import">Offer: %s - %s</string>
+    <string name="offerta_animale_import">We offer this %s named %s currently under our care</string>
+
+    <!-- Strings related to PokAnimal mode -->
+    <string name="bill_pc">Bill\'s PC</string>
+    <string name="seleziona_amico">Select friend</string>
+
+    <string name="completa_inserimento">Complete insertion</string>
+
+    <!-- Strings related to diagnoses -->
+    <string name="diagnosis_date_added_system">Date added to system</string>
+
+    <!-- Easter eggs because why not? -->
+    <string name="not_now">Use the Moon Stone!</string>
+    <string name="not_now_message">Professor Oak\'s words echo:\n\n<i>"There\'s a time and place for everything! But not now."</i></string>
+    <string name="not_now_button">Press to continue</string>
+    <string name="ascanio">Let Ascanio in!</string>
+    <string name="ascanio_message"><i>Hey, let Ascanio in, from January eighth\nSo, filing it is tough: she comes out, but it doesn\'t bother me</i></string>
+    <string name="ascanio_button">The hole burns her!</string>
+    <string name="cancellazione_successo">Deletion completed successfully</string>
+    <string name="modifica_animale_fallita_rete">Unable to modify animal: network unavailable</string>
+    <string name="seleziona_categoria">Select category</string>
+    <string name="username_tuo">The username entered is yours!</string>
+    <string name="costo_quantita_non_numero">Quantity or cost field must be a number</string>
+    <string name="error_no_app_mappe">Image sharing app not installed on device</string>
+    <string name="scegli_animale_prenotazione">Choose animal to book for</string>
+    <string name="modifica_info_animale">Edit animal information</string>
+    <string name="dettagli_appuntamento">Appointment details</string>
+    <string name="toelettatura">Grooming</string>
+    <string name="cibo">Food</string>
+    <string name="divertimento">Entertainment</string>
+    <string name="spese_mediche">Medical expenses</string>
+    <string name="lista_animali_vuota_no_ricerche">Empty animal list, unable to perform searches</string>
+    <string name="conferma_elimina_pokelink">Are you sure you want to delete this PokeLink?</string>
+    <string name="eliminazione_pokelink">PokeLink deletion</string>
+    <string name="nessun_risultato">No results</string>
+    <string name="aggiunta_spesa_fallita_no_animali">Unable to add expense without registered animals</string>
+    <string name="numero_animali">Number of animals</string>
+    <string name="numero_spese">Number of expenses made</string>
+    <string name="animale_duplicato">Duplicate animal: microchip code already exists</string>
+    <string name="salvataggio_animale_fallimento_rete">Unable to save animal: network unavailable</string>
+    <string name="error_spesa_inserimento">Error in adding expense</string>
+    <string name="caricamento_successo">Loading completed successfully</string>
+    <string name="prenotazione_conferma_successo">Reservation confirmed!</string>
+    <string name="impossibile_trovare_animali_di">"Unable to find animals owned by "</string>
+    <string name="link_aggiunta_successo">Link added successfully</string>
+    <string name="link_eliminazione_successo">Link deleted successfully</string>
+    <string name="animale_inserimento_successo">Animal registered successfully</string>
+    <string name="spesa_aggiunta_successo">Expense saved successfully</string>
+    <string name="error_numero_civico_intero">CAP or street number field is not a whole number</string>
+    <string name="error_corta_password">Password too short, minimum 6 characters.</string>
+    <string name="error_numero_non_valido">Invalid phone number.</string>
+    <string name="error_mail_non_valida">Invalid email.</string>
+    <string name="registrazione_successo">Registration completed successfully</string>
+    <string name="error_email_usata">Email already in use.</string>
+    <string name="salvando_veterinario">Saving veterinarian…</string>
+    <string name="error_username_usato">Username already in use.</string>
+    <string name="salvando_appassionato">Saving user…</string>
+    <string name="indirizzo_clinica">Clinic address</string>
+    <string name="error_appuntamento_presente">Appointment already present.</string>
+    <string name="proprietario">Owner</string>
+    <string name="dati">Data</string>
+    <string name="contatto_veterinario">Veterinarian contact</string>
+    <string name="collegamenti_rapidi">Quick links</string>
+    <string name="area_ricerca">Narrow down the search area</string>
+    <string name="aggiungi_segnalazione">Add a report</string>
+    <string name="aggiungi">Add</string>
+    <string name="altezza_m">Height (m)</string>
+    <string name="dati_segnalazione">Report informations</string>
+    <string name="informazioni">Informations</string>
+    <string name="dati_di_localizzazione">Localization informations</string>
+    <string name="immagine">Image</string>
+    <string name="dati_animale">Animal informations</string>
+    <string name="segnalazione_senza_animale_personale">This report doesn\'t concern my own pet</string>
+    <string name="conferma_segnalazione">Create report</string>
+    <string name="title_fragment_details_report">Report details</string>
+    <string name="title_fragment_add_report">Add new report</string>
+    <string name="modifica_profilo">Edit profile</string>
+    <string name="profilo">Profile</string>
+    <string name="importazione_dati">Data import</string>
+    <string name="gestione_stallo">Backbench management</string>
+    <string name="username_amico">Friend username</string>
+    <string name="altezza">Height</string>
+    <string name="carattere">Behaviour</string>
+    <string name="peso">Weight</string>
+    <string name="titolo_abbinamento">Match title</string>
+
+</resources>

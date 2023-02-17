@@ -12,7 +12,7 @@
         android:layout_marginRight="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:hint="Username amico"
+        android:hint="@string/username_amico"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
@@ -41,6 +41,6 @@
         android:onClick="btnRegisterAction"
         android:textColor="@color/black"
         android:textStyle="bold"
-        android:text="Conferma" />
+        android:text="@string/conferma" />
 
 </LinearLayout>

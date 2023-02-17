@@ -189,22 +189,22 @@ public class RegistrationPersonFragment extends Fragment implements DialogAddAdd
                     }
 
                     if (!InputFieldCheck.isNumberValid(phoneNumber)){
-                        Toast.makeText(getActivity(), "Numero di telefono non valido.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getString(R.string.error_numero_non_valido), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
 
             // Display error message if some fields are empty
             if (isEmptyInput) {
-                Toast.makeText(getActivity(), "Alcuni campi sono vuoti!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.alcuni_campi_vuoti), Toast.LENGTH_SHORT).show();
             }
 
             if (!InputFieldCheck.isEmailValid(email)) {
-                Toast.makeText(getActivity(), "Email non valida.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.error_mail_non_valida), Toast.LENGTH_SHORT).show();
             }
 
             if(!InputFieldCheck.isPasswordValid(password)) {
-                Toast.makeText(getActivity(), "Password troppo corta, minimo 6 caratteri.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.error_corta_password), Toast.LENGTH_SHORT).show();
             }
         });
     }

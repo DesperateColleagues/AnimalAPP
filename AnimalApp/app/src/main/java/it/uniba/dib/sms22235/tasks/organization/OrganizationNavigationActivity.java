@@ -377,7 +377,7 @@ public class OrganizationNavigationActivity extends AppCompatActivity implements
                                         .get()
                                         .addOnCompleteListener(task1 -> {
                                             if (task1.isSuccessful()) {
-                                                QuerySnapshot assistedAnimalsSnapshot = (QuerySnapshot) task1.getResult();
+                                                QuerySnapshot assistedAnimalsSnapshot = task1.getResult();
                                                 List<DocumentSnapshot> assistedAnimalsDocuments = assistedAnimalsSnapshot.getDocuments();
                                                 for (DocumentSnapshot snapshot : assistedAnimalsDocuments) {
                                                     Animal a = Animal.loadAnimal(snapshot);

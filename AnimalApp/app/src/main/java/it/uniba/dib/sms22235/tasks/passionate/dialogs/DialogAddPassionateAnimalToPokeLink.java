@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import it.uniba.dib.sms22235.R;
-import it.uniba.dib.sms22235.tasks.NavigationActivityInterface;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 
 public class DialogAddPassionateAnimalToPokeLink extends DialogFragment {

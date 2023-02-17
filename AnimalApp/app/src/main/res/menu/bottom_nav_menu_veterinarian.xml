@@ -24,6 +24,6 @@
     <item
         android:id="@+id/veterinarian_backbench"
         android:icon="@drawable/ic_baseline_house_siding_24"
-        android:title="Gestione stallo"/>
+        android:title="@string/gestione_stallo"/>
 
 </menu>

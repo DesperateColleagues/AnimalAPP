@@ -4,12 +4,12 @@
     <item
         android:id="@+id/organization_profile"
         android:icon="@drawable/ic_baseline_account_circle_24"
-        android:title="Profilo" />
+        android:title="@string/profilo" />
 
     <item
         android:id="@+id/organization_import_data"
         android:icon="@drawable/ic_baseline_import_export_24"
-        android:title="Importazione dati" />
+        android:title="@string/importazione_dati" />
 
     <item
         android:id="@+id/organization_requests"
@@ -19,5 +19,5 @@
     <item
         android:id="@+id/backBenchFragment"
         android:icon="@drawable/ic_baseline_house_siding_24"
-        android:title="Gestione stallo"/>
+        android:title="@string/gestione_stallo"/>
 </menu>
