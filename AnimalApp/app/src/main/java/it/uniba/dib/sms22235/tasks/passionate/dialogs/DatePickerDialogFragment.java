@@ -12,6 +12,9 @@ import androidx.fragment.app.Fragment;
 import java.util.Calendar;
 import java.util.Locale;
 
+/**
+ * A common date picker dialog
+ * */
 public class DatePickerDialogFragment extends DialogFragment  {
 
     private final Fragment parent;

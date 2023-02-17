@@ -27,8 +27,14 @@ import java.util.Locale;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.users.Animal;
 
+/**
+ * This dialog is used to inser animal data
+ * */
 public class DialogAddAnimalFragment extends DialogFragment implements android.app.DatePickerDialog.OnDateSetListener {
 
+    /**
+     * Interface that specifies the action that occur when an animal data is addd
+     * */
     public interface DialogAddAnimalFragmentListener {
         /**
          * Callback triggered when the user completes its sign up process

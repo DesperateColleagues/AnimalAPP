@@ -76,6 +76,10 @@ import it.uniba.dib.sms22235.tasks.organization.fragments.OrganizationProfileFra
 import it.uniba.dib.sms22235.utils.InterfacesOperationsHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This Activity manages the navigation of the organization in the app. It is responsible for
+ * db operations, and catches all the user actions by the callbacks from the interfaces implemented
+ * */
 public class OrganizationNavigationActivity extends AppCompatActivity implements
         NavigationActivityInterface, DiagnosisFragment.DiagnosisFragmentListener,
         AnimalProfile.AnimalProfileListener,

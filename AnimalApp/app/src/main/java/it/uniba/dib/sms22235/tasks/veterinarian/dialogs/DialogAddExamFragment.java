@@ -19,6 +19,9 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Exam;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This dialog is used to add exams data
+ * */
 public class DialogAddExamFragment extends DialogFragment {
 
     private TextView txtInputExamType;
@@ -26,7 +29,15 @@ public class DialogAddExamFragment extends DialogFragment {
     private DialogAddExamFragment.DialogAddExamFragmentListener listener;
     private Exam exam;
 
+    /**
+     * Dialog operations
+     * */
     public interface DialogAddExamFragmentListener{
+        /**
+         * Callback used to add a new exam
+         *
+         * @param exam the added exam
+         * */
         void onDialogAddExamDismissed(Exam exam);
     }
 

@@ -31,6 +31,9 @@ import it.uniba.dib.sms22235.tasks.common.views.animalprofile.AnimalProfile;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This dialog is used to show the animal card that can be shared on various other apps via an intent
+ * */
 public class DialogAnimalCardFragment extends DialogFragment {
 
     private final Animal animal;

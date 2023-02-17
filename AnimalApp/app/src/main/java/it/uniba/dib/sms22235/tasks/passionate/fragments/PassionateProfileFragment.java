@@ -55,6 +55,12 @@ import it.uniba.dib.sms22235.utils.DataManipulationHelper;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
 
+/**
+ * This fragment shows the passionate profile. From here passionate can access a various number
+ * of functionalities such as: requests, reports, list of organizations and veterinarians, list
+ * of booked reservation and poke links. The fragment shows the list of the animal owned by the
+ * passionate.
+ * */
 public class PassionateProfileFragment extends Fragment implements
         DialogAddAnimalFragment.DialogAddAnimalFragmentListener,
         DialogEditAnimalDataFragment.DialogEditAnimalDataFragmentListener,
@@ -115,6 +121,9 @@ public class PassionateProfileFragment extends Fragment implements
     });
 
 
+    /**
+     * Operation of the fragment
+     * */
     public interface ProfileFragmentListener {
         /**
          * This callback is used to register an animal to Firestore and to update or

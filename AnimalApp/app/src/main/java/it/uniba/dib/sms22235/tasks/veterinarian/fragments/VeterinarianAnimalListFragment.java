@@ -21,13 +21,26 @@ import it.uniba.dib.sms22235.tasks.veterinarian.VeterinarianNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 import it.uniba.dib.sms22235.utils.RecyclerTouchListener;
 
+/**
+ * Fragment used to show an animal list
+ * */
 public class VeterinarianAnimalListFragment extends Fragment {
 
     private RecyclerView assistedAnimalRecyclerView;
     private AnimalListAdapter adapter;
     private transient NavController controller;
 
+    /**
+     * Operation of the fragment
+     * */
     public interface VeterinarianAnimalListFragmentListener {
+        /**
+         * This method is called to load all the assisted animal. The animal must be
+         * displayed using the adapter and the recycler provided
+         *
+         * @param adapter the animal list adapter
+         * @param recyclerView the recycler where to show data represented by the adapter
+         * */
         void getAssistedAnimals(AnimalListAdapter adapter, RecyclerView recyclerView);
     }
 

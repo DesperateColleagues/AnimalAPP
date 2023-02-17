@@ -32,6 +32,9 @@ import it.uniba.dib.sms22235.entities.users.ImportedAnimal;
 import it.uniba.dib.sms22235.tasks.organization.OrganizationNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This fragment is used to import animal data automatically from a json string in the storage
+ * */
 public class OrganizationImportDataFragment extends Fragment {
 
     private ArrayList<ImportedAnimal> importedAnimalsList;
@@ -52,6 +55,12 @@ public class OrganizationImportDataFragment extends Fragment {
          * @param animal the animal to register
          * */
         void onAnimalRegistered(Animal animal);
+
+        /**
+         * This callback is used to upload animal photos
+         *
+         * @param animal the imported animal
+         * */
         void uploadPhotos(ImportedAnimal animal);
     }
 

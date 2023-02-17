@@ -24,6 +24,9 @@ import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.users.Animal;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 
+/**
+ * This dialog is used to add a poke link
+ * */
 public class DialogAddPokeLink extends DialogFragment {
 
     public interface DialogAddPokeLinkListener {
@@ -64,7 +67,7 @@ public class DialogAddPokeLink extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         @SuppressLint("InflateParams") View root = inflater.inflate(R.layout.fragment_dialog_add_poke_link, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.AnimalCardRoundedDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme);
         builder.setView(root);
 
         // Set dialog title

@@ -16,9 +16,20 @@ import androidx.fragment.app.DialogFragment;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.adapters.purchases.GridViewCategoryAdapter;
 
+/**
+ * This dialog is used to show purchases categories
+ * */
 public class DialogAddCategoryFragment extends DialogFragment {
 
+    /**
+     * Specify the action that occur in category selection
+     * */
     public interface DialogAddCategoryFragmentListener {
+        /**
+         * This callback is called when a category is selected
+         *
+         * @param categoryName the name of the category
+         * */
         void onDialogAddCategoryFragmentListener(String categoryName);
     }
 
@@ -33,7 +44,7 @@ public class DialogAddCategoryFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),
-                R.style.AnimalCardRoundedDialog);
+                R.style.AlertDialogTheme);
 
         LayoutInflater inflater = requireActivity().getLayoutInflater();//get the layout inflater
         View root = inflater.inflate(R.layout.fragment_dialog_add_category, null);//inflate the layout of the view with this new layout

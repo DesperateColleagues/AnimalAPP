@@ -24,16 +24,27 @@ import it.uniba.dib.sms22235.tasks.passionate.dialogs.DatePickerDialogFragment;
 import it.uniba.dib.sms22235.tasks.common.dialogs.DialogTimePickerFragment;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 
-public class DialogAddReservationFragment extends DialogFragment implements android.app.DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+/**
+ * Dialog to add a new reservation
+ * */
+public class DialogAddReservationFragment extends DialogFragment implements
+        android.app.DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener {
 
     private EditText txtInputReservationDate;
     private EditText txtInputReservationTime;
 
-    public DialogAddReservationFragment() {
-    }
+    public DialogAddReservationFragment() {}
 
-
+    /**
+     * Operation that occur when reservations info are added
+     * */
     public interface DialogAddReservationFragmentListener{
+        /**
+         * Callback used when a reservation is added
+         *
+         * @param reservation the added reservation
+         * */
         void onDialogAddReservationDismissed(Reservation reservation);
     }
 

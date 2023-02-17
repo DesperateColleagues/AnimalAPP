@@ -21,6 +21,12 @@ import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.tasks.passionate.PassionateNavigationActivity;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * This fragment is used to show a list of organizations that can be filtered by a search of
+ * specific info using its search bar. Every single element of the list provides two operations:
+ * 1) call a phone number
+ * 2) text email
+ * */
 public class PassionateOrganizationInfoListFragment extends Fragment {
 
     private ArrayList<Organization> organizationsList;

@@ -161,7 +161,7 @@ public class PassionateReservationFragment extends Fragment implements DialogCho
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void onDialogChoosedAnimal(String selectedAnimal) {
+    public void onDialogSelectedAnimal(String selectedAnimal) {
         this.selectedReservation.setAnimal(selectedAnimal);
         adapter.remove(selectedReservation);
         listener.onReservationBooked(selectedReservation);

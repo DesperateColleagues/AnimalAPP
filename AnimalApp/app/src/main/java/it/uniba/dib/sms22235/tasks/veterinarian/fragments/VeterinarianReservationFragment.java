@@ -27,6 +27,9 @@ import it.uniba.dib.sms22235.adapters.veterinarian.ReservationsAdapter;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 
+/**
+ * Fragment used to add a new reservation
+ * */
 public class VeterinarianReservationFragment extends Fragment implements
         DialogAddReservationFragment.DialogAddReservationFragmentListener {
 
@@ -42,7 +45,15 @@ public class VeterinarianReservationFragment extends Fragment implements
     private String currentTime;
 
 
+    /**
+     * Operations of the fragment
+     * */
     public interface VeterinarianReservationFragmentListener {
+        /**
+         * Adds a new reservation
+         *
+         * @param reservation reservation
+         * */
         void onReservationRegistered(Reservation reservation);
     }
 

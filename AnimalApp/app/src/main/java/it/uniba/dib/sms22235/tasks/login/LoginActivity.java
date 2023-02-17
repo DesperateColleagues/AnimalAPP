@@ -55,6 +55,11 @@ import it.uniba.dib.sms22235.entities.users.Organization;
 import it.uniba.dib.sms22235.entities.users.Passionate;
 import it.uniba.dib.sms22235.entities.users.Veterinarian;
 
+/**
+ * This Activity is responsible for the login in the application. Login uses Firebase so it's an
+ * online based one. But passionate can access part of the app offline so the login for this
+ * specific category of user is offline too.
+ * */
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth; // firebase object to perform authentication

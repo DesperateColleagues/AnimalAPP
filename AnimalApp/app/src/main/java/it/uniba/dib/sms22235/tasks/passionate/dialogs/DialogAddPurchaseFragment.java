@@ -28,10 +28,21 @@ import java.util.Locale;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Purchase;
 
+/**
+ * This dialog is used to add purchase data
+ * */
 public class DialogAddPurchaseFragment extends DialogFragment
         implements android.app.DatePickerDialog.OnDateSetListener, DialogAddCategoryFragment.DialogAddCategoryFragmentListener {
 
+    /**
+     * Operations of the dialog to be catch
+     * */
     public interface DialogAddPurchaseFragmentListener {
+        /**
+         * This callback is called when the dialog is dismissed after a purchase data is inserted
+         *
+         * @param purchase the purchase
+         * */
         void onDialogAddPurchaseFragmentDismissed(Purchase purchase);
     }
 
@@ -58,7 +69,7 @@ public class DialogAddPurchaseFragment extends DialogFragment
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),
-                R.style.AnimalCardRoundedDialog);
+                R.style.AlertDialogTheme);
 
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View root = inflater.inflate(R.layout.fragment_dialog_add_purchase, null);

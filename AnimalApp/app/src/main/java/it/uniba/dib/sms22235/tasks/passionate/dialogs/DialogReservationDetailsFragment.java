@@ -15,6 +15,9 @@ import androidx.fragment.app.DialogFragment;
 import it.uniba.dib.sms22235.R;
 import it.uniba.dib.sms22235.entities.operations.Reservation;
 
+/**
+ * Dialog to show reservation detail
+ * */
 public class DialogReservationDetailsFragment extends DialogFragment {
 
     private Reservation reservation;
