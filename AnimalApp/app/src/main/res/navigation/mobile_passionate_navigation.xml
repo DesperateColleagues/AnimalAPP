@@ -34,6 +34,7 @@
             app:destination="@id/passionateVeterinarianListFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
+
         <action
             android:id="@+id/action_passionate_profile_to_passionatePokAnimalList"
             app:destination="@id/passionatePokAnimalList"
@@ -163,7 +164,7 @@
     <fragment
         android:id="@+id/passionateVeterinarianListFragment"
         android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateVeterinarianInfoListFragment"
-        android:label="PassionateVeterinarianListFragment"
+        android:label="@string/veterinarian_list"
         tools:layout="@layout/fragment_passionate_veterinarian_info_list"/>
 
     <fragment
@@ -175,7 +176,7 @@
     <fragment
         android:id="@+id/passionateOrganizationListFragment"
         android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateOrganizationInfoListFragment"
-        android:label="PassionateOrganizationListFragment"
+        android:label="@string/organization_list"
         tools:layout="@layout/fragment_passionate_organization_info_list"/>
 
     <fragment

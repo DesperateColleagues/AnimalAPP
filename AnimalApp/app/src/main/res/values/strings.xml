@@ -359,6 +359,8 @@
     <string name="delete_confirm">Sicuro di voler eliminare questa spesa?</string>
     <string name="delete">Eliminazione</string>
     <string name="registrando_ente">Registrando ente…</string>
+    <string name="organization_list">Lista enti</string>
+    <string name="veterinarian_list">Lista veterinari</string>
 
     <string-array name="rangeSliderValues">
         <item>0</item>

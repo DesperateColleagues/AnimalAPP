@@ -352,6 +352,8 @@
     <string name="delete_confirm">Are you sure to delete this purchase?</string>
     <string name="delete">Delete</string>
     <string name="registrando_ente">Registering organization…</string>
+    <string name="organization_list">Organization list</string>
+    <string name="veterinarian_list">Veterinarian list</string>
 
 
 </resources>
