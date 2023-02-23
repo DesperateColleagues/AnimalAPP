@@ -356,11 +356,17 @@
     <string name="nome_item">Nome item</string>
     <string name="title_fragment_pokeanimal">Modalità PokAnimal</string>
 
-    <string name="delete_confirm">Sicuro di voler eliminare questa spesa?</string>
+    <string name="delete_confirm_purchases">Sicuro di voler eliminare questa spesa?</string>
+    <string name="delete_confirm_diagnosis">Sicuro di voler eliminare questa diagnosi?</string>
+    <string name="delete_confirm_exams">Sicuro di voler eliminare questo esame?</string>
     <string name="delete">Eliminazione</string>
     <string name="registrando_ente">Registrando ente…</string>
     <string name="organization_list">Lista enti</string>
     <string name="veterinarian_list">Lista veterinari</string>
+    <string name="elimina">Elimina</string>
+    <string name="elimina_def">Elimina definitivamente</string>
+    <string name="annulla">Annulla</string>
+    <string name="title_fragment_passionate_booked_reservation">Prenotazioni effettuate</string>
 
     <string-array name="rangeSliderValues">
         <item>0</item>

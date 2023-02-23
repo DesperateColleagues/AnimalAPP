@@ -1,19 +1,22 @@
 package it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,6 +41,7 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 public class DiagnosisFragment extends Fragment implements
         DialogAddDiagnosisFragment.DialogAddDiagnosisFragmentListener {
 
+    private transient FirebaseFirestore db;
     private final Animal animal;
     private final AbstractPersonUser user;
     private AnimalDiagnosisAdapter adapter;
@@ -86,6 +90,7 @@ public class DiagnosisFragment extends Fragment implements
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        db = FirebaseFirestore.getInstance();
         return inflater.inflate(R.layout.fragment_simple_vertical_list, container, false);
     }
 
@@ -140,14 +145,38 @@ public class DiagnosisFragment extends Fragment implements
     }
 
     private final AnimalDiagnosisAdapter.OnItemClickListener onClickEditListener = diagnosis -> {
-        new BSDialogEditDiagnosisFragment()
+        BSDialogEditDiagnosisFragment diagnosisOptionsFragment = new BSDialogEditDiagnosisFragment();
+
+        diagnosisOptionsFragment
                 .setOnUpgradeListener(() -> {
                     DialogAddDiagnosisFragment dialogAddDiagnosisFragment = new DialogAddDiagnosisFragment(diagnosis);
                     dialogAddDiagnosisFragment.setListener(this);
                     dialogAddDiagnosisFragment.show(getParentFragmentManager(), "DialogAddDiagnosisFragment");
                 })
                 .setOnDeleteListener(() -> {
-                    Toast.makeText(getContext(), getResources().getString(R.string.elimina_diagnosi), Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme);
+                    // Set dialog title
+                    @SuppressLint("InflateParams")
+                    View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+                    TextView titleText = titleView.findViewById(R.id.dialog_title);
+
+                    titleText.setText(getString(R.string.delete) + " " + diagnosis.getId().split("-")[0]);
+                    builder.setCustomTitle(titleView);
+                    builder.setMessage(R.string.delete_confirm_diagnosis);
+
+                    builder.setPositiveButton(R.string.elimina_def, ((dialog, which) ->{
+
+                        db.collection(KeysNamesUtils.CollectionsNames.DIAGNOSIS)
+                                .document(diagnosis.getId()).delete()
+                                .addOnSuccessListener(unused -> {
+                                    adapter.remove(diagnosis);
+                                    adapter.notifyDataSetChanged();
+                                    diagnosisOptionsFragment.dismiss();
+                                }); }));
+
+                    builder.setNegativeButton(R.string.annulla, ((dialog, which) -> dialog.dismiss()));
+
+                    builder.create().show();
                 })
                 .setOnShowListener(() -> {
                     showInfo(diagnosis);

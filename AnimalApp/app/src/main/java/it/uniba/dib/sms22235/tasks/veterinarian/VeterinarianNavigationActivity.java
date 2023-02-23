@@ -139,8 +139,6 @@ public class VeterinarianNavigationActivity extends AppCompatActivity implements
         if (reservationsList == null) {
             reservationsList = new ArrayList<>();
         }
-
-        Toast.makeText(getApplicationContext(), "" + veterinarian.getClinicAddress(), Toast.LENGTH_SHORT).show();
     }
 
     @Override

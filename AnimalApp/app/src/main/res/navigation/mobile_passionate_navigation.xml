@@ -93,7 +93,7 @@
     <fragment
         android:id="@+id/passionateBookedReservations"
         android:name="it.uniba.dib.sms22235.tasks.passionate.fragments.PassionateBookedReservationsFragment"
-        android:label="AnimalProfile"
+        android:label="@string/title_fragment_passionate_booked_reservation"
         tools:layout="@layout/fragment_passionate_booked_reservations"/>
 
     <fragment

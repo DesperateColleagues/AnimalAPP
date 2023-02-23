@@ -54,7 +54,7 @@ public class AnimalDiagnosisAdapter extends RecyclerView.Adapter<AnimalDiagnosis
     public void onBindViewHolder(@NonNull AnimalDiagnosisAdapter.ViewHolder holder, int position) {
         Diagnosis diagnosis = diagnosisList.get(position);
 
-        holder.txtDiagnosisInfo.setText(String.format("%s - %s", diagnosis.getId(), diagnosis.getDateAdded()));
+        holder.txtDiagnosisInfo.setText(String.format("%s - %s", diagnosis.getId().split("-")[0], diagnosis.getDateAdded()));
 
         holder.itemDiagnosisCardView.setOnClickListener(v -> {
             if (onItemClickListener != null){

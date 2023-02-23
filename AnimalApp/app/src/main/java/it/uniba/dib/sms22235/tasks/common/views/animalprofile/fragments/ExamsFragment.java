@@ -1,12 +1,14 @@
 package it.uniba.dib.sms22235.tasks.common.views.animalprofile.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,6 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,6 +42,7 @@ import it.uniba.dib.sms22235.utils.KeysNamesUtils;
 public class ExamsFragment extends Fragment implements
 DialogAddExamFragment.DialogAddExamFragmentListener {
 
+    private transient FirebaseFirestore db;
     private final Animal animal;
     private AbstractPersonUser user;
     private AnimalExamsAdapter adapter;
@@ -89,6 +94,7 @@ DialogAddExamFragment.DialogAddExamFragmentListener {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        db = FirebaseFirestore.getInstance();
         return inflater.inflate(R.layout.fragment_simple_vertical_list, container, false);
     }
 
@@ -147,17 +153,37 @@ DialogAddExamFragment.DialogAddExamFragmentListener {
     }
 
     private final AnimalExamsAdapter.OnItemClickListener onClickEditListener = exam -> {
-        new BSDialogEditExamFragment()
+        BSDialogEditExamFragment examOptionsFragment = new BSDialogEditExamFragment();
+        examOptionsFragment
                 .setOnUpgradeListener(() -> {
                     DialogAddExamFragment dialogAddExamFragment = new DialogAddExamFragment(exam);
                     dialogAddExamFragment.setListener(this);
                     dialogAddExamFragment.show(getParentFragmentManager(), "DialogAddExamFragment");
                 })
                 .setOnDeleteListener(() -> {
-                    Toast.makeText(getContext(), getResources().getString(R.string.elimina_esame), Toast.LENGTH_SHORT).show();
-                })
-                .setOnShowListener(() -> {
-                    Toast.makeText(getContext(), getResources().getString(R.string.mostra_esame), Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme);
+                    // Set dialog title
+                    @SuppressLint("InflateParams")
+                    View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
+                    TextView titleText = titleView.findViewById(R.id.dialog_title);
+
+                    titleText.setText(getString(R.string.delete) + " " + exam.getId().split("-")[0]);
+                    builder.setCustomTitle(titleView);
+                    builder.setMessage(R.string.delete_confirm_exams);
+
+                    builder.setPositiveButton(R.string.elimina_def, ((dialog, which) ->{
+
+                        db.collection(KeysNamesUtils.CollectionsNames.EXAMS)
+                                .document(exam.getId()).delete()
+                                .addOnSuccessListener(unused -> {
+                                    adapter.remove(exam);
+                                    adapter.notifyDataSetChanged();
+                                    examOptionsFragment.dismiss();
+                                }); }));
+
+                    builder.setNegativeButton(R.string.annulla, ((dialog, which) -> dialog.dismiss()));
+
+                    builder.create().show();
                 })
                 .setOnShowListener(() -> {
                     showInfo(exam);

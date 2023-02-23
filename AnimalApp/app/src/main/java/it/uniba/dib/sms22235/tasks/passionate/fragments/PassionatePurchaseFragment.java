@@ -156,7 +156,7 @@ public class PassionatePurchaseFragment extends Fragment implements
 
             // Set a positive action that let the user delete the purchase. The purchase is deleted
             // only if the user confirm the deletion by another alert dialog
-            builder.setPositiveButton(R.string.cancella, (dialog, which) -> {
+            builder.setPositiveButton(R.string.elimina, (dialog, which) -> {
                 listener.onPurchaseDeleted(position, currentDataSet, currentAdapter);
                 dialog.dismiss();
             });

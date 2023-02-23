@@ -247,7 +247,7 @@ public class InterfacesOperationsHelper {
                             recyclerView.setAdapter(adapter);
 
                         } else {
-                            Toast.makeText(context, "Nessuna diagnosi presente.", Toast.LENGTH_SHORT).show(); // TODO image
+                            Toast.makeText(context, "Nessuna diagnosi presente.", Toast.LENGTH_SHORT).show();
                         }
                     });
         }

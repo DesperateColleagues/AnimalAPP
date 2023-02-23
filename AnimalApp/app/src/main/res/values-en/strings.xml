@@ -349,11 +349,18 @@
     <string name="nome_item">Item name</string>
     <string name="title_fragment_pokeanimal">PokAnimal Mode</string>
 
-    <string name="delete_confirm">Are you sure to delete this purchase?</string>
+    <string name="delete_confirm_purchases">Are you sure you want to delete this purchase?</string>
+    <string name="delete_confirm_diagnosis">Are you sure you want to delete this diagnosis?</string>
+    <string name="delete_confirm_exams">Are you sure you want to delete this exam?</string>
     <string name="delete">Delete</string>
     <string name="registrando_ente">Registering organization…</string>
     <string name="organization_list">Organization list</string>
     <string name="veterinarian_list">Veterinarian list</string>
 
+    <string name="elimina">Delete</string>
+    <string name="elimina_def">Permanently delete</string>
+    <string name="annulla">Cancel</string>
+
+    <string name="title_fragment_passionate_booked_reservation">Booked reservations</string>
 
 </resources>

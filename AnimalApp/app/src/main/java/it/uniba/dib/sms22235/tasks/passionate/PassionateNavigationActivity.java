@@ -42,7 +42,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -443,12 +442,12 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
             View titleView = getLayoutInflater().inflate(R.layout.fragment_dialogs_title, null);
             TextView titleText = titleView.findViewById(R.id.dialog_title);
 
-            titleText.setText(R.string.delete + dataSetPurchase.get(pos).getItemName());
+            titleText.setText(getString(R.string.delete) + " " + dataSetPurchase.get(pos).getItemName());
             builder.setCustomTitle(titleView);
             // Show the purchase info
-            builder.setMessage(R.string.delete_confirm);
+            builder.setMessage(R.string.delete_confirm_purchases);
 
-            builder.setPositiveButton(R.string.conferma, ((dialog, which) ->{
+            builder.setPositiveButton(R.string.elimina_def, ((dialog, which) ->{
 
             db.collection(KeysNamesUtils.CollectionsNames.PURCHASES)
                     .document(id).delete()
@@ -464,7 +463,7 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                         adapter.notifyDataSetChanged();
                     }); }));
 
-            builder.setNegativeButton(R.string.cancella, ((dialog, which) -> dialog.dismiss()));
+            builder.setNegativeButton(R.string.annulla, ((dialog, which) -> dialog.dismiss()));
 
             builder.create().show();
         } else {
@@ -814,7 +813,8 @@ public class PassionateNavigationActivity extends AppCompatActivity implements
                 .get()
                 .addOnSuccessListener(query -> {
                     List<DocumentSnapshot> documentSnapshots = query.getDocuments();
-                    Toast.makeText(this, "" + documentSnapshots.size(), Toast.LENGTH_SHORT).show();
+                    Log.e("AnimalAPP - PokAnimal", "PassionateNavigationActivity:817 - Numero di PokeLink: " + documentSnapshots.size());
+
                     if (documentSnapshots.size() > 0) {
                         for (DocumentSnapshot snapshot : documentSnapshots) {
                             adapter.addPokeLink(PokeLink.loadPokeLink(snapshot));

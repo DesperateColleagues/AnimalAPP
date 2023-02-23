@@ -510,7 +510,6 @@ public class LoginActivity extends AppCompatActivity {
      * Specify what happens when the user want to recover a lost password
      * */
     public void txtRecoverPasswordAction(View view){
-        // todo
     }
 
     /***
